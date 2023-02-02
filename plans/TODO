@@ -1,0 +1,3 @@
+Refactor cr and bs into having more functions
+BS deleteing half of multipair, it should not
+nvim better string extension `'|` > `'|` and not `|`
