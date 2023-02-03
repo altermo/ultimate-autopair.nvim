@@ -4,33 +4,33 @@ local conf=gconf.cr or {}
 local utils=require'ultimate-autopair.utils.utils'
 local mem=require'ultimate-autopair.memory'
 local function newline_multichar(line,indent,indentsize)
-    for ft,list_of_pairs in pairs(conf.multichar) do
-      if vim.o.filetype==ft then
-        for _,pair in ipairs(list_of_pairs) do
-          local offset=0
+  for ft,list_of_pairs in pairs(conf.multichar) do
+    if vim.o.filetype==ft then
+      for _,pair in ipairs(list_of_pairs) do
+        local offset=0
+        if pair.pair or pair.next then
+          offset=#pair[2]
+        end
+        local bool=true
+        if pair.next and bool then
+          bool=line:sub(-#pair[2])==pair[2]
+        elseif bool then
+          bool=line:sub(-#pair[1]-offset,-offset-1)==pair[1]
+        end
+        if bool and not pair.noalpha then
+          bool=pair.noalpha or not line:sub(-#pair[1]-1-offset,-#pair[1]-1-offset):match('%a')
+        end
+        if bool then
           if pair.pair or pair.next then
-            offset=#pair[2]
+            utils.setline(line:sub(0,-offset-1))
           end
-          local bool=true
-          if pair.next and bool then
-            bool=line:sub(-#pair[2])==pair[2]
-          elseif bool then
-            bool=line:sub(-#pair[1]-offset,-offset-1)==pair[1]
-          end
-          if bool and not pair.noalpha then
-            bool=pair.noalpha or not line:sub(-#pair[1]-1-offset,-#pair[1]-1-offset):match('%a')
-          end
-          if bool then
-            if pair.pair or pair.next then
-              utils.setline(line:sub(0,-offset-1))
-            end
-            utils.appendline('',{indent=indent+indentsize,cursor='last'})
-            utils.appendline(pair[2],{indent=indent})
-            return true
-          end
+          utils.appendline('',{indent=indent+indentsize,cursor='last'})
+          utils.appendline(pair[2],{indent=indent})
+          return true
         end
       end
     end
+  end
 end
 function M.newline()
   local line=utils.getline()

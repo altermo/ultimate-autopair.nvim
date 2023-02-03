@@ -4,39 +4,57 @@ local conf=gconf.fastwarp
 local mem=require'ultimate-autopair.memory'
 local utils=require'ultimate-autopair.utils.utils'
 local info_line=require'ultimate-autopair.utils.info_line'
+local function fastwarp_over_pair(line,col,i,next_char,char)
+  local pair=mem.mem[char]
+  local matching_pair_pos
+  if pair.type==3 then
+    matching_pair_pos=info_line.findstringe(line,i+1,char)
+  else
+    matching_pair_pos=info_line.findepaire(line,i+1,char,pair.paire)
+  end
+  if matching_pair_pos then
+    utils.setline(line:sub(1,col-1)..line:sub(col+1,matching_pair_pos)..next_char..line:sub(matching_pair_pos+1))
+    utils.setcursor(matching_pair_pos)
+    return true
+  end
+end
+local function fastwarp_over_word(line,col,i,next_char)
+  local j=i
+  while line:sub(j,j):match('%a') do
+    j=j+1
+  end
+  utils.setline(line:sub(1,col-1)..line:sub(col+1,j-1)..next_char..line:sub(j))
+  utils.setcursor(j-1)
+  return true
+end
+local function fastwarp_end(line,col,next_char)
+  utils.setline(line:sub(1,col-1)..line:sub(col+1)..next_char)
+  utils.setcursor(#line)
+  return true
+end
 function M.fastwarp()
   local line=utils.getline()
   local col=utils.getcol()
-  local prev_char=line:sub(col-1,col-1)
   local next_char=line:sub(col,col)
-  local next_2_char=line:sub(col+1,col+1)
-  local prev_pair=mem.mem[prev_char]
   local next_pair=mem.mem[next_char]
-  local next_2_pair=mem.mem[next_2_char]
-  if prev_pair and next_pair and next_2_pair and prev_pair.paire==next_char and next_pair.pair==prev_char then
-    local matching_pair_pos
-    if next_2_pair.type==3 then
-      matching_pair_pos=info_line.findstringe(line,col+2,next_2_char)
-    else
-      matching_pair_pos=info_line.findepaire(line,col+2,next_2_char,next_2_pair.paire)
+  if next_pair then
+    for i=col+1,#line do
+      local char=line:sub(i,i)
+      if mem.mem[char] then
+        if fastwarp_over_pair(line,col,i,next_char,char) then
+          return
+        end
+      elseif char:match('%a') then
+        if fastwarp_over_word(line,col,i,next_char) then
+          return
+        end
+      end
     end
-    if matching_pair_pos then
-      utils.setline(line:sub(1,col-1)..line:sub(col+1,matching_pair_pos)..next_char..line:sub(matching_pair_pos+1))
-      utils.setcursor(matching_pair_pos)
+    if col~=#line then
+      if fastwarp_end(line,col,next_char) then
+        return
+      end
     end
-    return
-  elseif next_pair and next_pair.type~=1 then
-    local match=vim.fn.match(line:sub(col+1),[[\<.\{-}\>\zs]])
-    if match~=-1 then
-      local end_next_word=match+col
-      utils.setline(line:sub(1,col-1)..line:sub(col+1,end_next_word)..next_char..line:sub(end_next_word+1))
-      utils.setcursor(end_next_word)
-    else
-      local end_next_word=#line
-      utils.setline(line:sub(1,col-1)..line:sub(col+1,end_next_word)..next_char..line:sub(end_next_word+1))
-      utils.setcursor(end_next_word)
-    end
-    return
   end
   if type(conf.fallback)=='function' then
     conf.fallback()
