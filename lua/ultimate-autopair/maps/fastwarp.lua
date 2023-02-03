@@ -27,7 +27,6 @@ function M.fastwarp()
     return
   elseif conf.hopword and next_pair and next_pair.type~=1 then
     local match=vim.fn.match(line:sub(col+1),[[\<.\{-}\>\zs]])
-    --TODO if ( before word then fastwarp over pair and not word
     if match~=-1 then
       local end_next_word=match+col
       utils.setline(line:sub(1,col-1)..line:sub(col+1,end_next_word)..next_char..line:sub(end_next_word+1))

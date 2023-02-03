@@ -5,8 +5,8 @@ function M.create_function(key,filters)
     return function()
         local H={}
         H.key=key
-        for _,v in ipairs(filters) do
-            local exit_status=v.call(H,v.conf,mem.mem[H.key] and mem.mem[H.key].ext[v.name] or {},mem.mem)
+        for _,filter in ipairs(filters) do
+            local exit_status=filter.call(H,filter.conf,mem.mem[H.key] and mem.mem[H.key].ext[filter.name] or {},mem.mem)
             if exit_status then
                 if exit_status==2 then
                     utils.append(key)
