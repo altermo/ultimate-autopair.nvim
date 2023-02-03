@@ -44,7 +44,6 @@ M.default_config={
     },
     fastwarp={
         enable=true,
-        hopword=true,
         map='<A-e>',
         cmap='<A-e>',
         fallback=nil,

@@ -126,8 +126,6 @@ Example: >lua
  {
    fastwarp={
      enable=true,
-     hopword=true,
-     --{}foo > <A-e> > {foo}
      map='<A-e>',
      cmap='<A-e>',
      fallback=nil,
@@ -219,12 +217,12 @@ ultimate-autopair-fastwarp                        *ultimate-autopair-fastwarp*
 The fastwarp mapping can do a bunch of things.
 For the config, read |ultimate-autopair-config-fastwarp|.
 Example (`*` is cursor): >
- | before     | after      | config  |
- |------------+------------+---------|
- | (*){}      | ({}*)      |         |
- | (*){foo}   | ({foo}*)   |         |
- | ()foo      | (foo*)     | hopword |
- | (foo*),bar | (foo,bar*) | hopword |
+ | before     | after      |
+ |------------+------------+
+ | (*){}      | ({}*)      |
+ | (*){foo}   | ({foo}*)   |
+ | ()foo      | (foo*)     |
+ | (foo*),bar | (foo,bar*) |
 <
 ==============================================================================
 EXTENSIONS                                        *ultimate-autopair-extensions*

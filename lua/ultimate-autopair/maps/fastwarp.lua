@@ -25,7 +25,7 @@ function M.fastwarp()
       utils.setcursor(matching_pair_pos)
     end
     return
-  elseif conf.hopword and next_pair and next_pair.type~=1 then
+  elseif next_pair and next_pair.type~=1 then
     local match=vim.fn.match(line:sub(col+1),[[\<.\{-}\>\zs]])
     if match~=-1 then
       local end_next_word=match+col
