@@ -35,7 +35,7 @@
 + [ ] remove the ambiguous pair when filled `"|abc" > BS > |abc`
 + [ ] remove the both newline in multiline pair `[\n|\n] > BS > [|]`
 + [ ] make it have the ability to use extensions somehow
-# other
+# other mappings
 + [x] space `[|] > SP > [ | ]`
 + [x] smart space `[|text] > SP > [ |text ]`
 + [x] normal fastwarp `{}|[] > <A-e> > {[]|}`
@@ -44,12 +44,65 @@
 + [x] normal fastwarp `{foo|}, > <A-e> > {foo,|}`
 + [ ] normal fastwarp `{foo|},(bar) > <A-e> > {foo,(bar)|}`
 + [ ] normal fastwarp `{(|),},bar > <A-e> > {(,|)},bar`
-+ [ ] one char fastwarp `(foo|),+ > <A-l> > (foo,|)+`
++ [ ] one char fastwarp `(foo|),, > <A-l> > (foo,|),`
 + [ ] fastwarp WORD `<A-E>`
-+ [ ] fastwarp at `$` `<A-$>`
++ [ ] fastwarp end  `<A-$>`
++ [ ] smart fastwarp end `(|)foo,bar,` > `<A-$>` > `(foo,bar|),`
 + [ ] norma fastwarp multi line
-+ [ ] dot repeat?
 + [ ] hop style fastwarp
 + [ ] `[{"| > <A-k> > [{""}]`
 + [ ] reverse fastwarp
 + [ ] make it have the ability to use extensions somehow
++ [ ] makdown don't add space `+ [|]` > `+ [ |]`
+# filters
++ [x] only filter inside or outside of string
++ [x] user defined rules
++ [x] filetype
++ [x] multiline mode with the indentation determening the block size
++ [x] disable for surtent cmdlinetypes
++ [x] treesitter integration for special blocks (aka strings)
++ [ ] only filter inside or outside of comments
++ [ ] only filter inside or outside of other blocks
++ [ ] user defined blocks
++ [ ] multiline as one
+# inserting
++ [x] dont add pair `'` if previous is alphanumeric
++ [x] dont complete when previous is \ in string? `\| > [ > \[`
++ [x] `'a|b' > ' > 'a'|'b'`
++ [x] `f > ' > f''`
++ [x] `[[|] > ] > [[]|] and not [[]|`
++ [x] dont add pair if next is alphanumeric
++ [x] add the parens att end when logical `|"a" > [ > ["a"|]`
++ [x] auto escape extend in string?`'\|a' > ' > '\'|\'a'`
++ [x] dont add pair `'` in lisp
++ [x] lisp smart pair `"|" > ' > "'|'"`
++ [x] quick hop end `[{|}] > ] > [{}]|`
++ [x] auto goto end if only space or newline `[text|  ] > ] > [text  ]|`
++ [x] smart add `()|) > ) ())|)`
++ [ ] auto goto end `[te|xt] > ] > [text]|`
++ [ ] auto skip multicharacter pair `/*|*/ > * > /**/|`
++ [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
++ [ ] open multicharacter-pair detector
++ [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|`
++ [ ] `[{| > ] > [{}]|`
++ [ ] add the parens att end when logical `|{a} > [ > [|{a}]`
+# pairs
++ [x] multicharacter pair `py ''' and md ````
++ [x] comment pairs `/*|*/`
++ [x] nonsymetrical comment pairs `<!--|-->`
++ [x] multicharacter pair with word delimiter `aAND ~= AND`
++ [ ] other keywords `if ... end`?
++ [ ] html tag suport
++ [ ] html blacklist sertent tags
++ [ ] regex/wildcard multicharacter pair suport
++ [ ] with random text inbetween `if TEXT ... end`?
+# other
++ [x] command-line integration
++ [x] make everything optional
++ [x] fix bug which happens when nvim is booted up
++ [ ] map repeating `vim.v.count` (maybe by making mappings {expr=true})
++ [ ] testing
++ [ ] terminal mode integration
++ [ ] replace mode integration
++ [ ] better string filtering `'foo'|` > `'\1'|` and not `\1|`
++ [ ] dot repeat?

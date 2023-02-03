@@ -1,0 +1,13 @@
+{
+  cmdmode = false,
+  col = 13,
+  extra = {},
+  key = ")",
+  line = "+ [ ] ())))))",
+  linenr = 48,
+  pair = "(",
+  paire = ")",
+  type = 2,
+  wcol = 13,
+  wline = "+ [ ] ())))))"
+}
