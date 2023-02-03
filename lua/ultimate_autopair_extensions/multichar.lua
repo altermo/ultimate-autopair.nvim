@@ -3,7 +3,7 @@ return {
         if o.cmdmode then return end
         for newkey,opt in pairs(gmem) do
             local bool=#newkey>1 and opt.type~=2
-            if bool and opt.ext.filetype and #opt.ext.filetype~=0 then
+            if bool and opt.ext.filetype and vim.tbl_count(opt.ext.filetype)~=0 then
                 bool=opt.ext.filetype[vim.o.filetype]
             end
             if bool and opt.ext.rules and vim.tbl_count(opt.ext.rules)~=0 then
