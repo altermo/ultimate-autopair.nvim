@@ -32,6 +32,14 @@ local function fastwarp_end(line,col,next_char)
   utils.setcursor(#line)
   return true
 end
+local function fastwarp_next_to_pair(line,col,i,char,next_char)
+  if line:sub(col+1,col+1)==char then
+    return
+  end
+  utils.setline(line:sub(1,col-1)..line:sub(col+1,i-1)..next_char..line:sub(i))
+  utils.setcursor(i-1)
+  return true
+end
 function M.fastwarp()
   local line=utils.getline()
   local col=utils.getcol()
@@ -40,8 +48,12 @@ function M.fastwarp()
   if next_pair then
     for i=col+1,#line do
       local char=line:sub(i,i)
-      if mem.mem[char] then
+      if mem.mem[char] and mem.mem[char].type~=2 then
         if fastwarp_over_pair(line,col,i,next_char,char) then
+          return
+        end
+      elseif mem.mem[char] and mem.mem[char].type==2 then
+        if fastwarp_next_to_pair(line,col,i,char,next_char) then
           return
         end
       elseif char:match('%a') then

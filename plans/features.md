@@ -42,8 +42,8 @@
 + [x] normal fastwarp `{}|foo > <A-e> > {foo|}`
 + [x] normal fastwarp `{foo|},bar > <A-e> > {foo,bar|}`
 + [x] normal fastwarp `{foo|}, > <A-e> > {foo,|}`
-+ [ ] normal fastwarp `{foo|},(bar) > <A-e> > {foo,(bar)|}`
-+ [ ] normal fastwarp `{(|),},bar > <A-e> > {(,|)},bar`
++ [x] normal fastwarp `{foo|},(bar) > <A-e> > {foo,(bar)|}`
++ [x] normal fastwarp `{(|),},bar > <A-e> > {(,|)},bar`
 + [ ] one char fastwarp `(foo|),, > <A-l> > (foo,|),`
 + [ ] fastwarp WORD `<A-E>`
 + [ ] fastwarp end  `<A-$>`
