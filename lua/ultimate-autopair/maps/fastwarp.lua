@@ -24,6 +24,7 @@ function M.fastwarp()
       utils.setline(line:sub(1,col-1)..line:sub(col+1,matching_pair_pos)..next_char..line:sub(matching_pair_pos+1))
       utils.setcursor(matching_pair_pos)
     end
+    return
   elseif conf.hopword and next_pair and next_pair.type~=1 then
     local match=vim.fn.match(line:sub(col+1),[[\<.\{-}\>\zs]])
     --TODO if ( before word then fastwarp over pair and not word
@@ -36,6 +37,7 @@ function M.fastwarp()
       utils.setline(line:sub(1,col-1)..line:sub(col+1,end_next_word)..next_char..line:sub(end_next_word+1))
       utils.setcursor(end_next_word)
     end
+    return
   end
   if type(conf.fallback)=='function' then
     conf.fallback()

@@ -75,6 +75,7 @@ function M.backspace()
       end
       if bool and line:sub(col-#newkey,col-1)==newkey then
         utils.delete(line,col,#newkey,#newkey)
+        return
       end
     end
   end

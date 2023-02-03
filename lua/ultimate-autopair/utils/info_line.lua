@@ -1,5 +1,5 @@
 local M={}
-function M.count_pair(pair,paire,line,cols,cole,escape,Icount)
+function M.count_pair(pair,paire,line,cols,cole,ret_pos,Icount)
     local count=Icount or 0
     for i=cole,cols,-1 do
         local char=line:sub(i,i)
@@ -8,16 +8,16 @@ function M.count_pair(pair,paire,line,cols,cole,escape,Icount)
         elseif char==paire then
             count=count+1
         end
-        if escape and count==0 then
+        if ret_pos and count==0 then
             return i
         end
         if count<0 then
             count=0
         end
     end
-    return not escape and count
+    return not ret_pos and count
 end
-function M.count_paire(pair,paire,line,cols,cole,escape,Icount)
+function M.count_paire(pair,paire,line,cols,cole,ret_pos,Icount)
     local count=Icount or 0
     for i=cols,cole do
         local char=line:sub(i,i)
@@ -26,14 +26,14 @@ function M.count_paire(pair,paire,line,cols,cole,escape,Icount)
         elseif char==pair then
             count=count+1
         end
-        if escape and count==0 then
+        if ret_pos and count==0 then
             return i
         end
         if count<0 then
             count=0
         end
     end
-    return not escape and count
+    return not ret_pos and count
 end
 function M.count_ambigious_pair(pair,line,cols,cole,Icount)
     local count=Icount or 0
