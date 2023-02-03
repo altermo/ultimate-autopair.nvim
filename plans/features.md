@@ -1,108 +1,108 @@
-#R
-+ [] port
-+ [] to d line d b `{|} > R > {\\|\}`
-+ [] pect e tation vel
-+ [] to d ir `{| > R > {\|\}`
-+ [] ke back vior gable
-+ [] to d haracter (down de ock) `'''xt|''' > R > '''xt\\|\'''`)
-+ [] to d haracter irs `en| > R > en\|\nd`
-+ [] omplete ration
-+ [ ] to d en f xt `{c|} > R > {c\|\}`
-+ [ ] nt d haracter irs `en|\nd > R > en\|\nd`
-+ [ ] to d en f xt `(|c) > R > (\|c\)`
-+ [ ] to d irs `({| > R > ({\|\})`
-+ [ ] ave ke tjoin
-+ [ ] to d ; t e d f } n  en line
-+ [ ] haracter ir t n ing/her de
-+ [ ] ke t ve e lity o e nsions ehow
-# S
-+ [] ort
-+ [] ove e ir `[|] > S > |`
-+ [] ove e ir en ir led `[|c] > S > |c`
-+ [] ove e ir en ir pty `()| > S > |`
-+ [] nt ove ir en use t ance `[[|] > S > [|]`
-+ [] ke back vior gable
-+ [] ove e ace n e ir `[ | ] > S > [|]`
-+ [] ove e ir en haracter ir `/*|*/ > S > |`
-+ [ ] ter ing `'"'"|" > S > '"'|`
-+ [ ] ove e ir en haracter ir pty `/**/| > S > |`
-+ [ ] ove e ir en haracter ir led `f ol en |de d > S > |de`
-+ [ ] ove e lanced ace n e ir `[  | ] > S > [ | ]`
-+ [ ] ove e lanced ace n e ir `[ |  ] > S > [ | ]`
-+ [ ] ove e lanced ace n e ir `[  |] > S > [|]`
-+ [ ] ove e ir en ir th ace `[ ]| > S > |`
-+ [ ] ove e ace en ove ir `[| xt ] > S > |xt`
-+ [ ] ove e guous ir en led `"|c" > S > |c`
-+ [ ] ove e th line n iline ir `[\|\] > S > [|]`
-+ [ ] ke t ve e lity o e nsions ehow
-# her ings
-+ [] ace `[|] > P > [ | ]`
-+ [] art ace `[|xt] > P > [ |xt ]`
-+ [] mal warp `{}|[] > <-> > {[]|}`
-+ [] mal warp `{}|o > <-> > {o|}`
-+ [] mal warp `{o|},r > <-> > {o,r|}`
-+ [] mal warp `{o|}, > <-> > {o,|}`
-+ [ ] mal warp `{o|},(r) > <-> > {o,(r)|}`
-+ [ ] mal warp `{(|),},r > <-> > {(,|)},r`
-+ [ ] e ar warp `(o|),, > <-> > (o,|),`
-+ [ ] warp RD `<->`
-+ [ ] warp d  `<-$>`
-+ [ ] art warp d `(|)o,r,` > `<-$>` > `(o,r|),`
-+ [ ] rma warp lti ne
-+ [ ] p yle warp
-+ [ ] `[{"| > <-> > [{""}]`
-+ [ ] erse warp
-+ [ ] ke t ve e lity o e nsions ehow
-+ [ ] down n' d ace `+ [|]` > `+ [ |]`
-# ters
-+ [] ly ter ide r side f ing
-+ [] er ined les
-+ [] type
-+ [] iline de th e tation mening e ock ze
-+ [] able r tent netypes
-+ [] sitter ration r cial cks (a ings)
-+ [ ] ly ter ide r side f ents
-+ [ ] ly ter ide r side f her cks
-+ [ ] er ined cks
-+ [ ] iline s e
-# rting
-+ [] nt d ir `'` f ious s numeric
-+ [] nt lete en ious s \ n ing? `\| > [ > \[`
-+ [] `'|' > ' > ''|''`
-+ [] ` > ' > ''`
-+ [] `[[|] > ] > [[]|] d t [[]|`
-+ [] nt d ir f xt s numeric
-+ [] d e ens t d en ical `|"" > [ > [""|]`
-+ [] to ape end n ing?`'\|' > ' > '\'|\''`
-+ [] nt d ir `'` n sp
-+ [] sp art ir `"|" > ' > "'|'"`
-+ [] ick p d `[{|}] > ] > [{}]|`
-+ [] to to d f ly ace r line `[xt|  ] > ] > [xt  ]|`
-+ [] art d `()|) > ) ())|)`
-+ [ ] to to d `[e|t] > ] > [xt]|`
-+ [ ] to ip haracter ir `/*|*/ > * > /**/|`
-+ [ ] to to d f ly ace d ove `[xt|  ] > ] > [xt]|`
-+ [ ] en haracter-ir ctor
-+ [ ] to to d f ly line d ove `[\\|\] > ] > [\]|`
+# CR
++ [x] support
++ [x] auto add newline and tab `{|} > CR > {\n\t|\n}`
++ [x] respect the indentation level
++ [x] auto add pair `{| > CR > {\n|\n}`
++ [x] make falback behavior changable
++ [x] auto add multicharacter (markdown code block) `'''text|''' > CR > '''text\n\t|\n'''`)
++ [x] auto add multicharacter pairs `then| > CR > then\n|\nend`
++ [x] autocomplete integration
++ [ ] auto add even if text `{abc|} > CR > {abc\n|\n}`
++ [ ] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
++ [ ] auto add even if text `(|abc) > CR > (\n|abc\n)`
++ [ ] auto add pairs `({| > CR > ({\n|\n})`
++ [ ] behave like splitjoin
++ [ ] auto add ; att the end of } in c when newline
++ [ ] multicharacter pair not in string/other node
++ [ ] make it have the ability to use extensions somehow
+# BS
++ [x] suport
++ [x] remove the pair `[|] > BS > |`
++ [x] remove the pair when pair filled `[|abc] > BS > |abc`
++ [x] remove the pair when pair empty `()| > BS > |`
++ [x] dont remove pair when cause not balance `[[|] > BS > [|]`
++ [x] make falback behavior changable
++ [x] remove the space in the pair `[ | ] > BS > [|]`
++ [x] remove the pair when multicharacter pair `/*|*/ > BS > |`
++ [ ] filter string `'"'"|" > BS > '"'|`
++ [ ] remove the pair when multicharacter pair empty `/**/| > BS > |`
++ [ ] remove the pair when multicharacter pair filled `if bool then |code end > BS > |code`
++ [ ] remove the unbalanced space in the pair `[  | ] > BS > [ | ]`
++ [ ] remove the unbalanced space in the pair `[ |  ] > BS > [ | ]`
++ [ ] remove the unbalanced space in the pair `[  |] > BS > [|]`
++ [ ] remove the pair when pair with space `[ ]| > BS > |`
++ [ ] remove the space when remove pair `[| text ] > BS > |text`
++ [ ] remove the ambiguous pair when filled `"|abc" > BS > |abc`
++ [ ] remove the both newline in multiline pair `[\n|\n] > BS > [|]`
++ [ ] make it have the ability to use extensions somehow
+# other mappings
++ [x] space `[|] > SP > [ | ]`
++ [x] smart space `[|text] > SP > [ |text ]`
++ [x] normal fastwarp `{}|[] > <A-e> > {[]|}`
++ [x] normal fastwarp `{}|foo > <A-e> > {foo|}`
++ [x] normal fastwarp `{foo|},bar > <A-e> > {foo,bar|}`
++ [x] normal fastwarp `{foo|}, > <A-e> > {foo,|}`
++ [ ] normal fastwarp `{foo|},(bar) > <A-e> > {foo,(bar)|}`
++ [ ] normal fastwarp `{(|),},bar > <A-e> > {(,|)},bar`
++ [ ] one char fastwarp `(foo|),, > <A-l> > (foo,|),`
++ [ ] fastwarp WORD `<A-E>`
++ [ ] fastwarp end  `<A-$>`
++ [ ] smart fastwarp end `(|)foo,bar,` > `<A-$>` > `(foo,bar|),`
++ [ ] norma fastwarp multi line
++ [ ] hop style fastwarp
++ [ ] `[{"| > <A-k> > [{""}]`
++ [ ] reverse fastwarp
++ [ ] make it have the ability to use extensions somehow
++ [ ] makdown don't add space `+ [|]` > `+ [ |]`
+# filters
++ [x] only filter inside or outside of string
++ [x] user defined rules
++ [x] filetype
++ [x] multiline mode with the indentation determening the block size
++ [x] disable for surtent cmdlinetypes
++ [x] treesitter integration for special blocks (aka strings)
++ [ ] only filter inside or outside of comments
++ [ ] only filter inside or outside of other blocks
++ [ ] user defined blocks
++ [ ] multiline as one
+# inserting
++ [x] dont add pair `'` if previous is alphanumeric
++ [x] dont complete when previous is \ in string? `\| > [ > \[`
++ [x] `'a|b' > ' > 'a'|'b'`
++ [x] `f > ' > f''`
++ [x] `[[|] > ] > [[]|] and not [[]|`
++ [x] dont add pair if next is alphanumeric
++ [x] add the parens att end when logical `|"a" > [ > ["a"|]`
++ [x] auto escape extend in string?`'\|a' > ' > '\'|\'a'`
++ [x] dont add pair `'` in lisp
++ [x] lisp smart pair `"|" > ' > "'|'"`
++ [x] quick hop end `[{|}] > ] > [{}]|`
++ [x] auto goto end if only space or newline `[text|  ] > ] > [text  ]|`
++ [x] smart add `()|) > ) ())|)`
++ [ ] auto goto end `[te|xt] > ] > [text]|`
++ [ ] auto skip multicharacter pair `/*|*/ > * > /**/|`
++ [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
++ [ ] open multicharacter-pair detector
++ [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|`
 + [ ] `[{| > ] > [{}]|`
-+ [ ] d e ens t d en ical `|{} > [ > [|{}]`
-# irs
-+ [] haracter ir `y ''' d d ````
-+ [] ment irs `/*|*/`
-+ [] etrical ment irs `<!--|-->`
-+ [] haracter ir th rd miter `ND ~= D`
-+ [ ] her ords `f ... d`?
-+ [ ] ml g ort
-+ [ ] ml klist tent gs
-+ [ ] gex/card haracter ir ort
-+ [ ] th dom xt tween `f XT ... d`?
-# her
-+ [] mand-ne ration
-+ [] ke ything onal
-+ [] x g ich pens en im s ted p
-+ [ ] p ating `m..unt` (ybe y ing ings {pr=ue})
-+ [ ] ting
-+ [ ] inal de ration
-+ [ ] lace de ration
-+ [ ] ter ing ering `'o'|` > `'\1'|` d t `\1|`
-+ [ ] t eat?
++ [ ] add the parens att end when logical `|{a} > [ > [|{a}]`
+# pairs
++ [x] multicharacter pair `py ''' and md ````
++ [x] comment pairs `/*|*/`
++ [x] nonsymetrical comment pairs `<!--|-->`
++ [x] multicharacter pair with word delimiter `aAND ~= AND`
++ [ ] other keywords `if ... end`?
++ [ ] html tag suport
++ [ ] html blacklist sertent tags
++ [ ] regex/wildcard multicharacter pair suport
++ [ ] with random text inbetween `if TEXT ... end`?
+# other
++ [x] command-line integration
++ [x] make everything optional
++ [x] fix bug which happens when nvim is booted up
++ [ ] map repeating `vim.v.count` (maybe by making mappings {expr=true})
++ [ ] testing
++ [ ] terminal mode integration
++ [ ] replace mode integration
++ [ ] better string filtering `'foo'|` > `'\1'|` and not `\1|`
++ [ ] dot repeat?
