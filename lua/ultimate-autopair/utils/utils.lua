@@ -66,10 +66,10 @@ function M.appendline(line,conf)
     local cursor=conf.cursor
     local linenr=conf.linenr or M.getlinenr()
     if vim.o.expandtab then
-        line=line..vim.fn['repeat'](' ',indent)
+        line=vim.fn['repeat'](' ',indent)..line
     else
-        line=line..vim.fn['repeat']('\t',indent/vim.fn.shiftwidth())
-        line=line..vim.fn['repeat'](' ',indent%vim.fn.shiftwidth())
+        line=vim.fn['repeat']('\t',indent/vim.fn.shiftwidth())..line
+        line=vim.fn['repeat'](' ',indent%vim.fn.shiftwidth())..line
     end
     vim.api.nvim_buf_set_lines(0,linenr,linenr,false,{line})
     if cursor=='last' then

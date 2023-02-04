@@ -23,6 +23,8 @@ local function newline_multichar(line,indent,indentsize)
         if bool then
           if pair.pair or pair.next then
             utils.setline(line:sub(0,-offset-1))
+          else
+            --TODO: check if current indent block contains paire, then return
           end
           utils.appendline('',{indent=indent+indentsize,cursor='last'})
           utils.appendline(pair[2],{indent=indent})

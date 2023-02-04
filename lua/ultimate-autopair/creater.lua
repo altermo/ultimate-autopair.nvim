@@ -17,11 +17,11 @@ function M.create_function(key,filters)
         utils.append(key)
     end
 end
-function M.create_map(pair,paire,opt,typ)
+function M.create_map(pair,paire,opt,typ,cmdmode)
     local config=require('ultimate-autopair.config')
     local key=(typ==2 and paire or pair)
     mem.addpair(key,pair,paire,typ)
-    for name,extension in pairs(mem.extensions)do
+    for name,extension in pairs(mem.extensions) do
         if extension.init then
             mem.addext(key,name)
             extension.init(opt,mem.mem[key].ext[name],extension.conf,mem.mem)
@@ -29,9 +29,12 @@ function M.create_map(pair,paire,opt,typ)
     end
     local char=key:sub(-1,-1)
     if not mem.mapped[char] then
-        vim.keymap.set('i',char,M.create_function(char,mem.filters),config.conf.mapopt)
-        vim.keymap.set('c',char,M.create_function(char,mem.filters),config.conf.mapopt)
-        mem.mapped[char]=true
+        local func=M.create_function(char,mem.filters)
+        vim.keymap.set('i',char,func,config.conf.mapopt)
+        if cmdmode then
+            vim.keymap.set('c',char,func,config.conf.mapopt)
+        end
+        mem.mapped[char]=func
     end
 end
 return M
