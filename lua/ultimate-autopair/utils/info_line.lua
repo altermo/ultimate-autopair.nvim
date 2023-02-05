@@ -108,4 +108,58 @@ end
 function M.findepaire(line,col,pair,paire)
     return M.count_paire(pair,paire,line,col,#line,true,1)
 end
+function M.filter_string(line,col,linenr,notree)
+    linenr=linenr or vim.fn.line('.')-1
+    local instring,strbeg,strend=M.in_string(line,col,linenr,notree)
+    if instring then
+        return line:sub(strbeg+0,strend),col-strbeg+1
+    else
+        local newline=''
+        local parser=pcall(vim.treesitter.get_parser)
+        if not notree and parser then
+            for i=1,#line do
+                local err,node=pcall(vim.treesitter.get_node_at_pos,0,linenr-1,i-1,{})
+                if i==col then
+                    col=#newline+1
+                end
+                if err and node:type()~='string' then
+                    newline=newline..line:sub(i,i)
+                elseif newline:sub(-1)~='\1' then
+                    newline=newline..'\1'
+                end
+            end
+        else
+            local escape=false
+            for i=1,#line do
+                local char=line:sub(i,i)
+                if i==col then
+                    col=#newline+1
+                end
+                if not instring then
+                    newline=newline..char
+                end
+                if escape then
+                    escape=false
+                elseif char=='"' then
+                    if char==instring then
+                        newline=newline..char
+                        instring=nil
+                    else
+                        instring='"'
+                    end
+                elseif char=="'" then
+                    if char==instring then
+                        newline=newline..char
+                        instring=nil
+                    else
+                        instring="'"
+                    end
+                elseif char=='\\' then
+                    escape=true
+                end
+            end
+        end
+        return newline,col
+    end
+end
 return M

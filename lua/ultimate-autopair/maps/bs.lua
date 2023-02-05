@@ -71,8 +71,10 @@ local function delete_multichar(line,col)
   end
 end
 function M.backspace()
-  local line=utils.getline()
-  local col=utils.getcol()
+  local wline=utils.getline()
+  local wcol=utils.getcol()
+  --local line,col=info_line.filter_string(wline,wcol,nil,conf.notree)
+  local line,col=wline,wcol
   local prev_char=line:sub(col-1,col-1)
   local next_char=line:sub(col,col)
   local prev_pair=mem.mem[prev_char]
