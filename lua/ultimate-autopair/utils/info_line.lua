@@ -109,7 +109,7 @@ function M.findepaire(line,col,pair,paire)
     return M.count_paire(pair,paire,line,col,#line,true,1)
 end
 function M.filter_string(line,col,linenr,notree)
-    linenr=linenr or vim.fn.line('.')-1
+    linenr=linenr or vim.fn.line('.')
     local instring,strbeg,strend=M.in_string(line,col,linenr,notree)
     if instring then
         return line:sub(strbeg+0,strend),col-strbeg+1
@@ -122,7 +122,7 @@ function M.filter_string(line,col,linenr,notree)
                 if i==col then
                     col=#newline+1
                 end
-                if err and node:type()~='string' then
+                if not err or node:type()~='string' then
                     newline=newline..line:sub(i,i)
                 elseif newline:sub(-1)~='\1' then
                     newline=newline..'\1'
