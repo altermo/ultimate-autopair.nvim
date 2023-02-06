@@ -50,12 +50,14 @@ function M.in_string(line,col,linenr,notree)
     local escape=false
     local parser=pcall(vim.treesitter.get_parser)
     if parser and not notree then
-        local err,node=pcall(vim.treesitter.get_node_at_pos,0,linenr or vim.fn.line('.')-1,col-1,{})
-        if err and node and node:type()=='string' then
-            local _,column=node:start()
-            if column+1~=col then
-                local _,strbeg,_,strend=node:range()
-                return true,strbeg+1,strend
+        local err,node=pcall(vim.treesitter.get_node_at_pos,0,linenr-1,col-1,{})
+        if err then
+            if node and node:type()=='string' then
+                local _,column=node:start()
+                if column+1~=col then
+                    local _,strbeg,_,strend=node:range()
+                    return true,strbeg+1,strend
+                end
             end
             return
         end
@@ -109,7 +111,6 @@ function M.findepaire(line,col,pair,paire)
     return M.count_paire(pair,paire,line,col,#line,true,1)
 end
 function M.filter_string(line,col,linenr,notree)
-    linenr=linenr or vim.fn.line('.')
     local instring,strbeg,strend=M.in_string(line,col,linenr,notree)
     if instring then
         return line:sub(strbeg+0,strend),col-strbeg+1
