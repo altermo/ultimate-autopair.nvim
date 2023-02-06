@@ -35,6 +35,12 @@ function M.check_rule(rule,o)
         return o.line:sub(o.col-(args[2] or 1),o.col-(args[2] or 1))==args[1]
     elseif cmd=='filetype' then
         return vim.tbl_contains(args,vim.o.filetype)
+    elseif cmd=='option' then
+        if #args==1 then
+            return vim.o[args[1]]
+        else
+            return vim.o[args[1]]==args[2]
+        end
     elseif cmd=='call' then
         return args[1](o,unpack(args,2))
     elseif cmd=='instring' then

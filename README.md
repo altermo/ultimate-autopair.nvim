@@ -63,7 +63,7 @@ extensions={
     {'fly',{')','}',']',' '}},
 },
 {'(',')'},
-{"'","'",rules={{'when',{'filetype','lisp'},{'instring'}}}},
+{"'","'",rules={{'when',{'option','lisp'},{'instring'}}}},
 rules={ --only runs if the extension rules is loaded
     {[[\']],[[\']],rules={{'not',{'or',{'next',"'"},{'previous','\\',2}}}}},
     {[[\"]],[[\"]],rules={{'not',{'or',{'next','"'},{'previous','\\',2}}}}},

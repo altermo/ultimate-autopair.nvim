@@ -7,6 +7,7 @@
 + [x] auto add multicharacter (markdown code block) `'''text|''' > CR > '''text\n\t|\n'''`)
 + [x] auto add multicharacter pairs `then| > CR > then\n|\nend`
 + [x] autocomplete integration
++ [ ] auto add pairs `({|}) > CR > ({\n|\n})`
 + [ ] auto add even if text `{abc|} > CR > {abc\n|\n}`
 + [ ] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
 + [ ] auto add even if text `(|abc) > CR > (\n|abc\n)`

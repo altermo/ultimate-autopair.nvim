@@ -27,7 +27,7 @@ function M.space()
   if type(conf.fallback)=='function' then
     conf.fallback()
   else
-    vim.api.nvim_feedkeys(conf.fallback or ' ','n',true)
+    vim.api.nvim_feedkeys(conf.fallback or ' ','n',true)
   end
 end
 function M.setup()

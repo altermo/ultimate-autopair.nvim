@@ -66,7 +66,7 @@ M.default_config={
     {'(',')'},
     {'{','}'},
     {'"','"'},
-    {"'","'",rules={{'when',{'filetype','lisp'},{'instring'}}}},
+    {"'","'",rules={{'when',{'option','lisp'},{'instring'}}}},
     {'`','`'},
     rules={
         {[[\']],[[\']],rules={{'not',{'or',{'next',"'"},{'previous','\\',2}}}}},
