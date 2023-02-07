@@ -120,12 +120,9 @@ function M.filter_string(line,col,linenr,notree)
         if not notree and parser then
             for i=1,#line do
                 local err,node=pcall(vim.treesitter.get_node_at_pos,0,linenr-1,i-1,{})
-                if i==col then
-                    col=#newline+1
-                end
                 if not err or node:type()~='string' then
                     newline=newline..line:sub(i,i)
-                elseif newline:sub(-1)~='\1' then
+                else
                     newline=newline..'\1'
                 end
             end
@@ -140,6 +137,8 @@ function M.filter_string(line,col,linenr,notree)
                     if char==instring and not escape then
                         newline=newline..char
                         instring=nil
+                    else
+                        newline=newline..'\1'
                     end
                     if escape then escape=false end
                 elseif char=='"' or char=="'" and not escape then

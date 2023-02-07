@@ -74,6 +74,7 @@ function M.backspace()
   local wline=utils.getline()
   local wcol=utils.getcol()
   --local line,col=info_line.filter_string(wline,wcol,nil,conf.notree)
+  --requires whole file refactoring
   local line,col=wline,wcol
   local prev_char=line:sub(col-1,col-1)
   local next_char=line:sub(col,col)
