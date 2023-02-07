@@ -16,6 +16,7 @@
 + [ ] auto add ; att the end of } in c when newline
 + [ ] multicharacter pair not in string/other node
 + [ ] make it have the ability to use extensions somehow
++ [ ] make key spesific options (example: <A-o>={fallback='<C-o>o'} <CR>={fallback='<CR>'})
 # BS
 + [x] suport
 + [x] remove the pair `[|] > BS > |`
@@ -36,6 +37,7 @@
 + [ ] remove the ambiguous pair when filled `"|abc" > BS > |abc`
 + [ ] remove the both newline in multiline pair `[\n|\n] > BS > [|]`
 + [ ] make it have the ability to use extensions somehow
++ [ ] make key spesific options
 # other mappings
 + [x] space `[|] > SP > [ | ]`
 + [x] smart space `[|text] > SP > [ |text ]`
@@ -55,6 +57,7 @@
 + [ ] reverse fastwarp
 + [ ] make it have the ability to use extensions somehow
 + [ ] makdown don't add space `+ [|]` > `+ [ |]`
++ [ ] make key spesific options
 # filters
 + [x] only filter inside or outside of string
 + [x] user defined rules

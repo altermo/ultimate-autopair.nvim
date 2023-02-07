@@ -136,27 +136,21 @@ function M.filter_string(line,col,linenr,notree)
                 if i==col then
                     col=#newline+1
                 end
-                if not instring then
+                if instring then
+                    if char==instring and not escape then
+                        newline=newline..char
+                        instring=nil
+                    end
+                    if escape then escape=false end
+                elseif char=='"' or char=="'" and not escape then
+                    instring=char
                     newline=newline..char
-                end
-                if escape then
-                    escape=false
-                elseif char=='"' then
-                    if char==instring then
-                        newline=newline..char
-                        instring=nil
-                    else
-                        instring='"'
-                    end
-                elseif char=="'" then
-                    if char==instring then
-                        newline=newline..char
-                        instring=nil
-                    else
-                        instring="'"
-                    end
-                elseif char=='\\' then
+                elseif char=='\\' and not escape then
                     escape=true
+                    newline=newline..'\\'
+                else
+                    newline=newline..char
+                    if escape then escape=false end
                 end
             end
         end
