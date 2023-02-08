@@ -13,9 +13,7 @@ local function fastwarp_over_pair(line,col,i,next_char,char)
     matching_pair_pos=info_line.findepaire(line,i+1,char,pair.paire)
   end
   if matching_pair_pos then
-    utils.setline(line:sub(1,col-1)..line:sub(col+1,matching_pair_pos)..next_char..line:sub(matching_pair_pos+1))
-    utils.setcursor(matching_pair_pos)
-    return true
+    return utils.delete(0,1)..utils.movel(matching_pair_pos-col)..next_char..utils.moveh()
   end
 end
 local function fastwarp_over_word(line,col,i,next_char)
@@ -23,62 +21,55 @@ local function fastwarp_over_word(line,col,i,next_char)
   while line:sub(j,j):match('%a') do
     j=j+1
   end
-  utils.setline(line:sub(1,col-1)..line:sub(col+1,j-1)..next_char..line:sub(j))
-  utils.setcursor(j-1)
-  return true
+  return utils.delete(0,1)..utils.movel(j-col-1)..next_char..utils.moveh()
 end
-local function fastwarp_end(line,col,next_char)
-  utils.setline(line:sub(1,col-1)..line:sub(col+1)..next_char)
-  utils.setcursor(#line)
-  return true
+local function fastwarp_end(line,_,next_char)
+  return utils.delete(0,1)..utils.movel(#line)..next_char..utils.moveh()
 end
 local function fastwarp_next_to_pair(line,col,i,char,next_char)
   if line:sub(col+1,col+1)==char then
     return
   end
-  utils.setline(line:sub(1,col-1)..line:sub(col+1,i-1)..next_char..line:sub(i))
-  utils.setcursor(i-1)
-  return true
+  return utils.delete(0,1)..utils.movel(i-col)..next_char..utils.moveh()
 end
 function M.fastwarp()
   local line=utils.getline()
   local col=utils.getcol()
   local next_char=line:sub(col,col)
   local next_pair=mem.mem[next_char]
+  local key
   if next_pair then
     for i=col+1,#line do
       local char=line:sub(i,i)
       if mem.mem[char] and mem.mem[char].type~=2 then
-        if fastwarp_over_pair(line,col,i,next_char,char) then
-          return
-        end
+        key=fastwarp_over_pair(line,col,i,next_char,char)
       elseif mem.mem[char] and mem.mem[char].type==2 then
-        if fastwarp_next_to_pair(line,col,i,char,next_char) then
-          return
-        end
+        key=fastwarp_next_to_pair(line,col,i,char,next_char)
       elseif char:match('%a') then
-        if fastwarp_over_word(line,col,i,next_char) then
-          return
-        end
+        key=fastwarp_over_word(line,col,i,next_char)
+      end
+      if key then
+        break
       end
     end
-    if col~=#line then
-      if fastwarp_end(line,col,next_char) then
-        return
-      end
+    if not key and col~=#line then
+      key=fastwarp_end(line,col,next_char)
     end
   end
+  if key then
+    return key
+  end
   if type(conf.fallback)=='function' then
-    conf.fallback()
+    return conf.fallback()
   elseif conf.fallback then
-    vim.api.nvim_feedkeys(conf.fallback,'n',true)
+    return conf.fallback
   end
 end
 function M.setup()
   if conf.enable then
-    vim.keymap.set('i',conf.map,M.fastwarp,gconf.mapopt)
+    vim.keymap.set('i',conf.map,M.fastwarp,vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     if gconf.cmap and conf.cmap then
-      vim.keymap.set('c',conf.cmap,M.fastwarp,gconf.mapopt)
+      vim.keymap.set('c',conf.map,M.fastwarp,vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end
   end
 end

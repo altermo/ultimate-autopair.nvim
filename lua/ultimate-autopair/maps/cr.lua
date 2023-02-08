@@ -3,7 +3,7 @@ local gconf=require'ultimate-autopair.config'.conf
 local conf=gconf.cr or {}
 local utils=require'ultimate-autopair.utils.utils'
 local mem=require'ultimate-autopair.memory'
-local function newline_multichar(line,indent,indentsize)
+local function newline_multichar(line)
   for ft,list_of_pairs in pairs(conf.multichar) do
     if vim.o.filetype==ft then
       for _,pair in ipairs(list_of_pairs) do
@@ -21,14 +21,14 @@ local function newline_multichar(line,indent,indentsize)
           bool=pair.noalpha or not line:sub(-#pair[1]-1-offset,-#pair[1]-1-offset):match('%a')
         end
         if bool then
+          local ret=''
           if pair.pair or pair.next then
-            utils.setline(line:sub(0,-offset-1))
+            ret=ret..utils.delete(0,offset)
           else
             --TODO: check if current indent block contains paire, then return
           end
-          utils.appendline('',{indent=indent+indentsize,cursor='last'})
-          utils.appendline(pair[2],{indent=indent})
-          return true
+          vim.oprint(2)
+          return ret..'\r\r'..pair[2]..'<up><C-o>"_cc'
         end
       end
     end
@@ -41,32 +41,30 @@ function M.newline()
   local next_char=line:sub(col,col)
   local prev_pair=mem.mem[prev_char]
   local next_pair=mem.mem[next_char]
-  local linenr=utils.getlinenr()
-  local indent=utils.getindent(linenr)
-  local indentsize=utils.getindentsize()
+  local key
   if prev_pair and next_pair and prev_pair.paire==next_char and next_pair.pair==prev_char and col==#line then
-    utils.setline(utils.getline():sub(1,-2))
-    utils.appendline('',{indent=indent+indentsize,cursor='last'})
-    utils.appendline(next_char,{indent=indent})
-    return
+    key=utils.delete(0,1)..'\r\r'..next_char..'<up><C-o>"_cc'
   elseif conf.autoclose and prev_pair and prev_pair.type==1 and col-1==#line then
-    utils.appendline('',{indent=indent+indentsize,cursor='last'})
-    utils.appendline(prev_pair.paire,{indent=indent})
+    key='\r\r'..prev_pair.paire..'<up><C-o>"_cc'
     return
   elseif conf.multichar then
-    if newline_multichar(line,indent,indentsize) then
-      return
-    end
+    key=newline_multichar(line)
+  end
+  if key then
+    return key
   end
   if type(conf.fallback)=='function' then
-    conf.fallback()
+    return conf.fallback()
   else
-    vim.api.nvim_feedkeys(conf.fallback or '\x1d\r','n',true)
+    return conf.fallback or '\x1d\r'
   end
+end
+function M.cmpnewline()
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(M.newline(),true,true,true),'n',true)
 end
 function M.setup()
   if conf.enable then
-    vim.keymap.set('i','<cr>',M.newline,gconf.mapopt)
+    vim.keymap.set('i','<cr>',M.newline,vim.tbl_extend('error',gconf.mapopt,{expr=true}))
   end
 end
 return M
