@@ -59,8 +59,8 @@ M.default_config={
         'rules',
         'filetype',
         {'alpha',{before={"'"}}},
-        {'suround',{'"',"'"}}, --temperarly disabled TODO
-        {'fly',{')','}',']',' '}}, --temperarly disabled TODO
+        {'suround',{'"',"'"}},
+        {'fly',{')','}',']',' '}},
     },
     {'[',']'},
     {'(',')'},
