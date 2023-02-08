@@ -26,9 +26,13 @@ function M.gen_filters()
     M.filters=M._filters_add_defaults(filters)
 end
 function M.addpair(key,pair,paire,type)
-    M.mem[key]={pair=pair,paire=paire,type=type,ext={}}
+    if not M.mem[key] then
+        M.mem[key]={pair=pair,paire=paire,type=type,ext={}}
+    end
 end
 function M.addext(key,name)
-    M.mem[key].ext[name]={}
+    if not M.mem[key].ext[name] then
+        M.mem[key].ext[name]={}
+    end
 end
 return M

@@ -5,37 +5,38 @@ local mem=require'ultimate-autopair.memory'
 local utils=require'ultimate-autopair.utils.utils'
 local info_line=require'ultimate-autopair.utils.info_line'
 local open_pair=require'ultimate-autopair.utils.open_pair'
-local function delete_mid_pair(prev_pair,prev_char,next_char,line,col)
+local function delete_mid_pair(prev_pair,prev_char,next_char,line,col,wline,wcol)
   if prev_pair.type==3 then
     if not open_pair.open_pair_ambigous(prev_char,line) then
-      utils.delete(line,col,1,1)
+      utils.delete(wline,wcol,1,1)
       return true
     end
   elseif not open_pair.open_pair_before(prev_char,next_char,line,col) then
-    utils.delete(line,col,1,1)
+    utils.delete(wline,wcol,1,1)
     return true
   end
 end
-local function delete_prev_pair(prev_pair,prev_char,prev_2_char,line,col)
+local function delete_prev_pair(prev_pair,prev_char,prev_2_char,line,col,wline,wcol)
   if prev_pair.type==3 then
     if not open_pair.open_pair_ambigous(prev_char,line) then
-      utils.delete(line,col,2)
+      utils.delete(wline,wcol,2)
       return true
     end
   elseif not open_pair.open_paire_after(prev_2_char,prev_char,line,col) then
-    utils.delete(line,col,2)
+    utils.delete(wline,wcol,2)
     return true
   end
 end
-local function delete_overjump_pair(prev_pair,prev_char,line,col)
+local function delete_overjump_pair(prev_pair,prev_char,line,col,wline,wcol)
   local matching_pair_pos=info_line.findepaire(line,col,prev_char,prev_pair.paire)
   if matching_pair_pos then
-    utils.setline(line:sub(1,col-2)..line:sub(col,matching_pair_pos-1)..line:sub(matching_pair_pos+1))
+    local wmatching_pair_pos=matching_pair_pos-col+wcol
+    utils.setline(wline:sub(1,col-2)..wline:sub(col,wmatching_pair_pos-1)..wline:sub(wmatching_pair_pos+1))
     utils.moveh()
     return true
   end
 end
-local function delete_space(line,col)
+local function delete_space(line,col,wline,wcol)
   local newcol
   local char
   for i=col-2,1,-1 do
@@ -49,23 +50,25 @@ local function delete_space(line,col)
   if prev_n_pair and prev_n_pair.type==1 then
     local matching_pair_pos=info_line.findepaire(line,newcol-1,char,prev_n_pair.paire)
     if matching_pair_pos and col-newcol<matching_pair_pos-col and line:sub(matching_pair_pos-1,matching_pair_pos-1)==' ' then
-      utils.setline(line:sub(1,newcol-2)..line:sub(newcol,matching_pair_pos-2)..line:sub(matching_pair_pos))
+      local wmatching_pair_pos=matching_pair_pos-col+wcol
+      local wnewcol=newcol-col+wcol
+      utils.setline(wline:sub(1,wnewcol-2)..wline:sub(wnewcol,wmatching_pair_pos-2)..wline:sub(wmatching_pair_pos))
       utils.moveh()
       return true
     end
   end
 end
-local function delete_multichar(line,col)
+local function delete_multichar(line,col,wline,wcol)
   for newkey,opt in pairs(mem.mem) do
     local bool=#newkey>1 and opt.type~=2
     if bool and opt.ext.filetype and #opt.ext.filetype~=0 then
       bool=opt.ext.filetype[vim.o.filetype]
     end
-    if bool and vim.tbl_contains(mem.extensions.multichar.conf or {},newkey) then
+    if bool and opt.ext.alpha and vim.tbl_contains(opt.ext.alpha.before or {},newkey) then
       bool=not line:sub(col-#newkey-1,col-#newkey-1):match('%a')
     end
-    if bool and line:sub(col-#newkey,col-1)==newkey then
-      utils.delete(line,col,#newkey,#newkey)
+    if bool and line:sub(col-#newkey,col-1)==newkey and opt.paire==line:sub(col,col+#opt.paire-1) then
+      utils.delete(wline,wcol,#newkey-1,#newkey-1)
       return
     end
   end
@@ -73,20 +76,18 @@ end
 function M.backspace()
   local wline=utils.getline()
   local wcol=utils.getcol()
-  --local line,col=info_line.filter_string(wline,wcol,nil,conf.notree)
-  --requires whole file refactoring
-  local line,col=wline,wcol
+  local line,col=info_line.filter_string(wline,wcol,utils.getlinenr(),conf.notree)
   local prev_char=line:sub(col-1,col-1)
   local next_char=line:sub(col,col)
   local prev_pair=mem.mem[prev_char]
   local next_pair=mem.mem[next_char]
   if prev_pair and next_pair and prev_pair.paire==next_char and next_pair.pair==prev_char then
-    if delete_mid_pair(prev_pair,prev_char,next_char,line,col) then
+    if delete_mid_pair(prev_pair,prev_char,next_char,line,col,wline,wcol) then
       return
     end
   elseif conf.overjump and prev_pair and prev_pair.type==1 then
     if not open_pair.open_pair_before(prev_char,prev_pair.paire,line,col) then
-      if delete_overjump_pair(prev_pair,prev_char,line,col) then
+      if delete_overjump_pair(prev_pair,prev_char,line,col,wline,wcol) then
         return
       end
     end
@@ -94,16 +95,16 @@ function M.backspace()
     local prev_2_char=line:sub(col-2,col-2)
     local prev_2_pair=mem.mem[prev_2_char]
     if prev_2_pair and prev_2_pair.type~=2 and prev_2_pair.paire==prev_char then
-      if delete_prev_pair(prev_pair,prev_char,prev_2_char,line,col) then
+      if delete_prev_pair(prev_pair,prev_char,prev_2_char,line,col,wline,wcol) then
         return
       end
     end
   elseif conf.space and prev_char==' ' then
-    if delete_space(line,col) then
+    if delete_space(line,col,wline,wcol) then
       return
     end
   elseif conf.multichar and mem.extensions.multichar then
-    if delete_multichar(line,col) then
+    if delete_multichar(line,col,wline,wcol) then
       return
     end
   end

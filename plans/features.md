@@ -26,7 +26,7 @@
 + [x] make falback behavior changable
 + [x] remove the space in the pair `[ | ] > BS > [|]`
 + [x] remove the pair when multicharacter pair `/*|*/ > BS > |`
-+ [ ] filter string `'"'"|" > BS > '"'|`
++ [x] filter string `'"'"|" > BS > '"'|`
 + [ ] remove the pair when multicharacter pair empty `/**/| > BS > |`
 + [ ] remove the pair when multicharacter pair filled `if bool then |code end > BS > |code`
 + [ ] remove the unbalanced space in the pair `[  | ] > BS > [ | ]`
