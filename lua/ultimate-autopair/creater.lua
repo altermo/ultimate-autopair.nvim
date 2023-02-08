@@ -1,20 +1,19 @@
 local mem=require'ultimate-autopair.memory'
-local utils=require'ultimate-autopair.utils.utils'
 local M={}
 function M.create_function(key,filters)
     return function()
+        vim.api.nvim_feedkeys('\x1d','n',true)
         local H={}
         H.key=key
         for _,filter in ipairs(filters) do
-            local exit_status=filter.call(H,filter.conf,mem.mem[H.key] and mem.mem[H.key].ext[filter.name] or {},mem.mem)
-            if exit_status then
-                if exit_status==2 then
-                    utils.append(key)
-                end
-                return
+            local exit_key=filter.call(H,filter.conf,mem.mem[H.key] and mem.mem[H.key].ext[filter.name] or {},mem.mem)
+            if exit_key==2 then
+                return '\x1d'..key
+            elseif exit_key then
+                return '\x1d'..exit_key
             end
         end
-        utils.append(key)
+        return '\x1d'..key
     end
 end
 function M.create_map(pair,paire,opt,typ,cmdmode)
@@ -30,9 +29,9 @@ function M.create_map(pair,paire,opt,typ,cmdmode)
     local char=key:sub(-1,-1)
     if not mem.mapped[char] then
         local func=M.create_function(char,mem.filters)
-        vim.keymap.set('i',char,func,config.conf.mapopt)
+        vim.keymap.set('i',char,func,vim.tbl_extend('error',config.conf.mapopt,{expr=true}))
         if cmdmode then
-            vim.keymap.set('c',char,func,config.conf.mapopt)
+            vim.keymap.set('c',char,func,vim.tbl_extend('error',config.conf.mapopt,{expr=true}))
         end
         mem.mapped[char]=func
     end

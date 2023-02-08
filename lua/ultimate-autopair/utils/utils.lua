@@ -34,10 +34,10 @@ function M.setcursor(col,linenr)
     end
 end
 function M.movel(num)
-    M.setcursor(M.getcol()+(num or 1))
+    return vim.fn['repeat']('<right>',(num or 1))
 end
 function M.moveh(num)
-    M.setcursor(M.getcol()-(num or 1))
+    return vim.fn['repeat']('<left>',(num or 1))
 end
 function M.insert(text,line,col)
     line=line:sub(1,col-1)..text..line:sub(col)
@@ -56,9 +56,8 @@ end
 function M.getindentsize()
     return vim.fn.shiftwidth()
 end
-function M.delete(line,col,pre,pos)
-    M.moveh(pre)
-    M.setline(line:sub(1,col-(pre or 1)-1)..line:sub(col+(pos or 0)))
+function M.delete(pre,pos)
+    return vim.fn['repeat']('<bs>',pre or 1)..vim.fn['repeat']('<del>',pos or 0)
 end
 function M.appendline(line,conf)
     if M.incmd() then error() end

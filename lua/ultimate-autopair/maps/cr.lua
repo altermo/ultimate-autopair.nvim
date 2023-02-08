@@ -61,7 +61,7 @@ function M.newline()
   if type(conf.fallback)=='function' then
     conf.fallback()
   else
-    vim.api.nvim_feedkeys(conf.fallback or '\r','n',true)
+    vim.api.nvim_feedkeys(conf.fallback or '\x1d\r','n',true)
   end
 end
 function M.setup()

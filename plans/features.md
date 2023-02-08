@@ -110,3 +110,4 @@
 + [ ] replace mode integration
 + [ ] better string filtering `'foo'|` > `'\1'|` and not `\1|`
 + [ ] dot repeat?
++ [ ] abbreviation suport

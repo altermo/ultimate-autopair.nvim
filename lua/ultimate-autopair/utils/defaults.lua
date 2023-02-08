@@ -5,7 +5,7 @@ function M.default_end_filter(o,_,_,gmem)
         return 2
     end
     local add_pair=require'ultimate-autopair.utils.add_pair'
-    return add_pair.pair(o.pair,o.paire,o.line,o.col,o.wline,o.wcol,o.type)
+    return add_pair.pair(o.pair,o.paire,o.line,o.col,o.type)
 end
 function M.default_beg_filter(o,_,_,gmem)
     o.extra={}
@@ -59,8 +59,8 @@ M.default_config={
         'rules',
         'filetype',
         {'alpha',{before={"'"}}},
-        {'suround',{'"',"'"}},
-        {'fly',{')','}',']',' '}},
+        {'suround',{'"',"'"}}, --temperarly disabled TODO
+        {'fly',{')','}',']',' '}}, --temperarly disabled TODO
     },
     {'[',']'},
     {'(',')'},
