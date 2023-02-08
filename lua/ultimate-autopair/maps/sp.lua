@@ -20,8 +20,6 @@ function M.space()
   if prev_pair and prev_pair.type==1 then
     local matching_pair_pos=info_line.findepaire(line,pcol,prev_pair,prev_pair.paire)
     if matching_pair_pos then
-      --utils.movel()
-      --utils.setline(line:sub(1,col-1)..' '..line:sub(col,matching_pair_pos-1)..' '..line:sub(matching_pair_pos))
       return ' '..utils.movel(matching_pair_pos-col)..' '..utils.moveh(matching_pair_pos-col+1)
     end
   end

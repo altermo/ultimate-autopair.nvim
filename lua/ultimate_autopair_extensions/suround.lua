@@ -1,4 +1,5 @@
 local open_pair=require'ultimate-autopair.utils.open_pair'
+local utils=require'ultimate-autopair.utils.utils'
 local info_line=require'ultimate-autopair.utils.info_line'
 return {filter=function(o,conf)
     --TODO: don't use o.w* for detection. NEEDS: the string extension to leave in string delimiters
@@ -8,7 +9,7 @@ return {filter=function(o,conf)
             --TODO: don't use o.w*
             local index=info_line.findstringe(o.wline,o.wcol+1,poschar)
             if index then
-                return o.pair..vim.fn['repeat']('<right>',index-o.wcol+1)..o.paire..vim.fn['repeat']('<left>',index-o.wcol+2)
+                return o.pair..utils.movel(index-o.wcol+1)..o.paire..utils.moveh(index-o.wcol+2)
             end
         end
     end
