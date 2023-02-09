@@ -21,7 +21,8 @@ function M.open_pair_ambigous_only_after(pair,line,col)
     return u.count_ambigious_pair(pair,line,col,#line)
 end
 function M.open_pair_ambigous_before_and_after(pair,line,col)
-    return M.open_pair_ambigous_only_before(pair,line,col) and M.open_pair_ambigous_only_after(pair,line,col)
+    return M.open_pair_ambigous_only_before(pair,line,col) and
+        M.open_pair_ambigous_only_after(pair,line,col)
 end
 function M.open_pair_ambigous(pair,line,_)
     return u.count_ambigious_pair(pair,line,1,#line)

@@ -17,17 +17,8 @@ function M.create_function(key,filters)
         return '\x1d'..key
     end
 end
-function M.create_map(pair,paire,opt,typ,cmdmode)
+function M.create_vim_keymap(char,cmdmode)
     local config=require('ultimate-autopair.config')
-    local key=(typ==2 and paire or pair)
-    mem.addpair(key,pair,paire,typ)
-    for name,extension in pairs(mem.extensions) do
-        if extension.init then
-            mem.addext(key,name)
-            extension.init(opt,mem.mem[key].ext[name],extension.conf,mem.mem)
-        end
-    end
-    local char=key:sub(-1,-1)
     if not mem.mapped[char] then
         local func=M.create_function(char,mem.filters)
         vim.keymap.set('i',char,func,vim.tbl_extend('error',config.conf.mapopt,{expr=true}))
@@ -36,5 +27,16 @@ function M.create_map(pair,paire,opt,typ,cmdmode)
         end
         mem.mapped[char]=func
     end
+end
+function M.create_map(pair,paire,opt,typ,cmdmode)
+    local key=(typ==2 and paire or pair)
+    mem.addpair(key,pair,paire,typ)
+    for name,extension in pairs(mem.extensions) do
+        if extension.init then
+            mem.addext(key,name)
+            extension.init(opt,mem.mem[key].ext[name],extension.conf,mem.mem)
+        end
+    end
+    M.create_vim_keymap(key:sub(-1,-1),cmdmode)
 end
 return M

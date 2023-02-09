@@ -18,10 +18,16 @@ function M.getcol()
     end
 end
 function M.movel(num)
-    return vim.fn['repeat']('<right>',(num or 1))
+    if M.incmd() then
+        return vim.fn['repeat']('<right>',(num or 1))
+    end
+    return vim.fn['repeat']('\aU<right>',(num or 1))
 end
 function M.moveh(num)
-    return vim.fn['repeat']('<left>',(num or 1))
+    if M.incmd() then
+        return vim.fn['repeat']('<left>',(num or 1))
+    end
+    return vim.fn['repeat']('\aU<left>',(num or 1))
 end
 function M.getlinenr()
     return vim.fn.line('.')
