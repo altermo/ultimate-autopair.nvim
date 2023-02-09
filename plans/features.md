@@ -7,16 +7,16 @@
 + [x] auto add multicharacter (markdown code block) `'''text|''' > CR > '''text\n\t|\n'''`)
 + [x] auto add multicharacter pairs `then| > CR > then\n|\nend`
 + [x] autocomplete integration
++ [x] make key spesific fallback
++ [x] auto add ; att the end of } in c when newline
 + [ ] auto add pairs `({|}) > CR > ({\n|\n})`
 + [ ] auto add even if text `{abc|} > CR > {abc\n|\n}`
 + [ ] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
 + [ ] auto add even if text `(|abc) > CR > (\n|abc\n)`
 + [ ] auto add pairs `({| > CR > ({\n|\n})`
 + [ ] behave like splitjoin
-+ [ ] auto add ; att the end of } in c when newline
 + [ ] multicharacter pair not in string/other node
 + [ ] make it have the ability to use extensions somehow
-+ [ ] make key spesific options (example: <A-o>={fallback='<C-o>o'} <CR>={fallback='<CR>'})
 # BS
 + [x] suport
 + [x] remove the pair `[|] > BS > |`
@@ -27,6 +27,7 @@
 + [x] remove the space in the pair `[ | ] > BS > [|]`
 + [x] remove the pair when multicharacter pair `/*|*/ > BS > |`
 + [x] filter string `'"'"|" > BS > '"'|`
++ [x] make key spesific fallback
 + [ ] remove the pair when multicharacter pair empty `/**/| > BS > |`
 + [ ] remove the pair when multicharacter pair filled `if bool then |code end > BS > |code`
 + [ ] remove the unbalanced space in the pair `[  | ] > BS > [ | ]`
@@ -37,7 +38,6 @@
 + [ ] remove the ambiguous pair when filled `"|abc" > BS > |abc`
 + [ ] remove the both newline in multiline pair `[\n|\n] > BS > [|]`
 + [ ] make it have the ability to use extensions somehow
-+ [ ] make key spesific options
 # other mappings
 + [x] space `[|] > SP > [ | ]`
 + [x] smart space `[|text] > SP > [ |text ]`
@@ -47,6 +47,7 @@
 + [x] normal fastwarp `{foo|}, > <A-e> > {foo,|}`
 + [x] normal fastwarp `{foo|},(bar) > <A-e> > {foo,(bar)|}`
 + [x] normal fastwarp `{(|),},bar > <A-e> > {(,|)},bar`
++ [x] make key spesific fallback
 + [ ] one char fastwarp `(foo|),, > <A-l> > (foo,|),`
 + [ ] fastwarp WORD `<A-E>`
 + [ ] fastwarp end  `<A-$>`
@@ -57,7 +58,6 @@
 + [ ] reverse fastwarp
 + [ ] make it have the ability to use extensions somehow
 + [ ] makdown don't add space `+ [|]` > `+ [ |]`
-+ [ ] make key spesific options
 # filters
 + [x] only filter inside or outside of string
 + [x] user defined rules

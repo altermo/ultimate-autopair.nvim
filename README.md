@@ -36,6 +36,7 @@ cr={
         markdown={{'```','```',pair=true,noalpha=true,next=true}},
         lua={{'then','end'},{'do','end'}},
     },
+    addsemi={'c','cpp','rust'},
     fallback=nil,
 },
 space={

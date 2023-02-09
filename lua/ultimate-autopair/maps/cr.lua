@@ -38,12 +38,17 @@ function M.newline(fallback)
   local next_char=line:sub(col,col)
   local prev_pair=mem.mem[prev_char]
   local next_pair=mem.mem[next_char]
+  local semi=''
+  if vim.tbl_contains(conf.addsemi or {},vim.o.filetype) and not utils.incmd() then
+    if prev_char=='{' then
+      semi=';'
+    end
+  end
   local key
   if prev_pair and next_pair and prev_pair.paire==next_char and next_pair.pair==prev_char and col==#line then
-    key=utils.delete(0,1)..'\r\r'..next_char..'<up><C-o>"_cc'
+    key=utils.delete(0,1)..'\r\r'..next_char..semi..'<up><C-o>"_cc'
   elseif conf.autoclose and prev_pair and prev_pair.type==1 and col-1==#line then
-    key='\r\r'..prev_pair.paire..'<up><C-o>"_cc'
-    return
+    key='\r\r'..prev_pair.paire..semi..'<up><C-o>"_cc'
   elseif conf.multichar then
     key=newline_multichar(line)
   end
