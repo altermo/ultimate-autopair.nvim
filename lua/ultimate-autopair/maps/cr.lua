@@ -27,7 +27,6 @@ local function newline_multichar(line)
           else
             --TODO: check if current indent block contains paire, then return
           end
-          vim.oprint(2)
           return ret..'\r\r'..pair[2]..'<up><C-o>"_cc'
         end
       end
