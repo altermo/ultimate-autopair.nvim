@@ -43,7 +43,7 @@ local function delete_space(line,col)
   if prev_n_pair and prev_n_pair.type==1 then
     local matching_pair_pos=info_line.findepaire(line,newcol-1,char,prev_n_pair.paire)
     if matching_pair_pos and col-newcol<matching_pair_pos-col and line:sub(matching_pair_pos-1,matching_pair_pos-1)==' ' then
-      return utils.delete(1)..utils.addafter(matching_pair_pos-col-1,utils.delete(0,1),0)
+      return utils.moveh(col-newcol)..utils.delete(1)..utils.addafter(matching_pair_pos-col-1,utils.delete(0,1),-(col-newcol))
     end
   end
 end
@@ -61,7 +61,7 @@ local function delete_multichar(line,col)
     end
   end
 end
-function M.backspace() --TODO: inccorect behavior in NEW FILE:`(  |  )` > `(| )`
+function M.backspace()
   local wline=utils.getline()
   local wcol=utils.getcol()
   local line,col=info_line.filter_string(wline,wcol,utils.getlinenr(),conf.notree)
