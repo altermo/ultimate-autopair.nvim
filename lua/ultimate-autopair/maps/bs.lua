@@ -57,7 +57,7 @@ local function delete_multichar(line,col)
       bool=not line:sub(col-#newkey-1,col-#newkey-1):match('%a')
     end
     if bool and line:sub(col-#newkey,col-1)==newkey and opt.paire==line:sub(col,col+#opt.paire-1) then
-      return utils.delete(#newkey,#newkey-1)
+      return utils.delete(#newkey,#opt.paire)
     end
   end
 end

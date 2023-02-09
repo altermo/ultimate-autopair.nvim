@@ -24,8 +24,6 @@ local function newline_multichar(line)
           local ret=''
           if pair.pair or pair.next then
             ret=ret..utils.delete(0,offset)
-          else
-            --TODO: check if current indent block contains paire, then return
           end
           return ret..'\r\r'..pair[2]..'<up><C-o>"_cc'
         end
