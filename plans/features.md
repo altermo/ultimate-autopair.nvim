@@ -104,10 +104,10 @@
 + [x] command-line integration
 + [x] make everything optional
 + [x] fix bug which happens when nvim is booted up
-+ [ ] map repeating `vim.v.count` (maybe by making mappings {expr=true})
++ [x] dot repeat
++ [x] abbreviation suport
++ [x] map repeating `vim.v.count` (maybe by making mappings {expr=true})
 + [ ] testing
 + [ ] terminal mode integration
 + [ ] replace mode integration
 + [ ] better string filtering `'foo'|` > `'\1'|` and not `\1|`
-+ [ ] dot repeat?
-+ [ ] abbreviation suport

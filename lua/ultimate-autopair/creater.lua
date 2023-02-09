@@ -28,15 +28,18 @@ function M.create_vim_keymap(char,cmdmode)
         mem.mapped[char]=func
     end
 end
-function M.create_map(pair,paire,opt,typ,cmdmode)
-    local key=(typ==2 and paire or pair)
-    mem.addpair(key,pair,paire,typ)
+function M.init_map(key,opt)
     for name,extension in pairs(mem.extensions) do
         if extension.init then
             mem.addext(key,name)
             extension.init(opt,mem.mem[key].ext[name],extension.conf,mem.mem)
         end
     end
+end
+function M.create_map(pair,paire,opt,typ,cmdmode)
+    local key=(typ==2 and paire or pair)
+    mem.addpair(key,pair,paire,typ)
+    M.init_map(key,opt)
     M.create_vim_keymap(key:sub(-1,-1),cmdmode)
 end
 return M

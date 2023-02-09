@@ -61,7 +61,7 @@ local function delete_multichar(line,col)
     end
   end
 end
-function M.backspace()
+function M.backspace(fallback)
   local wline=utils.getline()
   local wcol=utils.getcol()
   local line,col=info_line.filter_string(wline,wcol,utils.getlinenr(),conf.notree)
@@ -90,17 +90,22 @@ function M.backspace()
   if key then
     return key
   end
-  if type(conf.fallback)=='function' then
-    return conf.fallback()
+  if conf.fallback then
+    return conf.fallback(fallback or '<bs>')
   else
-    return '<bs>'
+    return fallback or '<bs>'
+  end
+end
+function M.create_backspace(key)
+  return function ()
+    return M.backspace(key)
   end
 end
 function M.setup()
   if conf.enable then
-    vim.keymap.set('i','<bs>',M.backspace,vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+    vim.keymap.set('i','<bs>',M.create_backspace(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     if gconf.cmap then
-      vim.keymap.set('c','<bs>',M.backspace,vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+      vim.keymap.set('c','<bs>',M.create_backspace(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end
   end
 end

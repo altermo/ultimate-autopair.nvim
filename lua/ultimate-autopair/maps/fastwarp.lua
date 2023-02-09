@@ -32,7 +32,7 @@ local function fastwarp_next_to_pair(line,col,i,char,next_char)
   end
   return utils.delete(0,1)..utils.movel(i-col)..next_char..utils.moveh()
 end
-function M.fastwarp()
+function M.fastwarp(fallback)
   local line=utils.getline()
   local col=utils.getcol()
   local next_char=line:sub(col,col)
@@ -59,17 +59,22 @@ function M.fastwarp()
   if key then
     return key
   end
-  if type(conf.fallback)=='function' then
-    return conf.fallback()
-  elseif conf.fallback then
-    return conf.fallback
+  if conf.fallback then
+    return conf.fallback(fallback or '')
+  else
+    return fallback or ''
+  end
+end
+function M.create_fastwarp(key)
+  return function ()
+    return M.fastwarp(key)
   end
 end
 function M.setup()
   if conf.enable then
-    vim.keymap.set('i',conf.map,M.fastwarp,vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+    vim.keymap.set('i',conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     if gconf.cmap and conf.cmap then
-      vim.keymap.set('c',conf.map,M.fastwarp,vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+      vim.keymap.set('c',conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end
   end
 end

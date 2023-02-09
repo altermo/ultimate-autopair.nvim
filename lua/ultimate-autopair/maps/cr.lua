@@ -31,7 +31,7 @@ local function newline_multichar(line)
     end
   end
 end
-function M.newline()
+function M.newline(fallback)
   local line=utils.getline()
   local col=utils.getcol()
   local prev_char=line:sub(col-1,col-1)
@@ -50,18 +50,23 @@ function M.newline()
   if key then
     return key
   end
-  if type(conf.fallback)=='function' then
-    return conf.fallback()
+  if conf.fallback then
+    return conf.fallback(fallback or '\x1d\r')
   else
-    return conf.fallback or '\x1d\r'
+    return fallback or '\x1d\r'
   end
 end
 function M.cmpnewline()
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(M.newline(),true,true,true),'n',true)
 end
+function M.create_newline(key)
+  return function ()
+    return M.newline(key)
+  end
+end
 function M.setup()
   if conf.enable then
-    vim.keymap.set('i','<cr>',M.newline,vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+    vim.keymap.set('i','<cr>',M.create_newline(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
   end
 end
 return M

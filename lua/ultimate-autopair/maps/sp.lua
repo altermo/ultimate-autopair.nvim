@@ -4,7 +4,7 @@ local conf=gconf.space or {}
 local mem=require'ultimate-autopair.memory'
 local utils=require'ultimate-autopair.utils.utils'
 local info_line=require'ultimate-autopair.utils.info_line'
-function M.space()
+function M.space(fallback)
   local line=utils.getline()
   local col=utils.getcol()
   local prev_char
@@ -23,17 +23,22 @@ function M.space()
       return ' '..utils.addafter(matching_pair_pos-col,' ')
     end
   end
-  if type(conf.fallback)=='function' then
-    return conf.fallback()
+  if conf.fallback then
+    return conf.fallback(fallback or '\x1d ')
   else
-    return '\x1d '
+    return fallback or '\x1d '
+  end
+end
+function M.create_space(key)
+  return function ()
+    return M.space(key)
   end
 end
 function M.setup()
   if conf.enable then
-    vim.keymap.set('i',' ',M.space,vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+    vim.keymap.set('i',' ',M.create_space(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     if gconf.cmap then
-      vim.keymap.set('c',' ',M.space,vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+      vim.keymap.set('c',' ',M.create_space(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end
   end
 end
