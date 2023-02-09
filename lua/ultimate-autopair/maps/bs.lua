@@ -26,7 +26,7 @@ end
 local function delete_overjump_pair(prev_pair,prev_char,line,col)
   local matching_pair_pos=info_line.findepaire(line,col,prev_char,prev_pair.paire)
   if matching_pair_pos then
-    return utils.delete(1)..utils.movel(matching_pair_pos-col)..utils.delete(0,1)..utils.moveh(matching_pair_pos-col)
+    return utils.delete(1)..utils.addafter(matching_pair_pos-col,utils.delete(0,1),0)
   end
 end
 local function delete_space(line,col)
@@ -43,7 +43,7 @@ local function delete_space(line,col)
   if prev_n_pair and prev_n_pair.type==1 then
     local matching_pair_pos=info_line.findepaire(line,newcol-1,char,prev_n_pair.paire)
     if matching_pair_pos and col-newcol<matching_pair_pos-col and line:sub(matching_pair_pos-1,matching_pair_pos-1)==' ' then
-      return utils.delete(1)..utils.movel(matching_pair_pos-col-1)..utils.delete(0,1)..utils.moveh(matching_pair_pos-col-1)
+      return utils.delete(1)..utils.addafter(matching_pair_pos-col-1,utils.delete(0,1),0)
     end
   end
 end
@@ -61,7 +61,7 @@ local function delete_multichar(line,col)
     end
   end
 end
-function M.backspace()
+function M.backspace() --TODO: inccorect behavior in NEW FILE:`(  |  )` > `(| )`
   local wline=utils.getline()
   local wcol=utils.getcol()
   local line,col=info_line.filter_string(wline,wcol,utils.getlinenr(),conf.notree)

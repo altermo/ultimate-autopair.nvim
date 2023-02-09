@@ -6,10 +6,9 @@ return {filter=function(o,conf)
     local poschar=o.wline:sub(o.wcol,o.wcol)
     if o.type==1 and vim.tbl_contains(conf,poschar) then
         if not open_pair.open_pair_ambigous_before_and_after(poschar,o.wline,o.wcol) then
-            --TODO: don't use o.w*
             local index=info_line.findstringe(o.wline,o.wcol+1,poschar)
             if index then
-                return o.pair..utils.movel(index-o.wcol+1)..o.paire..utils.moveh(index-o.wcol+2)
+                return o.pair..utils.addafter(index-o.wcol+1,o.paire)
             end
         end
     end

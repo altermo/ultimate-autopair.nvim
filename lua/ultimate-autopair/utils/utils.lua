@@ -35,7 +35,7 @@ end
 function M.delete(pre,pos)
     return vim.fn['repeat']('<bs>',pre or 1)..vim.fn['repeat']('<del>',pos or 0)
 end
-function M.completeabbr()
-    return '\x1d'
+function M.addafter(num,text,textlen)
+    return M.movel(num)..text..M.moveh(num+(textlen or #text))
 end
 return M

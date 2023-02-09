@@ -2,13 +2,14 @@ local mem=require'ultimate-autopair.memory'
 local M={}
 function M.create_function(key,filters)
     return function()
-        vim.api.nvim_feedkeys('\x1d','n',true)
         local H={}
         H.key=key
         for _,filter in ipairs(filters) do
             local exit_key=filter.call(H,filter.conf,mem.mem[H.key] and mem.mem[H.key].ext[filter.name] or {},mem.mem)
             if exit_key==2 then
                 return '\x1d'..key
+            elseif exit_key==1 then
+                return ''
             elseif exit_key then
                 return '\x1d'..exit_key
             end

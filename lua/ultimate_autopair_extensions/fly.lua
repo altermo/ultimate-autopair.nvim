@@ -1,4 +1,5 @@
 local open_pair=require'ultimate-autopair.utils.open_pair'
+local utils=require'ultimate-autopair.utils.utils'
 return {filter=function (o,conf)
     if o.type~=2 then return end
     if #o.key>1 then return end
@@ -15,6 +16,6 @@ return {filter=function (o,conf)
     if not next_char_index then return end
     if o.col==next_char_index then return end
     if not open_pair.open_pair_before(o.pair,o.paire,o.line,next_char_index) then
-        return vim.fn['repeat']('<right>',next_char_index-o.col+1)
+        return utils.movel(next_char_index-o.col+1)
     end
 end}
