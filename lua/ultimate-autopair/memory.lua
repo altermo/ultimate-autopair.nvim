@@ -35,4 +35,14 @@ function M.addext(key,name)
         M.mem[key].ext[name]={}
     end
 end
+function M.ispair(prev_char,next_char)
+    local prev_pair=M.mem[prev_char]
+    local next_pair=M.mem[next_char]
+    if prev_pair and next_pair then
+        if prev_pair.type==2 or next_pair.type==1 then
+            return
+        end
+        return prev_pair.pair==next_pair.pair and prev_pair.paire==next_pair.paire
+    end
+end
 return M

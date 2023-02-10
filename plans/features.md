@@ -9,12 +9,13 @@
 + [x] autocomplete integration
 + [x] make key spesific fallback
 + [x] auto add ; att the end of } in c when newline
++ [x] auto add pairs `{|}; > CR > {\n|\n};`
 + [ ] auto add pairs `({|}) > CR > ({\n|\n})`
 + [ ] auto add even if text `{abc|} > CR > {abc\n|\n}`
 + [ ] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
 + [ ] auto add even if text `(|abc) > CR > (\n|abc\n)`
 + [ ] auto add pairs `({| > CR > ({\n|\n})`
-+ [ ] behave like splitjoin
++ [ ] behave like splitjoin (splitjoin plugin integration)
 + [ ] multicharacter pair not in string/other node
 + [ ] make it have the ability to use extensions somehow
 # BS
@@ -48,6 +49,7 @@
 + [x] normal fastwarp `{foo|},(bar) > <A-e> > {foo,(bar)|}`
 + [x] normal fastwarp `{(|),},bar > <A-e> > {(,|)},bar`
 + [x] make key spesific fallback
++ [x] makdown don't add space `+ [|]` > `+ [ |]`
 + [ ] one char fastwarp `(foo|),, > <A-l> > (foo,|),`
 + [ ] fastwarp WORD `<A-E>`
 + [ ] fastwarp end  `<A-$>`
@@ -57,7 +59,6 @@
 + [ ] `[{"| > <A-k> > [{""}]`
 + [ ] reverse fastwarp
 + [ ] make it have the ability to use extensions somehow
-+ [ ] makdown don't add space `+ [|]` > `+ [ |]`
 # filters
 + [x] only filter inside or outside of string
 + [x] user defined rules
@@ -95,7 +96,7 @@
 + [x] comment pairs `/*|*/`
 + [x] nonsymetrical comment pairs `<!--|-->`
 + [x] multicharacter pair with word delimiter `aAND ~= AND`
-+ [ ] other keywords `if ... end`?
++ [x] other keywords `if ... end`?
 + [ ] html tag suport
 + [ ] html blacklist sertent tags
 + [ ] regex/wildcard multicharacter pair suport

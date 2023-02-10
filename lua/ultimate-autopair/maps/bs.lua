@@ -68,9 +68,8 @@ function M.backspace(fallback)
   local prev_char=line:sub(col-1,col-1)
   local next_char=line:sub(col,col)
   local prev_pair=mem.mem[prev_char]
-  local next_pair=mem.mem[next_char]
   local key
-  if prev_pair and next_pair and prev_pair.paire==next_char and next_pair.pair==prev_char then
+  if mem.ispair(prev_char,next_char) then
     key=delete_mid_pair(prev_pair,prev_char,next_char,line,col)
   elseif conf.overjump and prev_pair and prev_pair.type==1 then
     if not open_pair.open_pair_before(prev_char,prev_pair.paire,line,col) then
@@ -78,12 +77,11 @@ function M.backspace(fallback)
     end
   elseif prev_pair and prev_pair.type~=1 then
     local prev_2_char=line:sub(col-2,col-2)
-    local prev_2_pair=mem.mem[prev_2_char]
-    if prev_2_pair and prev_2_pair.type~=2 and prev_2_pair.paire==prev_char then
+    if mem.ispair(prev_2_char,prev_char) then
       key=delete_prev_pair(prev_pair,prev_char,prev_2_char,line,col)
     end
   elseif conf.space and prev_char==' ' then
-    key= delete_space(line,col)
+    key=delete_space(line,col)
   elseif conf.multichar and mem.extensions.multichar then
     key=delete_multichar(line,col)
   end

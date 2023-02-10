@@ -17,7 +17,9 @@ function M.space(fallback)
     end
   end
   local prev_pair=mem.mem[prev_char]
-  if prev_pair and prev_pair.type==1 then
+  if not conf.nomd and not utils.incmd() and vim.o.filetype=='markdown' and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(line:sub(1,col)) then
+  elseif not conf.nostr and info_line.in_string(line,col,utils.getlinenr(),conf.notree) then
+  elseif prev_pair and prev_pair.type==1 then
     local matching_pair_pos=info_line.findepaire(line,pcol,prev_pair,prev_pair.paire)
     if matching_pair_pos then
       return ' '..utils.addafter(matching_pair_pos-col,' ')
