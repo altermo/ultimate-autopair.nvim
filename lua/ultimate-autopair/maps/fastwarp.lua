@@ -30,7 +30,7 @@ local function fastwarp_next_to_pair(line,col,i,char,next_char)
   if line:sub(col+1,col+1)==char then
     return
   end
-  return utils.delete(0,1)..utils.movel(i-col)..next_char..utils.moveh()
+  return utils.delete(0,1)..utils.movel(i-col-1)..next_char..utils.moveh()
 end
 function M.fastwarp(fallback)
   local line=utils.getline()
@@ -38,12 +38,12 @@ function M.fastwarp(fallback)
   local next_char=line:sub(col,col)
   local next_pair=mem.mem[next_char]
   local key
-  if next_pair then
+  if next_pair and next_pair.type~=1 then
     for i=col+1,#line do
       local char=line:sub(i,i)
-      if mem.mem[char] and mem.mem[char].type~=2 then
+      if mem.isstart(line,i) then
         key=fastwarp_over_pair(line,col,i,next_char,char)
-      elseif mem.mem[char] and mem.mem[char].type==2 then
+      elseif mem.isend(line,i) then
         key=fastwarp_next_to_pair(line,col,i,char,next_char)
       elseif char:match('%a') then
         key=fastwarp_over_word(line,col,i,next_char)
@@ -65,7 +65,7 @@ function M.fastwarp(fallback)
     return fallback or ''
   end
 end
-function M.create_fastwarp(key)
+function M.create_fastwarp(key,conf)
   return function ()
     return M.fastwarp(key)
   end

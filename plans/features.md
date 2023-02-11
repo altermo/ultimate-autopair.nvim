@@ -58,6 +58,7 @@
 + [ ] hop style fastwarp
 + [ ] `[{"| > <A-k> > [{""}]`
 + [ ] reverse fastwarp
++ [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
 + [ ] make it have the ability to use extensions somehow
 # filters
 + [x] only filter inside or outside of string
@@ -66,10 +67,9 @@
 + [x] multiline mode with the indentation determening the block size
 + [x] disable for surtent cmdlinetypes
 + [x] treesitter integration for special blocks (aka strings)
-+ [ ] only filter inside or outside of comments
-+ [ ] only filter inside or outside of other blocks
-+ [ ] user defined blocks
-+ [ ] multiline as one
++ [ ] only filter inside or outside of comments and other user defined treesitter nodes
++ [ ] make block filtering for inside/outside otpional `b|#a` > `b|\1` and `b#a|` > `b#a|` and not `\1#a|`
++ [ ] user defined multiline as one (maybe using treesitter)
 # inserting
 + [x] dont add pair `'` if previous is alphanumeric
 + [x] dont complete when previous is \ in string? `\| > [ > \[`
@@ -97,10 +97,10 @@
 + [x] nonsymetrical comment pairs `<!--|-->`
 + [x] multicharacter pair with word delimiter `aAND ~= AND`
 + [x] other keywords `if ... end`?
-+ [ ] html tag suport
-+ [ ] html blacklist sertent tags
++ [ ] integration with (windwp/nvim-ts-autotag) to suport html tags
 + [ ] regex/wildcard multicharacter pair suport
 + [ ] with random text inbetween `if TEXT ... end`?
++ [ ] possibility of html tag suport
 # other
 + [x] command-line integration
 + [x] make everything optional
@@ -108,7 +108,8 @@
 + [x] dot repeat
 + [x] abbreviation suport
 + [x] map repeating `vim.v.count` (maybe by making mappings {expr=true})
++ [x] replace mode integration
++ [x] make it so that for type-2 pair map the begining and not the end `bar` > `map b` and not `map r`
 + [ ] testing
 + [ ] terminal mode integration
-+ [ ] replace mode integration
 + [ ] better string filtering `'foo'|` > `'\1'|` and not `\1|`

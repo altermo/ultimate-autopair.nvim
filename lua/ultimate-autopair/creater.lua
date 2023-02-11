@@ -40,6 +40,11 @@ function M.create_map(pair,paire,opt,typ,cmdmode)
     local key=(typ==2 and paire or pair)
     mem.addpair(key,pair,paire,typ)
     M.init_map(key,opt)
-    M.create_vim_keymap(key:sub(-1,-1),cmdmode)
+    if typ~=1 then
+        M.create_vim_keymap(key:sub(1,1),cmdmode)
+    end
+    if typ~=2 then
+        M.create_vim_keymap(key:sub(-1,-1),cmdmode)
+    end
 end
 return M

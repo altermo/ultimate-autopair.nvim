@@ -45,4 +45,25 @@ function M.ispair(prev_char,next_char)
         return prev_pair.pair==next_pair.pair and prev_pair.paire==next_pair.paire
     end
 end
+function M.isstart(line,col)
+    local open_pair=require'ultimate-autopair.utils.open_pair'
+    local char=line:sub(col,col)
+    local pair=M.mem[char]
+    if not pair then
+        return false
+    end
+    if pair.type==1 then
+        return true
+    elseif pair.type==2 then
+        return false
+    end
+    return not open_pair.open_pair_ambigous_only_before(char,line,col)
+end
+function M.isend(line,col)
+    local pair=M.mem[line:sub(col,col)]
+    if not pair then
+        return false
+    end
+    return not M.isstart(line,col)
+end
 return M
