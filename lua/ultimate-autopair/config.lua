@@ -1,7 +1,7 @@
 local M={}
 local creater=require'ultimate-autopair.creater'
 local mem=require'ultimate-autopair.memory'
-local defaults=require'ultimate-autopair.utils.defaults'
+local defaults=require'ultimate-autopair.defaults'
 M.conf=defaults.default_config
 function M.create_map_pair(opt)
     if opt[1]==opt[2] then

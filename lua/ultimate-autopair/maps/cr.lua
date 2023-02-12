@@ -18,14 +18,14 @@ local function newline_multichar(line)
           bool=line:sub(-#pair[1]-offset,-offset-1)==pair[1]
         end
         if bool and not pair.noalpha then
-          bool=pair.noalpha or not line:sub(-#pair[1]-1-offset,-#pair[1]-1-offset):match('%a')
+          bool=not line:sub(-#pair[1]-1-offset,-#pair[1]-1-offset):match('%a')
         end
         if bool then
           local ret=''
           if pair.pair or pair.next then
             ret=ret..utils.delete(0,offset)
           end
-          return ret..'\r\r'..pair[2]..'<up><C-f>'
+          return ret..'\r'..pair[2]..'<up><end>\r'
         end
       end
     end
@@ -49,11 +49,12 @@ function M.newline(fallback)
   end
   local key
   if mem.ispair(prev_char,next_char) and col==#line then
-    key=utils.delete(0,1)..'\r\r'..next_char..semi..'<up><C-f>'
+    key=utils.delete(0,1)..'\r'..next_char..semi..'<up><end>\r'
   elseif conf.autoclose and prev_pair and prev_pair.type==1 and col-1==#line then
-    key='\r\r'..prev_pair.paire..semi..'<up><C-f>'
+    key='\r'..prev_pair.paire..semi..'<up><end>\r'
   elseif conf.multichar then
     key=newline_multichar(line)
+    vim.fn.writefile({vim.fn.getline('.')},'/tmp/o')
   end
   if key then
     return key

@@ -10,6 +10,7 @@
 + [x] make key spesific fallback
 + [x] auto add ; att the end of } in c when newline
 + [x] auto add pairs `{|}; > CR > {\n|\n};`
++ [ ] auto add pairs `{|} foo > CR > {\n|\n} foo`
 + [ ] auto add pairs `({|}) > CR > ({\n|\n})`
 + [ ] auto add even if text `{abc|} > CR > {abc\n|\n}`
 + [ ] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
@@ -42,7 +43,7 @@
 # other mappings
 + [x] space `[|] > SP > [ | ]`
 + [x] smart space `[|text] > SP > [ |text ]`
-+ [x] normal fastwarp `{}|[] > <A-e> > {[]|}`
++ [x] normal fastwarp `{|}[] > <A-e> > {[]|}`
 + [x] normal fastwarp `{}|foo > <A-e> > {foo|}`
 + [x] normal fastwarp `{foo|},bar > <A-e> > {foo,bar|}`
 + [x] normal fastwarp `{foo|}, > <A-e> > {foo,|}`
@@ -110,6 +111,6 @@
 + [x] map repeating `vim.v.count` (maybe by making mappings {expr=true})
 + [x] replace mode integration
 + [x] make it so that for type-2 pair map the begining and not the end `bar` > `map b` and not `map r`
-+ [ ] testing
++ [x] testing
 + [ ] terminal mode integration
 + [ ] better string filtering `'foo'|` > `'\1'|` and not `\1|`

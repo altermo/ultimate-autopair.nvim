@@ -18,7 +18,7 @@ local function fastwarp_over_pair(line,col,i,next_char,char)
 end
 local function fastwarp_over_word(line,col,i,next_char)
   local j=i
-  while line:sub(j,j):match('%a') do
+  while line:sub(j,j):match('%w') do
     j=j+1
   end
   return utils.delete(0,1)..utils.movel(j-col-1)..next_char..utils.moveh()
@@ -45,7 +45,7 @@ function M.fastwarp(fallback)
         key=fastwarp_over_pair(line,col,i,next_char,char)
       elseif mem.isend(line,i) then
         key=fastwarp_next_to_pair(line,col,i,char,next_char)
-      elseif char:match('%a') then
+      elseif char:match('%w') then
         key=fastwarp_over_word(line,col,i,next_char)
       end
       if key then
@@ -65,7 +65,7 @@ function M.fastwarp(fallback)
     return fallback or ''
   end
 end
-function M.create_fastwarp(key,conf)
+function M.create_fastwarp(key)
   return function ()
     return M.fastwarp(key)
   end

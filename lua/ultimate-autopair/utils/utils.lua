@@ -32,12 +32,6 @@ end
 function M.getlinenr()
     return vim.fn.line('.')
 end
-function M.getindent(linenr)
-    return vim.fn.indent(linenr)
-end
-function M.getindentsize()
-    return vim.fn.shiftwidth()
-end
 function M.delete(pre,pos)
     return vim.fn['repeat']('<bs>',pre or 1)..vim.fn['repeat']('<del>',pos or 0)
 end
