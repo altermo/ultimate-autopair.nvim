@@ -1,7 +1,7 @@
 local M={}
 M.extensions={}
 local gconf=require'ultimate-autopair.config'.conf
-local conf=gconf.bs or {}
+M.conf=gconf.bs or {}
 local mem=require'ultimate-autopair.memory'
 local utils=require'ultimate-autopair.utils.utils'
 local info_line=require'ultimate-autopair.utils.info_line'
@@ -34,7 +34,7 @@ function M.extensions.delete_prev_pair(prev_char,_,line,col)
 end
 function M.extensions.delete_overjump_pair(prev_char,_,line,col)
   local prev_pair=mem.mem[prev_char]
-  if conf.overjump and prev_pair and prev_pair.type==1 then
+  if M.conf.overjump and prev_pair and prev_pair.type==1 then
     if not open_pair.open_pair_before(prev_char,prev_pair.paire,line,col) then
       local matching_pair_pos=info_line.findepaire(line,col,prev_char,prev_pair.paire)
       if matching_pair_pos then
@@ -44,7 +44,7 @@ function M.extensions.delete_overjump_pair(prev_char,_,line,col)
   end
 end
 function M.extensions.delete_space(prev_char,_,line,col)
-  if conf.space and prev_char==' ' then
+  if M.conf.space and prev_char==' ' then
     local newcol
     local char
     for i=col-2,1,-1 do
@@ -64,7 +64,7 @@ function M.extensions.delete_space(prev_char,_,line,col)
   end
 end
 function M.extensions.delete_multichar(_,_,line,col)
-  if conf.multichar and mem.extensions.multichar then
+  if M.conf.multichar and mem.extensions.multichar then
     for newkey,opt in pairs(mem.mem) do
       local bool=#newkey>1 and opt.type~=2
       if bool and opt.ext.filetype and #opt.ext.filetype~=0 then
@@ -82,17 +82,17 @@ end
 function M.backspace(fallback)
   local wline=utils.getline()
   local wcol=utils.getcol()
-  local line,col=info_line.filter_string(wline,wcol,utils.getlinenr(),conf.notree)
+  local line,col=info_line.filter_string(wline,wcol,utils.getlinenr(),M.conf.notree)
   local prev_char=line:sub(col-1,col-1)
   local next_char=line:sub(col,col)
   for _,i in pairs(M.extensions) do
-    local ret=i(prev_char,next_char,line,col)
+    local ret=i(prev_char,next_char,line,col) --TODO: replace argument with one table
     if ret then
       return ret
     end
   end
-  if conf.fallback then
-    return conf.fallback(fallback or '<bs>')
+  if M.conf.fallback then
+    return M.conf.fallback(fallback or '<bs>')
   else
     return fallback or '<bs>'
   end
@@ -103,7 +103,7 @@ function M.create_backspace(key)
   end
 end
 function M.setup()
-  if conf.enable then
+  if M.conf.enable then
     vim.keymap.set('i','<bs>',M.create_backspace(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     if gconf.cmap then
       vim.keymap.set('c','<bs>',M.create_backspace(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))

@@ -1,6 +1,6 @@
 local M={}
 local gconf=require'ultimate-autopair.config'.conf
-local conf=gconf.fastwarp
+M.conf=gconf.fastwarp or {}
 local mem=require'ultimate-autopair.memory'
 local utils=require'ultimate-autopair.utils.utils'
 local info_line=require'ultimate-autopair.utils.info_line'
@@ -59,8 +59,8 @@ function M.fastwarp(fallback)
   if key then
     return key
   end
-  if conf.fallback then
-    return conf.fallback(fallback or '')
+  if M.conf.fallback then
+    return M.conf.fallback(fallback or '')
   else
     return fallback or ''
   end
@@ -71,10 +71,10 @@ function M.create_fastwarp(key)
   end
 end
 function M.setup()
-  if conf.enable then
-    vim.keymap.set('i',conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
-    if gconf.cmap and conf.cmap then
-      vim.keymap.set('c',conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+  if M.conf.enable then
+    vim.keymap.set('i',M.conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+    if gconf.cmap and M.conf.cmap then
+      vim.keymap.set('c',M.conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end
   end
 end

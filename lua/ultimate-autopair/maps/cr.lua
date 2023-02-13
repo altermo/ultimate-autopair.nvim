@@ -1,10 +1,10 @@
 local M={}
 local gconf=require'ultimate-autopair.config'.conf
-local conf=gconf.cr or {}
+M.conf=gconf.cr or {}
 local utils=require'ultimate-autopair.utils.utils'
 local mem=require'ultimate-autopair.memory'
 local function newline_multichar(line)
-  for ft,list_of_pairs in pairs(conf.multichar) do
+  for ft,list_of_pairs in pairs(M.conf.multichar) do
     if vim.o.filetype==ft then
       for _,pair in ipairs(list_of_pairs) do
         local offset=0
@@ -38,7 +38,7 @@ function M.newline(fallback)
   local next_char=line:sub(col,col)
   local prev_pair=mem.mem[prev_char]
   local semi=''
-  if vim.tbl_contains(conf.addsemi or {},vim.o.filetype) and not utils.incmd() then
+  if vim.tbl_contains(M.conf.addsemi or {},vim.o.filetype) and not utils.incmd() then
     if prev_char=='{' and col-1==#line or col==#line then
       if col+1==#line and line:sub(col+1,col+1)==';' then
         line=line:sub(0,-2)
@@ -50,17 +50,17 @@ function M.newline(fallback)
   local key
   if mem.ispair(prev_char,next_char) then
     key='\r<end>'..semi..'<up><end>\r'
-  elseif conf.autoclose and prev_pair and prev_pair.type==1 and col-1==#line then
+  elseif M.conf.autoclose and prev_pair and prev_pair.type==1 and col-1==#line then
     key='\r'..prev_pair.paire..semi..'<up><end>\r'
-  elseif conf.multichar then
+  elseif M.conf.multichar then
     key=newline_multichar(line)
     vim.fn.writefile({vim.fn.getline('.')},'/tmp/o')
   end
   if key then
     return key
   end
-  if conf.fallback then
-    return conf.fallback(fallback or '\x1d\r')
+  if M.conf.fallback then
+    return M.conf.fallback(fallback or '\x1d\r')
   else
     return fallback or '\x1d\r'
   end
@@ -74,7 +74,7 @@ function M.create_newline(key)
   end
 end
 function M.setup()
-  if conf.enable then
+  if M.conf.enable then
     vim.keymap.set('i','<cr>',M.create_newline(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
   end
 end
