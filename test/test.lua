@@ -56,6 +56,7 @@ function M.test_simple()
 end
 function M.test_newline()
     run(':set cindent\rI{\r','{\n\t\n}')
+    run(':set cindent\rI{foo\r','{foo\n\t\n}')
     run(':set cindent\rI{a\r','{\n\t\n}')
     run(':setf c\r:set cindent\rI{\r','{\n\t\n};')
     run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};')
@@ -103,6 +104,7 @@ function M.test_extensions()
     run('I[{( ]$','[{(  )}]$')
     run(':call setline(1,[input("\r(\r','(')
     run(':iab f foo\rIf()','foo()')
+    run(':cab s setline\r:call s(1,["foo\r','foo')
 end
 ---@diagnostic disable-next-line: undefined-global
 if not DONTRUNTEST then

@@ -44,6 +44,12 @@ function M.extensions.close_newline(o)
     return '\r'..o.prev_pair.paire..o.semi..'<up><end>\r'
   end
 end
+function M.extensions.before_paire_newline(o)
+  local next_pair=mem.mem[o.next_char]
+  if next_pair and not o.prev_pair and next_pair.type==2 and o.col==#o.line then
+    return '\r'..o.semi..'<up><end>\r'
+  end
+end
 function M.newline(fallback)
   local o={}
   o.line=utils.getline()

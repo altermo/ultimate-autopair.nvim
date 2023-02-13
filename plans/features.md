@@ -13,7 +13,7 @@
 + [x] auto add pairs `{|} foo > CR > {\n|\n} foo`
 + [x] auto add pairs `({|}) > CR > ({\n|\n})`
 + [x] make it have the ability to use extensions
-+ [ ] auto add even if text `{abc|} > CR > {abc\n|\n}`
++ [x] auto add even if text `{abc|} > CR > {abc\n|\n}`
 + [ ] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
 + [ ] auto add even if text `(|abc) > CR > (\n|abc\n)`
 + [ ] auto add pairs `({| > CR > ({\n|\n})`
