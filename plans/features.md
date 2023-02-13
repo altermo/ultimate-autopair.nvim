@@ -12,13 +12,13 @@
 + [x] auto add pairs `{|}; > CR > {\n|\n};`
 + [x] auto add pairs `{|} foo > CR > {\n|\n} foo`
 + [x] auto add pairs `({|}) > CR > ({\n|\n})`
++ [ ] make it have the ability to use extensions somehow
 + [ ] auto add even if text `{abc|} > CR > {abc\n|\n}`
 + [ ] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
 + [ ] auto add even if text `(|abc) > CR > (\n|abc\n)`
 + [ ] auto add pairs `({| > CR > ({\n|\n})`
 + [ ] behave like splitjoin (splitjoin plugin integration)
 + [ ] multicharacter pair not in string/other node
-+ [ ] make it have the ability to use extensions somehow
 # BS
 + [x] suport
 + [x] remove the pair `[|] > BS > |`
@@ -30,6 +30,7 @@
 + [x] remove the pair when multicharacter pair `/*|*/ > BS > |`
 + [x] filter string `'"'"|" > BS > '"'|`
 + [x] make key spesific fallback
++ [x] make it have the ability to use extensions somehow
 + [ ] remove the pair when multicharacter pair empty `/**/| > BS > |`
 + [ ] remove the pair when multicharacter pair filled `if bool then |code end > BS > |code`
 + [ ] remove the unbalanced space in the pair `[  | ] > BS > [ | ]`
@@ -39,7 +40,6 @@
 + [ ] remove the space when remove pair `[| text ] > BS > |text`
 + [ ] remove the ambiguous pair when filled `"|abc" > BS > |abc`
 + [ ] remove the both newline in multiline pair `[\n|\n] > BS > [|]`
-+ [ ] make it have the ability to use extensions somehow
 # other mappings
 + [x] space `[|] > SP > [ | ]`
 + [x] smart space `[|text] > SP > [ |text ]`
@@ -51,6 +51,7 @@
 + [x] normal fastwarp `{(|),},bar > <A-e> > {(,|)},bar`
 + [x] make key spesific fallback
 + [x] makdown don't add space `+ [|]` > `+ [ |]`
++ [ ] make it have the ability to use extensions somehow
 + [ ] one char fastwarp `(foo|),, > <A-l> > (foo,|),`
 + [ ] fastwarp WORD `<A-E>`
 + [ ] fastwarp end  `<A-$>`
@@ -60,7 +61,6 @@
 + [ ] `[{"| > <A-k> > [{""}]`
 + [ ] reverse fastwarp
 + [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
-+ [ ] make it have the ability to use extensions somehow
 # filters
 + [x] only filter inside or outside of string
 + [x] user defined rules

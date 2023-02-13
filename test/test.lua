@@ -102,6 +102,7 @@ function M.test_extensions()
     run(':set lisp\rI"\'','"\'\'"')
     run('I[{( ]$','[{(  )}]$')
     run(':call setline(1,[input("\r(\r','(')
+    run(':iab f foo\rIf()','foo()')
 end
 ---@diagnostic disable-next-line: undefined-global
 if not DONTRUNTEST then
