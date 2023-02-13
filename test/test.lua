@@ -56,7 +56,7 @@ function M.test_simple()
 end
 function M.test_newline()
     run(':set cindent\rI{\r','{\n\t\n}')
-    run(':set cindent\rI{}i\r','{\n\t\n}')
+    run(':set cindent\rI{a\r','{\n\t\n}')
     run(':setf c\r:set cindent\rI{\r','{\n\t\n};')
     run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};')
     run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};')

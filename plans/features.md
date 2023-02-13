@@ -12,7 +12,7 @@
 + [x] auto add pairs `{|}; > CR > {\n|\n};`
 + [x] auto add pairs `{|} foo > CR > {\n|\n} foo`
 + [x] auto add pairs `({|}) > CR > ({\n|\n})`
-+ [ ] make it have the ability to use extensions somehow
++ [x] make it have the ability to use extensions
 + [ ] auto add even if text `{abc|} > CR > {abc\n|\n}`
 + [ ] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
 + [ ] auto add even if text `(|abc) > CR > (\n|abc\n)`
@@ -30,7 +30,7 @@
 + [x] remove the pair when multicharacter pair `/*|*/ > BS > |`
 + [x] filter string `'"'"|" > BS > '"'|`
 + [x] make key spesific fallback
-+ [x] make it have the ability to use extensions somehow
++ [x] make it have the ability to use extensions
 + [ ] remove the pair when multicharacter pair empty `/**/| > BS > |`
 + [ ] remove the pair when multicharacter pair filled `if bool then |code end > BS > |code`
 + [ ] remove the unbalanced space in the pair `[  | ] > BS > [ | ]`
@@ -51,7 +51,7 @@
 + [x] normal fastwarp `{(|),},bar > <A-e> > {(,|)},bar`
 + [x] make key spesific fallback
 + [x] makdown don't add space `+ [|]` > `+ [ |]`
-+ [ ] make it have the ability to use extensions somehow
++ [ ] make it have the ability to use extensions
 + [ ] one char fastwarp `(foo|),, > <A-l> > (foo,|),`
 + [ ] fastwarp WORD `<A-E>`
 + [ ] fastwarp end  `<A-$>`
