@@ -10,8 +10,8 @@
 + [x] make key spesific fallback
 + [x] auto add ; att the end of } in c when newline
 + [x] auto add pairs `{|}; > CR > {\n|\n};`
-+ [ ] auto add pairs `{|} foo > CR > {\n|\n} foo`
-+ [ ] auto add pairs `({|}) > CR > ({\n|\n})`
++ [x] auto add pairs `{|} foo > CR > {\n|\n} foo`
++ [x] auto add pairs `({|}) > CR > ({\n|\n})`
 + [ ] auto add even if text `{abc|} > CR > {abc\n|\n}`
 + [ ] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
 + [ ] auto add even if text `(|abc) > CR > (\n|abc\n)`
