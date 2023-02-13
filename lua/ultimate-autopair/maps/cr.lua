@@ -54,7 +54,6 @@ function M.newline(fallback)
     key='\r'..prev_pair.paire..semi..'<up><end>\r'
   elseif M.conf.multichar then
     key=newline_multichar(line)
-    vim.fn.writefile({vim.fn.getline('.')},'/tmp/o')
   end
   if key then
     return key
