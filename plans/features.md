@@ -112,5 +112,5 @@
 + [x] replace mode integration
 + [x] make it so that for type-2 pair map the begining and not the end `bar` > `map b` and not `map r`
 + [x] testing
-+ [ ] terminal mode integration
 + [ ] better string filtering `'foo'|` > `'\1'|` and not `\1|`
++ [ ] terminal mode integration

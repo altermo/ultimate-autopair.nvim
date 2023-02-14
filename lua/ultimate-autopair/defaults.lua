@@ -62,6 +62,7 @@ M.default_config={
         --'indentblock',
         'multichar',
         'string',
+        {'treenode',{inside={'comment'}}},
         'escape',
         'rules',
         'filetype',

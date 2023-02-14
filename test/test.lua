@@ -108,6 +108,7 @@ function M.test_extensions()
     run(':call setline(1,[input("\r(\r','(')
     run(':iab f foo\rIf()','foo()')
     run(':cab s setline\r:call s(1,["foo\r','foo')
+    --TODO: test treesitter based extensions
 end
 ---@diagnostic disable-next-line: undefined-global
 if not DONTRUNTEST then
