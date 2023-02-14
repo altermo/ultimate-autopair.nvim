@@ -19,6 +19,8 @@
 + [ ] auto add pairs `({| > CR > ({\n|\n})`
 + [ ] behave like splitjoin (splitjoin plugin integration)
 + [ ] multicharacter pair not in string/other node
++ [ ] make map use pair extensions
++ [ ] make map use filtering pair extensions
 # BS
 + [x] suport
 + [x] remove the pair `[|] > BS > |`
@@ -40,6 +42,7 @@
 + [ ] remove the space when remove pair `[| text ] > BS > |text`
 + [ ] remove the ambiguous pair when filled `"|abc" > BS > |abc`
 + [ ] remove the both newline in multiline pair `[\n|\n] > BS > [|]`
++ [ ] make map use filtering pair extensions
 # other mappings
 + [x] space `[|] > SP > [ | ]`
 + [x] smart space `[|text] > SP > [ |text ]`
@@ -61,6 +64,7 @@
 + [ ] `[{"| > <A-k> > [{""}]`
 + [ ] reverse fastwarp
 + [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
++ [ ] make maps use filtering pair extensions
 # filters
 + [x] only filter inside or outside of string
 + [x] user defined rules
