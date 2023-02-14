@@ -62,6 +62,7 @@ extensions={
     --'indentblock',
     'multichar',
     'string',
+    {'treenode',{inside={'comment'}}},
     'escape',
     'rules',
     'filetype',
@@ -85,18 +86,19 @@ ft={
 ---more...
 ```
 ## The extensions
-| Extension   | What it does
-|-------------|-
-| cmdtype     | disables for specific command types
-| indentblock | makes the block of indent the "line" instead of it the current line
-| string      | makes it so that inside and outside of strings don't interact with each other (treesitter support)
-| multichar   | allows for pairs which consist of multiple characters
-| escape      | don't add if it will be escaped
-| rules       | a system which allows one to add rules
-| filetype    | only allow some file types
-| alpha       | no pair before or after alpha character
-| surround    | auto surround the pair `\|"foo"`>`(`>`("foo"\|)`
-| fly         | fly over ending parentheses `([{\|}])` > `)` > `([{}])\|`
+| Extension     | What it does
+| ------------- | -
+| cmdtype       | disables for specific command types
+| indentblock   | makes the block of indent the "line" instead of it the current line
+| string        | makes it so that inside and outside of strings don't interact with each other (treesitter support)
+| multichar     | allows for pairs which consist of multiple characters
+| escape        | don't add if it will be escaped
+| rules         | a system which allows one to add rules
+| filetype      | only allow some file types
+| alpha         | no pair before or after alpha character
+| surround      | auto surround the pair `\|"foo"`>`(`>`("foo"\|)`
+| fly           | fly over ending parentheses `([{\|}])` > `)` > `([{}])\|`
+| treenode      | filter inside or outside of treesitter nodes
 ### Donate
 If you want to donate then you need to find the correct link (50₁₀):
 * [0a]() [0b]() [0c]() [0d]() [0e]() [0f]() [0g]() [0h]()
