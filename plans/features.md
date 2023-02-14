@@ -52,9 +52,9 @@
 + [x] make key spesific fallback
 + [x] makdown don't add space `+ [|]` > `+ [ |]`
 + [x] fastwarp end  `<A-$>`
-+ [ ] make it have the ability to use extensions
-+ [ ] one char fastwarp `(foo|),, > <A-l> > (foo,|),`
-+ [ ] fastwarp WORD `<A-E>`
++ [x] make it have the ability to use extensions
++ [x] fastwarp WORD `<A-E>`
++ [ ] one char fastwarp `(foo|),, > <A-L> > (foo,|),`
 + [ ] smart fastwarp end `(|)foo,bar,` > `<A-$>` > `(foo,bar|),`
 + [ ] norma fastwarp multi line
 + [ ] hop style fastwarp
@@ -68,8 +68,8 @@
 + [x] multiline mode with the indentation determening the block size
 + [x] disable for surtent cmdlinetypes
 + [x] treesitter integration for special blocks (aka strings)
-+ [ ] only filter inside or outside of comments and other user defined treesitter nodes
-+ [ ] make block filtering for inside/outside otpional `b|#a` > `b|\1` and `b#a|` > `b#a|` and not `\1#a|`
++ [x] only filter inside or outside of comments and other user defined treesitter nodes
++ [x] make block filtering for inside/outside otpional `b|#a` > `b|\1` and `b#a|` > `b#a|` and not `\1#a|`
 + [ ] user defined multiline as one (maybe using treesitter)
 # inserting
 + [x] dont add pair `'` if previous is alphanumeric

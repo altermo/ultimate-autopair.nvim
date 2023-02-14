@@ -34,7 +34,7 @@ function M.extensions.delete_prev_pair(o)
 end
 function M.extensions.delete_overjump_pair(o)
   local prev_pair=mem.mem[o.prev_char]
-  if M.conf.overjump and prev_pair and prev_pair.type==1 then
+  if o.conf.overjump and prev_pair and prev_pair.type==1 then
     if not open_pair.open_pair_before(o.prev_char,prev_pair.paire,o.line,o.col) then
       local matching_pair_pos=info_line.findepaire(o.line,o.col,o.prev_char,prev_pair.paire)
       if matching_pair_pos then
@@ -44,7 +44,7 @@ function M.extensions.delete_overjump_pair(o)
   end
 end
 function M.extensions.delete_space(o)
-  if M.conf.space and o.prev_char==' ' then
+  if o.conf.space and o.prev_char==' ' then
     local newcol
     local char
     for i=o.col-2,1,-1 do
@@ -64,7 +64,7 @@ function M.extensions.delete_space(o)
   end
 end
 function M.extensions.delete_multichar(o)
-  if M.conf.multichar and mem.extensions.multichar then
+  if o.conf.multichar and mem.extensions.multichar then
     for newkey,opt in pairs(mem.mem) do
       local bool=#newkey>1 and opt.type~=2
       if bool and opt.ext.filetype and #opt.ext.filetype~=0 then
@@ -79,11 +79,12 @@ function M.extensions.delete_multichar(o)
     end
   end
 end
-function M.backspace(fallback)
+function M.backspace(conf,fallback)
   local o={}
+  o.conf=vim.tbl_extend('force',M.conf,conf or {})
   o.wline=utils.getline()
   o.wcol=utils.getcol()
-  o.line,o.col=info_line.filter_string(o.wline,o.wcol,utils.getlinenr(),M.conf.notree)
+  o.line,o.col=info_line.filter_string(o.wline,o.wcol,utils.getlinenr(),o.conf.notree)
   o.prev_char=o.line:sub(o.col-1,o.col-1)
   o.next_char=o.line:sub(o.col,o.col)
   for _,i in pairs(M.extensions) do
@@ -92,15 +93,15 @@ function M.backspace(fallback)
       return ret
     end
   end
-  if M.conf.fallback then
-    return M.conf.fallback(fallback or '<bs>')
+  if o.conf.fallback then
+    return o.conf.fallback(fallback or '<bs>')
   else
     return fallback or '<bs>'
   end
 end
-function M.create_backspace(key)
+function M.create_backspace(conf,key)
   return function ()
-    return M.backspace(key)
+    return M.backspace(conf,key)
   end
 end
 function M.setup()

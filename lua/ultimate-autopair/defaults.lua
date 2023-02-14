@@ -46,7 +46,9 @@ M.default_config={
     fastwarp={
         enable=true,
         map='<A-e>',
+        Wmap='<A-E>',
         cmap='<A-e>',
+        Wcmap='<A-E>',
         fallback=nil,
     },
     fastend={
