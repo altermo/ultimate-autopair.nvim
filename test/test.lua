@@ -79,6 +79,7 @@ function M.test_backspace()
 end
 function M.test_other_map()
     local d=':imap <C-e> <A-e>\r'
+    local e=':imap <C-O> <A-$>\r'
     run('I[ ','[  ]')
     run('I[foobi ','[ foo ]')
     run(':setf markdown\rI+ [ ','+ [ ]')
@@ -89,6 +90,7 @@ function M.test_other_map()
     run(d..'I{foo},hi','{foo,}')
     run(d..'I{foo},(bar)bbi','{foo,(bar)}')
     run(d..'I{(),}hhi','{(,)}')
+    run(e..'Ifoo,barI(','(foo,bar)')
 end
 function M.test_extensions()
     run(':setf c\ri/a*','/**/')

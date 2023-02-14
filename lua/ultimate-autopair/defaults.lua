@@ -49,6 +49,12 @@ M.default_config={
         cmap='<A-e>',
         fallback=nil,
     },
+    fastend={
+        enable=true,
+        map='<A-$>',
+        cmap='<A-$>',
+        fallback=nil,
+    },
     _default_beg_filter=M.default_beg_filter,
     _default_end_filter=M.default_end_filter,
     extensions={

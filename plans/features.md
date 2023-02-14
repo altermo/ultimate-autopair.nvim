@@ -51,10 +51,10 @@
 + [x] normal fastwarp `{(|),},bar > <A-e> > {(,|)},bar`
 + [x] make key spesific fallback
 + [x] makdown don't add space `+ [|]` > `+ [ |]`
++ [x] fastwarp end  `<A-$>`
 + [ ] make it have the ability to use extensions
 + [ ] one char fastwarp `(foo|),, > <A-l> > (foo,|),`
 + [ ] fastwarp WORD `<A-E>`
-+ [ ] fastwarp end  `<A-$>`
 + [ ] smart fastwarp end `(|)foo,bar,` > `<A-$>` > `(foo,bar|),`
 + [ ] norma fastwarp multi line
 + [ ] hop style fastwarp

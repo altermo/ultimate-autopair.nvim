@@ -36,9 +36,8 @@ function M.fastwarp(fallback)
   local line=utils.getline()
   local col=utils.getcol()
   local next_char=line:sub(col,col)
-  local next_pair=mem.mem[next_char]
   local key
-  if next_pair and next_pair.type~=1 then
+  if mem.isend(line,col) then
     for i=col+1,#line do
       local char=line:sub(i,i)
       if mem.isstart(line,i) then
@@ -74,7 +73,7 @@ function M.setup()
   if M.conf.enable then
     vim.keymap.set('i',M.conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     if gconf.cmap and M.conf.cmap then
-      vim.keymap.set('c',M.conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+      vim.keymap.set('c',M.conf.cmap,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end
   end
 end

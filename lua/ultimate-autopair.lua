@@ -9,5 +9,6 @@ function M.setup(config)
     require'ultimate-autopair.maps.cr'.setup()
     require'ultimate-autopair.maps.sp'.setup()
     require'ultimate-autopair.maps.fastwarp'.setup()
+    require'ultimate-autopair.maps.fastend'.setup()
 end
 return M
