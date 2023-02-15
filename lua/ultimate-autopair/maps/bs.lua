@@ -67,10 +67,10 @@ function M.extensions.delete_multichar(o)
   if o.conf.multichar and mem.extensions.multichar then
     for newkey,opt in pairs(mem.mem) do
       local bool=#newkey>1 and opt.type~=2
-      if bool and opt.ext.filetype and #opt.ext.filetype~=0 then
-        bool=opt.ext.filetype[vim.o.filetype]
+      if bool and opt.keyconf.ft then
+        bool=vim.tbl_contains(opt.keyconf.ft,vim.o.filetype)
       end
-      if bool and opt.ext.alpha and vim.tbl_contains(opt.ext.alpha.before or {},newkey) then
+      if bool and mem.extensions.alpha and vim.tbl_contains(mem.extensions.alpha.conf.before or {},newkey) then
         bool=not o.line:sub(o.col-#newkey-1,o.col-#newkey-1):match('%a')
       end
       if bool and o.line:sub(o.col-#newkey,o.col-1)==newkey and opt.paire==o.line:sub(o.col,o.col+#opt.paire-1) then

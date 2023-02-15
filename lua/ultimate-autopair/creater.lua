@@ -5,7 +5,7 @@ function M.create_function(key,filters)
         local H={}
         H.key=key
         for _,filter in ipairs(filters) do
-            local exit_key=filter.call(H,filter.conf,mem.mem[H.key] and mem.mem[H.key].ext[filter.name] or {},mem.mem)
+            local exit_key=filter.call(H,filter.conf or {},mem.mem)
             if exit_key==2 then
                 return '\x1d'..key
             elseif exit_key==1 then
@@ -28,18 +28,9 @@ function M.create_vim_keymap(char,cmdmode)
         mem.mapped[char]=func
     end
 end
-function M.init_map(key,opt)
-    for name,extension in pairs(mem.extensions) do
-        if extension.init then
-            mem.addext(key,name)
-            extension.init(opt,mem.mem[key].ext[name],extension.conf,mem.mem)
-        end
-    end
-end
 function M.create_map(pair,paire,opt,typ,cmdmode)
     local key=(typ==2 and paire or pair)
-    mem.addpair(key,pair,paire,typ)
-    M.init_map(key,opt)
+    mem.addpair(key,pair,paire,typ,opt)
     if typ~=1 then
         M.create_vim_keymap(key:sub(1,1),cmdmode)
     end

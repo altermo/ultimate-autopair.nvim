@@ -1,4 +1,5 @@
 local M={}
+M.jobs={}
 local function error(msg)
     vim.notify(msg,'error')
 end
@@ -12,7 +13,6 @@ function M.main()
     if rdft~='' then
         error('A non lua file was spotted at '..rdft)
     end
-    require'ultimate-autopair'.setup()
     vim.notify('tests starting')
     for k,v in pairs(M) do
         if k:sub(1,5)=='test_' then
@@ -34,13 +34,13 @@ local function run(keys,match)
         ':edit '..outtmp,
         keys..':wq!',
     },tmp)
-    vim.fn.jobstart({'nvim','-u','NONE','-s',tmp},{
+    table.insert(M.jobs,vim.fn.jobstart({'nvim','-u','NONE','-s',tmp},{
         on_exit=function()
             vim.fn.delete(tmp)
             assert(vim.fn.join(vim.fn.readfile(outtmp),'\n'),match)
             vim.fn.delete(outtmp)
         end,pty=true
-    })
+    }))
 end
 function M.test_simple()
     run('I(','()')
@@ -104,6 +104,7 @@ function M.test_extensions()
     run('I\\a(','\\(')
     run('I\\\\a(','\\\\()')
     run('I\'\\a"','\'\\"\\"\'')
+    run([[I'\\a"]],[['\\""']])
     run(":set lisp\rI'","'")
     run(':set lisp\rI"\'','"\'\'"')
     run('I[{( ]$','[{(  )}]$')

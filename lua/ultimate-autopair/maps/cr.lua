@@ -22,6 +22,9 @@ function M.extensions.newline_multichar(o)
           if bool and not pair.noalpha then
             bool=not o.line:sub(-#pair[1]-1-offset,-#pair[1]-1-offset):match('%a')
           end
+          if bool and not (pair.pair or pair.next) then
+            bool=not (vim.trim(utils.getline(o.linenr+1) or '')==pair[2] and vim.fn.indent(o.linenr)==vim.fn.indent(o.linenr+1))
+          end
           if bool then
             local ret=''
             if pair.pair or pair.next then
@@ -54,6 +57,7 @@ function M.newline(conf,fallback)
   local o={}
   o.conf=vim.tbl_extend('force',M.conf,conf or {})
   o.line=utils.getline()
+  o.linenr=utils.getlinenr()
   o.col=utils.getcol()
   o.prev_char=o.line:sub(o.col-1,o.col-1)
   o.next_char=o.line:sub(o.col,o.col)

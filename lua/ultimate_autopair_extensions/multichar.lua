@@ -1,16 +1,16 @@
 return {
-    filter=function (o,_,_,gmem)
+    call=function (o,_,mem)
         if o.cmdmode then return end
-        for newkey,opt in pairs(gmem) do
+        for newkey,opt in pairs(mem) do
             local bool=#newkey>1 and opt.type~=2
-            if bool and opt.ext.filetype and vim.tbl_count(opt.ext.filetype)~=0 then
-                bool=opt.ext.filetype[vim.o.filetype]
+            if bool and opt.keyconf.ft then
+                bool=vim.tbl_contains(opt.keyconf.ft,vim.o.filetype)
             end
-            if bool and opt.ext.rules and vim.tbl_count(opt.ext.rules)~=0 then
+            if bool and opt.keyconf.rules then
                 local rules=require'ultimate-autopair.memory'.load_extension('rules')
-                bool=rules.check_rules(opt.ext.rules,o)
+                bool=rules.check_rules(opt.keyconf.rules,o)
             end
-            if bool and opt.ext.alpha and vim.tbl_contains(opt.ext.alpha.before or {},newkey) then
+            if bool and o.ext.alpha and vim.tbl_contains(o.ext.alpha.before or {},newkey) then
                 bool=not o.line:sub(o.col-#newkey,o.col-#newkey):match('%a')
             end
             if (bool

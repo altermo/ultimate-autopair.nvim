@@ -54,14 +54,13 @@ function M.create_mappings()
         for ft,i in pairs(M.conf.ft or {}) do
             for _,v in ipairs(i) do
                 if not v.disable then
-                    M.create_map_pair(vim.tbl_extend('force',v,{ft=ft}))
+                    M.create_map_pair(vim.tbl_extend('force',v,{ft={ft}}))
                 end
             end
         end
     end
     for _,i in ipairs(M.conf.special or {}) do
-        mem.addpair(i.id,i.pair,i.paire,i.type)
-        mem.init_map(i.id,i.opt)
+        mem.addpair(i.id,i.pair,i.paire,i.type,i.keyconf)
         if i.key then
             creater.create_vim_keymap(i.key,i.cmdmode)
         end

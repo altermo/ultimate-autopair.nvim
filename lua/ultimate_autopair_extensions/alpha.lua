@@ -1,4 +1,5 @@
-return {filter=function (o,conf)
+return {call=function (o,conf)
+    if #o.key>1 then return end
     if o.type==2 or (o.line:sub(o.col,o.col)==o.paire and o.type==3) then
         return
     end

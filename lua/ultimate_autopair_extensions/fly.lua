@@ -1,6 +1,6 @@
 local open_pair=require'ultimate-autopair.utils.open_pair'
 local utils=require'ultimate-autopair.utils.utils'
-return {filter=function (o,conf)
+return {call=function (o,conf)
     if o.type~=2 then return end
     if #o.key>1 then return end
     local next_char_index

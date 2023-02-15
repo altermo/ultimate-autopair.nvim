@@ -1,4 +1,4 @@
-return{filter=function(o)
+return{call=function(o)
     if #o.key>1 then return end
     local col=o.col-1
     local escape=false

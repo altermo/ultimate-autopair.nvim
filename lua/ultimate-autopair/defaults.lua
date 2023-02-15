@@ -1,23 +1,28 @@
 local utils=require'ultimate-autopair.utils.utils'
 local M={}
-function M.default_end_filter(o,_,_,gmem)
-    if not gmem[o.key] then
+function M.default_end_filter(o,_,mem)
+    if not mem[o.key] then
         return 2
     end
     local add_pair=require'ultimate-autopair.utils.add_pair'
     return add_pair.pair(o.pair,o.paire,o.line,o.col,o.type)
 end
-function M.default_beg_filter(o,_,_,gmem)
+function M.default_beg_filter(o,_,mem)
     o.extra={}
-    if gmem[o.key] then o.pair=gmem[o.key].pair end
-    if gmem[o.key] then o.paire=gmem[o.key].paire end
-    if gmem[o.key] then o.type=gmem[o.key].type end
+    o.keyconf={}
+    if mem[o.key] then
+        o.pair=mem[o.key].pair
+        o.paire=mem[o.key].paire
+        o.type=mem[o.key].type
+        o.keyconf=mem[o.key].keyconf
+    end
     o.line=utils.getline()
     o.wline=utils.getline()
     o.col=utils.getcol()
     o.wcol=utils.getcol()
     o.linenr=utils.getlinenr()
     o.cmdmode=utils.incmd()
+    o.ext=require'ultimate-autopair.memory'.extensions
 end
 M.default_config={
     mapopt={noremap=true},

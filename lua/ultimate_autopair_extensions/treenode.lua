@@ -1,5 +1,5 @@
 return{
-    filter=function(o,conf)
+    call=function(o,conf)
         local parser=pcall(vim.treesitter.get_parser)
         if not parser then return end
         local tserr,tsnode=pcall(vim.treesitter.get_node_at_pos,0,o.linenr-1,o.col-2,{})

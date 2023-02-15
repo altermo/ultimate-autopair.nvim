@@ -14,12 +14,11 @@
 + [x] auto add pairs `({|}) > CR > ({\n|\n})`
 + [x] make it have the ability to use extensions
 + [x] auto add even if text `{abc|} > CR > {abc\n|\n}`
-+ [ ] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
++ [x] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
 + [ ] auto add even if text `(|abc) > CR > (\n|abc\n)`
 + [ ] auto add pairs `({| > CR > ({\n|\n})`
 + [ ] behave like splitjoin (splitjoin plugin integration)
 + [ ] multicharacter pair not in string/other node
-+ [ ] make map use pair extensions
 + [ ] make map use filtering pair extensions
 # BS
 + [x] suport

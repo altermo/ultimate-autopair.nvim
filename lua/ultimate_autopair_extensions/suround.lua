@@ -1,7 +1,7 @@
 local open_pair=require'ultimate-autopair.utils.open_pair'
 local utils=require'ultimate-autopair.utils.utils'
 local info_line=require'ultimate-autopair.utils.info_line'
-return {filter=function(o,conf)
+return {call=function(o,conf)
     --TODO: don't use o.w* for detection. NEEDS: the string extension to leave in string delimiters
     local poschar=o.wline:sub(o.wcol,o.wcol)
     if o.type==1 and vim.tbl_contains(conf,poschar) then

@@ -19,21 +19,22 @@ function M.gen_filters()
     local filters={}
     for _,name in ipairs(M.oextensions) do
         local extension=M.extensions[name]
-        if extension.filter then
-            filters[#filters+1]={call=extension.filter,conf=extension.conf,name=name}
+        if extension.call then
+            filters[#filters+1]={call=extension.call,conf=extension.conf,name=name}
         end
     end
     M.filters=M._filters_add_defaults(filters)
 end
-function M.addpair(key,pair,paire,type)
+function M.addpair(key,pair,paire,type,keyconf)
     if not M.mem[key] then
-        M.mem[key]={pair=pair,paire=paire,type=type,ext={}}
+        M.mem[key]={pair=pair,paire=paire,type=type,keyconf={}}
     end
-end
-function M.addext(key,name)
-    if not M.mem[key].ext[name] then
-        M.mem[key].ext[name]={}
+    for i,opt in pairs(keyconf) do
+        if _G.type(opt)=='table' then
+            M.mem[key].keyconf[i]=vim.list_extend(M.mem[key].keyconf[i] or {},opt)
+        end
     end
+
 end
 function M.ispair(prev_char,next_char)
     local prev_pair=M.mem[prev_char]

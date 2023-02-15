@@ -44,7 +44,7 @@ function M.check_rule(rule,o)
     elseif cmd=='call' then
         return args[1](o,unpack(args,2))
     elseif cmd=='instring' then
-        return require'ultimate-autopair.utils.info_line'.in_string(o.line,o.col)
+        return require'ultimate-autopair.utils.info_line'.in_string(o.line,o.col,o.linenr,args[1])
     else
         error(("Unknown command %s"):format(cmd))
     end
@@ -57,17 +57,17 @@ function M.check_rules(rules,o)
     end
     return false
 end
-function M.init(keyconf,mem)
-    if keyconf.rules then
-        for _,v in ipairs(keyconf.rules) do
+function M.init(rules,mem)
+    if rules then
+        for _,v in ipairs(rules) do
             mem[#mem+1]=v
         end
     end
 end
-function M.filter(o,_,mem)
+function M.call(o)
     if #o.key>1 then return end
-    if #mem==0 then return end
-    if M.check_rules(mem,o) then
+    if not o.keyconf.rules then return end
+    if M.check_rules(o.keyconf.rules,o) then
         return
     end
     return 2

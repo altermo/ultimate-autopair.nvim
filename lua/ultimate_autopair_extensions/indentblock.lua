@@ -1,5 +1,5 @@
 local utils=require'ultimate-autopair.utils.utils'
-return{filter=function (o)
+return{call=function (o)
     if o.cmdmode then return end
     local indent=utils.getindent(o.linenr)
     if indent==0 or indent==-1 then return end
