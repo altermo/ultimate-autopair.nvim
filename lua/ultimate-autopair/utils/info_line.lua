@@ -110,6 +110,9 @@ end
 function M.findepaire(line,col,pair,paire)
     return M.count_paire(pair,paire,line,col,#line,true,1)
 end
+function M.findpair(line,col,pair,paire)
+    return M.count_pair(pair,paire,line,col,#line,true,1)
+end
 function M.filter_string(line,col,linenr,notree)
     local instring,strbeg,strend=M.in_string(line,col,linenr,notree)
     if instring then
