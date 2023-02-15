@@ -50,7 +50,7 @@ function M.extensions.close_newline(o)
 end
 function M.extensions.before_paire_newline(o)
   local next_pair=mem.mem[o.next_char]
-  if next_pair and not o.prev_pair and next_pair.type==2 and o.col==#o.line and not info_line.findpair(o.line,o.col,o.next_char,next_pair.paire) then
+  if next_pair and not o.prev_pair and next_pair.type==2 and o.col==#o.line and info_line.findpair(o.line,o.col,next_pair.pair,o.next_char) then
     return '\r'..o.semi..'<up><end>\r'
   end
 end

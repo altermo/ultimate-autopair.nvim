@@ -77,6 +77,19 @@ function M.extensions.delete_multichar(o)
         return utils.delete(#newkey,#opt.paire)
       end
     end
+    for newkey,opt in pairs(mem.mem) do
+      local bool=#newkey>1 and opt.type~=2
+      local pair=opt.pair..opt.paire
+      if bool and opt.keyconf.ft then
+        bool=vim.tbl_contains(opt.keyconf.ft,vim.o.filetype)
+      end
+      if bool and mem.extensions.alpha and vim.tbl_contains(mem.extensions.alpha.conf.before or {},newkey) then
+        bool=not o.line:sub(o.col-#pair-1,o.col-#pair-1):match('%a')
+      end
+      if bool and o.line:sub(o.col-#pair,o.col-1)==pair then
+        return utils.delete(#pair)
+      end
+    end
   end
 end
 function M.backspace(conf,fallback)

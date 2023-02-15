@@ -75,6 +75,7 @@ function M.test_backspace()
     run(d..'I[ ','[]')
     run(d..'I[foobi ','[foo]')
     run(d..':setf c\rI/A*','')
+    run(d..':setf c\ri/a*A','')
     run(d..'I"\'"\'\'i','"\'"')
 end
 function M.test_other_map()

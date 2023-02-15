@@ -15,7 +15,7 @@ function M.count_pair(pair,paire,line,cols,cole,ret_pos,Icount)
             count=0
         end
     end
-    return not ret_pos and count
+    return (not ret_pos) and count
 end
 function M.count_paire(pair,paire,line,cols,cole,ret_pos,Icount)
     local count=Icount or 0
@@ -33,7 +33,7 @@ function M.count_paire(pair,paire,line,cols,cole,ret_pos,Icount)
             count=0
         end
     end
-    return not ret_pos and count
+    return (not ret_pos) and count
 end
 function M.count_ambigious_pair(pair,line,cols,cole,Icount)
     local count=Icount or 0
@@ -111,7 +111,7 @@ function M.findepaire(line,col,pair,paire)
     return M.count_paire(pair,paire,line,col,#line,true,1)
 end
 function M.findpair(line,col,pair,paire)
-    return M.count_pair(pair,paire,line,col,#line,true,1)
+    return M.count_pair(pair,paire,line,1,col-1,true,1)
 end
 function M.filter_string(line,col,linenr,notree)
     local instring,strbeg,strend=M.in_string(line,col,linenr,notree)
