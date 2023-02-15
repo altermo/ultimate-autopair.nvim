@@ -57,6 +57,7 @@ end
 function M.test_newline()
     run(':set cindent\rI{\r','{\n\t\n}')
     run(':set cindent\rI{foo\r','{foo\n\t\n}')
+    run(':set cindent\rI{foobi\r','{\n\tfoo\n}')
     run(':set cindent\rI{a\r','{\n\t\n}')
     run(':setf c\r:set cindent\rI{\r','{\n\t\n};')
     run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};')

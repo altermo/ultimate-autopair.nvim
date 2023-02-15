@@ -48,6 +48,15 @@ function M.extensions.close_newline(o)
     return '\r'..o.prev_pair.paire..o.semi..'<up><end>\r'
   end
 end
+function M.extensions.after_pair_newline(o)
+  local next_pair=mem.mem[o.next_char]
+  if o.prev_pair and not next_pair and o.prev_pair.type==1 then
+    local matching_pair_pos=info_line.findepaire(o.line,o.col,o.prev_char,o.prev_pair.paire)
+    if matching_pair_pos then
+      return utils.movel(matching_pair_pos-o.col)..'\r<up><home>'..utils.movel(o.col-1)..'\r'
+    end
+  end
+end
 function M.extensions.before_paire_newline(o)
   local next_pair=mem.mem[o.next_char]
   if next_pair and not o.prev_pair and next_pair.type==2 and o.col==#o.line and info_line.findpair(o.line,o.col,next_pair.pair,o.next_char) then

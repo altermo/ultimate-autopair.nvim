@@ -15,7 +15,7 @@
 + [x] make it have the ability to use extensions
 + [x] auto add even if text `{abc|} > CR > {abc\n|\n}`
 + [x] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
-+ [ ] auto add even if text `(|abc) > CR > (\n|abc\n)`
++ [x] auto add even if text `(|abc) > CR > (\n|abc\n)`
 + [ ] auto add pairs `({| > CR > ({\n|\n})`
 + [ ] splitjoin plugin integration
 + [ ] multicharacter pair not in string/other node
