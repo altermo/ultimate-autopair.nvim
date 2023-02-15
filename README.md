@@ -4,7 +4,7 @@ Ultimate-autopair plugin aims to have <u style="color: red">**all possible featu
 
 Requires neovim 0.7
 ## Summary
-Ultimate-autopair is an auto-pairing plugin that is easy to extend, by the fact that it supports extensions. (Note that the extra mappings (`<CR>`,`<BS>`,...) currently do **not** use this system of extensions) The builtin extensions includes among other things: command line support, multicharacter pairs, non one-line, fastwarp and much much more...
+Ultimate-autopair is an neovim autopair plugin that is easy to extend, by the fact that it supports extensions. (Note that the extra mappings (`<CR>`,`<BS>`,...) currently do **not** use this system of extensions) The builtin extensions includes among other things: command line support, multicharacter pairs, non one-line, fastwarp and much much more...
 ## Installation
 Packer:
 ```lua
