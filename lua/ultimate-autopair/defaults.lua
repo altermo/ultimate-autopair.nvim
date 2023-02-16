@@ -76,7 +76,7 @@ M.default_config={
         'filetype',
         {'alpha',{before={"'"}}},
         {'suround',{'"',"'"}},
-        {'fly',{')','}',']',' '}},
+        {'fly',{')','}',']',' ',match=nil}},
     },
     {'[',']'},
     {'(',')'},

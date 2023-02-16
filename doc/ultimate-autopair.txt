@@ -88,6 +88,7 @@ Example: >lua
      autoclose=true,
      --{| > cr > {^M|^M}
      multichar={
+      enable=false,
       --currently only allows filetype specific pairs
        markdown={{'```','```',
         pair=true,

@@ -61,7 +61,7 @@
 + [ ] norma fastwarp multi line
 + [ ] hop style fastwarp
 + [ ] `[{"| > <A-k> > [{""}]`
-+ [ ] reverse fastwarp
++ [ ] reverse fastwarp (+multiline)
 + [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
 + [ ] make maps use filtering pair extensions
 # filters
@@ -88,7 +88,7 @@
 + [x] quick hop end `[{|}] > ] > [{}]|`
 + [x] auto goto end if only space or newline `[text|  ] > ] > [text  ]|`
 + [x] smart add `()|) > ) ())|)`
-+ [ ] auto goto end `[te|xt] > ] > [text]|`
++ [x] auto goto end `[te|xt] > ] > [text]|`
 + [ ] auto skip multicharacter pair `/*|*/ > * > /**/|`
 + [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
 + [ ] open multicharacter-pair detector

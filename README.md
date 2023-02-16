@@ -71,7 +71,7 @@ extensions={
     'filetype',
     {'alpha',{before={"'"}}},
     {'suround',{'"',"'"}},
-    {'fly',{')','}',']',' '}},
+    {'fly',{')','}',']',' ',match=nil}},
 },
 {'(',')'},
 {"'","'",rules={{'when',{'option','lisp'},{'instring'}}}},

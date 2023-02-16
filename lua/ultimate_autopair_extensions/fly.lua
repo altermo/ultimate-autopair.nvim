@@ -9,8 +9,10 @@ return {call=function (o,conf)
         if char==o.key then
             next_char_index=i
             break
-        elseif not vim.tbl_contains(conf,char) then
-            return
+        elseif vim.tbl_contains(conf,char) then
+        elseif conf.match and vim.regex(conf.match):match_str(char) then
+        else
+                return
         end
     end
     if not next_char_index then return end
