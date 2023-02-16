@@ -44,7 +44,8 @@ function M.extensions.normal_newline(o)
   end
 end
 function M.extensions.close_newline(o)
-  if o.conf.autoclose and o.prev_pair and o.prev_pair.type==1 and o.col-1==#o.line then
+  if o.conf.autoclose and o.prev_pair and o.prev_pair.type==1 and o.col-1==#o.line and
+    vim.fn.trim(utils.getline(o.linenr+1) or '',' ',1):sub(1,1)~=o.prev_pair.paire then
     return '\r'..o.prev_pair.paire..o.semi..'<up><end>\r'
   end
 end

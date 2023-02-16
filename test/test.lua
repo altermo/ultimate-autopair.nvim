@@ -25,12 +25,12 @@ local function assert(x,y)
         error('Assertion failed '..vim.inspect(x)..' ~= '..vim.inspect(y))
     end
 end
-local function run(keys,match)
+local function run(keys,match,conf)
     local tmp=vim.fn.tempname()
     local outtmp=vim.fn.tempname()
     vim.fn.writefile({
         ':set runtimepath+='..M.path,
-        ':lua require"ultimate-autopair".setup()',
+        (':lua require"ultimate-autopair".setup(%s)').format(vim.inspect(conf)),
         ':edit '..outtmp,
         keys..':wq!',
     },tmp)
@@ -58,7 +58,7 @@ function M.test_newline()
     run(':set cindent\rI{\r','{\n\t\n}')
     run(':set cindent\rI{foo\r','{foo\n\t\n}')
     run(':set cindent\rI{foobi\r','{\n\tfoo\n}')
-    run(':set cindent\rI{a\r','{\n\t\n}')
+    run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
     run(':setf c\r:set cindent\rI{\r','{\n\t\n};')
     run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};')
     run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};')
@@ -78,6 +78,7 @@ function M.test_backspace()
     run(d..':setf c\rI/A*','')
     run(d..':setf c\ri/a*A','')
     run(d..'I"\'"\'\'i','"\'"')
+    run(d..'I{\r','{}')
 end
 function M.test_other_map()
     local d=':imap <C-e> <A-e>\r'

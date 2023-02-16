@@ -92,12 +92,26 @@ function M.extensions.delete_multichar(o)
     end
   end
 end
+function M.extensions.delete_multiline(o)
+  if (not utils.incmd()) and o.line=='' then
+    local prev_line=utils.getline(o.linenr-1)
+    local next_line=utils.getline(o.linenr+1)
+    if prev_line and next_line then
+      local prev_char=prev_line:sub(-1,-1)
+      local next_char=vim.fn.trim(next_line,' ',1):sub(1,1)
+      if mem.ispair(prev_char,next_char) then
+        return utils.delete(1,1+#next_line-#vim.fn.trim(next_line,' ',1))
+      end
+    end
+  end
+end
 function M.backspace(conf,fallback)
   local o={}
   o.conf=vim.tbl_extend('force',M.conf,conf or {})
   o.wline=utils.getline()
   o.wcol=utils.getcol()
-  o.line,o.col=info_line.filter_string(o.wline,o.wcol,utils.getlinenr(),o.conf.notree)
+  o.linenr=utils.getlinenr()
+  o.line,o.col=info_line.filter_string(o.wline,o.wcol,o.linenr,o.conf.notree)
   o.prev_char=o.line:sub(o.col-1,o.col-1)
   o.next_char=o.line:sub(o.col,o.col)
   for _,i in pairs(M.extensions) do
