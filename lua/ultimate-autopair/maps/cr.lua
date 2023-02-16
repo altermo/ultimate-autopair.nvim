@@ -6,7 +6,7 @@ M.conf=gconf.cr or {}
 local utils=require'ultimate-autopair.utils.utils'
 local mem=require'ultimate-autopair.memory'
 function M.extensions.newline_multichar(o)
-  if o.conf.multichar then
+  if o.conf.multichar and o.conf.multichar.enable then
     for ft,list_of_pairs in pairs(o.conf.multichar) do
       if vim.o.filetype==ft then
         for _,pair in ipairs(list_of_pairs) do

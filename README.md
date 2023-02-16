@@ -31,8 +31,9 @@ bs={
 },
 cr={
     enable=true,
-    autoclose=true,
+    autoclose=false,
     multichar={
+        enable=false,
         markdown={{'```','```',pair=true,noalpha=true,next=true}},
         lua={{'then','end'},{'do','end'}},
     },

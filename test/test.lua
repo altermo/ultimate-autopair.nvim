@@ -30,11 +30,11 @@ local function run(keys,match,conf)
     local outtmp=vim.fn.tempname()
     vim.fn.writefile({
         ':set runtimepath+='..M.path,
-        (':lua require"ultimate-autopair".setup(%s)').format(vim.inspect(conf)),
+        ':lua require"ultimate-autopair".setup('..vim.inspect(conf)..')',
         ':edit '..outtmp,
         keys..':wq!',
     },tmp)
-    table.insert(M.jobs,vim.fn.jobstart({'nvim','-u','NONE','-s',tmp},{
+    table.insert(M.jobs,vim.fn.jobstart({'nvim','-u','NONE','-i','NONE','-s',tmp},{
         on_exit=function()
             vim.fn.delete(tmp)
             assert(vim.fn.join(vim.fn.readfile(outtmp),'\n'),match)
@@ -62,7 +62,7 @@ function M.test_newline()
     run(':setf c\r:set cindent\rI{\r','{\n\t\n};')
     run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};')
     run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};')
-    run(':setf lua\rIdoA\r','do\n\nend')
+    run(':setf lua\rIdoA\r','do\n\nend',{cr={multichar={enable=true}}})
     run(':setf markdown\rI```\r','```\n\n```')
 end
 function M.test_backspace()
