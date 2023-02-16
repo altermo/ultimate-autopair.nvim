@@ -93,7 +93,6 @@
 + [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
 + [ ] open multicharacter-pair detector
 + [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|`
-+ [ ] `[{| > ] > [{}]|`
 + [ ] add the parens att end when logical `|{a} > [ > [|{a}]`
 # pairs
 + [x] multicharacter pair `py ''' and md ````
