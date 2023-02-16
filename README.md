@@ -1,10 +1,10 @@
-###### :exclamation: Ultimate-autopair is _alpha_ software. Some things may change and some things may break. Documentation may sometimes be inaccurate.
+###### :exclamation: Ultimate-autopair is _alpha_ software. Some things may change, and some things may break. Documentation may sometimes be inaccurate.
 # Ultimate-autopair.nvim 0.3.1
 Ultimate-autopair plugin aims to have <u style="color: red">**all possible features**</u> that an auto-pairing plugin needs.
 
 Requires neovim 0.7
 ## Summary
-Ultimate-autopair is an neovim autopair plugin that is easy to extend, by the fact that it supports extensions. (Note that the extra mappings (`<CR>`,`<BS>`,...) currently do **not** use this system of extensions) The builtin extensions includes among other things: command line support, multicharacter pairs, non one-line, fastwarp and much much more...
+Ultimate-autopair is a neovim autopair plugin that is easy to extend, by the fact that it supports extensions. (Note that the extra mappings (`<CR>`,`<BS>`,...) currently do **not** use this system of extensions) The builtin extensions includes among other things: command line support, multicharacter pairs, non one-line, fastwarp and much more...
 ## Installation
 Packer:
 ```lua
@@ -100,7 +100,7 @@ ft={
 | alpha         | no pair before or after alpha character
 | surround      | auto surround the pair `\|"foo"`>`(`>`("foo"\|)`
 | fly           | fly over ending parentheses `([{\|}])` > `)` > `([{}])\|`
-| treenode      | filter inside or outside of treesitter nodes
+| treenode      | filter inside or outside treesitter nodes
 ### Donate
 If you want to donate then you need to find the correct link (50₁₀):
 * [0a]() [0b]() [0c]() [0d]() [0e]() [0f]() [0g]() [0h]()
