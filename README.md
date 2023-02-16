@@ -46,10 +46,14 @@ space={
 },
 fastwarp={
     enable=true,
+    hopout=false,
     map='<A-e>',
-    Wmap='<A-E>',
+    rmap='<A-E>',
+    Wmap='<A-C-e>',
     cmap='<A-e>',
-    Wcmap='<A-E>',
+    rcmap='<A-E>',
+    Wcmap='<A-C-e>',
+    multiline=true,
     fallback=nil,
 },
 fastend={
