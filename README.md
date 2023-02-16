@@ -1,5 +1,5 @@
 ###### :exclamation: Ultimate-autopair is _alpha_ software. Some things may change, and some things may break. Documentation may sometimes be inaccurate.
-# Ultimate-autopair.nvim 0.3.1
+# Ultimate-autopair.nvim 0.3.2
 Ultimate-autopair plugin aims to have <u style="color: red">**all possible features**</u> that an auto-pairing plugin needs.
 
 Requires neovim 0.7
@@ -74,7 +74,7 @@ extensions={
     {'fly',{')','}',']',' ',match=nil}},
 },
 {'(',')'},
-{"'","'",rules={{'when',{'option','lisp'},{'instring'}}}},
+{"'","'",rules={{'when',{'option','lisp'},{'instring'},{'not',{'filetype','latex'}}}}},
 rules={ --only runs if the extension rules is loaded
     {[[\']],[[\']],rules={{'not',{'or',{'next',"'"},{'previous','\\',2}}}}},
     {[[\"]],[[\"]],rules={{'not',{'or',{'next','"'},{'previous','\\',2}}}}},

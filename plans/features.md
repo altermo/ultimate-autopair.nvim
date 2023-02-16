@@ -56,12 +56,12 @@
 + [x] fastwarp end  `<A-$>`
 + [x] make it have the ability to use extensions
 + [x] fastwarp WORD `<A-E>`
++ [x] norma fastwarp multi line
++ [x] reverse fastwarp (+multiline)
 + [ ] one char fastwarp `(foo|),, > <A-L> > (foo,|),`
 + [ ] smart fastwarp end `(|)foo,bar,` > `<A-$>` > `(foo,bar|),`
-+ [ ] norma fastwarp multi line
 + [ ] hop style fastwarp
 + [ ] `[{"| > <A-k> > [{""}]`
-+ [ ] reverse fastwarp (+multiline)
 + [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
 + [ ] make maps use filtering pair extensions
 # filters

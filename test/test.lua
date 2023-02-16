@@ -83,8 +83,9 @@ function M.test_backspace()
 end
 function M.test_other_map()
     local d=':imap <C-e> <A-e>\r'
-    local e=':imap <C-O> <A-$>\r'
-    local f=':imap <C-H> <A-E>\r'
+    local e=':imap <C-o> <A-$>\r'
+    local f=':imap <C-h> <A-C-e>\r'
+    local g=':imap <C-e> <A-E>\r'
     run('I[ ','[  ]')
     run('I[foobi ','[ foo ]')
     run(':setf markdown\rI+ [ ','+ [ ]')
@@ -92,11 +93,20 @@ function M.test_other_map()
     run(d..'I{}foobhi','{foo}')
     run(d..'I{}foo,bhi','{foo},')
     run(d..'I{foo},barbhhi','{foo,bar}')
+    run(d..'I()"bar"0a','("bar")')
     run(d..'I{foo},hi','{foo,}')
-    run(d..'I{foo},(bar)bbi','{foo,(bar)}')
-    run(d..'I{(),}hhi','{(,)}')
+    run(d..'I{foo},(bar)bbi','{foo,}(bar)')
+    run(d..'I{(),}hhi','{(,)}')
+    run(d..'I\rki(','(\n)')
     run(e..'Ifoo,barI(','(foo,bar)')
     run(f..'Ifoo,bar ,I(','(foo,bar) ,')
+    run(g..'I(foo)i','()foo')
+    run(g..'I()i','()')
+    run(g..'I(foo,bar)i','(foo),bar')
+    run(g..'I({bar})i','(){bar}')
+    run(g..'I("bar")i','()"bar"')
+    run(g..'I(foo{bar}baz)i','(foo{bar})baz')
+    run(g..'I(o)i','()\n')
 end
 function M.test_extensions()
     run(':setf c\ri/a*','/**/')

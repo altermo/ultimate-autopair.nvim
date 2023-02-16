@@ -51,10 +51,14 @@ M.default_config={
     },
     fastwarp={
         enable=true,
+        hopout=false,
         map='<A-e>',
-        Wmap='<A-E>',
+        rmap='<A-E>',
+        Wmap='<A-C-e>',
         cmap='<A-e>',
-        Wcmap='<A-E>',
+        rcmap='<A-E>',
+        Wcmap='<A-C-e>',
+        multiline=true,
         fallback=nil,
     },
     fastend={
@@ -82,8 +86,8 @@ M.default_config={
     {'(',')'},
     {'{','}'},
     {'"','"'},
-    {"'","'",rules={{'when',{'option','lisp'},{'instring'}}}},
-    {'`','`'},
+    {"'","'",rules={{'when',{'option','lisp'},{'instring'},{'not',{'filetype','latex'}}}}},
+    {'`','`',rules={{'not',{'filetype','latex'}}}},
     rules={
         {[[\']],[[\']],rules={{'not',{'or',{'next',"'"},{'previous','\\',2}}}}},
         {[[\"]],[[\"]],rules={{'not',{'or',{'next','"'},{'previous','\\',2}}}}},
@@ -107,6 +111,7 @@ M.default_config={
             {'"""','"""'},
             {"'''","'''"},
         },
+        latex={{'``',"''"}}
     },
 }
 return M

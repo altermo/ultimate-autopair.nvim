@@ -107,6 +107,20 @@ function M.findstringe(line,cols,pair,escape)
         end
     end
 end
+function M.findstring(line,cols,pair)
+    for i=cols-1,1,-1 do
+        local char=line:sub(i,i)
+        if char==pair then
+            local count=0
+            while line:sub(i-count-1,i-count-1)=='\\' do
+                count=count+1
+            end
+            if count%2==0 then
+                return i
+            end
+        end
+    end
+end
 function M.findepaire(line,col,pair,paire)
     return M.count_paire(pair,paire,line,col,#line,true,1)
 end
