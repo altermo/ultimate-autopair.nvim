@@ -20,14 +20,19 @@ end
 function M.extensions.delete_prev_pair(o)
   local prev_pair=mem.mem[o.prev_char]
   if prev_pair and prev_pair.type~=1 then
-    local prev_2_char=o.line:sub(o.col-2,o.col-2)
+    local i=0
+    local prev_2_char=o.line:sub(o.col-2-i,o.col-2-i)
+    while prev_2_char==' ' do
+      i=i+1
+      prev_2_char=o.line:sub(o.col-2-i,o.col-2-i)
+    end
     if mem.ispair(prev_2_char,o.prev_char) then
       if prev_pair.type==3 then
-        if not open_pair.open_pair_ambigous(o.prev_char,o.line) then
+        if not open_pair.open_pair_ambigous(o.prev_char,o.line) and i==0 then
           return utils.delete(2)
         end
       elseif not open_pair.open_paire_after(prev_2_char,o.prev_char,o.line,o.col) then
-        return utils.delete(2)
+        return utils.moveh(2+i)..utils.delete(0,2+i)
       end
     end
   end
