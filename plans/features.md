@@ -58,8 +58,8 @@
 + [x] fastwarp WORD `<A-E>`
 + [x] norma fastwarp multi line
 + [x] reverse fastwarp (+multiline)
++ [x] smart fastwarp end `(|)foo,bar,` > `<A-$>` > `(foo,bar|),`
 + [ ] one char fastwarp `(foo|),, > <A-L> > (foo,|),`
-+ [ ] smart fastwarp end `(|)foo,bar,` > `<A-$>` > `(foo,bar|),`
 + [ ] hop style fastwarp
 + [ ] `[{"| > <A-k> > [{""}]`
 + [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`

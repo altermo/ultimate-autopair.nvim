@@ -60,6 +60,7 @@ fastend={
     enable=true,
     map='<A-$>',
     cmap='<A-$>',
+    smart=false,
     fallback=nil,
 },
 _default_beg_filter=M.default_beg_filter,

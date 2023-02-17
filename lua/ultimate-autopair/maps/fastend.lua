@@ -9,6 +9,9 @@ function M.fastend(fallback)
   local next_char=line:sub(col,col)
   local next_pair=mem.mem[next_char]
   if next_pair and next_pair.type~=1 then
+    if M.conf.smart and vim.tbl_contains({';',','},line:sub(-1,-1)) then
+      return utils.delete(0,1)..'<end>'..utils.moveh()..next_char
+    end
     return utils.delete(0,1)..'<end>'..next_char
   end
   if M.conf.fallback then
