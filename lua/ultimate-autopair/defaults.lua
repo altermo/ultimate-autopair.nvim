@@ -91,8 +91,8 @@ M.default_config={
         {"'","'",rules={{'when',{'option','lisp'},{'instring'},{'not',{'filetype','tex'}}}}},
         {'`','`',rules={{'not',{'filetype','tex'}}}},
         rules={
-            {[[\']],[[\']],rules={{'not',{'or',{'next',"'"},{'previous','\\',2}}}}},
-            {[[\"]],[[\"]],rules={{'not',{'or',{'next','"'},{'previous','\\',2}}}}},
+            {[[\']],[[\']],rules={{'and',{'not',{'or',{'next',"'"},{'previous','\\',2}}},{'instring'}}}},
+            {[[\"]],[[\"]],rules={{'and',{'not',{'or',{'next','"'},{'previous','\\',2}}},{'instring'}}}},
         },
         ft={
             markdown={
