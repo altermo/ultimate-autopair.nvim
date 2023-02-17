@@ -35,6 +35,11 @@ function M.setup(config)
 end
 function M.create_mappings()
     if not M.conf then return end
+    for _,v in ipairs(M.conf.default_pairs or {}) do
+        if not v.disable then
+            M.create_map_pair(v)
+        end
+    end
     for _,v in ipairs(M.conf) do
         if not v.disable then
             M.create_map_pair(v)

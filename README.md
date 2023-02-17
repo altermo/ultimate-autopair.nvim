@@ -77,20 +77,22 @@ extensions={
     {'suround',{'"',"'"}},
     {'fly',{')','}',']',' ',match=nil}},
 },
-{'(',')'},
-{"'","'",rules={{'when',{'option','lisp'},{'instring'},{'not',{'filetype','tex'}}}}},
-rules={ --only runs if the extension rules is loaded
-    {[[\']],[[\']],rules={{'not',{'or',{'next',"'"},{'previous','\\',2}}}}},
-    {[[\"]],[[\"]],rules={{'not',{'or',{'next','"'},{'previous','\\',2}}}}},
-},
-ft={
-    markdown={
-        {'```','```'},
-        {'<!--','-->'},
+default_pairs={
+    {'(',')'},
+    {"'","'",rules={{'when',{'option','lisp'},{'instring'},{'not',{'filetype','tex'}}}}},
+    rules={ --only runs if the extension rules is loaded
+        {[[\']],[[\']],rules={{'not',{'or',{'next',"'"},{'previous','\\',2}}}}},
+        {[[\"]],[[\"]],rules={{'not',{'or',{'next','"'},{'previous','\\',2}}}}},
+    },
+    ft={
+        markdown={
+            {'```','```'},
+            {'<!--','-->'},
+        },
+        ---more...
     },
     ---more...
 },
----more...
 ```
 ## The extensions
 | Extension     | What it does
