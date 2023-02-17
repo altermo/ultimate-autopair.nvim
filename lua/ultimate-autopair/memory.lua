@@ -31,7 +31,13 @@ function M.addpair(key,pair,paire,type,keyconf)
     end
     for i,opt in pairs(keyconf) do
         if _G.type(opt)=='table' then
-            M.mem[key].keyconf[i]=vim.list_extend(M.mem[key].keyconf[i] or {},opt)
+            if vim.tbl_islist(opt) then
+                M.mem[key].keyconf[i]=vim.list_extend(M.mem[key].keyconf[i] or {},opt)
+            else
+                M.mem[key].keyconf[i]=vim.tbl_deep_extend('force',M.mem[key].keyconf[i] or {},opt)
+            end
+        else
+            M.mem[key].keyconf[i]=opt
         end
     end
 
