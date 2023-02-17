@@ -35,12 +35,7 @@ function M.setup(config)
 end
 function M.create_mappings()
     if not M.conf then return end
-    for _,v in ipairs(M.conf.default_pairs or {}) do
-        if not v.disable then
-            M.create_map_pair(v)
-        end
-    end
-    for _,v in ipairs(M.conf) do
+    for _,v in ipairs(vim.list_extend(M.conf.default_pairs or {},M.conf or {})) do
         if not v.disable then
             M.create_map_pair(v)
         end
@@ -48,12 +43,7 @@ function M.create_mappings()
     for _,i in pairs(mem.oextensions) do
         if type(i)=='string' then
             ---@diagnostic disable-next-line: param-type-mismatch
-            for _,v in ipairs(M.conf[i] or {}) do
-                if not v.disable then
-                    M.create_map_pair(v)
-                end
-            end
-            for _,v in ipairs(M.conf.default_pairs[i] or {}) do
+            for _,v in ipairs(vim.list_extend((M.conf.default_pairs[i] or {}),M.conf[i] or {})) do
                 if not v.disable then
                     M.create_map_pair(v)
                 end
@@ -61,14 +51,7 @@ function M.create_mappings()
         end
     end
     if mem.extensions.filetype then
-        for ft,i in pairs(M.conf.default_pairs.ft or {}) do
-            for _,v in ipairs(i) do
-                if not v.disable then
-                    M.create_map_pair(vim.tbl_extend('force',v,{ft={ft}}))
-                end
-            end
-        end
-        for ft,i in pairs(M.conf.ft or {}) do
+        for ft,i in pairs(vim.list_extend(M.conf.default_pairs.ft or {},(M.conf.ft or {}))) do
             for _,v in ipairs(i) do
                 if not v.disable then
                     M.create_map_pair(vim.tbl_extend('force',v,{ft={ft}}))
