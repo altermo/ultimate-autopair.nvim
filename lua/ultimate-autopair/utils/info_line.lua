@@ -158,7 +158,7 @@ function M.filter_string(line,col,linenr,notree)
                         newline=newline..'\1'
                     end
                     if escape then escape=false end
-                elseif char=='"' or char=="'" and not escape then
+                elseif (char=='"' or char=="'") and not escape then
                     instring=char
                     newline=newline..char
                 elseif char=='\\' and not escape then
