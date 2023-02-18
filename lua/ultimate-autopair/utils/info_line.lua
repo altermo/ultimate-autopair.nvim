@@ -137,7 +137,7 @@ function M.filter_string(line,col,linenr,notree)
         if not notree and parser then
             for i=1,#line do
                 local err,node=pcall(vim.treesitter.get_node_at_pos,0,linenr-1,i-1,{})
-                if err and node:type()=='string' then
+                if err and node and node:type()=='string' then
                     newline=newline..'\1'
                 else
                     newline=newline..line:sub(i,i)

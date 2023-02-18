@@ -3,7 +3,7 @@ return{
         local parser=pcall(vim.treesitter.get_parser)
         if not parser then return end
         local tserr,tsnode=pcall(vim.treesitter.get_node_at_pos,0,o.linenr-1,o.col-2,{})
-        if tserr and vim.tbl_contains(conf.inside or {},tsnode:type()) then
+        if tserr and tsnode and vim.tbl_contains(conf.inside or {},tsnode:type()) then
             local _,strbeg,_,strend=tsnode:range()
             o.line=o.line:sub(strbeg+1,strend)
             o.col=o.col-strbeg
