@@ -94,6 +94,8 @@ internal_pairs={
     },
     ---more...
 },
+----Place own pairs here...
+--{'$$','$$'}
 ```
 ## The extensions
 | Extension     | What it does
