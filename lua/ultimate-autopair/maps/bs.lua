@@ -93,7 +93,7 @@ M.extensions={
       if prev_n_pair and prev_n_pair.type==1 then
         local matching_pair_pos=info_line.findepaire(o.line,newcol-1,char,prev_n_pair.paire)
         if matching_pair_pos and o.col-newcol<matching_pair_pos-o.col and o.line:sub(matching_pair_pos-1,matching_pair_pos-1)==' ' then
-          return utils.moveh(o.col-newcol)..utils.delete(1)..utils.addafter(matching_pair_pos-o.col-1,utils.delete(0,1),-(o.col-newcol))
+          return utils.moveh()..utils.delete(0,1)..utils.movel(matching_pair_pos-o.col-1)..utils.delete(0,1)..utils.moveh(matching_pair_pos-o.col-1)
         end
       end
     end
