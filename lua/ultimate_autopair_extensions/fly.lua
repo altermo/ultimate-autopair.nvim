@@ -12,7 +12,7 @@ return {call=function (o,conf)
         elseif vim.tbl_contains(conf,char) then
         elseif conf.match and vim.regex(conf.match):match_str(char) then
         else
-                return
+            return
         end
     end
     if not next_char_index then return end

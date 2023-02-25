@@ -83,10 +83,12 @@ function M.newline(conf,fallback)
       end
     end
   end
-  for _,i in pairs(M.extensions) do
-    local ret=i(o)
-    if ret then
-      return '\x1d'..ret
+  if not (mem.extensions.filetype and vim.tbl_contains(mem.extensions.filetype.conf or {},vim.o.filetype)) then
+    for _,i in pairs(M.extensions) do
+      local ret=i(o)
+      if ret then
+        return '\x1d'..ret
+      end
     end
   end
   if o.conf.fallback then

@@ -17,7 +17,8 @@ function M.space(fallback)
     end
   end
   local prev_pair=mem.mem[prev_char]
-  if not M.conf.nomd and not utils.incmd() and vim.o.filetype=='markdown' and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(line:sub(1,col)) then
+  if mem.extensions.filetype and vim.tbl_contains(mem.extensions.filetype.conf or {},vim.o.filetype) then
+  elseif not M.conf.nomd and not utils.incmd() and vim.o.filetype=='markdown' and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(line:sub(1,col)) then
   elseif M.conf.notinstr and info_line.in_string(line,col,utils.getlinenr(),M.conf.notree) then
   elseif mem.extensions.cmdtype and vim.tbl_contains(mem.extensions.cmdtype.conf,vim.fn.getcmdtype()) then
   elseif prev_pair and prev_pair.type==1 then

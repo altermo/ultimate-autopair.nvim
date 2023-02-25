@@ -18,7 +18,7 @@ function M.setup_extensions()
             mem.extensions[v[1]]=vim.tbl_extend('error',mem.load_extension(v[1]),{conf=v[2]})
             mem.oextensions[#mem.oextensions+1]=v[1]
         elseif type(v)=='string' then
-            mem.extensions[v]=mem.load_extension(v)
+            mem.extensions[v]=vim.tbl_extend('error',mem.load_extension(v),{conf={}})
             mem.oextensions[#mem.oextensions+1]=v
         else
             mem.extensions[#mem.extensions+1]={filter=v}
@@ -52,6 +52,9 @@ function M.create_mappings()
     end
     if mem.extensions.filetype then
         for ft,i in pairs(vim.list_extend(M.conf.default_pairs.ft or {},(M.conf.ft or {}))) do
+            if i.disable then
+                table.insert(mem.extensions.filetype.conf,ft)
+            end
             for _,v in ipairs(i) do
                 if not v.disable then
                     M.create_map_pair(vim.tbl_extend('force',v,{ft={ft}}))

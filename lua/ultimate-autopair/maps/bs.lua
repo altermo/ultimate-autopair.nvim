@@ -121,10 +121,12 @@ function M.backspace(conf,fallback)
   o.line,o.col=info_line.filter_string(o.wline,o.wcol,o.linenr,o.conf.notree)
   o.prev_char=o.line:sub(o.col-1,o.col-1)
   o.next_char=o.line:sub(o.col,o.col)
-  for _,i in ipairs(M.extensions) do
-    local ret=i(o)
-    if ret then
-      return ret
+  if not (mem.extensions.filetype and vim.tbl_contains(mem.extensions.filetype.conf or {},vim.o.filetype)) then
+    for _,i in ipairs(M.extensions) do
+      local ret=i(o)
+      if ret then
+        return ret
+      end
     end
   end
   if o.conf.fallback then
