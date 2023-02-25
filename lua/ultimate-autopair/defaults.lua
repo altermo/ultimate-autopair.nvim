@@ -114,6 +114,7 @@ M.default_config={
                 {"'''","'''"},
             },
             tex={{'``',"''"}},
+            TelescopePrompt={disable=true},
         },
     }
 }
