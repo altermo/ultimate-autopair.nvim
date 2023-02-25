@@ -43,7 +43,7 @@ Example: >lua
 ultimate-autopair-config-filetype          *ultimate-autopair-config-filetype*
 The config key `ft` is special, its a macro which turns which turns
 `filetype=list_of_pairs` to for all list_of_pairs `{pair,ft=filetype}`
-More info about filetypes can be found at |ultimate-atuopair-ext-filetype|
+More info about filetypes can be found at |ultimate-autopair-ext-filetype|
 Example: >lua
  {
    ft={
@@ -229,7 +229,7 @@ Example (`*` is cursor): >
 EXTENSIONS                                        *ultimate-autopair-extensions*
 All extensions should be in the `lua/ultimate_autopair_extensions` directory.
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-alpha                      *ultimate-atuopair-ext-alpha*
+ultimate-autopair-ext-alpha                      *ultimate-autopair-ext-alpha*
 Extension config: {before,after,no_python}
 Extension requirement: `o.type` in {1,3}
 If `o.key` in `conf.after` or `conf.after` is bool true and next character is
@@ -237,18 +237,18 @@ alpha then escape. If `o.key` in `conf.before` or `conf.before` is bool true
 and previous character is alpha then escape. Spesial case in python
 f-string/other, can be disabled with `conf.no_python`
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-cmdtype                  *ultimate-atuopair-ext-cmdtype*
+ultimate-autopair-ext-cmdtype                  *ultimate-autopair-ext-cmdtype*
 Extension config: {list_of_cmdtypes...}
 Example: >lua
  {'/','?','@'}
 <
 If the cmdtype in `conf` then escape.
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-escape                    *ultimate-atuopair-ext-escape*
+ultimate-autopair-ext-escape                    *ultimate-autopair-ext-escape*
 Extension requirement: length `o.key` == 1
 If the previous number of `\\` is odd then escape.
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-filetype                *ultimate-atuopair-ext-filetype*
+ultimate-autopair-ext-filetype                *ultimate-autopair-ext-filetype*
 Note: filetype extension is sometimes needed for other extensions.
 The extension uses the `ft` key in each pair for its `mem`.
 Example: >lua
@@ -257,7 +257,7 @@ Example: >lua
 Note that `ft` can't be a table! If multiple filetypes are to be defined, then
 multiple pairs needs to be defined or |ultimate-autopair-config-filetype|.
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-fly                          *ultimate-atuopair-ext-fly*
+ultimate-autopair-ext-fly                          *ultimate-autopair-ext-fly*
 Extension config: {list_of_characters}
 Extension requirement: `o.type` == 2
 Extension requirement: length `o.key` == 1
@@ -268,14 +268,14 @@ Example (`*` is cursor): >
  | ({[*] }) | )   | ({[] })* | {'}',')',']',' '} |
 <
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-indentblock          *ultimate-atuopair-ext-indentblock*
+ultimate-autopair-ext-indentblock          *ultimate-autopair-ext-indentblock*
 Replacing the line with a block spaning current indentation.
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-multichar              *ultimate-atuopair-ext-multichar*
+ultimate-autopair-ext-multichar              *ultimate-autopair-ext-multichar*
 Optional dependencys: rules, filetype, alpha
 Suport for multichar pairs.
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-rules                      *ultimate-atuopair-ext-rules*
+ultimate-autopair-ext-rules                      *ultimate-autopair-ext-rules*
 Note: there are plans of doing breaking changes to extension.
 The extension uses the `rule` key in each pair for its `mem`. Whene runing the
 extension, the `mem` will be run as a expr with an `or` caller.
@@ -301,7 +301,7 @@ Example: >lua
  {'when',{'filetype','lisp'},{'not',{'instring'}}}
 <
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-string                    *ultimate-atuopair-ext-string*
+ultimate-autopair-ext-string                    *ultimate-autopair-ext-string*
 Extension requirement: length `o.key` == 1
 Extension config: {list_of_configs}
 The extension takes one config key, `notree`, which disables treesitter.
@@ -313,7 +313,7 @@ Example (`*` is cursor): >
  | a'b*'c  | 'c*'     |
 <
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-suround                  *ultimate-atuopair-ext-suround*
+ultimate-autopair-ext-suround                  *ultimate-autopair-ext-suround*
 Extension requirement: `o.type` == 1
 Extension config: {list_of_ambiguous_pairs_to_surround}
 Whene cursor is before a ambiguous pair defined, then suround the pair.
@@ -323,7 +323,7 @@ Example (`*` is cursor): >
  | *'a'   | (   | (*'a') |
 <
 ------------------------------------------------------------------------------
-ultimate-atuopair-ext-template                *ultimate-atuopair-ext-template*
+ultimate-autopair-ext-template                *ultimate-autopair-ext-template*
 A extension template for extension developers.
 ==============================================================================
 DEFAULT-SYSTEMS                            *ultimate-autopair-add-pair-system*
@@ -343,7 +343,7 @@ Examples:
 `addpair.paire`
 For type 2 pair (`)`), if the next character is the pair (`)`) and there are
 no open pairs (`(`) before the cursor, then hop over the pair, otherwise
-insert the pair. (Read |ultimate-atuopair-ext-fly| for special behavior.)
+insert the pair. (Read |ultimate-autopair-ext-fly| for special behavior.)
 Examples:
 `(|)`  > `)` > `()|`
 `((|)` > `)` > `(()|)`
@@ -352,7 +352,7 @@ For type 3 pair (`"`), if the apairs (`"`) are not balanced then insert the
 individual pair, else if next character is the pair (`"`) and inside the pair
 (there's an open apair (`"`) on the left and right of the cursor) then hop over
 the pair, otherwise insert the pair.
-(Read |ultimate-atuopair-ext-string| for weird behavior.)
+(Read |ultimate-autopair-ext-string| for weird behavior.)
 Examples:
 `|`   > `"` > `"|"`
 `"|`  > `"` > `""|`
