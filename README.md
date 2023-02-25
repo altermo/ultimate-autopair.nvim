@@ -78,7 +78,7 @@ extensions={
     {'suround',{'"',"'"}},
     {'fly',{')','}',']',' ',match=nil}},
 },
-default_pairs={
+internal_pairs={
     {'(',')'},
     {"'","'",rules={{'when',{'option','lisp'},{'instring'},{'not',{'filetype','tex'}}}}},
     rules={ --only runs if the extension rules is loaded

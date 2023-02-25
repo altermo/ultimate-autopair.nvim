@@ -83,7 +83,7 @@ M.default_config={
         {'suround',{'"',"'"}},
         {'fly',{')','}',']',' ',match=nil}},
     },
-    default_pairs={
+    internal_pairs={
         {'[',']'},
         {'(',')'},
         {'{','}'},

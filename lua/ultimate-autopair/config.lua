@@ -35,7 +35,7 @@ function M.setup(config)
 end
 function M.create_mappings()
     if not M.conf then return end
-    for _,v in ipairs(vim.list_extend(M.conf.default_pairs or {},M.conf or {})) do
+    for _,v in ipairs(vim.list_extend(M.conf.internal_pairs or {},M.conf or {})) do
         if not v.disable then
             M.create_map_pair(v)
         end
@@ -43,7 +43,7 @@ function M.create_mappings()
     for _,i in pairs(mem.oextensions) do
         if type(i)=='string' then
             ---@diagnostic disable-next-line: param-type-mismatch
-            for _,v in ipairs(vim.list_extend((M.conf.default_pairs[i] or {}),M.conf[i] or {})) do
+            for _,v in ipairs(vim.list_extend((M.conf.internal_pairs[i] or {}),M.conf[i] or {})) do
                 if not v.disable then
                     M.create_map_pair(v)
                 end
@@ -51,7 +51,7 @@ function M.create_mappings()
         end
     end
     if mem.extensions.filetype then
-        for ft,i in pairs(vim.list_extend(M.conf.default_pairs.ft or {},(M.conf.ft or {}))) do
+        for ft,i in pairs(vim.list_extend(M.conf.internal_pairs.ft or {},(M.conf.ft or {}))) do
             if i.disable then
                 table.insert(mem.extensions.filetype.conf,ft)
             end
