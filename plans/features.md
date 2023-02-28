@@ -74,6 +74,7 @@
 + [x] only filter inside or outside of comments and other user defined treesitter nodes
 + [x] make block filtering for inside/outside otpional `b|#a` > `b|\1` and `b#a|` > `b#a|` and not `\1#a|`
 + [ ] user defined multiline as one (maybe using treesitter)
++ [ ] filter escaped characters
 # inserting
 + [x] dont add pair `'` if previous is alphanumeric
 + [x] dont complete when previous is \ in string? `\| > [ > \[`

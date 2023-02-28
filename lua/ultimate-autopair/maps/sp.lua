@@ -22,7 +22,7 @@ function M.space(fallback)
   elseif M.conf.notinstr and info_line.in_string(line,col,utils.getlinenr(),M.conf.notree) then
   elseif mem.extensions.cmdtype and vim.tbl_contains(mem.extensions.cmdtype.conf,vim.fn.getcmdtype()) then
   elseif prev_pair and prev_pair.type==1 then
-    local matching_pair_pos=info_line.findepaire(line,pcol,prev_pair,prev_pair.paire)
+    local matching_pair_pos=info_line.findepaire(line,pcol,prev_char,prev_pair.paire)
     if matching_pair_pos then
       return ' '..utils.addafter(matching_pair_pos-col,' ')
     end
