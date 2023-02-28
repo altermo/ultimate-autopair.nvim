@@ -2,7 +2,7 @@ return{
     call=function(o,conf)
         local parser=pcall(vim.treesitter.get_parser)
         if not parser then return end
-        local tserr,tsnode=pcall(vim.treesitter.get_node_at_pos,0,o.linenr-1,o.col-2,{})
+        local tserr,tsnode=pcall(vim.treesitter.get_node,{bufnr=0,pos={o.linenr-1,o.col-2}},{})
         if tserr and tsnode and vim.tbl_contains(conf.inside or {},tsnode:type()) then
             local _,strbeg,_,strend=tsnode:range()
             o.line=o.line:sub(strbeg+1,strend)
@@ -12,7 +12,7 @@ return{
         if conf.outside then
             local newline=''
             for i=1,#o.line do
-                local err,node=pcall(vim.treesitter.get_node_at_pos,0,o.linenr-1,i-1,{})
+                local err,node=pcall(vim.treesitter.get_node, {bufnr=0, pos={o.linenr-1,i-1}},{})
                 if err and vim.tbl_contains(conf.outside,node:type()) then
                     newline=newline..'\1'
                 else
