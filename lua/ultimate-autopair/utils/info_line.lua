@@ -49,8 +49,9 @@ function M.in_string(line,col,linenr,notree)
     local instring
     local escape=false
     local parser=pcall(vim.treesitter.get_parser)
+    local utils=require'ultimate-autopair.utils.utils'
     if parser and not notree then
-        local err,node=pcall(vim.treesitter.get_node, {bufnr=0, pos={linenr-1,col-1}},{})
+        local err,node=pcall(utils.gettsnode,linenr-1,col-1)
         if err then
             if node and node:type()=='string' then
                 local _,column=node:start()
@@ -132,11 +133,12 @@ function M.filter_string(line,col,linenr,notree)
     if instring then
         return line:sub(strbeg+0,strend),col-strbeg+1
     else
+        local utils=require'ultimate-autopair.utils.utils'
         local newline=''
         local parser=pcall(vim.treesitter.get_parser)
         if not notree and parser then
             for i=1,#line do
-                local err,node=pcall(vim.treesitter.get_node,{bufnr=0, pos={linenr-1,i-1}},{})
+                local err,node=pcall(utils.gettsnode,linenr-1,i-1)
                 if err and node and node:type()=='string' then
                     newline=newline..'\1'
                 else

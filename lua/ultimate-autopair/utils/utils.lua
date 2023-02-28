@@ -38,4 +38,11 @@ end
 function M.addafter(num,text,textlen)
     return M.movel(num)..text..M.moveh(num+(textlen or #text))
 end
+function M.gettsnode(linenr,col)
+    if vim.treesitter.get_node then
+        return vim.treesitter.get_node({bufnr=0,pos={linenr,col}},{})
+    else
+        return vim.treesitter.get_node_at_pos(0,linenr,col,{})
+    end
+end
 return M
