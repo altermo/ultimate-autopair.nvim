@@ -111,6 +111,12 @@ internal_pairs={
 | surround      | auto surround the pair `\|"foo"`>`(`>`("foo"\|)`
 | fly           | fly over ending parentheses `([{\|}])` > `)` > `([{}])\|`
 | treenode      | filter inside or outside treesitter nodes
+### Other plugins to supercharge auto-pairing
+These are some other plugins which are related to pairing which have features that ultimate-autopair does not.
++ [endwise](https://github.com/RRethy/nvim-treesitter-endwise) wisely add `end` in lua, ruby, etc...
++ [tabout](https://github.com/abecodes/tabout.nvim) tab out of parentheses
++ [surround](https://github.com/kylechui/nvim-surround) delete, change surrounding parentheses and much more...
++ [autotag](https://github.com/windwp/nvim-ts-autotag) auto add html tags
 ### Donate
 If you want to donate then you need to find the correct link (50₁₀):
 * [0a]() [0b]() [0c]() [0d]() [0e]() [0f]() [0g]() [0h]()
