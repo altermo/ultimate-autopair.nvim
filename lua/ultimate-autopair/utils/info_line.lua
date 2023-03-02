@@ -45,7 +45,6 @@ function M.count_ambigious_pair(pair,line,cols,cole,Icount)
     return count%2==1
 end
 function M.in_string(line,col,linenr,notree)
-    if vim.fn.mode()=='c' then return end
     local instring
     local escape=false
     local parser=pcall(vim.treesitter.get_parser)
@@ -136,7 +135,7 @@ function M.filter_string(line,col,linenr,notree)
         local utils=require'ultimate-autopair.utils.utils'
         local newline=''
         local parser=pcall(vim.treesitter.get_parser)
-        if not notree and parser then
+        if parser and not notree then
             for i=1,#line do
                 local err,node=pcall(utils.gettsnode,linenr-1,i-1)
                 if err and node and node:type()=='string' then
