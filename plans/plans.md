@@ -9,5 +9,3 @@ There are three types of extensions:
 The ruling extension, extensions which define rules for when to insert pairs, like specific filetype.
 The filtering extension, extensions which filters lines, like strings inside and outside of strings.
 The insertion extension, extensions which inserts pairs a specific way, like surrounding strings.
-## A way to integrate extensions to `maps`
-The current problem is that `maps` does not exactly use extensions. A way to remedy this is by 
