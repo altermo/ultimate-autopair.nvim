@@ -41,7 +41,7 @@ Example: >lua
 <
 ------------------------------------------------------------------------------
 ultimate-autopair-config-filetype          *ultimate-autopair-config-filetype*
-The config key `ft` is special, its a macro which turns which turns
+The config key `ft` is special, its a config macro which turns
 `filetype=list_of_pairs` to for all list_of_pairs `{pair,ft=filetype}`
 More info about filetypes can be found at |ultimate-autopair-ext-filetype|
 Example: >lua
