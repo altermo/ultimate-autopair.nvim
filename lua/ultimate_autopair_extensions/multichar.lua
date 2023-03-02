@@ -3,10 +3,10 @@ return {
         if o.cmdmode then return end
         for newkey,opt in pairs(mem) do
             local bool=#newkey>1 and opt.type~=2
-            if bool and opt.keyconf.ft then
+            if bool and o.ext.filetype and opt.keyconf.ft then
                 bool=vim.tbl_contains(opt.keyconf.ft,vim.o.filetype)
             end
-            if bool and opt.keyconf.rules then
+            if bool and o.ext.rules and opt.keyconf.rules then
                 local rules=require'ultimate-autopair.memory'.load_extension('rules')
                 bool=rules.check_rules(opt.keyconf.rules,o)
             end

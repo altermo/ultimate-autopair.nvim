@@ -1,10 +1,12 @@
 ###### :exclamation: Ultimate-autopair is _alpha_ software. Some things may change, and some things may break. Documentation may sometimes be inaccurate.
-# Ultimate-autopair.nvim 0.3.3
+# Ultimate-autopair.nvim 0.4.0
 Ultimate-autopair plugin aims to have <u style="color: red">**all possible features**</u> that an auto-pairing plugin needs.
+
+Note that the documentation is severely out of date.
 
 Requires neovim 0.7
 ## Summary
-Ultimate-autopair is a neovim autopair plugin that is easy to extend, by the fact that it supports extensions. (Note that the extra mappings (`<CR>`,`<BS>`,...) currently do **not** use this system of extensions) The builtin extensions includes among other things: command line support, multicharacter pairs, non one-line, fastwarp and much more...
+Ultimate-autopair is a neovim autopair plugin that is easy to extend, by the fact that it supports extensions. (Note that the extra mappings (`<CR>`,`<BS>`,...) currently use a different system of extensions) The builtin extensions includes among other things: command line support, multicharacter pairs, non one-line, fastwarp and much more...
 ## Installation
 Packer:
 ```lua
@@ -28,6 +30,7 @@ bs={
     space=true,
     multichar=true,
     fallback=nil,
+    extensions=require('ultimate-autopair.maps.bs').default_extensions,
 },
 cr={
     enable=true,
@@ -39,6 +42,7 @@ cr={
     },
     addsemi={'c','cpp','rust'},
     fallback=nil,
+    extensions=require('ultimate-autopair.maps.cr').default_extensions,
 },
 space={
     enable=true,
@@ -55,6 +59,10 @@ fastwarp={
     Wcmap='<A-C-e>',
     multiline=true,
     fallback=nil,
+    extensions=require('ultimate-autopair.maps.fastwarp').default_extensions,
+    endextensions=require('ultimate-autopair.maps.fastwarp').default_endextensions,
+    rextensions=require('ultimate-autopair.maps.rfastwarp').default_extensions,
+    rendextensions=require('ultimate-autopair.maps.rfastwarp').default_endextensions,
 },
 fastend={
     enable=true,
@@ -93,9 +101,9 @@ internal_pairs={
         ---more...
     },
     ---more...
-},
+}
 ----Place own pairs here...
---{'$$','$$'}
+--{'$$','$$'},
 ```
 ## The extensions
 | Extension     | What it does

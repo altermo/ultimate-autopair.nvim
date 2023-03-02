@@ -73,4 +73,9 @@ function M.isend(line,col)
     end
     return not M.isstart(line,col)
 end
+function M.call_extension(ext,o)
+    if M.extensions[ext] then
+        return M.extensions[ext].call(o,M.extensions[ext].conf,M.mem)
+    end
+end
 return M

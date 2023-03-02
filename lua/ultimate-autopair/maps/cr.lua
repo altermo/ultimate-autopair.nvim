@@ -1,11 +1,9 @@
 local M={}
-M.extensions={}
-local gconf=require'ultimate-autopair.config'.conf
+M.ext={}
 local info_line=require'ultimate-autopair.utils.info_line'
-M.conf=gconf.cr or {}
 local utils=require'ultimate-autopair.utils.utils'
 local mem=require'ultimate-autopair.memory'
-function M.extensions.newline_multichar(o)
+function M.ext.newline_multichar(o)
   if o.conf.multichar and o.conf.multichar.enable then
     for ft,list_of_pairs in pairs(o.conf.multichar) do
       if vim.o.filetype==ft then
@@ -38,18 +36,18 @@ function M.extensions.newline_multichar(o)
     end
   end
 end
-function M.extensions.normal_newline(o)
+function M.ext.newline_normal(o)
   if mem.ispair(o.prev_char,o.next_char) then
     return '\r<end>'..o.semi..'<up><end>\r'
   end
 end
-function M.extensions.close_newline(o)
+function M.ext.newline_close(o)
   if o.conf.autoclose and o.prev_pair and o.prev_pair.type==1 and o.col-1==#o.line and
     vim.fn.trim(utils.getline(o.linenr+1) or '',' ',1):sub(1,1)~=o.prev_pair.paire then
     return '\r'..o.prev_pair.paire..o.semi..'<up><end>\r'
   end
 end
-function M.extensions.after_pair_newline(o)
+function M.ext.newline_after_pair(o)
   local next_pair=mem.mem[o.next_char]
   if o.prev_pair and not next_pair and o.prev_pair.type==1 then
     local matching_pair_pos=info_line.findepaire(o.line,o.col,o.prev_char,o.prev_pair.paire)
@@ -58,12 +56,19 @@ function M.extensions.after_pair_newline(o)
     end
   end
 end
-function M.extensions.before_paire_newline(o)
+function M.ext.newline_before_paire(o)
   local next_pair=mem.mem[o.next_char]
   if next_pair and not o.prev_pair and next_pair.type==2 and o.col==#o.line and info_line.findpair(o.line,o.col,next_pair.pair,o.next_char) then
     return '\r'..o.semi..'<up><end>\r'
   end
 end
+M.default_extensions={
+  M.ext.newline_multichar,
+  M.ext.newline_normal,
+  M.ext.newline_close,
+  M.ext.newline_before_paire,
+  M.ext.newline_after_pair,
+}
 function M.newline(conf,fallback)
   local o={}
   o.conf=vim.tbl_extend('force',M.conf,conf or {})
@@ -74,7 +79,7 @@ function M.newline(conf,fallback)
   o.next_char=o.line:sub(o.col,o.col)
   o.prev_pair=mem.mem[o.prev_char]
   o.semi=''
-  if vim.tbl_contains(o.conf.addsemi or {},vim.o.filetype) and not utils.incmd() then
+  if vim.tbl_contains(o.conf.addsemi or {},vim.o.filetype) then
     if o.prev_char=='{' and o.col-1==#o.line or o.col==#o.line then
       if o.col+1==#o.line and o.line:sub(o.col+1,o.col+1)==';' then
         o.line=o.line:sub(0,-2)
@@ -83,8 +88,8 @@ function M.newline(conf,fallback)
       end
     end
   end
-  if not (mem.extensions.filetype and vim.tbl_contains(mem.extensions.filetype.conf or {},vim.o.filetype)) then
-    for _,i in pairs(M.extensions) do
+  if not mem.call_extension('filetype',o) then
+    for _,i in ipairs(o.conf.extensions) do
       local ret=i(o)
       if ret then
         return '\x1d'..ret
@@ -106,6 +111,8 @@ function M.create_newline(conf,key)
   end
 end
 function M.setup()
+  local gconf=require'ultimate-autopair.config'.conf
+  M.conf=gconf.cr or {}
   if M.conf.enable then
     vim.keymap.set('i','<cr>',M.create_newline(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
   end

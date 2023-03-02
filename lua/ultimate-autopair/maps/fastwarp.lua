@@ -1,12 +1,10 @@
 local M={}
-local gconf=require'ultimate-autopair.config'.conf
-M.conf=gconf.fastwarp or {}
-M.extensions={}
-M.endextensions={}
+M.ext={}
+M.exte={}
 local mem=require'ultimate-autopair.memory'
 local utils=require'ultimate-autopair.utils.utils'
 local info_line=require'ultimate-autopair.utils.info_line'
-function M.extensions.fastwarp_over_pair(o)
+function M.ext.fastwarp_over_pair(o)
   if mem.isstart(o.line,o.i) then
     if o.col+1==o.i then
       local pair=mem.mem[o.char]
@@ -24,7 +22,7 @@ function M.extensions.fastwarp_over_pair(o)
     end
   end
 end
-function M.extensions.fastwarp_over_word(o)
+function M.ext.fastwarp_over_word(o)
   local regex=vim.regex([[\w]])
   if o.conf.WORD then
     regex=vim.regex([[\S]])
@@ -37,17 +35,17 @@ function M.extensions.fastwarp_over_word(o)
     return utils.delete(0,1)..utils.movel(j-o.col-1)..o.next_char..utils.moveh()
   end
 end
-function M.endextensions.fastwarp_end(o)
+function M.exte.fastwarp_end(o)
   if o.col~=#o.line then
     return utils.delete(0,1)..utils.movel(#o.line)..o.next_char..utils.moveh()
   end
 end
-function M.endextensions.fastwarp_next_line(o)
+function M.exte.fastwarp_next_line(o)
   if o.conf.multiline and o.col==#o.line and vim.fn.line('.')~=vim.fn.line('$') then
     return utils.delete(0,1)..'<down><home>'..o.next_char..utils.moveh()
   end
 end
-function M.extensions.fastwarp_next_to_pair(o)
+function M.ext.fastwarp_next_to_pair(o)
   if mem.isend(o.line,o.i) then
     if o.col+1==o.i then
       if o.conf.hopout then
@@ -59,6 +57,15 @@ function M.extensions.fastwarp_next_to_pair(o)
     return utils.delete(0,1)..utils.movel(o.i-o.col-1)..o.next_char..utils.moveh()
   end
 end
+M.default_extensions={
+  M.ext.fastwarp_next_to_pair,
+  M.ext.fastwarp_over_pair,
+  M.ext.fastwarp_over_word,
+}
+M.default_endextensions={
+  M.exte.fastwarp_end,
+  M.exte.fastwarp_next_line,
+}
 function M.fastwarp(conf,fallback)
   local o={}
   o.conf=vim.tbl_extend('force',M.conf,conf or {})
@@ -69,14 +76,14 @@ function M.fastwarp(conf,fallback)
     for i=o.col+1,#o.line do
       o.i=i
       o.char=o.line:sub(i,i)
-      for _,v in pairs(M.extensions) do
+      for _,v in pairs(o.conf.extensions) do
         local ret=v(o)
         if ret then
           return ret
         end
       end
     end
-    for _,v in pairs(M.endextensions) do
+    for _,v in pairs(o.conf.endextensions) do
       local ret=v(o)
       if ret then
         return ret
@@ -95,6 +102,8 @@ function M.create_fastwarp(conf,key)
   end
 end
 function M.setup()
+  local gconf=require'ultimate-autopair.config'.conf
+  M.conf=gconf.fastwarp or {}
   if M.conf.enable then
     vim.keymap.set('i',M.conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     if gconf.cmap and M.conf.cmap then

@@ -33,6 +33,7 @@ M.default_config={
         space=true,
         multichar=true,
         fallback=nil,
+        extensions=require('ultimate-autopair.maps.bs').default_extensions,
     },
     cr={
         enable=true,
@@ -44,6 +45,7 @@ M.default_config={
         },
         addsemi={'c','cpp','rust'},
         fallback=nil,
+        extensions=require('ultimate-autopair.maps.cr').default_extensions,
     },
     space={
         enable=true,
@@ -60,6 +62,10 @@ M.default_config={
         Wcmap='<A-C-e>',
         multiline=true,
         fallback=nil,
+        extensions=require('ultimate-autopair.maps.fastwarp').default_extensions,
+        endextensions=require('ultimate-autopair.maps.fastwarp').default_endextensions,
+        rextensions=require('ultimate-autopair.maps.rfastwarp').default_extensions,
+        rendextensions=require('ultimate-autopair.maps.rfastwarp').default_endextensions,
     },
     fastend={
         enable=true,

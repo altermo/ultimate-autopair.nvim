@@ -1,52 +1,49 @@
 local M={}
-local gconf=require'ultimate-autopair.config'.conf
-M.conf=gconf.fastwarp or {}
-M.endextensions={}
+M.ext={}
+M.exte={}
 local mem=require'ultimate-autopair.memory'
 local utils=require'ultimate-autopair.utils.utils'
 local info_line=require'ultimate-autopair.utils.info_line'
-M.extensions={
-  function (o)
-    if mem.isend(o.line,o.col-o.i-1) and o.i==0 then
-      local pair=mem.mem[o.char]
-      local matching_pair_pos
-      if pair.type==3 then
-        matching_pair_pos=info_line.findstring(o.line,o.col-o.i-1,o.char)
+function M.ext.rfastwarp_over_pair(o)
+  if mem.isend(o.line,o.col-o.i-1) and o.i==0 then
+    local pair=mem.mem[o.char]
+    local matching_pair_pos
+    if pair.type==3 then
+      matching_pair_pos=info_line.findstring(o.line,o.col-o.i-1,o.char)
+    else
+      matching_pair_pos=info_line.findpair(o.line,o.col-o.i-1,pair.pair,o.char)
+    end
+    if matching_pair_pos then
+      return utils.delete(0,1)..utils.moveh(o.col-matching_pair_pos)..o.next_char..utils.moveh()
+    end
+  end
+end
+function M.ext.rfastwarp_prev_to_pair(o)
+  if mem.isend(o.line,o.col-o.i-1) and o.i~=0 then
+    return utils.delete(0,1)..utils.moveh(o.i)..o.next_char..utils.moveh()
+  end
+end
+function M.ext.rfastwarp_next_to_pair(o)
+  local prev_n_pair=mem.mem[o.char]
+  if prev_n_pair and prev_n_pair.paire==o.next_char and prev_n_pair.type==1 then
+    if o.i==0 then
+      if o.conf.hopout then
+        return utils.delete(0,1)..utils.moveh(1)..o.next_char..utils.moveh()
       else
-        matching_pair_pos=info_line.findpair(o.line,o.col-o.i-1,pair.pair,o.char)
+        return ''
       end
-      if matching_pair_pos then
-        return utils.delete(0,1)..utils.moveh(o.col-matching_pair_pos)..o.next_char..utils.moveh()
-      end
+    else
+      return utils.delete(0,1)..utils.moveh(o.i)..o.next_char..utils.moveh()
     end
-  end,
-  function (o)
-    if mem.isend(o.line,o.col-o.i-1) and o.i~=0 then
-        return utils.delete(0,1)..utils.moveh(o.i)..o.next_char..utils.moveh()
-    end
-  end,
-  function (o)
-    local prev_n_pair=mem.mem[o.char]
-    if prev_n_pair and prev_n_pair.paire==o.next_char and prev_n_pair.type==1 then
-      if o.i==0 then
-        if o.conf.hopout then
-          return utils.delete(0,1)..utils.moveh(1)..o.next_char..utils.moveh()
-        else
-          return ''
-        end
-      else
-        return utils.delete(0,1)..utils.moveh(o.i)..o.next_char..utils.moveh()
-      end
-    end
-  end,
-  function (o)
-    local prev_char=o.line:sub(o.col-o.i-2,o.col-o.i-2)
-    if prev_char and vim.regex([[\w]]):match_str(prev_char) and not vim.regex([[\w]]):match_str(o.char) then
-      return utils.delete(0,1)..utils.moveh(o.i+1)..o.next_char..utils.moveh()
-    end
-  end,
-}
-function M.endextensions.rfastwarp_prev_line(o)
+  end
+end
+function M.ext.rfastwarp_over_word(o)
+  local prev_char=o.line:sub(o.col-o.i-2,o.col-o.i-2)
+  if prev_char and vim.regex([[\w]]):match_str(prev_char) and not vim.regex([[\w]]):match_str(o.char) then
+    return utils.delete(0,1)..utils.moveh(o.i+1)..o.next_char..utils.moveh()
+  end
+end
+function M.exte.rfastwarp_prev_line(o)
   if o.conf.multiline and vim.fn.line('.')~=0 then
     if o.col==1 then
       return utils.delete(0,1)..'<up><end>'..o.next_char..utils.moveh()
@@ -55,6 +52,15 @@ function M.endextensions.rfastwarp_prev_line(o)
     end
   end
 end
+M.default_extensions={
+  M.ext.rfastwarp_over_pair,
+  M.ext.rfastwarp_prev_to_pair,
+  M.ext.rfastwarp_next_to_pair,
+  M.ext.rfastwarp_over_word,
+}
+M.default_endextensions={
+  M.exte.rfastwarp_prev_line,
+}
 function M.rfastwarp(conf,fallback)
   local o={}
   o.conf=vim.tbl_extend('force',M.conf,conf or {})
@@ -65,14 +71,14 @@ function M.rfastwarp(conf,fallback)
     for i=0,o.col-2 do
       o.i=i
       o.char=o.line:sub(o.col-i-1,o.col-i-1)
-      for _,v in pairs(M.extensions) do
+      for _,v in pairs(o.conf.rextensions) do
         local ret=v(o)
         if ret then
           return ret
         end
       end
     end
-    for _,v in pairs(M.endextensions) do
+    for _,v in pairs(o.conf.rendextensions) do
       local ret=v(o)
       if ret then
         return ret
@@ -91,6 +97,8 @@ function M.create_rfastwarp(conf,key)
   end
 end
 function M.setup()
+  local gconf=require'ultimate-autopair.config'.conf
+  M.conf=gconf.fastwarp or {}
   if M.conf.enable then
     vim.keymap.set('i',M.conf.rmap,M.create_rfastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     if gconf.cmap and M.conf.rcmap then
