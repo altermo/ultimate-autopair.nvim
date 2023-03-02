@@ -87,7 +87,8 @@ extensions={
 },
 internal_pairs={
     {'(',')'},
-    {"'","'",rules={{'when',{'option','lisp'},{'instring'},{'not',{'filetype','tex'}}}}},
+    {"'","'",rules={{'when',{'option','lisp'},{'instring'}}}},
+    {"'","'",rules={{'not',{'filetype','tex'}}}},
     rules={ --only runs if the extension rules is loaded
         {[[\']],[[\']],rules={{'and',{'not',{'or',{'next',"'"},{'previous','\\',2}}},{'instring'}}}},
         {[[\"]],[[\"]],rules={{'and',{'not',{'or',{'next','"'},{'previous','\\',2}}},{'instring'}}}},

@@ -51,11 +51,11 @@ function M.check_rule(rule,o)
 end
 function M.check_rules(rules,o)
     for _,v in ipairs(rules) do
-        if M.check_rule(v,o) then
-            return true
+        if not M.check_rule(v,o) then
+            return false
         end
     end
-    return false
+    return true
 end
 function M.init(rules,mem)
     if rules then

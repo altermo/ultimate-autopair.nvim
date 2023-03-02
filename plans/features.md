@@ -40,7 +40,7 @@
 + [ ] remove the unbalanced space in the pair `[ |  ] > BS > [ | ]`
 + [ ] remove the unbalanced space in the pair `[  |] > BS > [|]`
 + [ ] remove the space when remove pair `[| text ] > BS > |text`
-+ [ ] remove the ambiguous pair when filled `"|abc" > BS > |abc`
++ [ ] remove the ambiguous pair when filled `"|abc" > BS > |abc` (not when alpha before)
 + [ ] make map use filtering pair extensions
 # other mappings
 + [x] space `[|] > SP > [ | ]`
