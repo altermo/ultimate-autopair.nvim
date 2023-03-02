@@ -269,6 +269,7 @@ Example (`*` is cursor): >
 <
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-indentblock          *ultimate-autopair-ext-indentblock*
+Currently disabled...
 Replacing the line with a block spaning current indentation.
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-multichar              *ultimate-autopair-ext-multichar*

@@ -75,7 +75,6 @@ _default_beg_filter=M.default_beg_filter,
 _default_end_filter=M.default_end_filter,
 extensions={
     {'cmdtype',{'/','?','@'}},
-    --'indentblock',
     'multichar',
     'string',
     {'treenode',{inside={'comment'}}},
@@ -106,10 +105,10 @@ internal_pairs={
 --{'$$','$$'},
 ```
 ## The extensions
+<!--| indentblock   | makes the block of indent the "line" instead of it the current line-->
 | Extension     | What it does
 | ------------- | -
 | cmdtype       | disables for specific command types
-| indentblock   | makes the block of indent the "line" instead of it the current line
 | string        | makes it so that inside and outside of strings don't interact with each other (treesitter support)
 | multichar     | allows for pairs which consist of multiple characters
 | escape        | don't add if it will be escaped

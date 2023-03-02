@@ -78,7 +78,6 @@ M.default_config={
     _default_end_filter=M.default_end_filter,
     extensions={
         {'cmdtype',{'/','?','@'}},
-        --'indentblock',
         'multichar',
         'string',
         {'treenode',{inside={'comment'}}},
