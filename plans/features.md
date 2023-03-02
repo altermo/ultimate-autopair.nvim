@@ -117,3 +117,4 @@
 + [x] testing
 + [ ] better string filtering `'foo'|` > `'\1'|` and not `\1|`
 + [ ] terminal mode integration
++ [ ] implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)

@@ -68,8 +68,9 @@ function M.call(o)
     if #o.key>1 then return end
     if not o.keyconf then return end
     if not o.keyconf.rules then return end
-    if not M.check_rules(o.keyconf.rules,o) then
-        return 2
+    if M.check_rules(o.keyconf.rules,o) then
+        return
     end
+    return 2
 end
 return M
