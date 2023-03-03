@@ -87,7 +87,7 @@ M.default_config={
         {'alpha',{before={"'"}}},
         {'suround',{'"',"'"}},
         {'fly',{')','}',']',' ',match=nil}},
-        --{'close',{map='<C-b>'}}
+        {'close',{map='<C-b>',pairs={{'(',')'},{'[',']'},{'{','}'}}},disable_pair=true},
     },
     internal_pairs={
         {'[',']'},
