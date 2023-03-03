@@ -121,6 +121,7 @@ function M.backspace(conf,fallback)
   o.wline=utils.getline()
   o.wcol=utils.getcol()
   o.linenr=utils.getlinenr()
+  o.cmdmode=utils.incmd()
   o.line,o.col=o.wline,o.wcol
   mem.call_extension('string',o)
   o.prev_char=o.line:sub(o.col-1,o.col-1)
