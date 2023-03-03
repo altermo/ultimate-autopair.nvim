@@ -11,6 +11,6 @@ function M.setup(config)
     require'ultimate-autopair.maps.fastwarp'.setup()
     require'ultimate-autopair.maps.rfastwarp'.setup()
     require'ultimate-autopair.maps.fastend'.setup()
-    require'ultimate-autopair.maps.fastclose'.setup()
+    --require'ultimate-autopair.maps.fastclose'.setup()
 end
 return M
