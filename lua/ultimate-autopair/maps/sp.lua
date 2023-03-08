@@ -40,7 +40,9 @@ function M.create_space(key)
 end
 function M.setup()
   if M.conf.enable then
-    vim.keymap.set('i',' ',M.create_space(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+    if not M.conf.nomap then
+      vim.keymap.set('i',' ',M.create_space(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+    end
     if gconf.cmap then
       vim.keymap.set('c',' ',M.create_space(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end

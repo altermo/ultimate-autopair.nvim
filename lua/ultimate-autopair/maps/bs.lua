@@ -151,7 +151,9 @@ function M.setup()
   local gconf=require'ultimate-autopair.config'.conf
   M.conf=gconf.bs or {}
   if M.conf.enable then
-    vim.keymap.set('i','<bs>',M.create_backspace(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+    if not gconf.nomap then
+      vim.keymap.set('i','<bs>',M.create_backspace(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+    end
     if gconf.cmap then
       vim.keymap.set('c','<bs>',M.create_backspace(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end

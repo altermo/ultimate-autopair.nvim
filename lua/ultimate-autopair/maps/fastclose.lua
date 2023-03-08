@@ -29,7 +29,9 @@ function M.setup()
     local gconf=require'ultimate-autopair.config'.conf
     M.conf=mem.extensions.close.conf
     if M.conf.map then
-      vim.keymap.set('i',M.conf.map,M.create_fastclose(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+      if not gconf.nomap then
+        vim.keymap.set('i',M.conf.map,M.create_fastclose(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
+      end
       if gconf.cmap and M.conf.cmap then
         vim.keymap.set('c',M.conf.cmap,M.create_fastclose(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
       end

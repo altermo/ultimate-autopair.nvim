@@ -63,6 +63,7 @@
 + [ ] hop style fastwarp
 + [ ] `[{"| > <A-k> > [{""}]`
 + [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
++ [ ] fastwarp no move cursor `(|)foo,bar > (|foo),bar`
 + [ ] make maps use filtering pair extensions
 # filters
 + [x] only filter inside or outside of string
