@@ -125,6 +125,12 @@ These are some other plugins which are related to pairing which have features th
 + [tabout](https://github.com/abecodes/tabout.nvim) tab out of parentheses
 + [surround](https://github.com/kylechui/nvim-surround) delete, change surrounding parentheses and much more...
 + [autotag](https://github.com/windwp/nvim-ts-autotag) auto add html tags
+<details>
+<summary><a href="https://github.com/windwp/nvim-autopairs">nvim-autopairs</a> integration</summary>
+
+Use [npairs-integrate-upair](https://github.com/altermo/npairs-integrate-upair) with `require('npairs-int-upair').setup({map='u'})`
+</details>
+
 ### Donate
 If you want to donate then you need to find the correct link (50₁₀):
 * [0a]() [0b]() [0c]() [0d]() [0e]() [0f]() [0g]() [0h]()
