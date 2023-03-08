@@ -5,10 +5,10 @@ local defaults=require'ultimate-autopair.defaults'
 M.conf=defaults.default_config
 function M.create_map_pair(opt)
     if opt[1]==opt[2] then
-        creater.create_map(opt[1],opt[2],opt,3,M.conf.cmap)
+        creater.create_map(opt[1],opt[2],opt,3,M.conf.cmap,M.conf.nomap)
     else
-        creater.create_map(opt[1],opt[2],opt,1,M.conf.cmap)
-        creater.create_map(opt[1],opt[2],opt,2,M.conf.cmap)
+        creater.create_map(opt[1],opt[2],opt,1,M.conf.cmap,M.conf.nomap)
+        creater.create_map(opt[1],opt[2],opt,2,M.conf.cmap,M.conf.nomap)
     end
 end
 function M.setup_extensions()

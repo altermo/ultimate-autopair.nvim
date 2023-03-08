@@ -95,6 +95,7 @@
 + [ ] open multicharacter-pair detector
 + [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|`
 + [ ] add the parens att end when logical `|{a} > [ > [|{a}]`
++ [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
 # pairs
 + [x] multicharacter pair `py ''' and md ````
 + [x] comment pairs `/*|*/`

@@ -4,7 +4,7 @@ local function error(msg)
     vim.notify(msg,'error')
 end
 function M.main()
-    M.path=vim.fn.fnamemodify('..',':p')
+    M.path=vim.fn.expand('%:p:h:h')
     local rdps=vim.fn.system('grep -r print '..M.path..'/lua')
     if rdps~='' then
         error('A rouge debug print statement was spotted at '..rdps)
