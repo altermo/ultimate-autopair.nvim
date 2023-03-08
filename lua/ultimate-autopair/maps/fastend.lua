@@ -27,9 +27,7 @@ function M.create_fastend(key)
 end
 function M.setup()
   if M.conf.enable then
-    if not M.conf.nomap then
-      vim.keymap.set('i',M.conf.map,M.create_fastend(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
-    end
+    vim.keymap.set('i',M.conf.map,M.create_fastend(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     if gconf.cmap and M.conf.cmap then
       vim.keymap.set('c',M.conf.cmap,M.create_fastend(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end

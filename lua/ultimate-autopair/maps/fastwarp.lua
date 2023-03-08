@@ -105,16 +105,12 @@ function M.setup()
   local gconf=require'ultimate-autopair.config'.conf
   M.conf=gconf.fastwarp or {}
   if M.conf.enable then
-    if not gconf.nomap then
-      vim.keymap.set('i',M.conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
-    end
+    vim.keymap.set('i',M.conf.map,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     if gconf.cmap and M.conf.cmap then
       vim.keymap.set('c',M.conf.cmap,M.create_fastwarp(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end
     if M.conf.Wmap then
-      if not gconf.nomap then
-        vim.keymap.set('i',M.conf.Wmap,M.create_fastwarp({WORD=true}),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
-      end
+      vim.keymap.set('i',M.conf.Wmap,M.create_fastwarp({WORD=true}),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
       if gconf.cmap and M.conf.Wcmap then
         vim.keymap.set('c',M.conf.Wcmap,M.create_fastwarp({WORD=true}),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
       end
