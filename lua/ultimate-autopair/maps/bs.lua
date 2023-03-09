@@ -124,6 +124,7 @@ function M.backspace(conf,fallback)
   o.cmdmode=utils.incmd()
   o.line,o.col=o.wline,o.wcol
   mem.call_extension('string',o)
+  mem.call_extension('escape',o)
   o.prev_char=o.line:sub(o.col-1,o.col-1)
   o.next_char=o.line:sub(o.col,o.col)
   if not mem.call_extension('filetype',o) then

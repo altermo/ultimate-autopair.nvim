@@ -62,7 +62,7 @@ function M.test_newline()
     run(':setf c\r:set cindent\rI{\r','{\n\t\n};')
     run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};')
     run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};')
-    run(':setf lua\rIdoA\r','do\n\nend',{cr={multichar={enable=true}}})
+    run(':setf lua\rIdoA\r','do\n\nend',{cr={multichar={enable=true,lua={{'then','end'},{'do','end'}}}}})
     run(':setf markdown\rI```\r','```\n\n```')
 end
 function M.test_backspace()
@@ -130,6 +130,7 @@ function M.test_extensions()
     run(':call setline(1,[input("\r(\r','(')
     run(':iab f foo\rIf()','foo()')
     run(':cab s setline\r:call s(1,["foo\r','foo')
+    run('I\\)I(','()\\)')
     --TODO: test treesitter based extensions
 end
 ---@diagnostic disable-next-line: undefined-global
