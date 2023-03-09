@@ -36,9 +36,8 @@ cr={
     enable=true,
     autoclose=false,
     multichar={
-        enable=false,
+        enable=true,
         markdown={{'```','```',pair=true,noalpha=true,next=true}},
-        lua={{'then','end'},{'do','end'}},
     },
     addsemi={'c','cpp','rust'},
     fallback=nil,
@@ -78,7 +77,7 @@ extensions={
     'multichar',
     'string',
     {'treenode',{inside={'comment'}}},
-    'escape',
+    {'escape',{filter=true}},
     'rules',
     'filetype',
     {'alpha',{before={"'"}}},
@@ -98,6 +97,7 @@ internal_pairs={
             {'```','```'},
             {'<!--','-->'},
         },
+        TelescopePrompt={disable=true},
         ---more...
     },
     ---more...
