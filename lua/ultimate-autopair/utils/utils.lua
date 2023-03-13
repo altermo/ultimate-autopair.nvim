@@ -19,21 +19,21 @@ function M.getcol()
 end
 function M.movel(num)
     if M.incmd() then
-        return vim.fn['repeat']('<right>',(num or 1))
+        return ('<right>'):rep(num or 1)
     end
-    return vim.fn['repeat']('\aU<right>',(num or 1))
+    return ('\aU<right>'):rep(num or 1)
 end
 function M.moveh(num)
     if M.incmd() then
-        return vim.fn['repeat']('<left>',(num or 1))
+        return ('<left>'):rep(num or 1)
     end
-    return vim.fn['repeat']('\aU<left>',(num or 1))
+    return ('\aU<left>'):rep(num or 1)
 end
 function M.getlinenr()
     return vim.fn.line('.')
 end
 function M.delete(pre,pos)
-    return vim.fn['repeat']('<bs>',pre or 1)..vim.fn['repeat']('<del>',pos or 0)
+    return ('<bs>'):rep(pre or 1)..('<del>'):rep(pos or 0)
 end
 function M.addafter(num,text,textlen)
     return M.movel(num)..text..M.moveh(num+(textlen or #text))

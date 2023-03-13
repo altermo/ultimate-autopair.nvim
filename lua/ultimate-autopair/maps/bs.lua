@@ -87,8 +87,25 @@ function M.ext.delete_space(o)
     local prev_n_pair=mem.mem[char]
     if prev_n_pair and prev_n_pair.type==1 then
       local matching_pair_pos=info_line.findepaire(o.line,newcol-1,char,prev_n_pair.paire)
-      if matching_pair_pos and o.col-newcol<matching_pair_pos-o.col and o.line:sub(matching_pair_pos-1,matching_pair_pos-1)==' ' then
-        return utils.moveh()..utils.delete(0,1)..utils.movel(matching_pair_pos-o.col-1)..utils.delete(0,1)..utils.moveh(matching_pair_pos-o.col-1)
+      if not matching_pair_pos then
+        return
+      end
+      if o.line:sub(newcol-1,matching_pair_pos-1):find('[^ ]') then
+        if o.line:sub(newcol-1,o.col-1):find('[^ ]') then
+          return
+        end
+        if o.line:sub(newcol-1,matching_pair_pos-1):match(' *')
+          <=o.line:sub(newcol-1,matching_pair_pos-1):reverse():match(' *') then
+          return utils.moveh()..utils.delete(0,1)..utils.movel(matching_pair_pos-o.col-1)..utils.delete(0,1)..utils.moveh(matching_pair_pos-o.col-1)
+        else
+          return utils.moveh()..utils.delete(0,1)
+        end
+      else
+        if o.line:sub(newcol-1,o.col-1)<=o.line:sub(o.col,matching_pair_pos-1) then
+          return utils.moveh()..utils.delete(0,1)..utils.movel(matching_pair_pos-o.col-1)..utils.delete(0,1)..utils.moveh(matching_pair_pos-o.col-1)
+        else
+          return utils.moveh()..utils.delete(0,1)
+        end
       end
     end
   end
@@ -111,8 +128,8 @@ M.default_extensions={
   M.ext.delete_pair,
   M.ext.delete_prev_pair,
   M.ext.delete_overjump,
-  M.ext.delete_space,
   M.ext.delete_multiline,
+  M.ext.delete_space,
 }
 function M.backspace(conf,fallback)
   local o={}
@@ -152,7 +169,7 @@ function M.setup()
   local gconf=require'ultimate-autopair.config'.conf
   M.conf=gconf.bs or {}
   if M.conf.enable then
-    if not gconf.nomap then
+    if not M.conf.nomap then
       vim.keymap.set('i','<bs>',M.create_backspace(),vim.tbl_extend('error',gconf.mapopt,{expr=true}))
     end
     if gconf.cmap then
