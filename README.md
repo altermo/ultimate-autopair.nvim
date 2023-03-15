@@ -82,7 +82,7 @@ extensions={
     'filetype',
     {'alpha',{before={"'"}}},
     {'suround',{'"',"'"}},
-    {'fly',{')','}',']',' ',"'",'"',match=nil,nofilter=false}},
+    {'fly',{')','}',']',' ',match=nil,nofilter=false}},
 },
 internal_pairs={
     {'(',')'},
