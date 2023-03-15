@@ -85,7 +85,7 @@ M.default_config={
         'filetype',
         {'alpha',{before={"'"}}},
         {'suround',{'"',"'"}},
-        {'fly',{')','}',']',' ',match=nil}},
+        {'fly',{')','}',']',' ',"'",match=nil,nofilter=false}},
     },
     internal_pairs={
         {'[',']'},

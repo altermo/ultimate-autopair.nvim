@@ -4,8 +4,9 @@ return {call=function (o,conf)
     if o.type~=2 then return end
     if #o.key>1 then return end
     local next_char_index
-    for i=o.col,#o.line  do
-        local char=o.line:sub(i,i)
+    local line=conf.nofilter and o.wline or o.line
+    for i=o.col,#line do
+        local char=line:sub(i,i)
         if char==o.key then
             next_char_index=i
             break
@@ -17,7 +18,7 @@ return {call=function (o,conf)
     end
     if not next_char_index then return end
     if o.col==next_char_index then return end
-    if not open_pair.open_pair_before(o.pair,o.paire,o.line,next_char_index) then
+    if not open_pair.open_pair_before(o.pair,o.paire,line,next_char_index) then
         return utils.movel(next_char_index-o.col+1)
     end
 end}
