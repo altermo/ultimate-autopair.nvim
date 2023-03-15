@@ -13,7 +13,7 @@ ultimate-autopair-config-other                *ultimate-autopair-config-other*
    --the default start filter (nil to disable)
    _default_end_filter=defaults.default_end_filter,
    --the default end filter (nil to disable)
-    _repconf=nil,
+   _repconf=nil,
    --whether to not deep extend with default config
  }
 <
@@ -74,6 +74,8 @@ Example: >lua
      --<!--|--> > bs > |
      fallback=nil,
      --can be function or string
+      extensions=require('ultimate-autopair.maps.bs').default_extensions,
+     --extensions used by bs
    }
  }
 <
@@ -103,6 +105,8 @@ Example: >lua
      },
      fallback=nil,
      --can be function or string
+     extensions=require('ultimate-autopair.maps.cr').default_extensions,
+     --extensions used by cr
    },
  }
 <
@@ -123,14 +127,45 @@ Example: >lua
 ultimate-autopair-config-fastwarp          *ultimate-autopair-config-fastwarp*
 The fastwarp configs should be put in the `fastwarp` config key
 For more information about fastwarp, see |ultimate-autopair-fastwarp|
+For more information about rfastwarp, see |ultimate-autopair-rfastwarp|
 Example: >lua
  {
    fastwarp={
      enable=true,
      map='<A-e>',
      cmap='<A-e>',
+     --set to '' to disable
+     Wmap='<A-C-e>',
+     --acts like WORD
+     Wcmap='<A-C-e>',
+     rmap='<A-E>',
+     --sets the rfastwarp keybinding
+     rcmap='<A-E>',
+     multiline=true,
+     --whether to warp multiple lines
      fallback=nil,
      --can be function or string
+     extensions=require('ultimate-autopair.maps.fastwarp').default_extensions,
+     endextensions=require('ultimate-autopair.maps.fastwarp').default_endextensions,
+     rextensions=require('ultimate-autopair.maps.rfastwarp').default_extensions,
+     rendextensions=require('ultimate-autopair.maps.rfastwarp').default_endextensions,
+     --different extensions used by fastwarp/rfastwarp
+   },
+ }
+<
+------------------------------------------------------------------------------
+ultimate-autopair-config-fastend            *ultimate-autopair-config-fastend*
+The fastend configs should be put in the `fastend` config key
+For more information about fastend, see |ultimate-autopair-fastend|
+Example: >lua
+ {
+   fastend={
+     enable=true,
+     map='<A-$>',
+     cmap='<A-$>',
+     smart=false,
+     --(|)foo, > <A-$> > (foo),
+     fallback=nil,
    },
  }
 <
@@ -225,6 +260,16 @@ Example (`*` is cursor): >
  | ()foo      | (foo*)     |
  | (foo*),bar | (foo,bar*) |
 <
+------------------------------------------------------------------------------
+ultimate-autopair-rfastwarp                        *ultimate-autopair-rfastwarp*
+The rfastwarp mapping can do a bunch of things.
+For the config, read |ultimate-autopair-config-fastwarp|.
+Is designed to do the reverse of fastwarp.
+------------------------------------------------------------------------------
+ultimate-autopair-rfastwarp                        *ultimate-autopair-fastend*
+The fastend mapping can do one thing.
+For the config, read |ultimate-autopair-config-fastend|.
+It will place the parens onaa the end of line.
 ==============================================================================
 EXTENSIONS                                        *ultimate-autopair-extensions*
 All extensions should be in the `lua/ultimate_autopair_extensions` directory.
@@ -247,6 +292,7 @@ If the cmdtype in `conf` then escape.
 ultimate-autopair-ext-escape                    *ultimate-autopair-ext-escape*
 Extension requirement: length `o.key` == 1
 If the previous number of `\\` is odd then escape.
+Also filters escaped parentheses if option `filter` is true.
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-filetype                *ultimate-autopair-ext-filetype*
 Note: filetype extension is sometimes needed for other extensions.
@@ -258,9 +304,11 @@ Note that `ft` can't be a table! If multiple filetypes are to be defined, then
 multiple pairs needs to be defined or |ultimate-autopair-config-filetype|.
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-fly                          *ultimate-autopair-ext-fly*
-Extension config: {list_of_characters}
+Extension config: {list_of_characters...,match,nofilter}
 Extension requirement: `o.type` == 2
 Extension requirement: length `o.key` == 1
+`match` alternative to list_of_characters, uses match.
+`nofilter` disable filtering.
 Hops over all `conf` characters if the pairs are balanced.
 Example (`*` is cursor): >
  | before   | key | after    | config            |
@@ -324,8 +372,16 @@ Example (`*` is cursor): >
  | *'a'   | (   | (*'a') |
 <
 ------------------------------------------------------------------------------
-ultimate-autopair-ext-template                *ultimate-autopair-ext-template*
-A extension template for extension developers.
+ultimate-autopair-ext-treenode                *ultimate-autopair-ext-treenode*
+Filters inside and outside of treesitter nodes.
+`inside` gives which treeitter nodes should be isolated
+`outside` gives which treeitter nodes should be filterd
+Example (`*` is cursor and `=` is deleted): >
+ | before    | after     | config                |
+ |-----------+-----------+-----------------------|
+ | foo #*bar | #*bar     | {inside={'comment'}}  |
+ | foo* #bar | foo* ==== | {outside={'comment'}} |
+<
 ==============================================================================
 DEFAULT-SYSTEMS                            *ultimate-autopair-add-pair-system*
 ------------------------------------------------------------------------------
@@ -361,7 +417,6 @@ Examples:
 `|""` > `"` > `""|""`
 ------------------------------------------------------------------------------
 ultimate-autopair-default-start-filter *ultimate-autopair-default-start-filter*
-For more information about the vaules, read |ultimate-autopair-obj-o|
 Initialize the values for the `o` variable >lua
  extra
  line
@@ -378,62 +433,10 @@ Initialize the values for the `o` variable >lua
 <
 ------------------------------------------------------------------------------
 ultimate-autopair-default-end-filter    *ultimate-autopair-default-end-filter*
-If `o.key` is in `gmem` then `addpair.pair` is called, else default behavior.
+If `o.key` is in `mem` then `addpair.pair` is called, else default behavior.
 ==============================================================================
 OBJECTS                                            *ultimate-autopair-objects*
-------------------------------------------------------------------------------
-ultimate-autopair-obj-o                              *ultimate-autopair-obj-o*
->lua
- {
-  key='(',   --key, basically the pair/paire/ambiguous pair
-  pair='(',  --may be nil if pair not defined in `gmem`
-  paire=')', --may be nil if paire not defined in `gmem`
-  type=1,   --may be nil if type not defined in `gmem`
-            --The types are: 1 pair, 2 paire, 3 ambiguous pair
-  linenr=1  --The line number
-  cmdmode=false --Whether in cmd mode
-  --The folowing types should be used by filtering extensions
-  line='"g"', --the current line, may be changed
-  col=2,   --the current col, may be changed
-  --The folowing types should be used by inserting extensions
-  wline='f"g"', --the current line, may not be changed
-  wcol=3,   --the current col, may not be changed
- }
-<
-------------------------------------------------------------------------------
-ultimate-autopair-obj-gmem                        *ultimate-autopair-obj-gmem*
->lua
- {
-  ['(']=mem1,
-  [')']=mem2,
-  ...
- }
-<
-------------------------------------------------------------------------------
-ultimate-autopair-obj-mem                          *ultimate-autopair-obj-mem*
->lua
- {
-  pair='(',
-  paire=')',
-  type=2, --The types are: 1 pair, 2 paire, 3 ambiguous pair
-  ext={ --contains extension mems
-   filetype=ext_mem,
-   rules=ext_mem,
-  }
- }
-<
-------------------------------------------------------------------------------
-ultimate-autopair-obj-extension              *ultimate-autopair-obj-extension*
->lua
- {
-  init=function (keyconf,mem,conf,gmem)end,
-  --called when initializing pairs
-  --may be nil
-  filter=function(o,conf,mem,gmem)end
-  --called when inserting pair
-  --may be nil
- }
-<
+Todo: write documentation
 ==============================================================================
 API                                                    *ultimate-autopair-api*
 Todo: write documentation

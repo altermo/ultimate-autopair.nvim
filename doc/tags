@@ -6,6 +6,7 @@ ultimate-autopair-config-backspace	ultimate-autopair.txt	/*ultimate-autopair-con
 ultimate-autopair-config-enter	ultimate-autopair.txt	/*ultimate-autopair-config-enter*
 ultimate-autopair-config-extension-checker	ultimate-autopair.txt	/*ultimate-autopair-config-extension-checker*
 ultimate-autopair-config-extensions	ultimate-autopair.txt	/*ultimate-autopair-config-extensions*
+ultimate-autopair-config-fastend	ultimate-autopair.txt	/*ultimate-autopair-config-fastend*
 ultimate-autopair-config-fastwarp	ultimate-autopair.txt	/*ultimate-autopair-config-fastwarp*
 ultimate-autopair-config-filetype	ultimate-autopair.txt	/*ultimate-autopair-config-filetype*
 ultimate-autopair-config-other	ultimate-autopair.txt	/*ultimate-autopair-config-other*
@@ -25,8 +26,9 @@ ultimate-autopair-ext-multichar	ultimate-autopair.txt	/*ultimate-autopair-ext-mu
 ultimate-autopair-ext-rules	ultimate-autopair.txt	/*ultimate-autopair-ext-rules*
 ultimate-autopair-ext-string	ultimate-autopair.txt	/*ultimate-autopair-ext-string*
 ultimate-autopair-ext-suround	ultimate-autopair.txt	/*ultimate-autopair-ext-suround*
-ultimate-autopair-ext-template	ultimate-autopair.txt	/*ultimate-autopair-ext-template*
+ultimate-autopair-ext-treenode	ultimate-autopair.txt	/*ultimate-autopair-ext-treenode*
 ultimate-autopair-extensions	ultimate-autopair.txt	/*ultimate-autopair-extensions*
+ultimate-autopair-fastend	ultimate-autopair.txt	/*ultimate-autopair-fastend*
 ultimate-autopair-fastwarp	ultimate-autopair.txt	/*ultimate-autopair-fastwarp*
 ultimate-autopair-obj-extension	ultimate-autopair.txt	/*ultimate-autopair-obj-extension*
 ultimate-autopair-obj-gmem	ultimate-autopair.txt	/*ultimate-autopair-obj-gmem*
@@ -34,6 +36,7 @@ ultimate-autopair-obj-mem	ultimate-autopair.txt	/*ultimate-autopair-obj-mem*
 ultimate-autopair-obj-o	ultimate-autopair.txt	/*ultimate-autopair-obj-o*
 ultimate-autopair-objects	ultimate-autopair.txt	/*ultimate-autopair-objects*
 ultimate-autopair-other-mappings	ultimate-autopair.txt	/*ultimate-autopair-other-mappings*
+ultimate-autopair-rfastwarp	ultimate-autopair.txt	/*ultimate-autopair-rfastwarp*
 ultimate-autopair-space	ultimate-autopair.txt	/*ultimate-autopair-space*
 ultimate-autopair-writing-extensions	ultimate-autopair.txt	/*ultimate-autopair-writing-extensions*
 ultimate-autopair.nvim	ultimate-autopair.txt	/*ultimate-autopair.nvim*
