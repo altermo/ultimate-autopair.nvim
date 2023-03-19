@@ -35,8 +35,8 @@
 + [x] remove the pair when multicharacter pair empty `/**/| > BS > |`
 + [x] remove the both newline in multiline pair `[\n|\n] > BS > [|]`
 + [x] remove the pair when pair with space `[ ]| > BS > |`
++ [x] remove the unbalanced space in the pair `[  | ] > BS > [ | ]`
 + [ ] remove the pair when multicharacter pair filled `if bool then |code end > BS > |code`
-+ [ ] remove the unbalanced space in the pair `[  | ] > BS > [ | ]`
 + [ ] remove the unbalanced space in the pair `[ |  ] > BS > [ | ]`
 + [ ] remove the unbalanced space in the pair `[  |] > BS > [|]`
 + [ ] remove the space when remove pair `[| text ] > BS > |text`
