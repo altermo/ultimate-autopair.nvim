@@ -9,3 +9,5 @@ There are three types of extensions:
 The ruling extension, extensions which define rules for when to insert pairs, like specific filetype.
 The filtering extension, extensions which filters lines, like strings inside and outside of strings.
 The insertion extension, extensions which inserts pairs a specific way, like surrounding strings.
+## The problem of complex pairs
+In the current state of the plugin (version 0.4.0) it is hard to implement non standard pairs, like regex pairs and multiline pairs. A rework is planed to make the plugin more like [npairs-integrate-upair](https://github.com/altermo/npairs-integrate-upair) while still offering the ability to easily extend the plugin.
