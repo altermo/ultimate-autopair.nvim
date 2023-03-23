@@ -8,11 +8,11 @@ return {call=function (o,conf)
     local col=conf.nofilter and o.wcol or o.col
     for i=col,#line do
         local char=line:sub(i,i)
-        if char==o.key then
-            next_char_index=i
-            break
-        elseif vim.tbl_contains(conf,char) then
-        elseif conf.match and vim.regex(conf.match):match_str(char) then
+        if vim.tbl_contains(conf,char) or (conf.match and vim.regex(conf.match):match_str(char)) then
+            if char==o.key then
+                next_char_index=i
+                break
+            end
         else
             return
         end
