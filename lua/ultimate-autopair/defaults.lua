@@ -42,7 +42,7 @@ M.default_config={
             enable=true,
             markdown={{'```','```',pair=true,noalpha=true,next=true}},
         },
-        addsemi={'c','cpp'},
+        addsemi={'c','cpp','rust'},
         fallback=nil,
         extensions=require('ultimate-autopair.maps.cr').default_extensions,
     },
