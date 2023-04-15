@@ -1,31 +1,41 @@
-local open_pair=require'ultimate-autopair.utils.open_pair'
-local utils=require'ultimate-autopair.utils.utils'
-return {call=function (o,conf)
-    if o.type==1 then return end
-    if #o.key>1 then return end
-    local next_char_index
-    local line=conf.nofilter and o.wline or o.line
-    local col=conf.nofilter and o.wcol or o.col
-    for i=col,#line do
-        local char=line:sub(i,i)
-        if vim.tbl_contains(conf,char) or (conf.match and vim.regex(conf.match):match_str(char)) then
-            if char==o.key then
-                next_char_index=i
-                break
+local utils=require'ultimate-autopair.utils'
+local default=require'ultimate-autopair.pair.default.utils.default'
+local L={}
+return {
+    initialize=function (conf) --TODO: implement undo fly keymap
+        return {
+            check=function (o)
+                if o.key==conf.undomap and L.incmd==o.incmd then
+                    return L.back
+                end
+            end,
+            get_map=default.get_map_wrapper(conf.undomap)
+        }
+    end,
+    call=function (o,keyconf,conf,pair_type,m)
+        if not keyconf.fly then return end
+        if not (pair_type==2 or pair_type==3) then return end
+        local next_char_index
+        local line=conf.nofilter and o.wline or o.line
+        local col=conf.nofilter and o.wcol or o.col
+        if line:sub(col,col)==o.key then return end
+        for i=col,#line do
+            local char=line:sub(i,i)
+            if vim.tbl_contains(conf.other_char,char)
+                or vim.tbl_get(default.get_pair(char) or {},'conf','fly') then
+                if char==o.key then
+                    next_char_index=i
+                    break
+                end
+            else
+                return
             end
-        else
-            return
         end
-    end
-    if not next_char_index then return end
-    if col==next_char_index then return end
-    if o.type==3 then
-        if not open_pair.open_pair_ambigous(o.pair,line,next_char_index) then
-            return utils.movel(next_char_index-col+1)
-        end
-    else
-        if not open_pair.open_pair_before(o.pair,o.paire,line,next_char_index) then
+        if not next_char_index then return end
+        if m.fn.check_end_pair(m.start_pair,m.pair,line,col) then
+            L.incmd=o.incmd
+            L.back=utils.moveh(next_char_index-col)..m.pair
             return utils.movel(next_char_index-col+1)
         end
     end
-end}
+}

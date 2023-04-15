@@ -75,8 +75,8 @@
 + [x] treesitter integration for special blocks (aka strings)
 + [x] only filter inside or outside of comments and other user defined treesitter nodes
 + [x] make block filtering for inside/outside otpional `b|#a` > `b|\1` and `b#a|` > `b#a|` and not `\1#a|`
++ [x] filter escaped characters
 + [ ] user defined multiline as one (maybe using treesitter)
-+ [ ] filter escaped characters
 # inserting
 + [x] dont add pair `'` if previous is alphanumeric
 + [x] dont complete when previous is \ in string? `\| > [ > \[`
@@ -92,9 +92,9 @@
 + [x] auto goto end if only space or newline `[text|  ] > ] > [text  ]|`
 + [x] smart add `()|) > ) ())|)`
 + [x] auto goto end `[te|xt] > ] > [text]|`
-+ [ ] auto skip multicharacter pair `/*|*/ > * > /**/|`
++ [x] auto skip multicharacter pair `/*|*/ > * > /**/|`
++ [x] open multicharacter-pair detector
 + [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
-+ [ ] open multicharacter-pair detector
 + [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|`
 + [ ] add the parens att end when logical `|{a} > [ > [|{a}]`
 + [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
@@ -122,3 +122,5 @@
 + [ ] terminal mode integration
 + [ ] implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)
 + [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
++ [ ] set up matrix room
++ [ ] reimplement features.md as tests

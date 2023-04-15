@@ -1,12 +1,16 @@
 return {
-    call=function (o,conf)
-        if vim.tbl_contains(conf,vim.o.filetype) then
+    call=function (_,keyconf,conf)
+        if conf.ft and not vim.tbl_contains(conf.ft,vim.o.filetype) then
             return 2
         end
-        if o.keyconf and o.keyconf.ft then
-            if not vim.tbl_contains(o.keyconf.ft,vim.o.filetype) then
-                return 2
-            end
+        if conf.nft and vim.tbl_contains(conf.nft,vim.o.filetype) then
+            return 2
+        end
+        if keyconf.ft and not vim.tbl_contains(keyconf.ft,vim.o.filetype) then
+            return 2
+        end
+        if keyconf.nft and vim.tbl_contains(keyconf.nft,vim.o.filetype) then
+            return 2
         end
     end
 }
