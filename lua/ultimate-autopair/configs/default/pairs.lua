@@ -1,6 +1,6 @@
 local M={}
-local default=require'ultimate-autopair.pair.default.utils.default'
-local open_pair=require'ultimate-autopair.pair.default.utils.open_pair'
+local default=require'ultimate-autopair.configs.default.utils.default'
+local open_pair=require'ultimate-autopair.configs.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
 M.fn={
     check_start_pair=open_pair.check_start_pair,
@@ -29,7 +29,7 @@ function M.init(q)
     end
     m.newline=function (o)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
-            return '\r<end>'..o.semi..'<up><end>\r'
+            return '\r<end><up><end>\r'
         end
     end
     function m.check(o)

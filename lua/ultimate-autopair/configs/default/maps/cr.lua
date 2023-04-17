@@ -1,4 +1,4 @@
-local default=require'ultimate-autopair.pair.default.utils.default'
+local default=require'ultimate-autopair.configs.default.utils.default'
 local M={}
 M.fn={}
 function M.fn.newline_pair(o,m,conf)
@@ -21,8 +21,8 @@ function M.newline(o,m,conf)
     end
 end
 function M.do_newline()
-    local core=require 'ultimate-autopair.core'
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(core.run('\r')(),true,true,true),'n',true)
+    local core=require'ultimate-autopair.core'
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(core.run('<cr>')(),true,true,true),'n',true)
 end
 function M.newline_wrapper(m,conf)
     return function (o)

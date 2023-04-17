@@ -1,4 +1,4 @@
-local default=require'ultimate-autopair.pair.default.utils.default'
+local default=require'ultimate-autopair.configs.default.utils.default'
 local utils=require'ultimate-autopair.utils'
 return {call=function(o,keyconf,_,pair_type,m)
     --TODO: don't use o.w* for detection. NEEDS: the string extension to leave in string delimiters

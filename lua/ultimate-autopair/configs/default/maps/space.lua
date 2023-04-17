@@ -1,4 +1,4 @@
-local default=require'ultimate-autopair.pair.default.utils.default'
+local default=require'ultimate-autopair.configs.default.utils.default'
 local utils=require'ultimate-autopair.utils'
 local M={}
 function M.space(o,m,conf)

@@ -1,6 +1,6 @@
 local M={}
-local default=require'ultimate-autopair.pair.default.utils.default'
-local open_pair=require'ultimate-autopair.pair.default.utils.open_pair'
+local default=require'ultimate-autopair.configs.default.utils.default'
+local open_pair=require'ultimate-autopair.configs.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
 M.fn={
     check_start_pair=open_pair.check_ambiguous_start_pair,
@@ -20,6 +20,11 @@ function M.init(q)
     m.p=q.p or 10
     m.sort=default.sort
     m.get_map=default.get_map_wrapper({q.cmap and 'c',(not q.nomap) and 'i'},m.key1,m.key2)
+    m.newline=function (o)
+        if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.pair==o.line:sub(o.col,o.col+#m.pair-1) then
+            return '\r<end><up><end>\r'
+        end
+    end
     m.backspace=function (o)
         if o.line:sub(o.col-#m.pair-#m.pair,o.col-1-#m.pair)==m.pair and m.pair==o.line:sub(o.col-#m.pair,o.col-1) then
             if not open_pair.open_pair_ambigous(m.pair,o.line,o.col) then

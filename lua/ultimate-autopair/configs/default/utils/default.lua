@@ -14,7 +14,7 @@ M.get_map_wrapper=function (modes,...)
     end
 end
 M.load_extension=function (extension_name)
-    return vim.F.npcall(require,'ultimate_autopair_extensions.'..extension_name) or
+    return vim.F.npcall(require,'ultimate-autopair.extensions.'..extension_name) or
         {call=function (...) end} --TODO
 end
 M.prepare_extensions=function (extensions)

@@ -1,5 +1,5 @@
 local utils=require'ultimate-autopair.utils'
-local default=require'ultimate-autopair.pair.default.utils.default'
+local default=require'ultimate-autopair.configs.default.utils.default'
 local L={}
 return {
     initialize=function (conf) --TODO: implement undo fly keymap

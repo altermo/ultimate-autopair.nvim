@@ -1,9 +1,10 @@
-local default=require'ultimate-autopair.pair.default.utils.default'
+local default=require'ultimate-autopair.configs.default.utils.default'
 local M={}
 M.fn={}
 function M.fn.delete_pair(o,m,conf)
     for _,v in ipairs(default.filter_pair_type()) do
         if v.backspace then
+            --TODO: check pair spesific rules
             local ret=v.backspace(o,m,conf)
             if ret then
                 return ret
@@ -12,7 +13,7 @@ function M.fn.delete_pair(o,m,conf)
     end
 end
 function M.backspace(o,m,conf)
-    --TODO: implement a way to run only filtering extensions
+    --TODO: implement a way to run only filtering and ruling extensions
     for _,v in pairs(M.fn) do
         local ret=v(o,m,conf)
         if ret then

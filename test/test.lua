@@ -55,7 +55,7 @@ function M.test_simple()
     run('I"ab"hi"','"a""b"')
 end
 function M.test_newline()
-    --run(':set cindent\rI{a\r','{\n\t\n}')
+    run(':set cindent\rI{a\r','{\n\t\n}')
     --run(':set cindent\rI{foo\r','{foo\n\t\n}')
     --run(':set cindent\rI{foobi\r','{\n\tfoo\n}')
     --run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
@@ -63,7 +63,7 @@ function M.test_newline()
     --run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};')
     --run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};')
     --run(':setf lua\rIdoA\r','do\n\nend',{cr={multichar={enable=true,lua={{'then','end'},{'do','end'}}}}})
-    --run(':setf markdown\rI```\r','```\n\n```')
+    run(':setf markdown\rI```\r','```\n\n```')
 end
 function M.test_backspace()
     local d=':imap <C-h> <bs>\r'

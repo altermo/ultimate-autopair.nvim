@@ -1,6 +1,6 @@
 local M={}
-local open_pair=require'ultimate-autopair.pair.default.utils.open_pair'
-local default=require'ultimate-autopair.pair.default.utils.default'
+local open_pair=require'ultimate-autopair.configs.default.utils.open_pair'
+local default=require'ultimate-autopair.configs.default.utils.default'
 local utils=require'ultimate-autopair.utils'
 M.fn={
     check_start_pair=open_pair.check_start_pair,

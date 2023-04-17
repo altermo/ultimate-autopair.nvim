@@ -1,5 +1,5 @@
 local core=require'ultimate-autopair.core'
-local paird=require'ultimate-autopair.pair.default'
+local paird=require'ultimate-autopair.configs.default'
 local M={}
 M.conf={}
 function M.add_conf(config)
@@ -9,11 +9,13 @@ function M.init_default(conf,mem)
     paird.init_conf(conf,mem)
 end
 function M.init_core(conf,mem)
+    --TODO: put in configs dir
     for _,v in ipairs(conf) do
         table.insert(mem,v)
     end
 end
 function M.init_cond(conf,mem)
+    --TODO: put in configs dir
     local lmem={}
     for _,v in ipairs(conf) do
         M.init_conf(v,lmem)
