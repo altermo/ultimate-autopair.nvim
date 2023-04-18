@@ -89,8 +89,8 @@ function M.test_other_map()
     --local e=':imap <C-o> <A-$>\r'
     --local f=':imap <C-h> <A-C-e>\r'
     --local g=':imap <C-e> <A-E>\r'
-    --run('I[ ','[  ]')
-    --run('I[foobi ','[ foo ]')
+    run('I[ ','[  ]')
+    run('I[foobi ','[ foo ]')
     run(':setf markdown\rI+ [ ','+ [ ]')
     --run(d..'I{}[hi','{[]}')
     --run(d..'I{}foobhi','{foo}')
@@ -129,12 +129,15 @@ function M.test_extensions()
     run([[I'\\a"]],[['\\""']])
     run(":set lisp\rI'","'")
     --run(':set lisp\rI"\'','"\'\'"')
-    --run('I[{( ]$','[{(  )}]$')
+    run('I[{( ]$','[{(  )}]$')
     run(':call setline(1,[input("\r(\r','(')
     run(':iab f foo\rIf()','foo()')
     run(':cab s setline\r:call s(1,["foo\r','foo')
     run('I\\)I(','()\\)')
     ----TODO: test treesitter based extensions
+end
+function M.test_complex()
+    run('Iprint("hello world!")','print("hello world!")')
 end
 ---@diagnostic disable-next-line: undefined-global
 if not DONTRUNTEST then

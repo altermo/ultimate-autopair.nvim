@@ -55,9 +55,9 @@ M.conf={
         fly={other_char={' '},nofilter=false,p=10,undu_map='<C-b>'},
     },
     internal_pairs={
-        {'[',']',fly=true,dosuround=true,newline=true},
-        {'(',')',fly=true,dosuround=true,newline=true},
-        {'{','}',fly=true,dosuround=true,newline=true},
+        {'[',']',fly=true,dosuround=true,newline=true,space=true},
+        {'(',')',fly=true,dosuround=true,newline=true,space=true},
+        {'{','}',fly=true,dosuround=true,newline=true,space=true},
         {'"','"',suround=true,rules={{'when',{'filetype','vim'},{'not',{'regex','^%s*$'}}}}},
         {"'","'",suround=true,rules={{'when',{'option','lisp'},{'instring'}}},alpha=true,nft={'tex'}},
         {'`','`',nft={'tex'}},

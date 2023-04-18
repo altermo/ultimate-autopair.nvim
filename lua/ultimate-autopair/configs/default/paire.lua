@@ -14,7 +14,7 @@ function M.init(q)
     m.extensions=q.extensions
     m.conf=q.conf
     m.key=m.pair:sub(1,1)
-    m._type={default.type_pair}
+    m._type={[default.type_pair]={'pair','end'}}
     m.fn=M.fn
 
     m.p=q.p or 10

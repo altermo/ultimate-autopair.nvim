@@ -1,7 +1,7 @@
 local default=require'ultimate-autopair.configs.default.utils.default'
 local utils=require'ultimate-autopair.utils'
 local M={}
-function M.space(o,m,conf)
+function M.space(o,_,conf)
     --TODO: implement a way to run only filtering extensions
     local prev_char
     local pcol=o.col
@@ -14,11 +14,10 @@ function M.space(o,m,conf)
     end
     local prev_pair=default.get_pair(prev_char)
     if not utils.incmd() and vim.tbl_contains(conf.check_box_ft,vim.o.filetype) and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(o.line:sub(1,o.col)) then
-    --elseif conf.notinstr and in_string(o.line,o.col,utils.getlinenr(),conf.notree) then
-    elseif prev_pair and prev_pair.type==1 then
-        local matching_pair_pos=info_line.findepaire(o.line,pcol,prev_char,prev_pair.paire)
+    elseif prev_pair and prev_pair.conf.space and prev_char then
+        local matching_pair_pos=prev_pair.fn.find_end_pair(prev_char,prev_pair.end_pair,o.line,pcol)
         if matching_pair_pos then
-            return ' '..utils.addafter(matching_pair_pos-o.col,' ')
+            return ' '..utils.addafter(matching_pair_pos-o.col-1,' ')
         end
     end
 end
@@ -34,6 +33,9 @@ function M.init(conf,mem,mconf)
     local m={}
     m.check=M.space_wrapper(m,conf)
     m.p=10
+    m._type={[default.type_pair]={'backspace'}}
+    m.backspace=function ()
+    end
     function m.get_map(mode)
         if mode=='i' and not conf.nomap then
             return {conf.map or ' '}

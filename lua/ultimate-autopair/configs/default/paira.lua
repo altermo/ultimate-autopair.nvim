@@ -14,7 +14,7 @@ function M.init(q)
     m.conf=q.conf
     m.key1=m.pair:sub(-1)
     m.key2=m.pair:sub(1,1)
-    m._type={default.type_pair}
+    m._type={[default.type_pair]={'pair','ambigous'}}
     m.fn=M.fn
 
     m.p=q.p or 10

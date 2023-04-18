@@ -110,4 +110,7 @@ function M.find_corresponding_ambiguous_end_pair(pair,_,line,col)
         i=i+1
     end
 end
+function M.find_corresponding_end_pair(start_pair,end_pair,line,col)
+    return M.count_end_pair(start_pair,end_pair,line,col,#line,1,true)
+end
 return M

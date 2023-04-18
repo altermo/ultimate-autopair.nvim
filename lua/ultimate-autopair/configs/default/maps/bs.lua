@@ -1,8 +1,8 @@
 local default=require'ultimate-autopair.configs.default.utils.default'
 local M={}
 M.fn={}
-function M.fn.delete_pair(o,m,conf)
-    for _,v in ipairs(default.filter_pair_type()) do
+function M.fn.delete(o,m,conf)
+    for _,v in ipairs(default.filter_pair_type({'backspace','pair'})) do
         if v.backspace then
             --TODO: check pair spesific rules
             local ret=v.backspace(o,m,conf)

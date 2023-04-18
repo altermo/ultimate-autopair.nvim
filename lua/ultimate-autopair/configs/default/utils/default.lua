@@ -1,7 +1,13 @@
 local M={}
 M.type_pair={}
+M.get_type_opt=function(obj,conf)
+    local tbl=vim.tbl_get(obj._type or {},M.type_pair)
+    if tbl then
+        return vim.tbl_contains(tbl,conf)
+    end
+end
 M.sort=function (a,b)
-    if vim.tbl_contains(a._type or {},M.type_pair) and vim.tbl_contains(b._type or {},M.type_pair) then
+    if M.get_type_opt(a,'pair') and M.get_type_opt(b,'pair') then
         return #a.pair>#b.pair
     end
 end
@@ -52,14 +58,18 @@ M.run_extensions=function (m,o,map_type)
         dont_end_pair=flag_dont_end_pair,
     }
 end
-function M.filter_pair_type()
+function M.filter_pair_type(conf)
+    if type(conf)=='string' then conf={conf} end
+    if type(conf)=='nil' then conf={'pair'} end
     local core=require'ultimate-autopair.core'
-    core.I.sort()
     return vim.tbl_filter(function (v)
-        return vim.tbl_contains(v._type or {},M.type_pair)
+        for _,i in ipairs(conf) do
+            if M.get_type_opt(v,i) then return true end
+        end
     end,core.mem)
 end
 function M.get_pair(pair)
+    --TODO: a version which takes (line,col)
     for _,v in ipairs(M.filter_pair_type()) do
         if v.pair==pair then return v end
     end

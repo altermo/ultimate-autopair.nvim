@@ -4,7 +4,8 @@ local open_pair=require'ultimate-autopair.configs.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
 M.fn={
     check_start_pair=open_pair.check_start_pair,
-    check_end_pair=open_pair.check_end_pair
+    check_end_pair=open_pair.check_end_pair,
+    find_end_pair=open_pair.find_corresponding_end_pair,
 }
 function M.init(q)
     local m={}
@@ -14,7 +15,7 @@ function M.init(q)
     m.conf=q.conf
     m.pair=m.start_pair
     m.key=m.pair:sub(-1)
-    m._type={default.type_pair}
+    m._type={[default.type_pair]={'pair','start'}}
     m.fn=M.fn
 
     m.p=q.p or 10
