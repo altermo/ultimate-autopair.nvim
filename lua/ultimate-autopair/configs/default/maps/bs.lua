@@ -1,4 +1,5 @@
 local default=require'ultimate-autopair.configs.default.utils.default'
+local mutils=require'ultimate-autopair.configs.default.maps.utils'
 local M={}
 M.fn={}
 function M.fn.delete(o,m,conf)
@@ -23,23 +24,17 @@ function M.backspace(o,m,conf)
 end
 function M.backspace_wrapper(m,conf)
     return function (o)
-        if o.key==(conf.map or '<bs>') then
+        if default.key_eq_mode(o,conf.map,conf.cmap) then
             return M.backspace(o,m,conf)
         end
     end
 end
-function M.init(conf,mem,mconf)
+function M.init(conf,mem,_)
     if not conf.enable then return end
     local m={}
     m.check=M.backspace_wrapper(m,conf)
     m.p=10
-    function m.get_map(mode)
-        if mode=='i' and not conf.nomap then
-            return {conf.map or '<bs>'}
-        elseif mode=='c' and (conf.nocmap or mconf.cmap) then
-            return {conf.cmap or '<bs>'}
-        end
-    end
+    m.get_map=mutils.get_map_wrapper(conf)
     table.insert(mem,m)
 end
 return M

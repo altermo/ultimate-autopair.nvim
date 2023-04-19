@@ -66,6 +66,7 @@
 + [ ] fastwarp no move cursor `(|)foo,bar > (|foo),bar`
 + [ ] make maps use filtering pair extensions
 + [ ] fastwarp treesitter nodes
++ [ ] fastwarp cursor no move
 # filters
 + [x] only filter inside or outside of string
 + [x] user defined rules

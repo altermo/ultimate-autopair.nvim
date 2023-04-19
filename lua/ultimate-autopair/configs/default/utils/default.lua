@@ -81,4 +81,10 @@ function M.select_opt(...)
         end
     end
 end
+function M.key_eq_mode(o,insert,command)
+    if o.incmd and command then
+        return o.key==command
+    end
+    return o.key==insert
+end
 return M

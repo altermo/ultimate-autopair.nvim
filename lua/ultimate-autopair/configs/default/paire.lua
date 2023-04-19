@@ -20,6 +20,9 @@ function M.init(q)
     m.p=q.p or 10
     m.sort=default.sort
     m.get_map=default.get_map_wrapper({q.cmap and 'c',(not q.nomap) and 'i'},m.key)
+    m.rule=function ()
+        return true --TODO: implement
+    end
     m.backspace=function (o)
         if o.line:sub(o.col-#m.start_pair-#m.end_pair,o.col-1-#m.end_pair)==m.start_pair and m.end_pair==o.line:sub(o.col-#m.end_pair,o.col-1) then
             if not open_pair.open_end_pair_after(m.start_pair,m.end_pair,o.line,o.col) then
@@ -28,9 +31,10 @@ function M.init(q)
         end
     end
     function m.check(o)
-        if o.key~=m.key then
+        if o.key~=m.key then --TODO: If cmap=false and incmd then return
             return
         end
+        if not m.rule() then return end
         local flags=default.run_extensions(m,o,2)
         if type(flags)=='string' then return flags
         elseif flags.dont_pair then return

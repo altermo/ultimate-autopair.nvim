@@ -1,9 +1,10 @@
 local default=require'ultimate-autopair.configs.default.utils.default'
 local M={}
 M.fn={}
-function M.fn.newline_pair(o,m,conf)
-    for _,v in ipairs(default.filter_pair_type()) do
+function M.fn.linefeed(o,m,conf)
+    for _,v in ipairs(default.filter_pair_type({'pair','newline'})) do
         if v.newline then
+            --TODO: check pair spesific rules
             local ret=v.newline(o,m,conf)
             if ret then
                 return ret
@@ -26,7 +27,7 @@ function M.do_newline()
 end
 function M.newline_wrapper(m,conf)
     return function (o)
-        if o.key==(conf.map or '<cr>') then
+        if default.key_eq_mode(o,conf.map) then
             return M.newline(o,m,conf)
         end
     end
@@ -37,8 +38,8 @@ function M.init(conf,mem,_)
     m.check=M.newline_wrapper(m,conf)
     m.p=10
     function m.get_map(mode)
-        if mode=='i' and not conf.nomap then
-            return {conf.map or '<cr>'}
+        if mode=='i' and conf.map then
+            return {conf.map}
         end
     end
     table.insert(mem,m)

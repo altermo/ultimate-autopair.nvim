@@ -4,6 +4,20 @@ local function error(msg)
     vim.notify(msg,'error')
 end
 function M.main()
+    local file=vim.fn.expand('%:p')
+    if vim.loader.enabled and _G.__FILE and _G.__FILE~=vim.loop.fs_stat(file).mtime.nsec then
+        vim.ui.select({'Do nothing','Disable vim.loader'},
+            {prompt='Can\'t run modified test while vim.loader is enabled'},
+            function (choice)
+            if choice=='Disable vim.loader' then
+                vim.loader.disable()
+                vim.cmd('luafile %')
+            end
+        end)
+        return
+    else
+        _G.__FILE=vim.loop.fs_stat(file).mtime.nsec
+    end
     M.path=vim.fn.expand('%:p:h:h')
     local rdps=vim.fn.system('grep -r print '..M.path..'/lua')
     if rdps~='' then
