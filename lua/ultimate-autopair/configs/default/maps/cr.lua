@@ -43,5 +43,10 @@ function M.init(conf,mem,_)
         end
     end
     table.insert(mem,m)
+    table.insert(mem,{p=0,check=function (o)
+        if o.key=='<cr>' then
+            return '\r'
+        end
+    end,get_map=m.get_map})
 end
 return M

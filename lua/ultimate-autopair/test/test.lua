@@ -1,10 +1,13 @@
 local M={}
 M.jobs={}
-local function error(msg)
+function M.info(msg)
+    vim.notify(msg,'info')
+end
+function M.error(msg)
     vim.notify(msg,'error')
 end
 function M.main()
-    local file=vim.fn.expand('%:p')
+    local file=vim.api.nvim_get_runtime_file('lua/ultimate-autopair/test/test.lua',false)[1]
     if vim.loader.enabled and _G.__FILE and _G.__FILE~=vim.loop.fs_stat(file).mtime.nsec then
         vim.ui.select({'Do nothing','Disable vim.loader'},
             {prompt='Can\'t run modified test while vim.loader is enabled'},
@@ -18,16 +21,16 @@ function M.main()
     else
         _G.__FILE=vim.loop.fs_stat(file).mtime.nsec
     end
-    M.path=vim.fn.expand('%:p:h:h')
-    local rdps=vim.fn.system('grep -r print '..M.path..'/lua')
+    M.path=vim.fn.fnamemodify(vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1],':h:h')
+    local rdps=vim.fn.system('grep -r --exclude=test.lua print '..M.path..'/lua')
     if rdps~='' then
-        error('A rouge debug print statement was spotted at '..rdps)
+        M.error('A rouge debug prin\t statement was spotted at '..rdps)
     end
     local rdft=vim.fn.system('find '..M.path..'/lua -type f ! -name "*.lua" ! -name "*.md"')
     if rdft~='' then
-        error('A non lua file was spotted at '..rdft)
+        M.error('A non lua file was spotted at '..rdft)
     end
-    vim.notify('tests starting')
+    M.info('tests starting')
     for k,v in pairs(M) do
         if k:sub(1,5)=='test_' then
             v()
@@ -36,7 +39,7 @@ function M.main()
 end
 local function assert(x,y)
     if x~=y then
-        error('Assertion failed '..vim.inspect(x)..' ~= '..vim.inspect(y))
+        M.error('Assertion failed '..vim.inspect(x)..' ~= '..vim.inspect(y))
     end
 end
 local function run(keys,match,conf)
@@ -88,15 +91,15 @@ function M.test_backspace()
     run(d..'I[[lxi','[]')
     --run(d..'I[foobi','foo')
     --run(d..'I[ ]','')
-    --run(d..'I[foobi ','[foo]')
+    run(d..'I[foobi ','[foo]')
     run(d..':setf html\rI<!-A-','')
     run(d..':setf html\ri<!-a-A','')
     --run(d..'I"\'"\'\'i','"\'"')
     --run(d..'I{\r','{}')
-    --run(d..'I[ ','[]')
-    --run(d..'I( foobi','(foo)')
-    --run(d..'I(  foobi','( foo )')
-    --run(d..'I(  a','(  )')
+    run(d..'I[ ','[]')
+    run(d..'I( foobi','(foo)')
+    run(d..'I(  foobi','( foo )')
+    run(d..'I(  a','(  )')
 end
 function M.test_other_map()
     --local d=':imap <C-e> <A-e>\r'
@@ -105,6 +108,7 @@ function M.test_other_map()
     --local g=':imap <C-e> <A-E>\r'
     run('I[ ','[  ]')
     run('I[foobi ','[ foo ]')
+    --run('I[foo bi ','[ foo ]')
     run(':setf markdown\rI+ [ ','+ [ ]')
     --run(d..'I{}[hi','{[]}')
     --run(d..'I{}foobhi','{foo}')
@@ -153,8 +157,8 @@ end
 function M.test_complex()
     run('Iprint("hello world!")','print("hello world!")')
 end
----@diagnostic disable-next-line: undefined-global
-if not DONTRUNTEST then
+---@diagnostic disable-next-line: undefined-field
+if not _G.DONTRUNTEST then
     M.main()
 end
 return M

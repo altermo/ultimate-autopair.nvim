@@ -30,14 +30,46 @@ function M.space_wrapper(m,conf)
         end
     end
 end
+function M.backspace(o,_,conf)
+    if conf.space and o.line:sub(o.col-1,o.col-1)==' ' then
+        local newcol
+        local char
+        for i=o.col-2,1,-1 do
+            char=o.line:sub(i,i)
+            if char~=' ' then
+                newcol=i+2
+                break
+            end
+        end
+        local prev_n_pair=default.get_pair(char)
+        if prev_n_pair and default.get_type_opt(prev_n_pair,'start') then
+            local matching_pair_pos=prev_n_pair.fn.find_end_pair(char,prev_n_pair.end_pair,o.line,newcol-1)
+            if not matching_pair_pos then return end
+            if o.line:sub(newcol-1,matching_pair_pos-2):find('[^ ]') then
+                if o.line:sub(newcol-1,o.col-1):find('[^ ]') then return end
+                if o.line:sub(newcol-1,matching_pair_pos-2):match(' *')
+                    <=o.line:sub(newcol-1,matching_pair_pos-2):reverse():match(' *') then
+                    return utils.moveh()..utils.delete(0,1)..utils.movel(matching_pair_pos-o.col-2)..utils.delete(0,1)..utils.moveh(matching_pair_pos-o.col-2)
+                else
+                    return utils.moveh()..utils.delete(0,1)
+                end
+            else
+                if o.line:sub(newcol-1,o.col-1)<=o.line:sub(o.col,matching_pair_pos-2) then
+                    return utils.moveh()..utils.delete(0,1)..utils.movel(matching_pair_pos-o.col-2)..utils.delete(0,1)..utils.moveh(matching_pair_pos-o.col-2)
+                else
+                    return utils.moveh()..utils.delete(0,1)
+                end
+            end
+        end
+    end
+end
 function M.init(conf,mem,_)
     if not conf.enable then return end
     local m={}
     m.check=M.space_wrapper(m,conf)
     m.p=10
     m._type={[default.type_pair]={'backspace'}}
-    m.backspace=function ()
-    end
+    m.backspace=M.backspace
     m.get_map=mutils.get_map_wrapper(conf)
     table.insert(mem,m)
     table.insert(mem,{p=0,check=function (o)
