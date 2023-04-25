@@ -22,6 +22,7 @@ function M.main()
         _G.__FILE=vim.loop.fs_stat(file).mtime.nsec
     end
     M.path=vim.fn.fnamemodify(vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1],':h:h')
+    M.count=0
     local rdps=vim.fn.system('grep -r --exclude=test.lua print '..M.path..'/lua')
     if rdps~='' then
         M.error('A rouge debug prin\t statement was spotted at '..rdps)
@@ -56,6 +57,7 @@ local function run(keys,match,conf)
             vim.fn.delete(tmp)
             assert(vim.fn.join(vim.fn.readfile(outtmp),'\n'),match)
             vim.fn.delete(outtmp)
+            M.count=M.count+1
         end,pty=true
     }))
 end
@@ -73,13 +75,13 @@ function M.test_simple()
 end
 function M.test_newline()
     run(':set cindent\rI{a\r','{\n\t\n}')
-    --run(':set cindent\rI{foo\r','{foo\n\t\n}')
+    run(':set cindent\rI{foo\r','{foo\n\t\n}')
     --run(':set cindent\rI{foobi\r','{\n\tfoo\n}')
     --run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
-    --run(':setf c\r:set cindent\rI{\r','{\n\t\n};')
-    --run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};')
-    --run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};')
-    --run(':setf lua\rIdoA\r','do\n\nend',{cr={multichar={enable=true,lua={{'then','end'},{'do','end'}}}}})
+    --run(':setf c\r:set cindent\rI{\r','{\n\t\n};') --TBD
+    --run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};') --TBD
+    --run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};') --TBD
+    --run(':setf lua\rIdoA\r','do\n\nend',{cr={multichar={enable=true,lua={{'then','end'},{'do','end'}}}}}) --TBD
     run(':setf markdown\rI```\r','```\n\n```')
 end
 function M.test_backspace()
@@ -90,7 +92,7 @@ function M.test_backspace()
     run(d..'I[[','[]')
     run(d..'I[[lxi','[]')
     --run(d..'I[foobi','foo')
-    --run(d..'I[ ]','')
+    --run(d..'I[ ]','') --TBD
     run(d..'I[foobi ','[foo]')
     run(d..':setf html\rI<!-A-','')
     run(d..':setf html\ri<!-a-A','')
@@ -103,8 +105,8 @@ function M.test_backspace()
 end
 function M.test_other_map()
     --local d=':imap <C-e> <A-e>\r'
-    --local e=':imap <C-o> <A-$>\r'
-    --local f=':imap <C-h> <A-C-e>\r'
+    --local e=':imap <C-o> <A-$>\r' --TBD
+    --local f=':imap <C-h> <A-C-e>\r' --TBD
     --local g=':imap <C-e> <A-E>\r'
     run('I[ ','[  ]')
     run('I[foobi ','[ foo ]')
@@ -119,9 +121,9 @@ function M.test_other_map()
     --run(d..'I{foo},(bar)bbi','{foo,}(bar)')
     --run(d..'I{(),}hhi','{(,)}')
     --run(d..'I\rki(','(\n)')
-    --run(e..'Ifoo,barI(','(foo,bar)')
-    --run(e..'Ifoo,bar,I(','(foo,bar),',{fastend={smart=true}})
-    --run(f..'Ifoo,bar ,I(','(foo,bar) ,')
+    --run(e..'Ifoo,barI(','(foo,bar)') --TBD
+    --run(e..'Ifoo,bar,I(','(foo,bar),',{fastend={smart=true}}) --TBD
+    --run(f..'Ifoo,bar ,I(','(foo,bar) ,') --TBD
     --run(g..'I(foo)i','()foo')
     --run(g..'I()i','()')
     --run(g..'I(foo,bar)i','(foo),bar')

@@ -24,16 +24,19 @@ function M.init(q)
     m.rule=function ()
         return true --TODO: implement
     end
+    m.newline=function (o)
+        if m.pair==o.line:sub(o.col-#m.pair,o.col-1) then
+            local matching_pair_pos=m.fn.find_end_pair(m.start_pair,m.end_pair,o.line,o.col)
+            if matching_pair_pos then
+              return utils.movel(matching_pair_pos-o.col-1)..'\r<up><home>'..utils.movel(o.col-1)..'\r'
+            end
+        end
+    end
     m.backspace=function (o)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
             if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
                 return utils.delete(#m.start_pair,#m.end_pair)
             end
-        end
-    end
-    m.newline=function (o)
-        if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
-            return '\r<end><up><end>\r'
         end
     end
     function m.check(o)

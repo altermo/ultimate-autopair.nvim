@@ -14,7 +14,7 @@ function M.space(o,_,conf)
         end
     end
     local prev_pair=default.get_pair(prev_char)
-    if not utils.incmd() and vim.tbl_contains(conf.check_box_ft,vim.o.filetype) and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(o.line:sub(1,o.col)) then
+    if not utils.incmd() and (vim.tbl_contains(conf.check_box_ft,vim.o.filetype) or conf.check_box_ft==true) and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(o.line:sub(1,o.col)) then
     elseif prev_pair and prev_pair.conf.space and prev_char and
         (default.get_type_opt(prev_pair,'ambiguous') or default.get_type_opt(prev_pair,'start')) then
         local matching_pair_pos=prev_pair.fn.find_end_pair(prev_char,prev_pair.end_pair,o.line,pcol)

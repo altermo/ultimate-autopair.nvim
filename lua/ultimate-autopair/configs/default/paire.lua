@@ -30,6 +30,11 @@ function M.init(q)
             end
         end
     end
+    m.newline=function (o)
+        if m.pair==o.line:sub(o.col,o.col+#m.pair-1) then
+            return '\r<end><up><end>\r'
+        end
+    end
     function m.check(o)
         if o.key~=m.key then --TODO: If cmap=false and incmd then return
             return

@@ -6,3 +6,5 @@ THIS IS A PRE-ALPHA VERSION SOFTWARE which means that:
 + Some of the files are dead weight.
 
 Pleas **DO NOT USE** this software version as is.
+
+The non warning [readme.md](README.md)
