@@ -70,6 +70,7 @@ function M.filter_pair_type(conf)
 end
 function M.get_pair(pair)
     --TODO: a version which takes (line,col)
+    --TODO: a version which takes (line,col) and is reversed
     for _,v in ipairs(M.filter_pair_type()) do
         if v.pair==pair then return v end
     end

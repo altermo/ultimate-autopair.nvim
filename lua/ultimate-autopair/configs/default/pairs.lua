@@ -25,10 +25,10 @@ function M.init(q)
         return true --TODO: implement
     end
     m.newline=function (o)
-        if m.pair==o.line:sub(o.col-#m.pair,o.col-1) then
+        if m.pair==o.line:sub(o.col-#m.pair,o.col-1) and m.conf.newline then
             local matching_pair_pos=m.fn.find_end_pair(m.start_pair,m.end_pair,o.line,o.col)
             if matching_pair_pos then
-              return utils.movel(matching_pair_pos-o.col-1)..'\r<up><home>'..utils.movel(o.col-1)..'\r'
+                return utils.movel(matching_pair_pos-o.col-1)..'\r<up><home>'..utils.movel(o.col-1)..'\r'
             end
         end
     end
@@ -37,6 +37,26 @@ function M.init(q)
             if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
                 return utils.delete(#m.start_pair,#m.end_pair)
             end
+        end
+        if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair then
+            if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
+                local matching_pair_pos=m.fn.find_end_pair(m.start_pair,m.end_pair,o.line,o.col)
+                if matching_pair_pos then
+                    return utils.delete(#m.start_pair)..utils.addafter(matching_pair_pos-o.col-1,utils.delete(0,#m.end_pair),0)
+                end
+            end
+        end
+        if o.incmd then return end
+        if vim.trim(o.line:sub(1,o.col))~='' then
+            return
+        end
+        local line1=utils.getline(o.linenr-1)
+        local line2=utils.getline(o.linenr+1)
+        if not line1 or not line2 then
+            return
+        end
+        if line1:sub(-1)==m.start_pair and vim.trim(line2):sub(1,1)==m.end_pair then
+            return utils.delete(0,line2:find('[^%s]'))..'<up><end>'..utils.delete(0,o.col+1)
         end
     end
     function m.check(o)

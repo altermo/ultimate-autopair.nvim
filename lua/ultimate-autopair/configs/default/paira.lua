@@ -5,7 +5,7 @@ local utils=require'ultimate-autopair.utils'
 M.I={}
 function M.I.newline_wrapper(m)
     return function(o)
-        if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.pair==o.line:sub(o.col,o.col+#m.pair-1) then
+        if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
             return '\r<end><up><end>\r'
         end
     end

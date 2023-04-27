@@ -1,4 +1,5 @@
 local default=require'ultimate-autopair.configs.default.utils.default'
+local utils=require'ultimate-autopair.utils'
 local M={}
 M.fn={}
 function M.fn.linefeed(o,m,conf)
@@ -37,6 +38,7 @@ function M.init(conf,mem,_)
     local m={}
     m.check=M.newline_wrapper(m,conf)
     m.p=10
+    m.backspace=M.backspace
     function m.get_map(mode)
         if mode=='i' and conf.map then
             return {conf.map}

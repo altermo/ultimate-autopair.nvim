@@ -14,10 +14,9 @@ M.check=function ()
         _G.__FILE=nil
         local stat,test=pcall(require,'ultimate-autopair.test.test')
         if not stat then
-            warn('could not find test.lua: aborting')
+            error('could not find test.lua: aborting')
             return
         end
-        ok('found test.lua')
         ---@diagnostic disable-next-line: duplicate-set-field
         test.info=function (msg)
             info(msg)
@@ -30,6 +29,8 @@ M.check=function ()
         local _,ret=vim.wait(2000,function() return test.count==#test.jobs end)
         if ret then
             warn('could not run all tests in time')
+        else
+            ok('all tests finnished')
         end
     end)
     _G.__FILE=save.__FILE

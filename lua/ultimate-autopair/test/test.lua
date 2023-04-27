@@ -23,6 +23,7 @@ function M.main()
     end
     M.path=vim.fn.fnamemodify(vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1],':h:h')
     M.count=0
+    M.jobs={}
     local rdps=vim.fn.system('grep -r --exclude=test.lua print '..M.path..'/lua')
     if rdps~='' then
         M.error('A rouge debug prin\t statement was spotted at '..rdps)
@@ -76,7 +77,7 @@ end
 function M.test_newline()
     run(':set cindent\rI{a\r','{\n\t\n}')
     run(':set cindent\rI{foo\r','{foo\n\t\n}')
-    --run(':set cindent\rI{foobi\r','{\n\tfoo\n}')
+    run(':set cindent\rI{foobi\r','{\n\tfoo\n}')
     --run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
     --run(':setf c\r:set cindent\rI{\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};') --TBD
@@ -91,13 +92,13 @@ function M.test_backspace()
     run(d..'I[]','')
     run(d..'I[[','[]')
     run(d..'I[[lxi','[]')
-    --run(d..'I[foobi','foo')
+    run(d..'I[foobi','foo')
     --run(d..'I[ ]','') --TBD
     run(d..'I[foobi ','[foo]')
     run(d..':setf html\rI<!-A-','')
     run(d..':setf html\ri<!-a-A','')
     --run(d..'I"\'"\'\'i','"\'"')
-    --run(d..'I{\r','{}')
+    run(d..'I{\r','{}')
     run(d..'I[ ','[]')
     run(d..'I( foobi','(foo)')
     run(d..'I(  foobi','( foo )')
