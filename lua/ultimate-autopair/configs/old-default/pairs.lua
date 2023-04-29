@@ -1,21 +1,30 @@
-local default=require'ultimate-autopair.configs.default.utils'
+local M={}
+local default=require'ultimate-autopair.configs.default.utils.default'
 local open_pair=require'ultimate-autopair.configs.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
-local M={}
 M.fn={
     check_start_pair=open_pair.check_start_pair,
     check_end_pair=open_pair.check_end_pair,
     find_end_pair=open_pair.find_corresponding_end_pair,
 }
-M.check_wrapper=function (m)
-    return function (o)
-        if o.line:sub(o.col-#m.pair+1,o.col-1)~=m.pair:sub(0,-2) then return end
-        if open_pair.open_end_pair_after(m.start_pair,m.end_pair,o.line,o.col) then return end
-        return '\x1d'..m.start_pair:sub(-1)..m.end_pair..utils.moveh(#m.end_pair)
+function M.init(q)
+    local m={}
+    m.start_pair=q.start_pair
+    m.end_pair=q.end_pair
+    m.extensions=q.extensions
+    m.conf=q.conf
+    m.pair=m.start_pair
+    m.key=m.pair:sub(-1)
+    m._type={[default.type_pair]={'pair','start'}}
+    m.fn=M.fn
+
+    m.p=q.p or 10
+    m.sort=default.sort
+    m.get_map=default.get_map_wrapper({q.cmap and 'c',(not q.nomap) and 'i'},m.key)
+    m.rule=function ()
+        return true --TODO: implement
     end
-end
-M.newline_wrapper=function (m)
-    return function(o)
+    m.newline=function (o)
         if m.pair==o.line:sub(o.col-#m.pair,o.col-1) and m.conf.newline then
             local matching_pair_pos=m.fn.find_end_pair(m.start_pair,m.end_pair,o.line,o.col)
             if matching_pair_pos then
@@ -23,9 +32,7 @@ M.newline_wrapper=function (m)
             end
         end
     end
-end
-M.backspace_wrapper=function (m)
-    return function (o)
+    m.backspace=function (o)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
             if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
                 return utils.delete(#m.start_pair,#m.end_pair)
@@ -52,33 +59,18 @@ M.backspace_wrapper=function (m)
             return utils.delete(0,line2:find('[^%s]'))..'<up><end>'..utils.delete(0,o.col+1)
         end
     end
-end
-function M.init(q)
-    local m={}
-    m.start_pair=q.start_pair
-    m.end_pair=q.end_pair
-    m.pair=m.start_pair
-    m.extensions=q.extensions
-    m.conf=q.conf
-    m.key=m.pair:sub(-1)
-    m._type={[default.type_pair]={'pair','start'}}
-    m.fn=M.fn
-
-    m.check=M.check_wrapper(m)
-    m.newline=M.newline_wrapper(m)
-    m.backspace=M.backspace_wrapper(m)
-    m.rule=function () return true end
-    default.init_extensions(m,m.extensions)
-    m.get_map=default.get_map_wrapper({q.cmap and 'c',(not q.nomap) and 'i'},m.key)
-    m.sort=default.sort
-    m.p=q.p or 10
-    local check=m.check
-    m.check=function (o)
-        o.wline=o.line
-        o.wcol=o.col
-        if not default.key_check_cmd(o,m.key,q.map,q.cmap) then return end
+    function m.check(o)
+        if o.key~=m.key then --TODO: If cmap=false and incmd then return
+            return
+        end
         if not m.rule() then return end
-        return check(o)
+        local flags=default.run_extensions(m,o,1)
+        if type(flags)=='string' then return flags
+        elseif flags.dont_pair then return
+        elseif flags.dont_start_pair then return end
+        if not open_pair.open_end_pair_after(m.start_pair,m.end_pair,o.line,o.col) and o.line:sub(o.col-#m.pair+1,o.col-1)==m.pair:sub(0,-2) then
+            return '\x1d'..m.start_pair:sub(-1)..m.end_pair..utils.moveh(#m.end_pair)
+        end
     end
     return m
 end

@@ -9,13 +9,13 @@ function M.init_default(conf,mem)
     paird.init_conf(conf,mem)
 end
 function M.init_core(conf,mem)
-    --TODO: put in configs dir
+    --TODO: put in configs/ dir
     for _,v in ipairs(conf) do
         table.insert(mem,v)
     end
 end
 function M.init_cond(conf,mem)
-    --TODO: put in configs dir
+    --TODO: put in configs/ dir
     local lmem={}
     for _,v in ipairs(conf) do
         M.init_conf(v,lmem)
@@ -37,6 +37,9 @@ function M.init_conf(conf,mem)
         M.init_core(conf,mem)
     elseif conf.config_init=='cond' then
         M.init_cond(conf,mem)
+    elseif conf.config_init=='new' then --TODO: temporary hack
+        local new=require'ultimate-autopair.configs.new-default'
+        new.init_conf(conf,mem)
     elseif type(conf.config_init)=='function' then
         conf.config_init(conf,mem)
     end

@@ -1,3 +1,4 @@
+local default=require'ultimate-autopair.configs.default.utils'
 local M={}
 function M.filter_string(line,col,linenr,notree)
     if M.instring() then
@@ -10,8 +11,7 @@ function M.filter_string(line,col,linenr,notree)
         end
     end
 end
-M.call=function(o,_,conf)
+return default.wrapp_old_extension(function(o,_,conf)
     return
     o.line,o.col=M.filter_string(o.line,o.col,o.linenr,(conf or {}).notree or o.cmdmode)
-end
-return M
+end,M)

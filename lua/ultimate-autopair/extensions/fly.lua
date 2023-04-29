@@ -1,18 +1,7 @@
 local utils=require'ultimate-autopair.utils'
-local default=require'ultimate-autopair.configs.default.utils.default'
-local L={}
-return {
-    initialize=function (conf) --TODO: implement undo fly keymap
-        return {
-            check=function (o)
-                if o.key==conf.undomap and L.incmd==o.incmd then
-                    return L.back
-                end
-            end,
-            get_map=default.get_map_wrapper(conf.undomap)
-        }
-    end,
-    call=function (o,keyconf,conf,pair_type,m)
+local default=require'ultimate-autopair.configs.default.utils'
+--TODO: implement undo fly keymap
+return default.wrapp_old_extension(function (o,keyconf,conf,pair_type,m)
         if not keyconf.fly then return end
         if not (pair_type==2 or pair_type==3) then return end
         local next_char_index
@@ -33,9 +22,7 @@ return {
         end
         if not next_char_index then return end
         if m.fn.check_end_pair(m.start_pair,m.pair,line,col) then
-            L.incmd=o.incmd
-            L.back=utils.moveh(next_char_index-col)..m.pair
             return utils.movel(next_char_index-col+1)
         end
     end
-}
+)

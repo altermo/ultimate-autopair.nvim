@@ -1,5 +1,5 @@
-return {
-    call=function (_,keyconf,conf)
+local default=require'ultimate-autopair.configs.default.utils'
+return default.wrapp_old_extension(function (_,keyconf,conf)
         if conf.ft and not vim.tbl_contains(conf.ft,vim.o.filetype) then
             return 2
         end
@@ -12,5 +12,4 @@ return {
         if keyconf.nft and vim.tbl_contains(keyconf.nft,vim.o.filetype) then
             return 2
         end
-    end
-}
+    end)

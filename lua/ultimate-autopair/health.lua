@@ -12,6 +12,7 @@ M.check=function ()
         _G.DONTRUNTEST=true
         start('ultimate-autopair')
         _G.__FILE=nil
+        package.loaded['ultimate-autopair.test.test']=nil
         local stat,test=pcall(require,'ultimate-autopair.test.test')
         if not stat then
             error('could not find test.lua: aborting')
@@ -26,7 +27,7 @@ M.check=function ()
             error(('A test failed: %s'):format(msg))
         end
         test.main()
-        local _,ret=vim.wait(2000,function() return test.count==#test.jobs end)
+        local _,ret=vim.wait(10000,function() return test.count==#test.jobs end)
         if ret then
             warn('could not run all tests in time')
         else

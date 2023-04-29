@@ -1,4 +1,5 @@
-return{call=function(o,keyconf,conf)
+local default=require'ultimate-autopair.configs.default.utils'
+return default.wrapp_old_extension(function(o,keyconf,conf)
     if keyconf.noescape then return end
     if not (conf.nochar or keyconf.nocharescape) then
         local col=o.col-1
@@ -25,4 +26,4 @@ return{call=function(o,keyconf,conf)
         end
     end
     o.line=newline
-end}
+end)
