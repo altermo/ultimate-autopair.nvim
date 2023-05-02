@@ -115,9 +115,9 @@ function M.key_eq_mode(o,insert,command)
     end
     return o.key==insert
 end
-function M.key_check_cmd(o,key,normal,cmd)
+function M.key_check_cmd(o,key,normal,cmd,keyc)
     if o.incmd then
-        return cmd and o.key==key
+        return cmd and o.key==(keyc or key)
     end
     return normal and o.key==key
 end

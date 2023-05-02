@@ -3,6 +3,15 @@ local M={}
 local utils=require'ultimate-autopair.utils'
 M.mem={}
 M.I={}
+function M.I.activate_iabbrev(key)
+    if key:sub(1,4)=='<cr>' then
+        return '<C-]>'..key
+    end
+    if not vim.regex('\\k'):match_str(key:sub(1,1)) then
+        return '<C-]>'..key
+    end
+    return key
+end
 function M.I.var_create_wrapper(key)
     local line=utils.getline()
     local col=utils.getcol()
@@ -24,10 +33,10 @@ function M.run(key)
         for _,v in ipairs(M.mem) do
             local ret=v.check(fo())
             if ret then
-                return ret
+                return M.I.activate_iabbrev(ret)
             end
         end
-        return key
+        return M.I.activate_iabbrev(key)
     end
 end
 function M.clear()

@@ -3,9 +3,9 @@ local pair_s=require'ultimate-autopair.configs.default.pairs'
 local pair_a=require'ultimate-autopair.configs.default.paira'
 local pair_e=require'ultimate-autopair.configs.default.paire'
 local default=require'ultimate-autopair.configs.default.utils'
---local bs=require'ultimate-autopair.configs.default.maps.bs'
---local cr=require'ultimate-autopair.configs.default.maps.cr'
---local space=require'ultimate-autopair.configs.default.maps.space'
+local bs=require'ultimate-autopair.configs.default.maps.bs'
+local cr=require'ultimate-autopair.configs.default.maps.cr'
+local space=require'ultimate-autopair.configs.default.maps.space'
 function M.init_multi(q)
     if q.start_pair==q.end_pair then
         return {pair_a.init(q)}
@@ -22,15 +22,15 @@ function M.init_conf(conf,mem)
 end
 function M.clear()
 end
---function M.init_bs(conf,mem,mconf)
-    --bs.init(conf,mem,mconf)
---end
---function M.init_cr(conf,mem,mconf)
-    --cr.init(conf,mem,mconf)
---end
---function M.init_space(conf,mem,mconf)
-    --space.init(conf,mem,mconf)
---end
+function M.init_bs(conf,mem,mconf)
+    bs.init(conf,mem,mconf)
+end
+function M.init_cr(conf,mem,mconf)
+    cr.init(conf,mem,mconf)
+end
+function M.init_space(conf,mem,mconf)
+    space.init(conf,mem,mconf)
+end
 function M.init_pair(conf,mem,mconf)
     local ext=default.prepare_extensions(mconf.extensions)
     for _,v in ipairs(conf) do
