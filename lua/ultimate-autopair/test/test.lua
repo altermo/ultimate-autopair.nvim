@@ -23,7 +23,6 @@ function M.main()
     end
     M.path=vim.fn.fnamemodify(vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1],':h:h')
     M.count=0
-    M.jobs={}
     local rdps=vim.fn.system('grep -r --exclude=test.lua print '..M.path..'/lua')
     if rdps~='' then
         M.error('A rouge debug prin\t statement was spotted at '..rdps)
@@ -43,6 +42,12 @@ local function assert(x,y)
     if x~=y then
         M.error('Assertion failed '..vim.inspect(x)..' ~= '..vim.inspect(y))
     end
+end
+function M.stopall()
+    for _,v in ipairs(M.jobs) do
+        vim.fn.jobstop(v)
+    end
+    M.jobs={}
 end
 local function run(keys,match,conf)
     local tmp=vim.fn.tempname()
@@ -71,7 +76,7 @@ function M.test_simple()
     run('I"','""')
     run('I""','""')
     run('I()','()')
-    run('I(()xi)','(())')
+    run('I(()Xi(','(())')
     run('I"ab"hi"','"a""b"')
     run(':setf html\rI<!-A-','<!---->')
     run(':setf html\rI<!-A-xi-','<!---->')
@@ -163,6 +168,7 @@ function M.test_extensions()
 end
 function M.test_complex()
     run('Iprint("hello world!")','print("hello world!")')
+    run('Iprint("hello world!','print("hello world!")')
 end
 ---@diagnostic disable-next-line: undefined-field
 if not _G.DONTRUNTEST then

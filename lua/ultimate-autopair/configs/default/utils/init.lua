@@ -19,6 +19,16 @@ M.get_map_wrapper=function (modes,...)
         end
     end
 end
+M.get_mode_map_wrapper=function(key,keyc)
+    return function(mode)
+        if mode=='i' and key then
+            return {key}
+        end
+        if mode=='c' and keyc then
+            return {keyc}
+        end
+    end
+end
 M.load_extension=function (extension_name)
     return vim.F.npcall(require,'ultimate-autopair.extensions.'..extension_name) or
         {call=function (...) end} --TODO
@@ -68,6 +78,8 @@ function M.wrapp_old_extension(f,I)
         elseif M.get_type_opt(m,'ambigous-end') then
             typ='end'
             map_type=3
+        else
+            return
         end
         local check=m.check
         function m.check(o)
@@ -108,12 +120,6 @@ function M.select_opt(...)
             return v
         end
     end
-end
-function M.key_eq_mode(o,insert,command)
-    if o.incmd and command then
-        return o.key==command
-    end
-    return o.key==insert
 end
 function M.key_check_cmd(o,key,normal,cmd,keyc)
     if o.incmd then

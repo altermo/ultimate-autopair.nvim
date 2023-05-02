@@ -29,6 +29,7 @@ M.check=function ()
         test.main()
         local _,ret=vim.wait(10000,function() return test.count==#test.jobs end)
         if ret then
+            test.stopall()
             warn('could not run all tests in time')
         else
             ok('all tests finnished')

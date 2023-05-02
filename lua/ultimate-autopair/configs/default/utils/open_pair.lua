@@ -10,13 +10,13 @@ function M.count_start_pair(Istart_pair,Iend_pair,Iline,cols,cole,Icount,ret_pos
     local i=cole
     local count=Icount or 0
     while i>cols-1 do
-        local line=Iline:sub(0,i):reverse()
+        local line=Iline:sub(cols,i):reverse()
         if M.I.match(start_pair,line) then
             count=count-1
-            i=i-#end_pair
+            i=i-#start_pair
         elseif M.I.match(end_pair,line) then
             count=count+1
-            i=i-#start_pair
+            i=i-#end_pair
         else
             i=i-1
         end
@@ -32,13 +32,13 @@ function M.count_end_pair(start_pair,end_pair,Iline,cols,cole,Icount,ret_pos)
     local i=cols
     local count=Icount or 0
     while i<cole+1 do
-        local line=Iline:sub(i)
+        local line=Iline:sub(i,cole)
         if M.I.match(start_pair,line) then
             count=count+1
-            i=i+#end_pair
+            i=i+#start_pair
         elseif M.I.match(end_pair,line) then
             count=count-1
-            i=i+#start_pair
+            i=i+#end_pair
         else
             i=i+1
         end
@@ -54,7 +54,7 @@ function M.count_ambigious_pair(pair,Iline,cols,cole,Icount)
     local i=cols
     local count=Icount or 0
     while i<cole+1 do
-        local line=Iline:sub(i)
+        local line=Iline:sub(i,cole)
         if M.I.match(pair,line) then
             count=count+1
             i=i+#pair

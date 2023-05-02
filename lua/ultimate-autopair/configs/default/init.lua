@@ -18,18 +18,18 @@ function M.init_conf(conf,mem)
     M.init_pair(conf.internal_pairs,mem,conf)
     --M.init_bs(conf.bs,mem,conf)
     --M.init_cr(conf.cr,mem,conf)
-    --M.init_space(conf.space,mem,conf)
+    M.init_space(conf.space,mem,conf)
 end
 function M.clear()
 end
 function M.init_bs(conf,mem,mconf)
-    bs.init(conf,mem,mconf)
+    table.insert(mem,bs.init(conf,mconf))
 end
 function M.init_cr(conf,mem,mconf)
-    cr.init(conf,mem,mconf)
+    table.insert(mem,cr.init(conf,mconf))
 end
 function M.init_space(conf,mem,mconf)
-    space.init(conf,mem,mconf)
+    table.insert(mem,space.init(conf,mconf))
 end
 function M.init_pair(conf,mem,mconf)
     local ext=default.prepare_extensions(mconf.extensions)
@@ -40,8 +40,8 @@ function M.init_pair(conf,mem,mconf)
             p=v.p or mconf.p,
             conf=v,
             extensions=ext,
-            cmap=default.select_opt(v.cmap,mconf.pair_cmap,mconf.cmap),
-            map=default.select_opt(v.imap,mconf.pair_map,mconf.map),
+            cmap=mconf.cmap and default.select_opt(v.cmap,mconf.pair_cmap,true),
+            map=mconf.map and default.select_opt(v.imap,mconf.pair_map,true),
         })) do
             table.insert(mem,i)
         end
