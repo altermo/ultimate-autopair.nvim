@@ -83,6 +83,7 @@ function M.test_simple()
     run(':setf html\rI-->I<!--','<!---->')
     run(':setf python\ri"""','""""""')
     run('I)I)','))')
+    run('I())0a)','())')
 end
 function M.test_newline()
     run(':set cindent\rI{a\r','{\n\t\n}')
