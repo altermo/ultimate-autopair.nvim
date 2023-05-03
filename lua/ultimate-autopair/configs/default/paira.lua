@@ -25,7 +25,6 @@ M.check_end_wrapper=function (m)
 end
 M.newline_wrapper=function (m)
     return function (o)
-        if not m.rule() then return end
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
             return '\r<end><up><end>\r'
         end
@@ -33,7 +32,6 @@ M.newline_wrapper=function (m)
 end
 M.backspace_wrapper=function (m)
     return function (o)
-        if not m.rule() then return end
         if o.line:sub(o.col-#m.pair-#m.pair,o.col-1-#m.pair)==m.pair and m.pair==o.line:sub(o.col-#m.pair,o.col-1) then
             if not open_pair.open_pair_ambigous(m.pair,o.line,o.col) then
                 return utils.delete(#m.pair+#m.pair)
@@ -64,10 +62,6 @@ function M.init(q)
 
     ms.check=M.check_start_wrapper(ms)
     me.check=M.check_end_wrapper(me)
-    ms.newline=M.newline_wrapper(ms)
-    me.newline=M.newline_wrapper(me)
-    ms.backspace=M.backspace_wrapper(ms)
-    me.backspace=M.backspace_wrapper(me)
     ms.rule=function () return true end
     me.rule=function () return true end
     default.init_extensions(ms,ms.extensions)
@@ -91,6 +85,8 @@ function M.init(q)
     m.conf=q.conf
     m._type={[default.type_pair]={'pair','ambigous'}}
     m.fn=M.fn
+    m.backspace=M.backspace_wrapper(m)
+    m.newline=M.newline_wrapper(m)
     m.check=function (o)
         o.wline=o.line
         o.wcol=o.col

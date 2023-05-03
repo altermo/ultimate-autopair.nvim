@@ -17,8 +17,10 @@ M.check_wrapper=function (m)
 end
 M.newline_wrapper=function (m)
     return function(o)
-        if m.pair==o.line:sub(o.col,o.col+#m.pair-1) then
-            return '\r<end><up><end>\r'
+        if m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
+            if open_pair.check_start_pair(m.start_pair,m.end_pair,o.line,o.col) then
+                return '\r<end><up><end>\r'
+            end
         end
     end
 end

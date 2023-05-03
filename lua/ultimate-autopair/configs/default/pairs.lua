@@ -49,7 +49,7 @@ M.backspace_wrapper=function (m)
             return
         end
         if line1:sub(-1)==m.start_pair and vim.trim(line2):sub(1,1)==m.end_pair then
-            return utils.delete(0,line2:find('[^%s]'))..'<up><end>'..utils.delete(0,o.col+1)
+            return utils.delete(0,line2:find('[^%s]'))..'<up><end>'..utils.delete(0,o.col)
         end
     end
 end

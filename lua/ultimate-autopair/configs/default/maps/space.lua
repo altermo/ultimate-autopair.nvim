@@ -3,10 +3,10 @@ local default=require 'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
 local M={}
 function M.space(o,m)
+    --TODO: run filtering extensions
     local conf=m.conf
     local prev_char
     local pcol=o.col
-    --TODO: run filtering extensions
     for i=o.col-1,1,-1 do
         prev_char=o.line:sub(i,i)
         if prev_char~=' ' then

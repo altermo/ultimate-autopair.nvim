@@ -1,3 +1,4 @@
+--TODO: add map configs to all pairs...
 local M={}
 local pair_s=require'ultimate-autopair.configs.default.pairs'
 local pair_a=require'ultimate-autopair.configs.default.paira'
@@ -16,8 +17,8 @@ end
 function M.init_conf(conf,mem)
     M.init_pair(conf,mem,conf)
     M.init_pair(conf.internal_pairs,mem,conf)
-    --M.init_bs(conf.bs,mem,conf)
-    --M.init_cr(conf.cr,mem,conf)
+    M.init_bs(conf.bs,mem,conf)
+    M.init_cr(conf.cr,mem,conf)
     M.init_space(conf.space,mem,conf)
 end
 function M.clear()

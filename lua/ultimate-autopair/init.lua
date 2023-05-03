@@ -6,18 +6,6 @@ function M.add_conf(conf)
 end
 function M.setup(conf)
     M.add_conf(vim.tbl_deep_extend('force',default.conf,conf or {}))
-    --M.add_conf({
-    --config_init='default',
-    --map=true,
-    --cmap=true,
-    --pair_map=true,
-    --pair_cmap=true,
-    --extensions={
-    --alpha={p=30},
-    --},
-    --{"'","'",alpha=true},
-    --{'(',')'},
-    --}) --TODO: Temporary hack
     M.init()
 end
 function M.init()
