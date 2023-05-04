@@ -7,7 +7,8 @@ function M.I.activate_iabbrev(key)
     if key:sub(1,4)=='<cr>' then
         return '<C-]>'..key
     end
-    if not vim.regex('\\k'):match_str(key:sub(1,1)) then
+    local match=vim.api.nvim_replace_termcodes(key,true,true,true)
+    if vim.regex('[^[:keyword:][:cntrl:]\x80]'):match_str(match:sub(1,1)) then
         return '<C-]>'..key
     end
     return key

@@ -89,7 +89,7 @@ end
     run(':set cindent\rI{a\r','{\n\t\n}')
     run(':set cindent\rI{foo\r','{foo\n\t\n}')
     run(':set cindent\rI{foobi\r','{\n\tfoo\n}')
-    --run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
+    run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
     --run(':setf c\r:set cindent\rI{\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};') --TBD
@@ -117,12 +117,10 @@ function M.test_backspace()
 end
 function M.test_other_map()
     --local d=':imap <C-e> <A-e>\r'
-    --local e=':imap <C-o> <A-$>\r' --TBD
-    --local f=':imap <C-h> <A-C-e>\r' --TBD
     --local g=':imap <C-e> <A-E>\r'
     run('I[ ','[  ]')
     run('I[foobi ','[ foo ]')
-    --run('I[foo bi ','[ foo ]')
+    run('I[foo bi ','[ foo ]')
     run(':setf markdown\rI+ [ ','+ [ ]')
     --run(d..'I{}[hi','{[]}')
     --run(d..'I{}foobhi','{foo}')
@@ -133,9 +131,6 @@ function M.test_other_map()
     --run(d..'I{foo},(bar)bbi','{foo,}(bar)')
     --run(d..'I{(),}hhi','{(,)}')
     --run(d..'I\rki(','(\n)')
-    --run(e..'Ifoo,barI(','(foo,bar)') --TBD
-    --run(e..'Ifoo,bar,I(','(foo,bar),',{fastend={smart=true}}) --TBD
-    --run(f..'Ifoo,bar ,I(','(foo,bar) ,') --TBD
     --run(g..'I(foo)i','()foo')
     --run(g..'I()i','()')
     --run(g..'I(foo,bar)i','(foo),bar')

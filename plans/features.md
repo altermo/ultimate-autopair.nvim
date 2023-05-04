@@ -109,6 +109,8 @@
 + [ ] regex/wildcard multicharacter pair suport
 + [ ] with random text inbetween `if TEXT ... end`?
 + [ ] possibility of html tag suport
++ [ ] triple pair
++ [ ] newline autoclose only pairs
 # other
 + [x] command-line integration
 + [x] make everything optional
@@ -125,3 +127,5 @@
 + [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
 + [ ] set up matrix room
 + [ ] reimplement features.md as tests
++ [ ] buffer specific keybindings
++ [ ] utf8 suport

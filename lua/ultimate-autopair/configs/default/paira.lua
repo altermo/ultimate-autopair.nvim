@@ -9,17 +9,13 @@ M.fn={
 }
 M.check_start_wrapper=function (m)
     return function(o)
-        if o.line:sub(o.col-#m.pair+1,o.col-1)~=m.pair:sub(0,-2) then return end
-        if open_pair.open_pair_ambigous(m.pair,o.line,o.col)  then return end
+        if not open_pair.check_ambiguous_start_pair(m.pair,m.end_pair,o.line,o.col) then return end
         return '\x1d'..m.pair:sub(-1)..m.pair..utils.moveh(#m.pair)
     end
 end
 M.check_end_wrapper=function (m)
     return function(o)
-        if o.line:sub(o.col,o.col-1+#m.pair)~=m.pair then return end
-        local opab=open_pair.open_pair_ambigous_before(m.pair,o.line,o.col)
-        local opaa=open_pair.open_pair_ambigous_after(m.pair,o.line,o.col)
-        if not opab or not opaa then return end
+        if not open_pair.check_ambiguous_end_pair(m.start_pair,m.pair,o.line,o.col) then return end
         return '\x1d'..utils.movel(#m.pair)
     end
 end

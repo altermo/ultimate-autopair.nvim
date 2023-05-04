@@ -3,11 +3,10 @@ local default=require 'ultimate-autopair.configs.default.utils'
 local M={}
 function M.backspace(o,m)
     --TODO: run filtering extensions
-    local conf=m.conf
     for _,v in ipairs(default.filter_pair_type({'dobackspace','pair'})) do
         if v.backspace then
             --TODO: check v.rule()
-            local ret=v.backspace(o,m,conf)
+            local ret=v.backspace(o,m,m.conf)
             if ret then
                 return ret
             end

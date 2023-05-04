@@ -9,9 +9,9 @@ M.fn={
 M.check_wrapper=function (m)
     return function (o)
         if o.line:sub(o.col,o.col-1+#m.pair)~=m.pair then return end
-        local count1=open_pair.count_start_pair(m.start_pair,m.end_pair,o.line,o.col,#o.line)
-        local count2=open_pair.count_end_pair(m.start_pair,m.end_pair,o.line,1,o.col-1)
-        if count1-count2~=0 then return end --TODO: fix bugs and move into open_pair
+        local count2=open_pair.count_start_pair(m.start_pair,m.end_pair,o.line,o.col,#o.line)
+        local count1=open_pair.count_end_pair(m.start_pair,m.end_pair,o.line,1,o.col-1)
+        if count1==0 or count1>count2 then return end --TODO: move into open_pair
         return '\x1d'..utils.movel(#m.pair)
     end
 end

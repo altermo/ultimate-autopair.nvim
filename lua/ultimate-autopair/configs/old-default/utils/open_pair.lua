@@ -4,7 +4,7 @@ function M.I.match (str,line)
     return str==line:sub(1,#str)
 end
 
-function M.count_start_pair(Istart_pair,Iend_pair,Iline,cols,cole,Icount,ret_pos)
+function M.='count_'..(submatch(1)=='end'?'start':'end')..'_pair'(Istart_pair,Iend_pair,Iline,cols,cole,Icount,ret_pos)
     local start_pair=Istart_pair:reverse()
     local end_pair=Iend_pair:reverse()
     local i=cole
@@ -28,7 +28,7 @@ function M.count_start_pair(Istart_pair,Iend_pair,Iline,cols,cole,Icount,ret_pos
     end
     return (not ret_pos) and count
 end
-function M.count_end_pair(start_pair,end_pair,Iline,cols,cole,Icount,ret_pos)
+function M.='count_'..(submatch(1)=='end'?'start':'end')..'_pair'(start_pair,end_pair,Iline,cols,cole,Icount,ret_pos)
     local i=cols
     local count=Icount or 0
     while i<cole+1 do
@@ -66,12 +66,12 @@ function M.count_ambigious_pair(pair,Iline,cols,cole,Icount)
 end
 
 function M.open_start_pair_before(start_pair,end_pair,line,col)
-    local count=M.count_start_pair(start_pair,end_pair,line,col,#line)
-    return M.count_start_pair(start_pair,end_pair,line,1,col-1,count+1,true)
+    local count=M.='count_'..(submatch(1)=='end'?'start':'end')..'_pair'(start_pair,end_pair,line,col,#line)
+    return M.='count_'..(submatch(1)=='end'?'start':'end')..'_pair'(start_pair,end_pair,line,1,col-1,count+1,true)
 end
 function M.open_end_pair_after(start_pair,end_pair,line,col)
-    local count=M.count_end_pair(start_pair,end_pair,line,1,col-1)
-    return M.count_end_pair(start_pair,end_pair,line,col,#line,count+1,true)
+    local count=M.='count_'..(submatch(1)=='end'?'start':'end')..'_pair'(start_pair,end_pair,line,1,col-1)
+    return M.='count_'..(submatch(1)=='end'?'start':'end')..'_pair'(start_pair,end_pair,line,col,#line,count+1,true)
 end
 function M.open_pair_ambigous_before(pair,line,col)
     return M.count_ambigious_pair(pair,line,1,col-1)
@@ -111,6 +111,6 @@ function M.find_corresponding_ambiguous_end_pair(pair,_,line,col)
     end
 end
 function M.find_corresponding_end_pair(start_pair,end_pair,line,col)
-    return M.count_end_pair(start_pair,end_pair,line,col,#line,1,true)
+    return M.='count_'..(submatch(1)=='end'?'start':'end')..'_pair'(start_pair,end_pair,line,col,#line,1,true)
 end
 return M

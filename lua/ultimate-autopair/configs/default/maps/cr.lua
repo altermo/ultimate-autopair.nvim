@@ -3,14 +3,11 @@ local default=require 'ultimate-autopair.configs.default.utils'
 local M={}
 function M.newline(o,m)
     --TODO: run filtering extensions
-    local conf=m.conf
     for _,v in ipairs(default.filter_pair_type({'donewline','pair'})) do
         if v.newline then
             --TODO: check v.rule()
-            local ret=v.newline(o,m,conf)
-            if ret then
-                return ret
-            end
+            local ret=v.newline(o,m,m.conf)
+            if ret then return ret end
         end
     end
 end

@@ -2,7 +2,7 @@ local M={}
 M.conf={
     config_init='default',
     map=true,
-    cmap=true,
+    cmap=true, --cmap stands for cmd-line map
     pair_map=true,
     pair_cmap=true,
     bs={
@@ -19,7 +19,7 @@ M.conf={
         map='<cr>',
         cmap='<cr>',
         autoclose=false,
-        addsemi={'c','cpp','rust'},
+        --addsemi={'c','cpp','rust'},
         fallback=nil,
         _func='default',
     },
@@ -36,23 +36,13 @@ M.conf={
         hopout=false,
         map='<A-e>',
         rmap='<A-E>',
-        --Wmap='<A-C-e>',
         cmap='<A-e>',
         rcmap='<A-E>',
-        --Wcmap='<A-C-e>',
         multiline=true,
         fallback=nil,
         _func='default',
         nocursormove=true,
     },
-    --fastend={
-        --enable=true,
-        --map='<A-$>',
-        --cmap='<A-$>',
-        --smart=false,
-        --fallback=nil,
-        --_func='default',
-    --},
     extensions={
         cmdtype={types={'/','?','@'},p=90},
         string={p=80},

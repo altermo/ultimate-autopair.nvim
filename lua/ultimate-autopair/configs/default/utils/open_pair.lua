@@ -95,7 +95,7 @@ function M.check_ambiguous_end_pair(_,pair,line,col)
     return opab and opaa and line:sub(col,col-1+#pair)==pair
 end
 function M.check_ambiguous_start_pair(pair,_,line,col)
-    return not M.open_pair_ambigous(pair,line,col)
+    return line:sub(col-#pair+1,col-1)==pair:sub(0,-2) and not M.open_pair_ambigous(pair,line,col)
 end
 
 function M.find_corresponding_ambiguous_end_pair(pair,_,line,col)
