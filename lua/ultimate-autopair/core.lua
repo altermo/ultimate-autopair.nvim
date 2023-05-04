@@ -41,6 +41,14 @@ function M.run(key)
     end
 end
 function M.clear()
+    for _,v in ipairs(M.mem) do
+        for _,key in ipairs(v.get_map('i') or {}) do
+            vim.keymap.del('i',key)
+        end
+        for _,key in ipairs(v.get_map('c') or {}) do
+            vim.keymap.del('c',key)
+        end
+    end
     M.mem={}
 end
 function M.I.sort()

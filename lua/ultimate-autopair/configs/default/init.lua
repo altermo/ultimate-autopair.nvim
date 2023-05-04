@@ -24,25 +24,28 @@ end
 function M.clear()
 end
 function M.init_bs(conf,mem,mconf)
-    table.insert(mem,bs.init(conf,mconf))
+    local Ibs=bs.init(conf or {},mconf)
+    if Ibs then table.insert(mem,Ibs) end
 end
 function M.init_cr(conf,mem,mconf)
-    table.insert(mem,cr.init(conf,mconf))
+    local Icr=cr.init(conf or {},mconf)
+    if Icr then table.insert(mem,Icr) end
 end
 function M.init_space(conf,mem,mconf)
-    table.insert(mem,space.init(conf,mconf))
+    local Ispace=space.init(conf or {},mconf)
+    if Ispace then table.insert(mem,Ispace) end
 end
 function M.init_pair(conf,mem,mconf)
     local ext=default.prepare_extensions(mconf.extensions)
-    for _,v in ipairs(conf) do
+    for _,v in ipairs(conf or {}) do
         for _,i in ipairs(M.init_multi({
             start_pair=v[1],
             end_pair=v[2],
             p=v.p or mconf.p,
             conf=v,
             extensions=ext,
-            cmap=mconf.cmap and default.select_opt(v.cmap,mconf.pair_cmap,true),
-            map=mconf.map and default.select_opt(v.imap,mconf.pair_map,true),
+            cmap=mconf.cmap~=false and default.select_opt(v.cmap,mconf.pair_cmap,true),
+            map=mconf.map~=false and default.select_opt(v.imap,mconf.pair_map,true),
         })) do
             table.insert(mem,i)
         end

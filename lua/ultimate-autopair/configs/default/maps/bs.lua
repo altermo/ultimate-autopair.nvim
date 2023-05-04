@@ -24,8 +24,8 @@ function M.init(conf,mconf)
     if not conf.enable then return end
     local m={}
     m.conf=conf
-    m.map=mconf.map and conf.map
-    m.cmap=mconf.cmap and conf.cmap
+    m.map=mconf.map~=false and conf.map
+    m.cmap=mconf.cmap~=false and conf.cmap
     m.p=conf.p or 10
     m.check=M.wrapp_backspace(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)

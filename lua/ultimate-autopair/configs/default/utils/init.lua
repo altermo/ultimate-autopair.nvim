@@ -33,28 +33,17 @@ M.load_extension=function (extension_name)
     return vim.F.npcall(require,'ultimate-autopair.extensions.'..extension_name) or
         {call=function (...) end} --TODO
 end
-if vim.iter then -- nvim-0.10 feature
-    M.prepare_extensions=function (extensions)
-        local ret=vim.iter(extensions)
-            :map(function (k,v)
-                return {name=k,conf=v,m=M.load_extension(k)}
-            end):totable()
-        table.sort(ret,function (a,b) return a.conf.p<b.conf.p end) --TODO: when sort method is implemented for vim.iter then refactor
-        return ret
+M.prepare_extensions=function (extensions)
+    local exts={}
+    for k,v in pairs(extensions or {}) do
+        table.insert(exts,{k=k,v=v})
     end
-else
-    M.prepare_extensions=function (extensions)
-        local exts={}
-        for k,v in pairs(extensions) do
-            table.insert(exts,{k=k,v=v})
-        end
-        table.sort(exts,function (a,b) return a.v.p<b.v.p end)
-        local ret={}
-        for _,i in ipairs(exts) do
-            table.insert(ret,{m=M.load_extension(i.k),name=i.k,conf=i.v})
-        end
-        return ret
+    table.sort(exts,function (a,b) return a.v.p<b.v.p end)
+    local ret={}
+    for _,i in ipairs(exts) do
+        table.insert(ret,{m=M.load_extension(i.k),name=i.k,conf=i.v})
     end
+    return ret
 end
 function M.init_extensions(m,extensions)
     for _,i in ipairs(extensions) do

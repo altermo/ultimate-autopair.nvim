@@ -62,8 +62,8 @@ function M.init(conf,mconf)
     if not conf.enable then return end
     local m={}
     m.conf=conf
-    m.map=mconf.map and conf.map
-    m.cmap=mconf.cmap and conf.cmap
+    m.map=mconf.map~=false and conf.map
+    m.cmap=mconf.cmap~=false and conf.cmap
     m.p=conf.p or 10
     m._type={[default.type_pair]={'dobackspace'}}
     m.backspace=M.backspace
