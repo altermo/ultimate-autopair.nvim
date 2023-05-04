@@ -7,27 +7,27 @@ M.conf={
     pair_cmap=true,
     bs={
         enable=true,
-        map='<bs>',
+        map='<bs>', --string or table
         cmap='<bs>',
         overjumps=true,
         space=true,
-        fallback=nil,
+        fallback=nil, --TODO remove
         _func='default',
     },
     cr={
         enable=true,
-        map='<cr>',
+        map='<cr>', --string or table
         cmap='<cr>',
         autoclose=false,
         --addsemi={'c','cpp','rust'},
-        fallback=nil,
+        fallback=nil, --TODO remove
         _func='default',
     },
     space={
         enable=true,
         map=' ',
         cmap=' ',
-        fallback=nil,
+        fallback=nil, --TODO remove
         check_box_ft={'markdown','vimwiki'},
         _func='default',
     },
@@ -39,7 +39,7 @@ M.conf={
         cmap='<A-e>',
         rcmap='<A-E>',
         multiline=true,
-        fallback=nil,
+        fallback=nil, --TODO remove
         _func='default',
         nocursormove=true,
     },

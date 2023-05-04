@@ -7,9 +7,7 @@ function M.backspace(o,m)
         if v.backspace then
             --TODO: check v.rule()
             local ret=v.backspace(o,m,m.conf)
-            if ret then
-                return ret
-            end
+            if ret then return ret end
         end
     end
 end

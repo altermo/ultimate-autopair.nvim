@@ -22,10 +22,10 @@ end
 M.get_mode_map_wrapper=function(key,keyc)
     return function(mode)
         if mode=='i' and key then
-            return {key}
+            return type(key)=='string' and {key} or key
         end
         if mode=='c' and keyc then
-            return {keyc}
+            return type(keyc)=='string' and {keyc} or keyc
         end
     end
 end
@@ -111,9 +111,11 @@ function M.select_opt(...)
     end
 end
 function M.key_check_cmd(o,key,normal,cmd,keyc)
+    key=type(key)=='string' and {key} or key
+    keyc=keyc and (type(keyc)=='string' and {keyc} or keyc) or key
     if o.incmd then
-        return cmd and o.key==(keyc or key)
+        return cmd and vim.tbl_contains(keyc,o.key)
     end
-    return normal and o.key==key
+    return normal and vim.tbl_contains(keyc,o.key)
 end
 return M
