@@ -2,6 +2,7 @@ local config=require'ultimate-autopair.config'
 local default=require'ultimate-autopair.default'
 local M={}
 function M.old_config_detector(conf)
+    if conf.config_type~='default' then return end
     local function c(s,n)
         vim.notify('ultimate-autopair:\nOld configuration detected\nThe problem:\n'..s)
         return n
@@ -48,12 +49,17 @@ function M.old_config_detector(conf)
     elseif conf.ft then
         return c('ft'..cns..inb)
     end
+    for _,v in ipairs{'bs','cr','space','fastwarp'} do
+        if conf[v] and conf[v].fallback then
+            return c(v..'.fallback'..cns)
+        end
+    end
 end
 function M.add_conf(conf)
+    M.old_config_detector(conf)
     config.add_conf(conf)
 end
 function M.setup(conf)
-    if conf and M.old_config_detector(conf) then return end
     M.add_conf(vim.tbl_deep_extend('force',default.conf,conf or {}))
     M.init()
 end

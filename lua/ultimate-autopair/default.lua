@@ -1,6 +1,6 @@
 local M={}
 M.conf={
-    config_init='default',
+    config_type='default',
     map=true,
     cmap=true, --cmap stands for cmd-line map
     pair_map=true,
@@ -11,7 +11,6 @@ M.conf={
         cmap='<bs>',
         overjumps=true,
         space=true,
-        fallback=nil, --TODO remove
         _func='default',
     },
     cr={
@@ -20,14 +19,12 @@ M.conf={
         cmap='<cr>',
         autoclose=false,
         --addsemi={'c','cpp','rust'},
-        fallback=nil, --TODO remove
         _func='default',
     },
     space={
         enable=true,
         map=' ',
         cmap=' ',
-        fallback=nil, --TODO remove
         check_box_ft={'markdown','vimwiki'},
         _func='default',
     },
@@ -39,7 +36,6 @@ M.conf={
         cmap='<A-e>',
         rcmap='<A-E>',
         multiline=true,
-        fallback=nil, --TODO remove
         _func='default',
         nocursormove=true,
     },
