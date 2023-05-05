@@ -5,5 +5,5 @@
 + [ ] Write documentation
 + [ ] All mappings can use extensions
 + [ ] Implement pair.rule()
-+ [ ] Add a config type which allows user to create normal mappings
 + [ ] autocompletion integration
++ [ ] make all mapping options become implemented

@@ -54,6 +54,7 @@ local function run(keys,match,conf)
     local outtmp=vim.fn.tempname()
     vim.fn.writefile({
         ':set runtimepath+='..M.path,
+        ':lua _G.DONTDEBUG=true',
         ':lua require"ultimate-autopair".setup('..vim.inspect(conf)..')',
         ':edit '..outtmp,
         keys..':wq!',
@@ -117,21 +118,21 @@ function M.test_backspace()
     run('(','',{bs={map={'<bs>','<C-h>'}}})
 end
 function M.test_other_map()
-    --local d=':imap <C-e> <A-e>\r'
+    local d=':imap <C-e> <A-e>\r'
     --local g=':imap <C-e> <A-E>\r'
     run('I[ ','[  ]')
     run('I[foobi ','[ foo ]')
     run('I[foo bi ','[ foo ]')
     run(':setf markdown\rI+ [ ','+ [ ]')
-    --run(d..'I{}[hi','{[]}')
-    --run(d..'I{}foobhi','{foo}')
-    --run(d..'I{}foo,bhi','{foo},')
-    --run(d..'I{foo},barbhhi','{foo,bar}')
-    --run(d..'I()"bar"0a','("bar")')
-    --run(d..'I{foo},hi','{foo,}')
-    --run(d..'I{foo},(bar)bbi','{foo,}(bar)')
-    --run(d..'I{(),}hhi','{(,)}')
-    --run(d..'I\rki(','(\n)')
+    run(d..'I{}[hi','{[]}')
+    run(d..'I{}foobhi','{foo}')
+    run(d..'I{}foo,bhi','{foo},')
+    run(d..'I{foo},barbhhi','{foo,bar}')
+    run(d..'I()"bar"0a','("bar")')
+    run(d..'I{foo},hi','{foo,}')
+    run(d..'I{foo},(bar)bbi','{foo,}(bar)')
+    run(d..'I{(),}hhi','{(,)}')
+    run(d..'I\rki(','(\n)')
     --run(g..'I(foo)i','()foo')
     --run(g..'I()i','()')
     --run(g..'I(foo,bar)i','(foo),bar')
