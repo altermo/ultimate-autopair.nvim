@@ -4,7 +4,9 @@ local utils=require'ultimate-autopair.utils'
 local M={}
 M.fn={
     check_start_pair=open_pair.check_start_pair,
-    check_end_pair=open_pair.check_end_pair
+    check_end_pair=open_pair.check_end_pair,
+    is_start=function () return false end,
+    is_end=function () return true end,
 }
 M.check_wrapper=function (m)
     return function (o)

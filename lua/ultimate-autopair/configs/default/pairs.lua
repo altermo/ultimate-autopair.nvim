@@ -6,6 +6,8 @@ M.fn={
     check_start_pair=open_pair.check_start_pair,
     check_end_pair=open_pair.check_end_pair,
     find_end_pair=open_pair.find_corresponding_end_pair,
+    is_start=function () return true end,
+    is_end=function () return false end,
 }
 M.check_wrapper=function (m)
     return function (o)

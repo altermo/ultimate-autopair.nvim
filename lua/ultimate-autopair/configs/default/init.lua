@@ -16,33 +16,34 @@ function M.init_multi(q)
     end
 end
 function M.init_conf(conf,mem)
-    M.init_pair(conf,mem,conf)
-    M.init_pair(conf.internal_pairs,mem,conf)
-    M.init_bs(conf.bs,mem,conf)
-    M.init_cr(conf.cr,mem,conf)
-    M.init_space(conf.space,mem,conf)
-    M.init_fastwarp(conf.fastwarp,mem,conf)
+    local ext=default.prepare_extensions(conf.extensions)
+    M.init_pair(conf,mem,conf,ext)
+    M.init_pair(conf.internal_pairs,mem,conf,ext)
+    M.init_bs(conf.bs,mem,conf,ext)
+    M.init_cr(conf.cr,mem,conf,ext)
+    M.init_space(conf.space,mem,conf,ext)
+    M.init_fastwarp(conf.fastwarp,mem,conf,ext)
 end
 function M.clear()
 end
-function M.init_bs(conf,mem,mconf)
-    local Ibs=bs.init(conf or {},mconf)
+function M.init_bs(conf,mem,mconf,ext)
+    local Ibs=bs.init(conf or {},mconf,ext)
     if Ibs then table.insert(mem,Ibs) end
 end
-function M.init_cr(conf,mem,mconf)
+function M.init_cr(conf,mem,mconf,_)
     local Icr=cr.init(conf or {},mconf)
     if Icr then table.insert(mem,Icr) end
 end
-function M.init_space(conf,mem,mconf)
+function M.init_space(conf,mem,mconf,_)
     local Ispace=space.init(conf or {},mconf)
     if Ispace then table.insert(mem,Ispace) end
 end
-function M.init_fastwarp(conf,mem,mconf)
-    local Ifastwarp=fastwarp.init(conf or {},mconf)
+function M.init_fastwarp(conf,mem,mconf,_)
+    local Ifastwarp,Idont=fastwarp.init(conf or {},mconf)
     if Ifastwarp then table.insert(mem,Ifastwarp) end
+    if Idont then table.insert(mem,Idont) end
 end
-function M.init_pair(conf,mem,mconf)
-    local ext=default.prepare_extensions(mconf.extensions)
+function M.init_pair(conf,mem,mconf,ext)
     for _,v in ipairs(conf or {}) do
         for _,i in ipairs(M.init_multi({
             start_pair=v[1],

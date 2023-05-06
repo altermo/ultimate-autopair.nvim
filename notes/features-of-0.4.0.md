@@ -129,3 +129,4 @@
 + [ ] reimplement features.md as tests
 + [ ] buffer specific keybindings
 + [ ] utf8 suport
++ [ ] make extensions use other extensions

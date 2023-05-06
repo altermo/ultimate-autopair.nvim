@@ -1,9 +1,13 @@
 local M={}
+local open_pair=require'ultimate-autopair.configs.default.utils.open_pair'
 M.type_pair={}
 M.get_type_opt=function(obj,conf)
+    if type(conf)~='table' then conf={conf} end
     local tbl=vim.tbl_get(obj._type or {},M.type_pair)
     if tbl then
-        return vim.tbl_contains(tbl,conf)
+        for _,i in ipairs(conf) do
+            if vim.tbl_contains(tbl,i) then return true end
+        end
     end
 end
 M.sort=function (a,b)
@@ -98,7 +102,7 @@ function M.filter_pair_type(conf)
     end,core.mem)
 end
 function M.get_pair(pair)
-    --TODO: a version which takes (line,col) (and a reverse version)
+    --TODO: depreciated
     for _,v in ipairs(M.filter_pair_type()) do
         if v.pair==pair then return v end
     end
@@ -117,5 +121,25 @@ function M.key_check_cmd(o,key,normal,cmd,keyc)
         return cmd and vim.tbl_contains(keyc,o.key)
     end
     return normal and vim.tbl_contains(keyc,o.key)
+end
+function M.start_pair(col,line,next)
+    local pairs=M.get_pairs_by_pos(col,line,next)
+    table.sort(pairs,function (a,b)
+        return #a.pair>#b.pair
+    end)
+    for _,i in ipairs(pairs) do
+        if i.fn.is_start() then return i end
+    end
+end
+function M.get_pairs_by_pos(col,line,next)
+    local ret={}
+    for _,i in ipairs(M.filter_pair_type()) do
+        if not next and i.pair==line:sub(col-#i.pair,col-1) then
+            table.insert(ret,i)
+        elseif next and i.pair==line:sub(col,col+#i.pair-1) then
+            table.insert(ret,i)
+        end
+    end
+    return ret
 end
 return M

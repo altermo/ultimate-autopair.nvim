@@ -17,7 +17,7 @@ function M.space(o,m)
     local prev_pair=default.get_pair(prev_char)
     if not utils.incmd() and (vim.tbl_contains(conf.check_box_ft,vim.o.filetype) or conf.check_box_ft==true) and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(o.line:sub(1,o.col)) then
     elseif prev_pair and prev_pair.conf.space and prev_char and
-        (default.get_type_opt(prev_pair,'ambiguous') or default.get_type_opt(prev_pair,'start')) then
+        default.get_type_opt(prev_pair,{'ambiguous','start'}) then
         --TODO: check prev_pair.rule()
         local matching_pair_pos=prev_pair.fn.find_end_pair(prev_char,prev_pair.end_pair,o.line,pcol)
         if matching_pair_pos then
@@ -66,6 +66,7 @@ function M.init(conf,mconf)
     m.cmap=mconf.cmap~=false and conf.cmap
     m.p=conf.p or 10
     m._type={[default.type_pair]={'dobackspace'}}
+    m.rule=function () return true end
     m.backspace=M.backspace
     m.check=M.wrapp_space(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
