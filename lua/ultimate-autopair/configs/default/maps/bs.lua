@@ -3,7 +3,7 @@ local M={}
 function M.backspace(o,m)
     for _,v in ipairs(default.filter_pair_type({'dobackspace','pair'})) do
         if v.backspace then
-            local ret=v.rule() and v.backspace(o,m,m.iconf)
+            local ret=(not v.rule or v.rule()) and v.backspace(o,m,m.iconf)
             if ret then return ret end
         end
     end
@@ -17,7 +17,7 @@ function M.init(conf,mconf,ext)
     if not conf.enable then return end
     local m={}
     m.iconf=conf
-    m.conf=m.iconf.conf or {}
+    m.conf=conf.conf or {}
     m.map=mconf.map~=false and conf.map
     m.cmap=mconf.cmap~=false and conf.cmap
     m.p=conf.p or 10

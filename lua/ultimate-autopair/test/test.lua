@@ -8,7 +8,7 @@ function M.error(msg)
 end
 function M.main()
     local file=vim.api.nvim_get_runtime_file('lua/ultimate-autopair/test/test.lua',false)[1]
-    if vim.loader.enabled and _G.__FILE and _G.__FILE~=vim.loop.fs_stat(file).mtime.nsec then
+    if vim.loader and vim.loader.enabled and _G.__FILE and _G.__FILE~=vim.loop.fs_stat(file).mtime.nsec then
         vim.ui.select({'Do nothing','Disable vim.loader'},
             {prompt='Can\'t run modified test while vim.loader is enabled'},
             function (choice)
@@ -85,8 +85,8 @@ function M.test_simple()
     run(':setf python\ri"""','""""""')
     run('I)I)','))')
     run('I())0a)','())')
-    function M.test_newline()
 end
+function M.test_newline()
     run(':set cindent\rI{a\r','{\n\t\n}')
     run(':set cindent\rI{foo\r','{foo\n\t\n}')
     run(':set cindent\rI{foobi\r','{\n\tfoo\n}')

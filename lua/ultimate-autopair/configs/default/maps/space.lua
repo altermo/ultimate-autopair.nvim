@@ -1,10 +1,8 @@
---TODO: implement extensions for space
 local default=require 'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
 local M={}
 function M.space(o,m)
-    --TODO: run filtering extensions
-    local conf=m.conf
+    local conf=m.iconf
     local prev_char
     local pcol=o.col
     for i=o.col-1,1,-1 do
@@ -15,10 +13,10 @@ function M.space(o,m)
         end
     end
     local prev_pair=default.get_pair(prev_char)
-    if not utils.incmd() and (vim.tbl_contains(conf.check_box_ft,vim.o.filetype) or conf.check_box_ft==true) and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(o.line:sub(1,o.col)) then
-    elseif prev_pair and prev_pair.conf.space and prev_char and
-        default.get_type_opt(prev_pair,{'ambiguous','start'}) then
-        --TODO: check prev_pair.rule()
+    if not prev_pair or not prev_pair.conf.space then
+    elseif not utils.incmd() and (vim.tbl_contains(conf.check_box_ft,vim.o.filetype) or conf.check_box_ft==true) and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(o.line:sub(1,o.col)) then
+    elseif prev_pair.rule and not prev_pair.rule() then
+    elseif default.get_type_opt(prev_pair,{'ambiguous','start'}) then
         local matching_pair_pos=prev_pair.fn.find_end_pair(prev_char,prev_pair.end_pair,o.line,pcol)
         if matching_pair_pos then
             return ' '..utils.addafter(matching_pair_pos-o.col-1,' ')
@@ -27,9 +25,7 @@ function M.space(o,m)
 end
 function M.wrapp_space(m)
     return function (o)
-        if default.key_check_cmd(o,m.map,m.map,m.cmap,m.cmap) then
-            return M.space(o,m)
-        end
+        return M.space(o,m)
     end
 end
 function M.backspace(o,_,conf)
@@ -58,18 +54,30 @@ function M.backspace(o,_,conf)
         return utils.moveh()..utils.delete(0,1)..utils.movel(matching_pair_pos-o.col-2)..utils.delete(0,1)..utils.moveh(matching_pair_pos-o.col-2)
     end
 end
-function M.init(conf,mconf)
+function M.init(conf,mconf,ext)
     if not conf.enable then return end
     local m={}
-    m.conf=conf
+    m.iconf=conf
+    m.conf=conf.conf or {}
     m.map=mconf.map~=false and conf.map
     m.cmap=mconf.cmap~=false and conf.cmap
     m.p=conf.p or 10
-    m._type={[default.type_pair]={'dobackspace'}}
-    m.rule=function () return true end
+    m.extensions=ext
+    m._type={[default.type_pair]={'dobackspace','space'}}
     m.backspace=M.backspace
     m.check=M.wrapp_space(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
+    m.rule=function () return true end
+    default.init_extensions(m,m.extensions)
+    local check=m.check
+    m.check=function (o)
+        o.wline=o.line
+        o.wcol=o.coll
+        if not default.key_check_cmd(o,m.map,m.map,m.cmap,m.cmap) then return end
+        check(o)
+        if not m.rule() then return end
+        return check(o)
+    end
     return m
 end
 return M

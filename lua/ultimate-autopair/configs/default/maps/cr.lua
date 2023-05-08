@@ -1,32 +1,40 @@
---TODO: implement extensions for newline
 local default=require 'ultimate-autopair.configs.default.utils'
 local M={}
 function M.newline(o,m)
-    --TODO: run filtering extensions
     for _,v in ipairs(default.filter_pair_type({'donewline','pair'})) do
         if v.newline then
-            --TODO: check v.rule()
-            local ret=v.newline(o,m,m.conf)
+            local ret=(not v.rule or v.rule()) and v.newline(o,m,m.iconf)
             if ret then return ret end
         end
     end
 end
 function M.wrapp_newline(m)
     return function (o)
-        if default.key_check_cmd(o,m.map,m.map,m.cmap,m.cmap) then
-            return M.newline(o,m)
-        end
+        return M.newline(o,m)
     end
 end
-function M.init(conf,mconf)
+function M.init(conf,mconf,ext)
     if not conf.enable then return end
     local m={}
-    m.conf=conf
+    m.iconf=conf
+    m.conf=conf.conf or {}
     m.map=mconf.map~=false and conf.map
-    m.cmap=mconf.cmap~=false and conf.cmap
     m.p=conf.p or 10
+    m.extensions=ext
+    m._type={[default.type_pair]={'newline'}}
     m.check=M.wrapp_newline(m)
-    m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
+    m.get_map=default.get_mode_map_wrapper(m.map)
+    m.rule=function () return true end
+    default.init_extensions(m,m.extensions)
+    local check=m.check
+    m.check=function (o)
+        o.wline=o.line
+        o.wcol=o.coll
+        if not default.key_check_cmd(o,m.map,m.map) then return end
+        check(o)
+        if not m.rule() then return end
+        return check(o)
+    end
     return m
 end
 return M

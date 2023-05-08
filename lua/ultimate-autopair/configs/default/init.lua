@@ -30,16 +30,16 @@ function M.init_bs(conf,mem,mconf,ext)
     local Ibs=bs.init(conf or {},mconf,ext)
     if Ibs then table.insert(mem,Ibs) end
 end
-function M.init_cr(conf,mem,mconf,_)
-    local Icr=cr.init(conf or {},mconf)
+function M.init_cr(conf,mem,mconf,ext)
+    local Icr=cr.init(conf or {},mconf,ext)
     if Icr then table.insert(mem,Icr) end
 end
-function M.init_space(conf,mem,mconf,_)
-    local Ispace=space.init(conf or {},mconf)
+function M.init_space(conf,mem,mconf,ext)
+    local Ispace=space.init(conf or {},mconf,ext)
     if Ispace then table.insert(mem,Ispace) end
 end
-function M.init_fastwarp(conf,mem,mconf,_)
-    local Ifastwarp,Idont=fastwarp.init(conf or {},mconf)
+function M.init_fastwarp(conf,mem,mconf,ext)
+    local Ifastwarp,Idont=fastwarp.init(conf or {},mconf,ext)
     if Ifastwarp then table.insert(mem,Ifastwarp) end
     if Idont then table.insert(mem,Idont) end
 end
