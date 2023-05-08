@@ -68,6 +68,8 @@ function M.init(q)
     m.sort=default.sort
     m.p=q.p or 10
     m.pair=q.start_pair
+    m.start_pair=ms.pair
+    m.end_pair=me.pair
     m.extensions=q.extensions
     m.conf=q.conf
     m._type={[default.type_pair]={'pair','ambigous'}}

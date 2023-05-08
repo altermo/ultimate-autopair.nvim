@@ -7,7 +7,7 @@ function M.ext.fastwarp_over_pair(o,ind,p)
     local pair=default.get_pair(o.line:sub(ind,ind))
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if not default.get_type_opt(pair,'start') then return end
+    if not pair.fn.is_start(pair,o) then return end
     local matching_pair_pos=pair.fn.find_end_pair(pair.start_pair,pair.end_pair,o.line,ind+1)
     if not matching_pair_pos then return end
     return utils.delete(0,1)..utils.movel(matching_pair_pos-o.col)..p..utils.moveh(),matching_pair_pos-1
@@ -17,7 +17,7 @@ function M.ext.fastwarp_next_to_start_pair(o,ind,p)
     local pair=default.get_pair(o.line:sub(ind,ind))
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if not default.get_type_opt(pair,'start') then return end
+    if not pair.fn.is_start(pair,o) then return end
     return utils.delete(0,1)..utils.movel(ind-o.col-1)..p..utils.moveh(),ind-2
 end
 function M.ext.fastwarp_next_to_end_pair(o,ind,p,m)
@@ -49,7 +49,7 @@ function M.fastwarp(o,m)
     local p=o.line:sub(o.col,o.col)
     local pair=default.get_pair(p)
     if not pair then return end
-    if not default.get_type_opt(pair,'end') then return end
+    if not pair.fn.is_end(pair,o) then return end
     if pair.rule and not pair.rule() then return end
     for i=o.col+1,#o.line do
         local ind=i
