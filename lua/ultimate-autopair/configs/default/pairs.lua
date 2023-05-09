@@ -27,13 +27,13 @@ M.newline_wrapper=function (m)
     end
 end
 M.backspace_wrapper=function (m)
-    return function (o)
+    return function (o,_,conf)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
             if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
                 return utils.delete(#m.start_pair,#m.end_pair)
             end
         end
-        if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair then
+        if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and conf.overjumps then
             if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
                 local matching_pair_pos=m.fn.find_end_pair(m.start_pair,m.end_pair,o.line,o.col)
                 if matching_pair_pos then

@@ -55,7 +55,7 @@ function M.backspace(o,_,conf)
     end
 end
 function M.init(conf,mconf,ext)
-    if not conf.enable then return end
+    if conf.enable==false then return end
     local m={}
     m.iconf=conf
     m.conf=conf.conf or {}

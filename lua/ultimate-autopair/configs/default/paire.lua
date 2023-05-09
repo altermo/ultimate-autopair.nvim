@@ -5,6 +5,7 @@ local M={}
 M.fn={
     check_start_pair=open_pair.check_start_pair,
     check_end_pair=open_pair.check_end_pair,
+    find_start_pair=open_pair.find_corresponding_start_pair,
     is_start=function () return false end,
     is_end=function () return true end,
 }

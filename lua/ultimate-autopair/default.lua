@@ -30,6 +30,8 @@ M.conf={
     },
     fastwarp={
         enable=true,
+        enable_normal=true,
+        enable_reverse=true,
         hopout=false,
         map='<A-e>',
         rmap='<A-E>',

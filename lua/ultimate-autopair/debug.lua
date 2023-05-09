@@ -39,7 +39,7 @@ function M.create_traceback_buf(traceback,win,mes)
     local buf=M.I.sbuf()
     vim.api.nvim_win_set_buf(win,buf)
     vim.api.nvim_buf_set_lines(buf,0,0,false,{'use <CR> to vedit file'})
-    vim.api.nvim_buf_set_lines(buf,1,1,false,{'The error is: '..mes}) --TODO: get only the error message
+    vim.api.nvim_buf_set_lines(buf,1,1,false,{'The error is: '..mes})
     vim.api.nvim_buf_set_name(buf,'traceback')
     local places={}
     for _,v in ipairs(traceback) do

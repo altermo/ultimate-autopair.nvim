@@ -6,8 +6,9 @@ M.fn={
     check_start_pair=open_pair.check_ambiguous_start_pair,
     check_end_pair=open_pair.check_ambiguous_end_pair,
     find_end_pair=open_pair.find_corresponding_ambiguous_end_pair,
-    is_start=function (m,o) return not open_pair.open_pair_ambigous_before(m.pair,o.line,o.col) end,
-    is_end=function (m,o) return open_pair.open_pair_ambigous_before(m.pair,o.line,o.col) end,
+    find_start_pair=open_pair.find_corresponding_ambiguous_start_pair,
+    is_start=function (m,line,col) return not open_pair.open_pair_ambigous_before(m.pair,line,col) end,
+    is_end=function (m,line,col) return open_pair.open_pair_ambigous_before(m.pair,line,col) end,
 }
 M.check_start_wrapper=function (m)
     return function(o)

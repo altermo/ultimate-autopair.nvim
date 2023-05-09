@@ -116,11 +116,13 @@ function M.test_backspace()
     run(d..'I( foobi','(foo)')
     run(d..'I(  foobi','( foo )')
     run(d..'I(  a','(  )')
+    run(d..'I(foobi','foo)',{bs={overjumps=false}})
+    run(d..'I( ','( )',{bs={space=false}})
     run('(','',{bs={map={'<bs>','<C-h>'}}})
 end
 function M.test_other_map()
     local d=':imap <C-e> <A-e>\r'
-    --local g=':imap <C-e> <A-E>\r'
+    local g=':imap <C-e> <A-E>\r'
     run('I[ ','[  ]')
     run('I[foobi ','[ foo ]')
     run('I[foo bi ','[ foo ]')
@@ -134,17 +136,17 @@ function M.test_other_map()
     run(d..'I{foo},(bar)bbi','{foo,}(bar)')
     run(d..'I{(),}hhi','{(,)}')
     run(d..'I\rki(','(\n)')
-    --run(g..'I(foo)i','()foo')
-    --run(g..'I()i','()')
-    --run(g..'I(foo,bar)i','(foo),bar')
-    --run(g..'I({bar})i','(){bar}')
-    --run(g..'I("bar")i','()"bar"')
-    --run(g..'I(foo{bar}baz)i','(foo{bar})baz')
-    --run(g..'I(o)i','()\n')
-    --run('I(a','()')
-    --run('I({a','({})')
-    --run('I({(la','({()})')
-    --run('I({)i','({})')
+    run(g..'I(foo)i','()foo')
+    run(g..'I()i','()')
+    run(g..'I(foo,bar)i','(foo),bar')
+    run(g..'I({bar})i','(){bar}')
+    run(g..'I("bar")i','()"bar"')
+    run(g..'I(foo{bar}baz)i','(foo{bar})baz')
+    run(g..'I(o)i','()\n')
+    --run('I(a','()') --TBD
+    --run('I({a','({})') --TBD
+    --run('I({(la','({()})') --TBD
+    --run('I({)i','({})') --TBD
 end
 function M.test_extensions()
     run('I"foo"I(','("foo")')
@@ -166,8 +168,12 @@ function M.test_extensions()
     ----TODO: test treesitter based extensions
 end
 function M.test_complex()
+    local f=':imap <C-e> <A-e>\r'
+    local F=':imap <C-a> <A-E>\r'
     run('Iprint("hello world!")','print("hello world!")')
     run('Iprint("hello world!','print("hello world!")')
+    run(f..'Iprint "hello world!F ;s(','print("hello world!")')
+    run(f..F..'Ifo\ro [bar]\r"baz"\rggI(','()fo\no [bar]\n"baz"\n')
 end
 ---@diagnostic disable-next-line: undefined-field
 if not _G.DONTRUNTEST then

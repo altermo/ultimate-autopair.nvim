@@ -102,15 +102,26 @@ function M.find_corresponding_ambiguous_end_pair(pair,_,line,col)
     local opab=M.open_pair_ambigous_before(pair,line,col)
     local opaa=M.open_pair_ambigous_after(pair,line,col)
     if not (opab and opaa) then return end
-    local i=col
-    while i<#line+1 do
+    for i=col,#line do
         if M.I.match(pair,line:sub(i)) then
-            return i
+            return i+1
         end
-        i=i+1
+    end
+end
+function M.find_corresponding_ambiguous_start_pair(pair,_,line,col)
+    local opab=M.open_pair_ambigous_before(pair,line,col)
+    local opaa=M.open_pair_ambigous_after(pair,line,col)
+    if not (opab and opaa) then return end
+    for i=col,1,-1 do
+        if M.I.match(pair,line:sub(i)) then
+            return i-1
+        end
     end
 end
 function M.find_corresponding_end_pair(start_pair,end_pair,line,col)
     return M.count_end_pair(start_pair,end_pair,line,col,#line,1,true)
+end
+function M.find_corresponding_start_pair(start_pair,end_pair,line,col)
+    return M.count_start_pair(start_pair,end_pair,line,1,col,1,true)
 end
 return M
