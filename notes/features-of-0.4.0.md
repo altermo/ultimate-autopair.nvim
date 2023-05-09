@@ -16,10 +16,10 @@
 + [x] auto add even if text `{abc|} > CR > {abc\n|\n}`
 + [x] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
 + [x] auto add even if text `(|abc) > CR > (\n|abc\n)`
++ [x] make map use filtering pair extensions
 + [ ] auto add pairs `({| > CR > ({\n|\n})`
 + [ ] splitjoin plugin integration
 + [ ] multicharacter pair not in string/other node
-+ [ ] make map use filtering pair extensions
 # BS
 + [x] suport
 + [x] remove the pair `[|] > BS > |`
@@ -36,12 +36,12 @@
 + [x] remove the both newline in multiline pair `[\n|\n] > BS > [|]`
 + [x] remove the pair when pair with space `[ ]| > BS > |`
 + [x] remove the unbalanced space in the pair `[  | ] > BS > [ | ]`
++ [x] make map use filtering pair extensions
 + [ ] remove the pair when multicharacter pair filled `if bool then |code end > BS > |code`
 + [ ] remove the unbalanced space in the pair `[ |  ] > BS > [ | ]`
 + [ ] remove the unbalanced space in the pair `[  |] > BS > [|]`
 + [ ] remove the space when remove pair `[| text ] > BS > |text`
 + [ ] remove the ambiguous pair when filled `"|abc" > BS > |abc` (not when alpha before)
-+ [ ] make map use filtering pair extensions
 # other mappings
 + [x] space `[|] > SP > [ | ]`
 + [x] smart space `[|text] > SP > [ |text ]`
@@ -59,12 +59,12 @@
 + [x] norma fastwarp multi line
 + [x] reverse fastwarp (+multiline)
 + [x] smart fastwarp end `(|)foo,bar,` > `<A-$>` > `(foo,bar|),`
++ [x] make maps use filtering pair extensions
 + [ ] one char fastwarp `(foo|),, > <A-L> > (foo,|),`
 + [ ] hop style fastwarp
 + [ ] `[{"| > <A-k> > [{""}]`
 + [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
 + [ ] fastwarp no move cursor `(|)foo,bar > (|foo),bar`
-+ [ ] make maps use filtering pair extensions
 + [ ] fastwarp treesitter nodes
 + [ ] fastwarp cursor no move
 # filters
