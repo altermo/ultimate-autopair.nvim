@@ -7,3 +7,4 @@
 + [ ] Implement pair.rule()
 + [ ] autocompletion integration
 + [ ] make all mapping options become implemented
++ [ ] Implement non inserting pairs (a non hacky way...)
