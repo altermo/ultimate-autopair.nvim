@@ -16,7 +16,6 @@ M.conf={
     cr={
         enable=true,
         map='<cr>', --string or table
-        cmap='<cr>',
         autoclose=false,
         --addsemi={'c','cpp','rust'},
         _func='default',
@@ -57,8 +56,8 @@ M.conf={
         {'[',']',fly=true,dosuround=true,newline=true,space=true,fastwarp=true,backspace_suround=true},
         {'(',')',fly=true,dosuround=true,newline=true,space=true,fastwarp=true,backspace_suround=true},
         {'{','}',fly=true,dosuround=true,newline=true,space=true,fastwarp=true,backspace_suround=true},
-        {'"','"',suround=true,rules={{'when',{'filetype','vim'},{'not',{'regex','^%s*$'}}}}},
-        {"'","'",suround=true,rules={{'when',{'option','lisp'},{'instring'}}},alpha=true,nft={'tex'}},
+        {'"','"',suround=true,rules={{'when',{'filetype','vim'},{'not',{'regex','^%s*$'}}}},string=true},
+        {"'","'",suround=true,rules={{'when',{'option','lisp'},{'instring'}}},alpha=true,nft={'tex'},string=true},
         {'`','`',nft={'tex'}},
         {'``',"''",ft={'tex'}},
         {'```','```',newline=true,ft={'markdown'}},

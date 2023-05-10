@@ -130,3 +130,4 @@
 + [ ] buffer specific keybindings
 + [ ] utf8 suport
 + [ ] make extensions use other extensions
++ [ ] filter ' in lisp not instring

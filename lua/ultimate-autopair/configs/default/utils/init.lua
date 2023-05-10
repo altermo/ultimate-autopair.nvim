@@ -120,7 +120,7 @@ function M.key_check_cmd(o,key,normal,cmd,keyc)
     if o.incmd then
         return cmd and vim.tbl_contains(keyc,o.key)
     end
-    return normal and vim.tbl_contains(keyc,o.key)
+    return normal and vim.tbl_contains(key,o.key)
 end
 function M.start_pair(col,line,next)
     local pairs=M.get_pairs_by_pos(col,line,next)

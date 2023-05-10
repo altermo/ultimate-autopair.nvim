@@ -9,6 +9,11 @@ M.fn={
     find_start_pair=open_pair.find_corresponding_ambiguous_start_pair,
     is_start=function (m,line,col) return not open_pair.open_pair_ambigous_before(m.pair,line,col) end,
     is_end=function (m,line,col) return open_pair.open_pair_ambigous_before(m.pair,line,col) end,
+    in_pair=function (m,line,col)
+        local opab=open_pair.open_pair_ambigous_before(m.pair,line,col)
+        local opaa=open_pair.open_pair_ambigous_after(m.pair,line,col)
+        return opab and opaa,opab,(opaa or 0)
+    end
 }
 M.check_start_wrapper=function (m)
     return function(o)
@@ -59,12 +64,14 @@ function M.init(q)
     ms.fn=M.fn
     me.fn=M.fn
 
+    ms.rule=function () return true end
+    me.rule=function () return true end
     ms.check=M.check_start_wrapper(ms)
     me.check=M.check_end_wrapper(me)
     default.init_extensions(ms,ms.extensions)
     default.init_extensions(me,me.extensions)
     local m={}
-    m.rule=function () return true end
+    m.rule=function () return ms.rule() or me.rule() end
     m.get_map=default.get_map_wrapper({q.cmap and 'c',q.map and 'i'},ms.key,me.key)
     m.sort=default.sort
     m.p=q.p or 10
@@ -80,12 +87,11 @@ function M.init(q)
     m.check=function (o)
         o.wline=o.line
         o.wcol=o.col
-        if not m.rule() then return end
-        if default.key_check_cmd(o,me.key,q.map,q.cmap) then
+        if default.key_check_cmd(o,me.key,q.map,q.cmap) and me.rule() then
             local ret=me.check(vim.deepcopy(o))
             if ret then return ret end
         end
-        if default.key_check_cmd(o,ms.key,q.map,q.cmap) then
+        if default.key_check_cmd(o,ms.key,q.map,q.cmap) and ms.rule() then
             return ms.check(o)
         end
     end
