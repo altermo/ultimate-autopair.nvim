@@ -28,6 +28,7 @@ function M.instring(line,col,linenr,notree)
         local char=line:sub(i,i)
         if char==instring then
             instring=nil
+        elseif instring then
         elseif char=='"' or char=="'" then
             instring=char
             strbeg=i
@@ -42,7 +43,6 @@ function M.instring(line,col,linenr,notree)
     end
 end
 function M.filter_out_string(line,col,linenr,notree)
-    --TODO: refactor
     --[[refactor:
         use previous mentioned in pair function
     --]]
