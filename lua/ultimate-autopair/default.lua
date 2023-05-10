@@ -17,7 +17,7 @@ M.conf={
         enable=true,
         map='<cr>', --string or table
         autoclose=false,
-        --addsemi={'c','cpp','rust'},
+        addsemi={}, --list of filetypes
         _func='default',
     },
     space={
