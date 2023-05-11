@@ -11,6 +11,6 @@ return default.wrapp_old_extension(function(o,keyconf,_,pair_type,m)
     if not m.fn.check_start_pair(m.start_pair,m.end_pair,o.line,o.col) then return end
     local index=pair.fn.find_end_pair(pair.pair,pair.end_pair,o.wline,o.wcol+1)
     if index then
-        return m.pair..utils.addafter(index-o.wcol+1,m.end_pair)
+        return m.pair..utils.addafter(index-o.wcol,m.end_pair)
     end
 end)

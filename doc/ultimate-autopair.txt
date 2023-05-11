@@ -1,0 +1,349 @@
+*ultimate-autopair.nvim* The ultimate-autopair plugin
+==============================================================================
+TOC
+==============================================================================
+CONFIG                                              *ultimate-autopair-config*
+------------------------------------------------------------------------------
+ultimate-autopair-config-system              *ultimate-autopair-config-system*
+Ultimate-autopair.nvim has a unique and complicated configuration system: it
+supports multiple configuration at the same time. Each configuration has its
+own type, the built-in configuration types are:
+        default: The default pair configuration type
+        cond: Specifies a condition for specific configurations
+        map: A simple mapping type configuration
+        raw: No parse configuration type
+To set the configuration type set `config_type`.
+------------------------------------------------------------------------------
+ultimate-autopair-config-system-init    *ultimate-autopair-config-system-init*
+If you just want to setup config then use `ua.setup`.
+If you want to use multiple configuration then use `ua.add_conf` to add a
+configuration to the system and `ua.init` to initialize the plugin.
+------------------------------------------------------------------------------
+ultimate-autopair-config-type-cond        *ultimate-autopair-config-type-cond*
+The cond configuration type takes a list of configurations and a key `check`.
+The configuration type makes all configurations in the list go through
+the `check`. (NOTE: this only effects the configurations' `check`)
+Example: >lua
+ ua.add_conf({
+     config_type='cond',
+     check=function (o) return vim.o.filetype=='lua' end,
+     {config_type='map',{'i','(','()'}},
+ })
+<
+------------------------------------------------------------------------------
+ultimate-autopair-config-type-map          *ultimate-autopair-config-type-map*
+The map configuration type takes a list of `{mode,lhs,rhs}` and creates
+mappings out of them. (NOTE: only modes `i` and `c` are supported)
+Example: >lua
+ ua.add_conf({
+     config_type='map',
+     {'i','(','()'},
+     {{'i','c'},')',function(o,m) return o.linenr end,p=20},
+ })
+<
+------------------------------------------------------------------------------
+ultimate-autopair-config-type-raw          *ultimate-autopair-config-type-raw*
+The raw configuration type takes a list of `modules` and directly inserts them
+into the system.
+Example: >lua
+ ua.add_conf({
+     config_type='raw',
+     {
+         check=function(o) return o.key=='(' and '()' end,
+         get_map=function(mode) return mode=='i' and '(' end,
+         p=10,
+     },
+ })
+<
+------------------------------------------------------------------------------
+ultimate-autopair-config-type-default  *ultimate-autopair-config-type-default*
+The default configuration type is the default configuration type...
+Options found at: |ultimate-autopair-config-default|
+------------------------------------------------------------------------------
+ultimate-autopair-config-default            *ultimate-autopair-config-default*
+The default configuration contains a loot of options, here are those:
+(The uncommented options are future planed)
+>lua
+ {
+     config_type='default',
+     map=true,
+     --whether to allow any insert map
+     cmap=true, --cmap stands for cmd-line map
+     --whether to allow any cmd-line map
+     pair_map=true,
+     --whether to allow pair insert map
+     pair_cmap=true,
+     --whether to allow pair cmd-line map
+     bs={-- *ultimate-autopair-map-backspace-config*
+         enable=true,
+         map='<bs>', --string or table
+         cmap='<bs>',
+         overjumps=true,
+         --(|foo) > bs > |foo
+         space=true,
+         --( |foo ) > bs > (|foo)
+     },
+     cr={-- *ultimate-autopair-map-newline-config*
+         enable=true,
+         map='<cr>', --string or table
+         autoclose=false,
+         --(| > cr > (\n|\n)
+         --addsemi={}, --list of filetypes
+     },
+     space={-- *ultimate-autopair-map-space-config*
+         enable=true,
+         map=' ',
+         cmap=' ',
+         check_box_ft={'markdown','vimwiki'},
+         --+ [|] > space > + [ ]
+     },
+     fastwarp={-- *ultimate-autopair-map-fastwarp-config*
+         enable=true,
+         enable_normal=true,
+         enable_reverse=true,
+         hopout=false,
+         --{(|)} > fastwarp > {(}|)
+         map='<A-e>',
+         rmap='<A-E>',
+         cmap='<A-e>',
+         rcmap='<A-E>',
+         multiline=true,
+         --(|) > fastwarp > (\n|)
+         --nocursormove=true,
+         do_nothing_if_fail=true,
+         --add a module so that if fastwarp fails
+         --then an `e` will not be inserted
+     },
+     extensions={-- *ultimate-autopair-extensions-default-config*
+         cmdtype={types={'/','?','@'},p=90},
+         filetype={p=80,nft={'TelescopePrompt'}},
+         escape={filter=true,p=70},
+         string={p=60},
+         --treenode={inside={'comment'},p=50},
+         rules={p=40},
+         alpha={p=30},
+         suround={p=20},
+         fly={other_char={' '},nofilter=false,p=10},
+     },
+     internal_pairs={-- *ultimate-autopair-pairs-default-config*
+         {'[',']',fly=true,dosuround=true,newline=true,space=true,fastwarp=true,backspace_suround=true},
+         {'(',')',fly=true,dosuround=true,newline=true,space=true,fastwarp=true,backspace_suround=true},
+         {'{','}',fly=true,dosuround=true,newline=true,space=true,fastwarp=true,backspace_suround=true},
+         {'"','"',suround=true,rules={{'when',{'filetype','vim'},{'not',{'regex','^%s*$'}}}},string=true},
+         {"'","'",suround=true,rules={{'when',{'option','lisp'},{'instring'}}},alpha=true,nft={'tex'},string=true},
+         {'`','`',nft={'tex'}},
+         {'``',"''",ft={'tex'}},
+         {'```','```',newline=true,ft={'markdown'}},
+         {'<!--','-->',ft={'markdown','html'}},
+         {'"""','"""',newline=true,ft={'python'}},
+         {"'''","'''",newline=true,ft={'python'}},
+         {'string',type='tsnode',string=true},
+         {'raw_string',type='tsnode',string=true},
+     },
+ }
+<
+==============================================================================
+MAP                                                    *ultimate-autopair-map*
+------------------------------------------------------------------------------
+ultimate-autopair-map-backspace              *ultimate-autopair-map-backspace*
+Behaves like you would expect an autopair backspace to behave.
+For configuration options see: |ultimate-autopair-map-backspace-config|
+Example (`*` is cursor): >
+ | before    | after    | config  |
+ |-----------+----------+---------|
+ | (*)       | *        |         |
+ | ((*)      | (*)      |         |
+ | (*foo)    | *foo     | overjum |
+ | ( * )     | (*)      | space   |
+ | ( *foo )  | (*foo)   | space   |
+ | (  *foo ) | ( *foo ) | space   |
+<
+------------------------------------------------------------------------------
+ultimate-autopair-map-newline                  *ultimate-autopair-map-newline*
+Behaves like you would expect an autopair newline to behave.
+For configuration options see: |ultimate-autopair-map-newline-config|
+Example (`*` is cursor and `\t` is tab): >
+ | before | after  | config    |
+ |--------+--------+-----------|
+ | {*}    | {      |           |
+ |        | \t*    |           |
+ |        | }      |           |
+ |--------+--------+-----------|
+ | {*     | {      | autoclose |
+ |        | \t*    |           |
+ |        | }      |           |
+ |--------+--------+-----------|
+ | {foo*} | {foo   |           |
+ |        | \t*    |           |
+ |        | }      |           |
+ |--------+--------+-----------|
+ | {*foo} | {      |           |
+ |        | \t*foo |           |
+ |        | }      |           |
+<
+------------------------------------------------------------------------------
+ultimate-autopair-space                              *ultimate-autopair-space*
+Behaves like you would expect an autopair space to behave.
+For configuration options see: |ultimate-autopair-map-space-config|
+Example (`*` is cursor): >
+ | before | after    | config                |
+ |--------+----------+-----------------------|
+ | (*)    | ( * )    |                       |
+ | ( * )  | (  *  )  |                       |
+ | (*foo) | ( *foo ) |                       |
+ | + [*]  | + [ *]   | check_box_ft={'text'} |
+<
+------------------------------------------------------------------------------
+ultimate-autopair-fastwarp                        *ultimate-autopair-fastwarp*
+The fastwarp mapping fast warp (not wraps) the next end pair.
+For configuration options see: |ultimate-autopair-map-fastwarp-config|
+Example (`*` is cursor): >
+ | before     | after      |
+ |------------+------------|
+ | (*){}      | ({}*)      |
+ | (*){foo}   | ({foo}*)   |
+ | (*)foo     | (foo*)     |
+ | (foo*),bar | (foo,bar*) |
+<
+------------------------------------------------------------------------------
+ultimate-autopair-rfastwarp                      *ultimate-autopair-rfastwarp*
+The rfastwarp mapping is designed to do the opposite of fastwarp.
+For configuration options see: |ultimate-autopair-map-fastwarp-config|
+==============================================================================
+EXTENSIONS                                      *ultimate-autopair-extensions*
+All extensions should be in the `extensions` directory.
+For default configuration see: |ultimate-autopair-extensions-default-config|
+Every extension has a `p` flag which denotes the priority.
+------------------------------------------------------------------------------
+ultimate-autopair-ext-alpha                      *ultimate-autopair-ext-alpha*
+Extension config: {alpha,after,no_python}
+Extension pair config: {alpha,alpha_after}
+If `alpha` is set and previous character is alpha then return, unless fstring.
+If `after` is set and next character is alpha then return.
+------------------------------------------------------------------------------
+ultimate-autopair-ext-cmdtype                  *ultimate-autopair-ext-cmdtype*
+Extension config: {types}
+Example config: `{types={'/','?','@'}}`
+If the cmdtype in `conf` then return.
+------------------------------------------------------------------------------
+ultimate-autopair-ext-escape                    *ultimate-autopair-ext-escape*
+Extension config: {nochar,nofilter}
+Extension pair config: {nofilterescape,noescape,nocharescape}
+If the previous character is `\` and the previous character is not escaped then
+return (unless `nochar` or `noescape` or `nocharescape` is set).
+Also filters escaped parentheses
+(unless `noescape` or `nofilter` or `nofilterescape` is set).
+------------------------------------------------------------------------------
+ultimate-autopair-ext-filetype                *ultimate-autopair-ext-filetype*
+Extension config: {ft,nft}
+Extension pair config: {ft,nft}
+Example config: `{nft={'TelescopePrompt'}}`
+Checks if current filetype in `ft` if `ft` is set and if current filetype is
+not in `nft` if `nft` is set.
+------------------------------------------------------------------------------
+ultimate-autopair-ext-fly                          *ultimate-autopair-ext-fly*
+Extension config: {other_char,nofilter}
+Extension pair config: {fly}
+Hops over all pairs with the `fly` option and all characters in `other_char`.
+To enable hop outs of strings, set `nofilter` to not filter.
+Example (`*` is cursor) (default config): >
+ | before   | key | after    |
+ |----------+-----+----------|
+ | ({[*] }) | )   | ({[] })* |
+<
+------------------------------------------------------------------------------
+ultimate-autopair-ext-rules                      *ultimate-autopair-ext-rules*
+Extension pair config: {rules}
+Checks all rules in `rules` and if one of them returns false then return.
+The `rules` uses a lisp style syntax, example: `{'not',{'instring'}}`
+For full list of functions, read source code.
+------------------------------------------------------------------------------
+ultimate-autopair-ext-string                    *ultimate-autopair-ext-string*
+Extension config: {notree}
+Extension pair config: {string}
+Filters inside/outside of any pair with the config `string`.
+If `notree` is then don't filter treesitter-node strings.
+Example (`*` is cursor): >
+ | in     | out     |
+ |--------+---------|
+ | a'b'c* | a'\1'c* |
+ | a'b*'c | 'b*'    |
+<
+------------------------------------------------------------------------------
+ultimate-autopair-ext-suround                  *ultimate-autopair-ext-suround*
+Extension pair config: {dosuround,suround}
+If next is pair with options `suround` and the inserting pair has the option
+`dosuround` then suround the pair.
+Example (`*` is cursor): >
+ | before | key | after  |
+ |--------+-----+--------|
+ | *'a'   | (   | (*'a') |
+<
+==============================================================================
+ADD-PAIR                                          *ultimate-autopair-add-pair*
+------------------------------------------------------------------------------
+ultimate-autopair-add-start-pair            *ultimate-autopair-add-start-pair*
+When inserting start pair, then if there is not already a corresponding end
+pair in the line, then insert an end pair.
+Example (`*` is cursor): >
+ | before | keys | after |
+ | *      | (    | (*)   |
+ | *      | ((   | ((*)) |
+ | *)     | (    | (*)   |
+ | (*))   | (    | ((*)) |
+<
+------------------------------------------------------------------------------
+ultimate-autopair-add-end-pair                *ultimate-autopair-add-end-pair*
+When inserting end pair and next is end pair, then if there is a corresponding
+start pair in the line, then hop over the end pair.
+Example (`*` is cursor): >
+ | before | keys | after |
+ | (*)    | )    | ()*   |
+ | (*     | )    | ()*   |
+ | ((*)   | )    | (()*) |
+ | (*))   | )    | ()*)  |
+<
+------------------------------------------------------------------------------
+ultimate-autopair-add-ambiguous-pair    *ultimate-autopair-add-ambiguous-pair*
+When inserting ambiguous pair, if the next is ambiguous pair which has a
+corresponding pair then hop over, otherwise if there's not already a
+corresponding pair on the line then insert the ambiguous pair double
+
+Example (`*` is cursor): >
+ | before | keys | after   |
+ | *      | '    | ''*     |
+ | '*     | '    | ''*     |
+ | *'     | '    | '*'     |
+ | '*'    | '    | ''*     |
+ | ''*''  | '    | '''*''' |
+<
+==============================================================================
+OBJECTS                                            *ultimate-autopair-objects*
+Todo: write documentation
+==============================================================================
+API                                                    *ultimate-autopair-api*
+Todo: write documentation
+==============================================================================
+WRITING-EXTENSIONS                      *ultimate-autopair-writing-extensions*
+Todo: write documentation
+==============================================================================
+WRITING-CONFIG-TYPES                  *ultimate-autopair-writing-config-types*
+Todo: write documentation
+==============================================================================
+OTHER                                                *ultimate-autopair-other*
+------------------------------------------------------------------------------
+ultimate-autopair-debug                              *ultimate-autopair-debug*
+Ultimate-autopair has a few scripts to run debug. The first one is `ua._list`
+which will allow you to select wanted pair and see information about sed pair.
+The second one is `debug` which automatically activates when a mapping throws
+an error.
+------------------------------------------------------------------------------
+ultimate-autopair-test                                *ultimate-autopair-test*
+The test file sits in the `test` directory. You can run the test by sourcing
+it with neovim or by running `:checkhealth ultimate-autopair`. Any test which
+is commented out is a possible future feature.
+------------------------------------------------------------------------------
+ultimate-autopair-notes                              *ultimate-autopair-notes*
+The root directory `notes` contains notes and scribbles about the plugin.
+
+vim:ft=help:

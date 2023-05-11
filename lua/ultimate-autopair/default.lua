@@ -46,7 +46,7 @@ M.conf={
         rules={p=40},
         alpha={p=30},
         suround={p=20},
-        fly={other_char={' '},nofilter=false,p=10,undu_map='<C-b>'},
+        fly={other_char={' '},nofilter=false,p=10},
     },
     internal_pairs={
         {'[',']',fly=true,dosuround=true,newline=true,space=true,fastwarp=true,backspace_suround=true},

@@ -49,6 +49,7 @@ function M.fastwarp(o,m)
     local p=o.line:sub(o.col,o.col)
     local pair=default.get_pair(p)
     if not pair then return end
+    if not pair.conf.fastwarp then return end
     if not pair.fn.is_end(pair,o) then return end
     if pair.rule and not pair.rule() then return end
     for i=o.col+1,#o.line do

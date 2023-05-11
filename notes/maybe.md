@@ -121,15 +121,16 @@
 + [x] replace mode integration
 + [x] make it so that for type-2 pair map the begining and not the end `bar` > `map b` and not `map r`
 + [x] testing
-+ [ ] better string filtering `'foo'|` > `'\1'|` and not `\1|`
++ [x] utf8 suport
++ [x] better string filtering `'foo'|` > `'\1'|` and not `\1|`
 + [ ] terminal mode integration
 + [ ] implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)
 + [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
 + [ ] set up matrix room
 + [ ] reimplement features.md as tests
 + [ ] buffer specific keybindings
-+ [ ] utf8 suport
 + [ ] make extensions use other extensions
 + [ ] filter ' in lisp not instring
 + [ ] test other modules
 + [ ] make cond configuration type filter insted of replacing m.check()
++ [ ] make ambiguous pairs have the ability to use fastwarp
