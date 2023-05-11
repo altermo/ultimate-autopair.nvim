@@ -1,5 +1,5 @@
 **:exclamation: Ultimate-autopair is _alpha_ software. Some things may change, and some things may break. Documentation may sometimes be inaccurate.**
-# Ultimate-autopair.nvim 0.5.0-alpha
+# Ultimate-autopair.nvim 0.5.0
 Ultimate-autopair plugin aims to have **all possible features** that an auto-pairing plugin needs.\
 Requires neovim 0.7 (recomended 0.9)
 ## Installation
