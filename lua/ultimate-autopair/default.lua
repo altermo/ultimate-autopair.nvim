@@ -11,21 +11,18 @@ M.conf={
         cmap='<bs>',
         overjumps=true,
         space=true,
-        _func='default',
     },
     cr={
         enable=true,
         map='<cr>', --string or table
         autoclose=false,
-        addsemi={}, --list of filetypes
-        _func='default',
+        --addsemi={}, --list of filetypes
     },
     space={
         enable=true,
         map=' ',
         cmap=' ',
         check_box_ft={'markdown','vimwiki'},
-        _func='default',
     },
     fastwarp={
         enable=true,
@@ -37,8 +34,7 @@ M.conf={
         cmap='<A-e>',
         rcmap='<A-E>',
         multiline=true,
-        _func='default',
-        nocursormove=true,
+        --nocursormove=true,
         do_nothing_if_fail=true,
     },
     extensions={
@@ -64,6 +60,7 @@ M.conf={
         {'<!--','-->',ft={'markdown','html'}},
         {'"""','"""',newline=true,ft={'python'}},
         {"'''","'''",newline=true,ft={'python'}},
+        {'string',type='tsnode',string=true},
     },
 }
 return M

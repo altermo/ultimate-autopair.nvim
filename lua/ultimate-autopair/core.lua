@@ -34,7 +34,8 @@ function M.run(key)
         local fo=M.I.var_create_wrapper(key)
         for _,v in ipairs(M.mem) do
             local ret
-            if debug_status then
+            if not v.check then
+            elseif debug_status then
                 ret=debug.create_check_debuger(v.check,v)(fo())
             else
                 ret=v.check(fo())
@@ -48,11 +49,13 @@ function M.run(key)
 end
 function M.clear()
     for _,v in ipairs(M.mem) do
-        for _,key in ipairs(v.get_map('i') or {}) do
-            vim.keymap.del('i',key)
-        end
-        for _,key in ipairs(v.get_map('c') or {}) do
-            vim.keymap.del('c',key)
+        if v.get_map then
+            for _,key in ipairs(v.get_map('i') or {}) do
+                vim.keymap.del('i',key)
+            end
+            for _,key in ipairs(v.get_map('c') or {}) do
+                vim.keymap.del('c',key)
+            end
         end
     end
     M.mem={}
@@ -76,11 +79,13 @@ end
 function M.init()
     M.I.sort()
     for _,v in ipairs(M.mem) do
-        for _,key in ipairs(v.get_map('i') or {}) do
-            vim.keymap.set('i',key,M.run(key),{noremap=true,expr=true})
-        end
-        for _,key in ipairs(v.get_map('c') or {}) do
-            vim.keymap.set('c',key,M.run(key),{noremap=true,expr=true})
+        if v.get_map then
+            for _,key in ipairs(v.get_map('i') or {}) do
+                vim.keymap.set('i',key,M.run(key),{noremap=true,expr=true})
+            end
+            for _,key in ipairs(v.get_map('c') or {}) do
+                vim.keymap.set('c',key,M.run(key),{noremap=true,expr=true})
+            end
         end
     end
 end

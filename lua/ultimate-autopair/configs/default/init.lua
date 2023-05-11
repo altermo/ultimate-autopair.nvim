@@ -2,6 +2,7 @@
 local M={}
 local pair_s=require'ultimate-autopair.configs.default.pairs'
 local pair_a=require'ultimate-autopair.configs.default.paira'
+local pair_t=require'ultimate-autopair.configs.default.pairt'
 local pair_e=require'ultimate-autopair.configs.default.paire'
 local default=require'ultimate-autopair.configs.default.utils'
 local bs=require'ultimate-autopair.configs.default.maps.bs'
@@ -10,7 +11,9 @@ local space=require'ultimate-autopair.configs.default.maps.space'
 local fastwarp=require'ultimate-autopair.configs.default.maps.fastwarp'
 local rfastwarp=require'ultimate-autopair.configs.default.maps.rfastwarp'
 function M.init_multi(q)
-    if q.start_pair==q.end_pair then
+    if q.type=='tsnode' then
+        return {pair_t.init(q)}
+    elseif q.start_pair==q.end_pair then
         return {pair_a.init(q)}
     else
         return {pair_s.init(q),pair_e.init(q)}
@@ -60,6 +63,7 @@ function M.init_pair(conf,mem,mconf,ext)
             extensions=ext,
             cmap=mconf.cmap~=false and default.select_opt(v.cmap,mconf.pair_cmap,true),
             map=mconf.map~=false and default.select_opt(v.imap,mconf.pair_map,true),
+            type=v.type,
         })) do
             table.insert(mem,i)
         end
