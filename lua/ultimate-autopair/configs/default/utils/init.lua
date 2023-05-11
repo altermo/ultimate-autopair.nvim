@@ -34,8 +34,7 @@ M.get_mode_map_wrapper=function(key,keyc)
     end
 end
 M.load_extension=function (extension_name)
-    return vim.F.npcall(require,'ultimate-autopair.extensions.'..extension_name) or
-        {call=function (...) end} --TODO
+    return require('ultimate-autopair.extensions.'..extension_name)
 end
 M.prepare_extensions=function (extensions)
     local exts={}

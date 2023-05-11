@@ -1,4 +1,3 @@
---TODO: add map configs to all pairs...
 local M={}
 local pair_s=require'ultimate-autopair.configs.default.pairs'
 local pair_a=require'ultimate-autopair.configs.default.paira'
