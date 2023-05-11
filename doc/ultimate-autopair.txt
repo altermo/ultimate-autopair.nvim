@@ -311,7 +311,7 @@ corresponding pair on the line then insert the ambiguous pair double
 
 Example (`*` is cursor): >
  | before | keys | after   |
- | *      | '    | ''*     |
+ | *      | '    | '*'     |
  | '*     | '    | ''*     |
  | *'     | '    | '*'     |
  | '*'    | '    | ''*     |
