@@ -2,8 +2,6 @@
 # Ultimate-autopair.nvim 0.4.0
 Ultimate-autopair plugin aims to have <u style="color: red">**all possible features**</u> that an auto-pairing plugin needs.
 
-##### NOTE: ultimate-autopair will be getting a <u>major update</u> in the following weeks... Some of the configurations will be broken... [branch-link](https://github.com/altermo/ultimate-autopair.nvim/tree/v0.5.0-pre-alpha)
-
 Requires neovim 0.7
 ## Summary
 Ultimate-autopair is a neovim autopair plugin that is easy to extend, by the fact that it supports extensions. (Note that the extra mappings (`<CR>`,`<BS>`,...) currently use a different system of extensions) The builtin extensions includes among other things: command line support, multicharacter pairs, non one-line, fastwarp and much more...
