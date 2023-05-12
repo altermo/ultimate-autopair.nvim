@@ -61,6 +61,7 @@ M.conf={
         {'"""','"""',newline=true,ft={'python'}},
         {"'''","'''",newline=true,ft={'python'}},
         {'string',type='tsnode',string=true},
+        {'raw_string',type='tsnode',string=true},
     },
 }
 return M
