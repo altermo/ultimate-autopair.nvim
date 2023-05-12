@@ -34,7 +34,7 @@ M.conf={
         cmap='<A-e>',
         rcmap='<A-E>',
         multiline=true,
-        --nocursormove=true,
+        nocursormove=true,
         do_nothing_if_fail=true,
     },
     extensions={

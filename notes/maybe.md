@@ -134,3 +134,5 @@
 + [ ] test other modules
 + [ ] make cond configuration type filter insted of replacing m.check()
 + [ ] make ambiguous pairs have the ability to use fastwarp
++ [ ] make everything work with multichar pair (fastwarp,space...)
++ [ ] make wrappers for pair.fn functions (so that the same thing does not need to be written 20 times)

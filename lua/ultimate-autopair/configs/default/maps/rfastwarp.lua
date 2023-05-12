@@ -10,14 +10,14 @@ function M.ext.rfastwarp_under_pair(o,ind,p)
     if not pair.fn.is_end(pair,o.line,ind) then return end
     local matching_pair_pos=pair.fn.find_start_pair(pair.start_pair,pair.end_pair,o.line,ind-1)
     if not matching_pair_pos then return end
-    return utils.delete(0,1)..utils.moveh(o.col-matching_pair_pos-1)..p..utils.moveh(),matching_pair_pos-1
+    return utils.delete(0,1)..utils.moveh(o.col-matching_pair_pos-1)..p..utils.moveh(),matching_pair_pos
 end
 function M.ext.rfastwarp_next_to_end_pair(o,ind,p)
     if o.col-1==ind then return end
     local pair=default.get_pair(o.line:sub(ind,ind))
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if not pair.fn.is_end(pair,o) then return end
+    if not pair.fn.is_end(pair,o.line,o.col) then return end
     return utils.delete(0,1)..utils.moveh(o.col-ind-1)..p..utils.moveh()
 end
 function M.ext.rfastwarp_next_to_start_pair(o,ind,p,m)
@@ -45,17 +45,40 @@ function M.rfastwarp_start(o,p,m)
     return utils.delete(0,1)..'<up><end>'..p..utils.moveh(),0,1
 end
 function M.rfastwarp(o,m)
+    local move
+    local nocursormove=m.iconf.nocursormove
+    if nocursormove then
+        local sp=o.line:sub(o.col-1,o.col-1)
+        local spair=default.get_pair(sp)
+        if spair and spair.fn.is_start(spair,o.line,o.col-1) then
+            move=spair.fn.find_end_pair(spair.start_pair,spair.end_pair,o.line,o.col)
+            if move then
+                move=move-o.col-1
+                o.col=o.col+move
+            else
+                nocursormove=false
+            end
+        else
+            nocursormove=false
+        end
+    end
     local p=o.line:sub(o.col,o.col)
     local pair=default.get_pair(p)
     if not pair then return end
-    if not pair.fn.is_end(pair,o) then return end
+    if not pair.conf.fastwarp then return end
+    if not pair.fn.is_end(pair,o.line,o.col) then return end
     if pair.rule and not pair.rule() then return end
     for i=o.col-1,1,-1 do
         local ind=i
         for _,v in pairs(M.ext) do
-            local ret=v(o,ind,p,m)
+            local ret,s=v(o,ind,p,m)
             if ret==1 then return end
-            if ret then return ret end
+            if ret then
+                if nocursormove then
+                    return utils.movel(move)..ret..utils.moveh(move-(o.col-(s or ind)-1))
+                end
+                return ret
+            end
         end
     end
     return M.rfastwarp_start(o,p,m)
@@ -87,7 +110,6 @@ function M.init(conf,mconf,ext)
         o.wline=o.line
         o.wcol=o.coll
         if not default.key_check_cmd(o,m.map,m.map,m.cmap,m.cmap) then return end
-        check(o)
         if not m.rule() then return end
         return check(o)
     end

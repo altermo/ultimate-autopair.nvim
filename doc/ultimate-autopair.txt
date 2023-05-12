@@ -109,7 +109,9 @@ The default configuration contains a loot of options, here are those:
          rcmap='<A-E>',
          multiline=true,
          --(|) > fastwarp > (\n|)
-         --nocursormove=true,
+         nocursormove=true,
+         --makes the cursor not move (|)foo > fastwarp > (|foo)
+         --disables multiline feature
          do_nothing_if_fail=true,
          --add a module so that if fastwarp fails
          --then an `e` will not be inserted

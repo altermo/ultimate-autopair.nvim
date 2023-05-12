@@ -72,6 +72,9 @@ function M._list()
         if item.pair then
             return item.pair
         end
+        if item.map then
+            return vim.inspect(item.map)
+        end
     end},function (_,idx)
             vim.cmd.vnew()
             local buf=vim.api.nvim_create_buf(false,true)
