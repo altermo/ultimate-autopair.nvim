@@ -136,3 +136,6 @@
 + [ ] make ambiguous pairs have the ability to use fastwarp
 + [ ] make everything work with multichar pair (fastwarp,space...)
 + [ ] make wrappers for pair.fn functions (so that the same thing does not need to be written 20 times)
++ [ ] fastwarp nocursormove spesific map
++ [ ] fastwarp nocursormove map to actually move
++ [ ] abecodes/tabout.nvim like map
