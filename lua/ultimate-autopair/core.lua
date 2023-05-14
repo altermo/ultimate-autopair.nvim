@@ -48,16 +48,7 @@ function M.run(key)
     end
 end
 function M.clear()
-    for _,v in ipairs(M.mem) do
-        if v.get_map then
-            for _,key in ipairs(v.get_map('i') or {}) do
-                vim.keymap.del('i',key)
-            end
-            for _,key in ipairs(v.get_map('c') or {}) do
-                vim.keymap.del('c',key)
-            end
-        end
-    end
+    if not vim.tbl_isempty(M.mem or {}) then error('Double initialization of plugin ultimate-autopair') end
     M.mem={}
 end
 function M.I.sort()
@@ -79,6 +70,7 @@ end
 function M.init()
     M.I.sort()
     for _,v in ipairs(M.mem) do
+        if v.oinit then v.oinit() end
         if v.get_map then
             for _,key in ipairs(v.get_map('i') or {}) do
                 vim.keymap.set('i',key,M.run(key),{noremap=true,expr=true})
