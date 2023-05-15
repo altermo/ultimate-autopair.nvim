@@ -74,7 +74,7 @@ function M.init(q)
     m.backspace=M.backspace_wrapper(m)
     m.rule=function () return true end
     default.init_extensions(m,m.extensions)
-    m.get_map=default.get_map_wrapper({q.cmap and 'c',(not q.nomap) and 'i'},m.key)
+    m.get_map=default.get_map_wrapper({q.cmap and 'c',q.map and 'i'},m.key)
     m.sort=default.sort
     m.p=q.p or 10
     local check=m.check
