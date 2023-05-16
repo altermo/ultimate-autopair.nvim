@@ -5,23 +5,25 @@ function M.space(o,m)
     local conf=m.iconf
     local prev_char
     local pcol=o.col
+    local total=0
     for i=o.col-1,1,-1 do
         prev_char=o.line:sub(i,i)
         if prev_char~=' ' then
             pcol=i+1
             break
         end
+        total=total+1
     end
     local prev_pair=default.get_pair(prev_char)
-    if not prev_pair or not prev_pair.conf.space then
-    elseif not utils.incmd() and (vim.tbl_contains(conf.check_box_ft,vim.o.filetype) or conf.check_box_ft==true) and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(o.line:sub(1,o.col)) then
-    elseif prev_pair.rule and not prev_pair.rule() then
-    elseif default.get_type_opt(prev_pair,{'ambiguous','start'}) then
-        local matching_pair_pos=prev_pair.fn.find_end_pair(prev_char,prev_pair.end_pair,o.line,pcol)
-        if matching_pair_pos then
-            return ' '..utils.addafter(matching_pair_pos-o.col-1,' ')
-        end
-    end
+    if not prev_pair or not prev_pair.conf.space then return end
+    if not utils.incmd() and (vim.tbl_contains(conf.check_box_ft,vim.o.filetype) or conf.check_box_ft==true) and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(o.line:sub(1,o.col)) then return end
+    if prev_pair.rule and not prev_pair.rule() then return end
+    if not default.get_type_opt(prev_pair,'start') then return end
+    local matching_pair_pos=prev_pair.fn.find_end_pair(prev_char,prev_pair.end_pair,o.line,pcol)
+    if not matching_pair_pos then return end
+    local ototal=#o.line:sub(o.col,matching_pair_pos-2):reverse():match(' *')
+    if ototal>total then return end
+    return ' '..utils.addafter(matching_pair_pos-o.col-1,(' '):rep(total-ototal+1))
 end
 function M.wrapp_space(m)
     return function (o)

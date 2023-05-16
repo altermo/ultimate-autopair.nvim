@@ -15,6 +15,8 @@ use{
     end,
 }
 ```
+## Contribution
+For configuration options, read the doc (`:help ultimate-autopair-config`).
 ### Other plugins to supercharge auto-pairing
 These are some other plugins which are related to pairing which have features that ultimate-autopair does not.
 + [endwise](https://github.com/RRethy/nvim-treesitter-endwise) wisely add `end` in lua, ruby, etc...
