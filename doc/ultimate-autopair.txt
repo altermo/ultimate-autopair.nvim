@@ -97,6 +97,11 @@ The default configuration contains a loot of options, here are those:
          check_box_ft={'markdown','vimwiki'},
          --+ [|] > space > + [ ]
      },
+     space2={-- *ultimate-autopair-map-space2-config*
+         enable=false,
+         match=[[\a]],
+         --what character activate
+     },
      fastwarp={-- *ultimate-autopair-map-fastwarp-config*
          enable=true,
          enable_normal=true,
@@ -112,6 +117,7 @@ The default configuration contains a loot of options, here are those:
          nocursormove=true,
          --makes the cursor not move (|)foo > fastwarp > (|foo)
          --disables multiline feature
+         --only activates if prev char is start pair, otherwise fallback to normal
          do_nothing_if_fail=true,
          --add a module so that if fastwarp fails
          --then an `e` will not be inserted
@@ -196,6 +202,18 @@ Example (`*` is cursor): >
  | + [*]  | + [ *]   | check_box_ft={'text'} |
 <
 ------------------------------------------------------------------------------
+ultimate-autopair-space2                            *ultimate-autopair-space2*
+Auto balances spaces when input char is `match`.
+For configuration options see: |ultimate-autopair-map-space2-config|
+Example (`*` is cursor): >
+ | before | inp | after    |
+ |--------+-----+----------|
+ | ( *)   | f   | ( f* )   |
+ | (  *)  | f   | (  f*  ) |
+ | ( * )  | f   | ( f* )   |
+ | ( *oo) | f   | ( f*oo ) |
+<
+------------------------------------------------------------------------------
 ultimate-autopair-fastwarp                        *ultimate-autopair-fastwarp*
 The fastwarp mapping fast warp (not wraps) the next end pair.
 For configuration options see: |ultimate-autopair-map-fastwarp-config|
@@ -206,6 +224,13 @@ Example (`*` is cursor): >
  | (*){foo}   | ({foo}*)   |
  | (*)foo     | (foo*)     |
  | (foo*),bar | (foo,bar*) |
+< Example (`*` is cursor)(nocursormove=true): >
+ | before     | after      |
+ |------------+------------|
+ | (*){}      | (*{})      |
+ | (*){foo}   | (*{foo})   |
+ | (*)foo     | (*foo)     |
+ | (foo*),bar | (foo,bar*) | (fallback to cursormove if logical)
 <
 ------------------------------------------------------------------------------
 ultimate-autopair-rfastwarp                      *ultimate-autopair-rfastwarp*

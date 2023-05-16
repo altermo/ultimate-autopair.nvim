@@ -24,6 +24,10 @@ M.conf={
         cmap=' ',
         check_box_ft={'markdown','vimwiki'},
     },
+    space2={
+        enable=false,
+        match=[[\a]],
+    },
     fastwarp={
         enable=true,
         enable_normal=true,

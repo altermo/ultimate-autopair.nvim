@@ -7,6 +7,7 @@ local default=require'ultimate-autopair.configs.default.utils'
 local bs=require'ultimate-autopair.configs.default.maps.bs'
 local cr=require'ultimate-autopair.configs.default.maps.cr'
 local space=require'ultimate-autopair.configs.default.maps.space'
+local space2=require'ultimate-autopair.configs.default.maps.space2'
 local fastwarp=require'ultimate-autopair.configs.default.maps.fastwarp'
 local rfastwarp=require'ultimate-autopair.configs.default.maps.rfastwarp'
 function M.init_multi(q)
@@ -25,6 +26,7 @@ function M.init_conf(conf,mem)
     M.init_bs(conf.bs,mem,conf,ext)
     M.init_cr(conf.cr,mem,conf,ext)
     M.init_space(conf.space,mem,conf,ext)
+    M.init_space2(conf.space2,mem,conf,ext)
     M.init_fastwarp(conf.fastwarp,mem,conf,ext)
     M.init_rfastwarp(conf.fastwarp,mem,conf,ext)
 end
@@ -40,6 +42,10 @@ function M.init_cr(conf,mem,mconf,ext)
 end
 function M.init_space(conf,mem,mconf,ext)
     local Ispace=space.init(conf or {},mconf,ext)
+    if Ispace then table.insert(mem,Ispace) end
+end
+function M.init_space2(conf,mem,mconf,ext)
+    local Ispace=space2.init(conf or {},mconf,ext)
     if Ispace then table.insert(mem,Ispace) end
 end
 function M.init_fastwarp(conf,mem,mconf,ext)
