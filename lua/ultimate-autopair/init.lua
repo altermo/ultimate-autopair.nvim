@@ -4,51 +4,39 @@ local M={}
 function M.old_config_detector(conf)
     if conf.config_type~='default' then return end
     local function c(s,n)
-        vim.notify('ultimate-autopair:\nOld configuration detected\nThe problem:\n'..s)
+        vim.notify('ultimate-autopair:\nOld configuration detected:\n'..s)
         return n
     end
     local cns=' option is no longer supported'
     local inb=', it uses a diffrent system now'
 
-    if conf.extensions and vim.tbl_islist(conf.extensions) then
-        return c('extensions option needs updating (aborting)',true)
-    elseif conf._no_old_warn then
-        return
-    elseif conf.mapopt then
-        return c('mapopt'..cns)
-    elseif conf.fastend then
-        return c('fastend'..cns)
-    elseif conf.bs then
-        if conf.bs.extensions then
-            return c('bs.extensions'..cns..inb)
-        elseif conf.bs.multichar then
-            return c('bs.multichar'..cns..inb)
-        end
-    elseif conf.cr then
-        if conf.cr.extensions then
-            return c('cr.extensions'..cns..inb)
-        elseif conf.cr.multichar then
-            return c('cr.multichar'..cns..inb)
-        end
-    elseif conf.fastwarp then
-        if conf.fastwarp.Wmap or conf.fastwarp.Wcmap then
-            return c('fastwarp.Wmap & fastwarp.Wcmap'..cns)
-        elseif conf.fastwarp.extensions then
-            return c('fastwarp.extensions'..cns..inb)
-        elseif conf.fastwarp.rextensions then
-            return c('fastwarp.rextensions'..cns..inb)
-        elseif conf.fastwarp.endextensions then
-            return c('fastwarp.endextensions'..cns..inb)
-        elseif conf.fastwarp.rendextensions then
-            return c('fastwarp.rendextensions'..cns..inb)
-        end
-    elseif conf._default_beg_filter then
-        return c('_default_beg_filter'..cns)
-    elseif conf._default_end_filter then
-        return c('_default_end_filter'..cns)
-    elseif conf.ft then
-        return c('ft'..cns..inb)
+    if conf.extensions and vim.tbl_islist(conf.extensions) then return c('extensions option needs updating (aborting)',true) end
+    if conf._no_old_warn then return end
+    if conf.mapopt then return c('mapopt'..cns) end
+    if conf.fastend then return c('fastend'..cns) end
+    if conf.bs then
+        if conf.bs.extensions then return c('bs.extensions'..cns..inb) end
+        if conf.bs.multichar then return c('bs.multichar'..cns..inb) end
+        if conf.bs.nomap then return c('bs.nomap'..cns..inb) end
     end
+    if conf.cr then
+        if conf.cr.extensions then return c('cr.extensions'..cns..inb) end
+        if conf.cr.multichar then return c('cr.multichar'..cns..inb) end
+        if conf.cr.nomap then return c('cr.nomap'..cns..inb) end
+    end
+    if conf.fastwarp then
+        if conf.fastwarp.Wmap or conf.fastwarp.Wcmap then return c('fastwarp.Wmap & fastwarp.Wcmap'..cns) end
+        if conf.fastwarp.extensions then return c('fastwarp.extensions'..cns..inb) end
+        if conf.fastwarp.rextensions then return c('fastwarp.rextensions'..cns..inb) end
+        if conf.fastwarp.endextensions then return c('fastwarp.endextensions'..cns..inb) end
+        if conf.fastwarp.rendextensions then return c('fastwarp.rendextensions'..cns..inb) end
+    end
+    if conf.space then
+        if conf.space.nomap then return c('space.nomap'..cns..inb) end
+    end
+    if conf._default_beg_filter then return c('_default_beg_filter'..cns) end
+    if conf._default_end_filter then return c('_default_end_filter'..cns) end
+    if conf.ft then return c('ft'..cns..inb) end
     for _,v in ipairs{'bs','cr','space','fastwarp'} do
         if conf[v] and conf[v].fallback then
             return c(v..'.fallback'..cns)
