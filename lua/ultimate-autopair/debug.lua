@@ -99,7 +99,10 @@ end
 function M.handel_smart_debug(o)
     return function (mes)
         local traceback=M.get_traceback_data(3)
-        local inp=vim.fn.input(debug.traceback(mes)..'\nenter y/yes to start debugger:')
+        local inp=vim.fn.input(debug.traceback(mes)..'\nenter y/yes to start debugger (or c/copy to copy traceback):')
+        if vim.tbl_contains({'c','copy'},string.lower(inp)) then
+            vim.fn.setreg('+',debug.traceback(mes))
+        end
         if not vim.tbl_contains({'y','Y','yes','Yes'},inp) then return end
         vim.cmd.stopinsert()
         o.mes=mes
