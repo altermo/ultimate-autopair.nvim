@@ -1,7 +1,8 @@
 local config=require'ultimate-autopair.config'
+local debug=require'ultimate-autopair.debug'
 local default=require'ultimate-autopair.default'
 local M={}
-function M.old_config_detector(conf)
+function M._old_config_detector(conf)
     if conf.config_type~='default' then return end
     local function c(s,n)
         vim.notify('ultimate-autopair:\nOld configuration detected:\n'..s)
@@ -44,7 +45,7 @@ function M.old_config_detector(conf)
     end
 end
 function M.add_conf(conf)
-    M.old_config_detector(conf)
+    M._old_config_detector(conf)
     config.add_conf(conf)
 end
 function M.setup(conf)
@@ -52,7 +53,7 @@ function M.setup(conf)
     M.init()
 end
 function M.init()
-    config.init()
+    debug.wrapp_smart_debugger(config.init,config.conf)()
 end
 function M._list()
     local core=require'ultimate-autopair.core'

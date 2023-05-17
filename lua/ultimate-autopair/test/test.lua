@@ -1,10 +1,10 @@
 local M={}
 M.jobs={}
 function M.info(msg)
-    vim.notify(msg,'info')
+    vim.notify(msg,vim.log.levels.INFO)
 end
 function M.error(msg)
-    vim.notify(msg,'error')
+    vim.notify(msg,vim.log.levels.ERROR)
 end
 function M.main()
     local file=vim.api.nvim_get_runtime_file('lua/ultimate-autopair/test/test.lua',false)[1]
@@ -27,7 +27,7 @@ function M.main()
     if rdps~='' then
         M.error('A rouge debug prin\t statement was spotted at '..rdps)
     end
-    local rdft=vim.fn.system('find '..M.path..'/lua -type f ! -name "*.lua" ! -name "*.md"')
+    local rdft=vim.fn.system('find '..M.path..'/lua -type f ! -name "*.lua" ! -name "*.md" ! -name ".luarc.json"')
     if rdft~='' then
         M.error('A non lua file was spotted at '..rdft)
     end

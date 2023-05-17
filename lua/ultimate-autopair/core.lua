@@ -1,7 +1,7 @@
 --Internal
 local M={}
 local utils=require'ultimate-autopair.utils'
-local debug_status,debug=pcall(require,'ultimate-autopair.debug')
+local debug=require'ultimate-autopair.debug'
 M.mem={}
 M.I={}
 function M.I.activate_iabbrev(key)
@@ -35,10 +35,8 @@ function M.run(key)
         for _,v in ipairs(M.mem) do
             local ret
             if not v.check then
-            elseif debug_status then
-                ret=debug.create_check_debuger(v.check,v)(fo())
             else
-                ret=v.check(fo())
+                ret=debug.wrapp_smart_debugger(v.check,v)(fo())
             end
             if ret then
                 return M.I.activate_iabbrev(ret)

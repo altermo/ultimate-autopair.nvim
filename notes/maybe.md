@@ -140,3 +140,5 @@
 + [ ] fastwarp nocursormove map to actually move
 + [ ] abecodes/tabout.nvim like map
 + [ ] make use of treesitter list of nodes at pos to filter instead of one node at pos
++ [ ] make config-types cond work with oinit and rule (while making standard)
++ [ ] markdown code block spesific behavior (like lisp code block)
