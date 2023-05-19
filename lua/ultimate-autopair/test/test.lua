@@ -143,6 +143,7 @@ function M.test_other_map()
     run(d..'I{foo},(bar)bbi','{foo,}(bar)')
     run(d..'I{(),}hhi','{(,)}')
     run(d..'I\rki(','(\n)',{fastwarp={nocursormove=false}})
+    run(d..'I(),""0a','(,)""')
     run(g..'I(foo)i','()foo')
     run(g..'I()i','()')
     run(g..'I(foo,bar)i','(foo),bar')
@@ -150,6 +151,7 @@ function M.test_other_map()
     run(g..'I("bar")i','()"bar"')
     run(g..'I(foo{bar}baz)i','(foo{bar})baz')
     run(g..'I(o)i','()\n')
+    run(g..'I("",)0a','(""),')
     --run('I(a','()') --TBD
     --run('I({a','({})') --TBD
     --run('I({(la','({()})') --TBD

@@ -17,7 +17,7 @@ function M.ext.fastwarp_next_to_start_pair(o,ind,p)
     local pair=default.get_pair(o.line:sub(ind,ind))
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if not pair.fn.is_start(pair,o.line,o.col) then return end
+    if not pair.fn.is_start(pair,o.line,ind) then return end
     return utils.delete(0,1)..utils.movel(ind-o.col-1)..p..utils.moveh()
 end
 function M.ext.fastwarp_next_to_end_pair(o,ind,p,m)
