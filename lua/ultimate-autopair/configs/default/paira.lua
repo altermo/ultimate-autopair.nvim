@@ -85,6 +85,7 @@ function M.init(q)
     m.backspace=M.backspace_wrapper(m)
     m.newline=M.newline_wrapper(m)
     m.check=function (o)
+        if not m.rule() then return end
         o.wline=o.line
         o.wcol=o.col
         if default.key_check_cmd(o,me.key,q.map,q.cmap) and me.rule() then

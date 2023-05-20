@@ -5,10 +5,20 @@ function M.init_conf(conf,mem)
         M.init_conf(v,lmem)
     end
     for _,v in ipairs(lmem) do
-        local check=v.check
-        v.check=function (...)
-            if conf.check(...) then
-                return check(...)
+        if v.check then
+            local check=v.check
+            v.check=function (...)
+                if (conf.check or conf.rule)(...) then
+                    return check(...)
+                end
+            end
+        end
+        if v.rule then
+            local rule=v.rule
+            v.rule=function (...)
+                if conf.rule(...) then
+                    return rule(...)
+                end
             end
         end
         table.insert(mem,v)
