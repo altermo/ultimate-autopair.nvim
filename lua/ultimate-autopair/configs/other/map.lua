@@ -9,6 +9,7 @@ end
 function M.wrapp_check(m)
     return function (o)
         if o.key~=m.lhs then return end
+        if not o.rule() then return end
         if type(m.rhs)=='function' then
             return m.rhs(o,m)
         end
@@ -22,6 +23,7 @@ function M.init_map(conf,mconf)
     m.lhs=conf[2]
     m.rhs=conf[3]
     m.conf=conf
+    m.rule=function () return true end
     m.get_map=M.wrapp_get_map(m)
     m.check=M.wrapp_check(m)
     return m
