@@ -2,6 +2,27 @@ local config=require'ultimate-autopair.config'
 local debug=require'ultimate-autopair.debug'
 local default=require'ultimate-autopair.default'
 local M={}
+function M.extend_with_pair_opt(pair)
+    vim.tbl_extend('error',pair,{fly=true,dosuround=true,newline=true,space=true,fastwarp=true})
+end
+function M._list()
+    local core=require'ultimate-autopair.core'
+    vim.ui.select(core.mem,{format_item=function (item)
+        if item.pair then
+            return item.pair
+        end
+        if item.map then
+            return vim.inspect(item.map)
+        end
+    end},function (_,idx)
+            vim.cmd.vnew()
+            local buf=vim.api.nvim_create_buf(false,true)
+            vim.api.nvim_buf_set_option(buf,'bufhidden','wipe')
+            local win=vim.api.nvim_get_current_win()
+            vim.api.nvim_win_set_buf(win,buf)
+            vim.api.nvim_buf_set_lines(buf,0,0,false,vim.split(vim.inspect(core.mem[idx]),'\n'))
+        end)
+end
 function M._old_config_detector(conf)
     if conf.config_type~='default' then return end
     local function c(s,n)
@@ -54,23 +75,5 @@ function M.setup(conf)
 end
 function M.init()
     debug.wrapp_smart_debugger(config.init,config.conf)()
-end
-function M._list()
-    local core=require'ultimate-autopair.core'
-    vim.ui.select(core.mem,{format_item=function (item)
-        if item.pair then
-            return item.pair
-        end
-        if item.map then
-            return vim.inspect(item.map)
-        end
-    end},function (_,idx)
-            vim.cmd.vnew()
-            local buf=vim.api.nvim_create_buf(false,true)
-            vim.api.nvim_buf_set_option(buf,'bufhidden','wipe')
-            local win=vim.api.nvim_get_current_win()
-            vim.api.nvim_win_set_buf(win,buf)
-            vim.api.nvim_buf_set_lines(buf,0,0,false,vim.split(vim.inspect(core.mem[idx]),'\n'))
-        end)
 end
 return M

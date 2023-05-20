@@ -92,10 +92,10 @@ function M.test_newline()
     run(':set cindent\rI{foobi\r','{\n\tfoo\n}')
     run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
     --run(':set cindent\rI{fooa\r','{\n\t\n}',{cr={autoclose=true}})
+    --run(':setf lua\rIdoA\r','do\n\nend',{cr={autoclose=true},{'do','end',imap=false,ft='lua'}})
     --run(':setf c\r:set cindent\rI{\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};') --TBD
-    --run(':setf lua\rIdoA\r','do\n\nend',{cr={multichar={enable=true,lua={{'then','end'},{'do','end'}}}}}) --TBD
     run(':setf markdown\rI```\r','```\n\n```')
 end
 function M.test_backspace()
@@ -187,6 +187,7 @@ function M.test_complex()
     run('Iprint("hello world!','print("hello world!")')
     run(f..'Iprint "hello world!F ;s(','print("hello world!")')
     run(f..F..'Ifo\ro [bar]\r"baz"\rggI(','()fo\no [bar]\n"baz"\n',{fastwarp={nocursormove=false}})
+    run(f..F..'Ifoo [bar]"baz"ggI(','()foo [bar]"baz"',{fastwarp={nocursormove=true}})
 end
 function M.test_options()
     local b=':map! <C-h> <bs>\r'
