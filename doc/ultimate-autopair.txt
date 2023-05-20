@@ -373,5 +373,8 @@ is commented out is a possible future feature.
 ------------------------------------------------------------------------------
 ultimate-autopair-notes                              *ultimate-autopair-notes*
 The root directory `notes` contains notes and scribbles about the plugin.
+------------------------------------------------------------------------------
+ultimate-autopair-experimental                *ultimate-autopair-experimental*
+`experimental` directory contains experimental features.
 
 vim:ft=help:
