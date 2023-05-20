@@ -76,7 +76,6 @@ function M.init(conf,mconf,ext)
         o.wline=o.line
         o.wcol=o.coll
         if not default.key_check_cmd(o,m.map,m.map,m.cmap,m.cmap) then return end
-        check(o)
         if not m.rule() then return end
         return check(o)
     end
