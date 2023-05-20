@@ -25,14 +25,13 @@ function M._list()
 end
 function M._old_config_detector(conf)
     if conf.config_type~='default' then return end
-    local function c(s,n)
+    local function c(s)
         vim.notify('ultimate-autopair:\nOld configuration detected:\n'..s)
-        return n
     end
     local cns=' option is no longer supported'
     local inb=', it uses a diffrent system now'
 
-    if conf.extensions and vim.tbl_islist(conf.extensions) then return c('extensions option needs updating (aborting)',true) end
+    if conf.extensions and vim.tbl_islist(conf.extensions) then return c('extensions option needs updating (aborting)') end
     if conf._no_old_warn then return end
     if conf.mapopt then return c('mapopt'..cns) end
     if conf.fastend then return c('fastend'..cns) end
@@ -64,13 +63,14 @@ function M._old_config_detector(conf)
             return c(v..'.fallback'..cns)
         end
     end
+    return true
 end
 function M.add_conf(conf)
-    M._old_config_detector(conf)
+    if not M._old_config_detector(conf) then return true end
     config.add_conf(conf)
 end
 function M.setup(conf)
-    M.add_conf(vim.tbl_deep_extend('force',default.conf,conf or {}))
+    if M.add_conf(vim.tbl_deep_extend('force',default.conf,conf or {})) then return end
     M.init()
 end
 function M.init()
