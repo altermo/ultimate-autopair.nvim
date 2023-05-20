@@ -20,13 +20,14 @@ If you want to use multiple configuration then use `ua.add_conf` to add a
 configuration to the system and `ua.init` to initialize the plugin.
 ------------------------------------------------------------------------------
 ultimate-autopair-config-type-cond        *ultimate-autopair-config-type-cond*
-The cond configuration type takes a list of configurations and a key `check`.
-The configuration type makes all configurations in the list go through
-the `check`. (NOTE: this only effects the configurations' `check`)
+The cond configuration type takes a list of configurations and the keys `check`
+and or `rule`. The configuration type makes all configurations in the list go through
+the `check` and `rule` functions.
 Example: >lua
  ua.add_conf({
      config_type='cond',
-     check=function (o) return vim.o.filetype=='lua' end,
+     rule=function () return vim.o.filetype=='lua' end,
+     check=function (o) return not vim.startswith(o.line,'@') end,
      {config_type='map',{'i','(','()'}},
  })
 <

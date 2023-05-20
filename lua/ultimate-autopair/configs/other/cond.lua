@@ -8,7 +8,7 @@ function M.init_conf(conf,mem)
         if v.check then
             local check=v.check
             v.check=function (...)
-                if (conf.check or conf.rule)(...) then
+                if conf.check(...) then
                     return check(...)
                 end
             end
