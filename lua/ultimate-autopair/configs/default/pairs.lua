@@ -66,6 +66,7 @@ function M.init(q)
     m.key=m.pair:sub(-1)
     m._type={[default.type_pair]={'pair','start'}}
     m.fn=M.fn
+    m.ext_checks={}
 
     m.check=M.check_wrapper(m)
     m.newline=M.newline_wrapper(m)
@@ -83,6 +84,6 @@ function M.init(q)
         if not m.rule() then return end
         return check(o)
     end
-    return m
+    return m,unpack(m.ext_checks)
 end
 return M

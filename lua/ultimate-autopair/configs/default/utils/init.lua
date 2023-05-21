@@ -1,9 +1,8 @@
 local M={}
-local open_pair=require'ultimate-autopair.configs.default.utils.open_pair'
 M.type_pair={}
 M.get_type_opt=function(obj,conf)
     if type(conf)~='table' then conf={conf} end
-    local tbl=vim.tbl_get(obj._type or {},M.type_pair)
+    local tbl=(obj._type or {})[M.type_pair]
     if tbl then
         for _,i in ipairs(conf) do
             if vim.tbl_contains(tbl,i) then return true end
@@ -101,7 +100,7 @@ function M.filter_pair_type(conf)
     end,core.mem)
 end
 function M.get_pair(pair)
-    --TODO: depreciated
+    --TODO: depreciated mostly
     for _,v in ipairs(M.filter_pair_type()) do
         if v.pair==pair then return v end
     end

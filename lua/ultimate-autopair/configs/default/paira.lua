@@ -77,6 +77,7 @@ function M.init(q)
     m.get_map=default.get_map_wrapper({q.cmap and 'c',q.map and 'i'},ms.key,me.key)
     m.sort=default.sort
     m.p=q.p or 10
+    m.ext_checks={}
     m.pair=q.start_pair
     m.start_pair=ms.pair
     m.end_pair=me.pair
@@ -98,6 +99,6 @@ function M.init(q)
             return ms.check(o)
         end
     end
-    return m
+    return m,unpack(m.ext_checks)
 end
 return M
