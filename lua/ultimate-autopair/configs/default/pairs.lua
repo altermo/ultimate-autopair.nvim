@@ -44,10 +44,8 @@ M.backspace_wrapper=function (m)
                 end
             end
         end
-        if o.incmd then return end
-        if 1~=o.col then
-            return
-        end
+        if not conf.indent_ignore and 1~=o.col then return end
+        if conf.indent_ignore and  vim.trim(o.line:sub(1,o.col))~='' then return end
         local line1=utils.getline(o.linenr-1)
         local line2=utils.getline(o.linenr+1)
         if not line1 or not line2 then

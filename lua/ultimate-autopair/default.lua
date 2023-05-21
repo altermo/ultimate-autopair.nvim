@@ -11,6 +11,7 @@ M.conf={
         cmap='<bs>',
         overjumps=true,
         space=true,
+        indent_ignore=false,
     },
     cr={
         enable=true,

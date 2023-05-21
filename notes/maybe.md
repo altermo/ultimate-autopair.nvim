@@ -144,3 +144,5 @@
 + [ ] markdown code block spesific behavior (like lisp code block)
 + [ ] markdown code block filter
 + [ ] undo suround/autopair/...
++ [ ] somehow configure default config internal pairs, like adding `fly=true` to `'` opt
++ [ ] newline backspace for ambiguous pairs

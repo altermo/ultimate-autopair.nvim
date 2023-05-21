@@ -83,6 +83,8 @@ The default configuration contains a loot of options, here are those:
          --(|foo) > bs > |foo
          space=true,
          --( |foo ) > bs > (|foo)
+         indent_ignore=false,
+         --(\n\t|\n) > bs > (|)
      },
      cr={-- *ultimate-autopair-map-newline-config*
          enable=true,
