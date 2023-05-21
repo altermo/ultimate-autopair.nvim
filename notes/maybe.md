@@ -60,13 +60,13 @@
 + [x] reverse fastwarp (+multiline)
 + [x] smart fastwarp end `(|)foo,bar,` > `<A-$>` > `(foo,bar|),`
 + [x] make maps use filtering pair extensions
++ [x] fastwarp no move cursor `(|)foo,bar > (|foo),bar`
++ [x] fastwarp cursor no move
 + [ ] one char fastwarp `(foo|),, > <A-L> > (foo,|),`
 + [ ] hop style fastwarp
 + [ ] `[{"| > <A-k> > [{""}]`
 + [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
-+ [ ] fastwarp no move cursor `(|)foo,bar > (|foo),bar`
 + [ ] fastwarp treesitter nodes
-+ [ ] fastwarp cursor no move
 # filters
 + [x] only filter inside or outside of string
 + [x] user defined rules
@@ -78,6 +78,7 @@
 + [x] make block filtering for inside/outside otpional `b|#a` > `b|\1` and `b#a|` > `b#a|` and not `\1#a|`
 + [x] filter escaped characters
 + [ ] user defined multiline as one (maybe using treesitter)
++ [ ] whole file detection (requires implementation of tsnode blocks)
 # inserting
 + [x] dont add pair `'` if previous is alphanumeric
 + [x] dont complete when previous is \ in string? `\| > [ > \[`
@@ -95,9 +96,9 @@
 + [x] auto goto end `[te|xt] > ] > [text]|`
 + [x] auto skip multicharacter pair `/*|*/ > * > /**/|`
 + [x] open multicharacter-pair detector
++ [x] add the parens att end when logical `|{a} > [ > [|{a}]`
 + [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
 + [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|`
-+ [ ] add the parens att end when logical `|{a} > [ > [|{a}]`
 + [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
 # pairs
 + [x] multicharacter pair `py ''' and md ````
@@ -110,7 +111,7 @@
 + [ ] with random text inbetween `if TEXT ... end`?
 + [ ] possibility of html tag suport
 + [ ] triple pair
-+ [ ] newline autoclose only pairs
++ [ ] newline autoclose only pairs (`if| > CR > if\n|\nend`)
 # other
 + [x] command-line integration
 + [x] make everything optional
@@ -123,26 +124,24 @@
 + [x] testing
 + [x] utf8 suport
 + [x] better string filtering `'foo'|` > `'\1'|` and not `\1|`
++ [x] set up matrix room
++ [x] filter ' in lisp not instring
++ [x] make config-types cond work with oinit and rule (while making standard)
 + [ ] terminal mode integration
 + [ ] implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)
 + [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
-+ [ ] set up matrix room
 + [ ] reimplement features.md as tests
 + [ ] buffer specific keybindings
 + [ ] make extensions use other extensions
-+ [ ] filter ' in lisp not instring
-+ [ ] test other modules
-+ [ ] make cond configuration type filter insted of replacing m.check()
++ [ ] test non pair parts (core,other config types...)
 + [ ] make ambiguous pairs have the ability to use fastwarp
 + [ ] make everything work with multichar pair (fastwarp,space...)
-+ [ ] make wrappers for pair.fn functions (so that the same thing does not need to be written 20 times)
-+ [ ] fastwarp nocursormove spesific map
-+ [ ] fastwarp nocursormove map to actually move
++ [ ] make wrappers for pair.fn functions (to avoid `pair.fn.is_start(pair.pair,pair.pair,...)`)
++ [ ] fastwarp nocursormove spesific map (without requiring creating new config)
 + [ ] abecodes/tabout.nvim like map
 + [ ] make use of treesitter list of nodes at pos to filter instead of one node at pos
-+ [ ] make config-types cond work with oinit and rule (while making standard)
 + [ ] markdown code block spesific behavior (like lisp code block)
 + [ ] markdown code block filter
-+ [ ] undo suround/autopair/...
-+ [ ] somehow configure default config internal pairs, like adding `fly=true` to `'` opt
++ [ ] undo map for suround/autopair/...
++ [ ] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
 + [ ] newline backspace for ambiguous pairs
