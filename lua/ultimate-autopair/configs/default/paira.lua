@@ -55,6 +55,8 @@ function M.init(q)
     local me={}
     ms.pair=q.start_pair
     me.pair=q.end_pair
+    me.ext_checks={}
+    ms.ext_checks={}
     ms.extensions=q.extensions
     me.extensions=q.extensions
     ms.conf=q.conf
@@ -99,6 +101,6 @@ function M.init(q)
             return ms.check(o)
         end
     end
-    return m,unpack(m.ext_checks)
+    return m,unpack(m.ext_checks),unpack(me.ext_checks),unpack(ms.ext_checks)
 end
 return M
