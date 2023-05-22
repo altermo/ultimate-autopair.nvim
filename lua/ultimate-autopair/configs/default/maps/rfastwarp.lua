@@ -113,6 +113,7 @@ function M.init(conf,mconf,ext)
         if not m.rule() then return end
         return check(o)
     end
+    m.doc='autopairs reverse fastwarp key map'
     if conf.do_nothing_if_fail then
         local n={}
         n.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
@@ -122,6 +123,8 @@ function M.init(conf,mconf,ext)
                 return ''
             end
         end
+        n.map=m.map
+        n.doc='autopairs reverse fastwarp do nothing'
         return m,n
     end
     return m

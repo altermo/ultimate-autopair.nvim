@@ -30,6 +30,7 @@ function M.init(q)
     m.rule=function () return true end
     default.init_extensions(m,m.extensions)
     m.p=q.p or 10
+    m.doc=('autopairs treesitter node virtual pair: %s'):format(m.node)
     return m
 end
 return M

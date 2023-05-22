@@ -79,6 +79,7 @@ function M.init(conf,mconf,ext)
         if not m.rule() then return end
         return check(o)
     end
+    m.doc='autopairs space key map'
     return m
 end
 return M

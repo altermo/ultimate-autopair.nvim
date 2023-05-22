@@ -49,6 +49,7 @@ function M.init(conf,mconf,ext)
     end
     default.init_extensions(m,m.extensions)
     m.check=nil
+    m.doc='autopairs autocmd for space2'
     return m
 end
 return M

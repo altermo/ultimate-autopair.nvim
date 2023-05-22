@@ -67,14 +67,22 @@ function M.I.sort()
 end
 function M.init()
     M.I.sort()
+    local imapped={}
+    local cmapped={}
     for _,v in ipairs(M.mem) do
         if v.oinit then v.oinit() end
         if v.get_map then
             for _,key in ipairs(v.get_map('i') or {}) do
-                vim.keymap.set('i',key,M.run(key),{noremap=true,expr=true})
+                if not imapped[key] then
+                    vim.keymap.set('i',key,M.run(key),{noremap=true,expr=true,desc=v.doc})
+                    imapped[key]=true
+                end
             end
             for _,key in ipairs(v.get_map('c') or {}) do
-                vim.keymap.set('c',key,M.run(key),{noremap=true,expr=true})
+                if not cmapped[key] then
+                    vim.keymap.set('c',key,M.run(key),{noremap=true,expr=true,desc=v.doc})
+                    cmapped[key]=true
+                end
             end
         end
     end

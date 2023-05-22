@@ -101,6 +101,9 @@ function M.init(q)
             return ms.check(o)
         end
     end
+    ms.doc=('autopairs ambigous start pair: %s'):format(m.pair)
+    me.doc=('autopairs ambigous end pair: %s'):format(m.pair)
+    m. doc=('autopairs ambigous pair: %s'):format(m.pair)
     return m,unpack(m.ext_checks),unpack(me.ext_checks),unpack(ms.ext_checks)
 end
 return M

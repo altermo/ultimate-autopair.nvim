@@ -9,10 +9,10 @@ function M._list()
     local core=require'ultimate-autopair.core'
     vim.ui.select(core.mem,{format_item=function (item)
         if item.pair then
-            return item.pair
+            return item.pair..' '..(item.doc or '')
         end
         if item.map then
-            return vim.inspect(item.map)
+            return vim.inspect(item.map)..' '..(item.doc or '')
         end
     end},function (_,idx)
             vim.cmd.vnew()

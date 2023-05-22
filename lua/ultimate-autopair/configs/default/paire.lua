@@ -64,6 +64,7 @@ function M.init(q)
         if not m.rule() then return end
         return check(o)
     end
+    m.doc=('autopairs end pair: %s,%s'):format(m.start_pair,m.end_pair)
     return m,unpack(m.ext_checks)
 end
 return M
