@@ -16,7 +16,8 @@ use{
 }
 ```
 ## Configuration
-For configuration options, read the doc (`:help ultimate-autopair-config`).
+To add a pair, use `ua.setup{{'<<','>>'},}`.
+For more configuration options, read the doc (`:help ultimate-autopair-config`).
 ### Other plugins to supercharge auto-pairing
 These are some other plugins which are related to pairing which have features that ultimate-autopair does not.
 + [endwise](https://github.com/RRethy/nvim-treesitter-endwise) wisely add `end` in lua, ruby, etc...
