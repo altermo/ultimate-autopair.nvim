@@ -15,7 +15,7 @@ M.fn={
         if rs+1<conf.linenr then start=0 end
         local re,end_,_=node:end_()
         if re+1>conf.linenr then end_=#line end
-        return node:type()==m.node and nnode==node,start+1,end_+1
+        return node:type()==m.node and nnode==node,start+1,end_
     end
 }
 function M.init(q)

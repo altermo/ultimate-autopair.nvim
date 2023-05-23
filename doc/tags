@@ -12,6 +12,7 @@ ultimate-autopair-config-type-default	ultimate-autopair.txt	/*ultimate-autopair-
 ultimate-autopair-config-type-map	ultimate-autopair.txt	/*ultimate-autopair-config-type-map*
 ultimate-autopair-config-type-raw	ultimate-autopair.txt	/*ultimate-autopair-config-type-raw*
 ultimate-autopair-debug	ultimate-autopair.txt	/*ultimate-autopair-debug*
+ultimate-autopair-experimental	ultimate-autopair.txt	/*ultimate-autopair-experimental*
 ultimate-autopair-ext-alpha	ultimate-autopair.txt	/*ultimate-autopair-ext-alpha*
 ultimate-autopair-ext-cmdtype	ultimate-autopair.txt	/*ultimate-autopair-ext-cmdtype*
 ultimate-autopair-ext-escape	ultimate-autopair.txt	/*ultimate-autopair-ext-escape*
@@ -33,6 +34,7 @@ ultimate-autopair-map-space-config	ultimate-autopair.txt	/*ultimate-autopair-map
 ultimate-autopair-map-space2-config	ultimate-autopair.txt	/*ultimate-autopair-map-space2-config*
 ultimate-autopair-notes	ultimate-autopair.txt	/*ultimate-autopair-notes*
 ultimate-autopair-objects	ultimate-autopair.txt	/*ultimate-autopair-objects*
+ultimate-autopair-objects-core-obj	ultimate-autopair.txt	/*ultimate-autopair-objects-core-obj*
 ultimate-autopair-other	ultimate-autopair.txt	/*ultimate-autopair-other*
 ultimate-autopair-pairs-default-config	ultimate-autopair.txt	/*ultimate-autopair-pairs-default-config*
 ultimate-autopair-rfastwarp	ultimate-autopair.txt	/*ultimate-autopair-rfastwarp*
