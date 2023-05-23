@@ -37,7 +37,7 @@ function M.newline_wrapper(m)
     end
 end
 function M.backspace_wrapper(m)
-    return function (o)
+    return function (o,_,conf)
         if o.line:sub(o.col-#m.pair-#m.pair,o.col-1-#m.pair)==m.pair and m.pair==o.line:sub(o.col-#m.pair,o.col-1) then
             if not open_pair.open_pair_ambigous(m.pair,o.line,o.col) then
                 return utils.delete(#m.pair+#m.pair)
@@ -48,6 +48,15 @@ function M.backspace_wrapper(m)
                 return utils.delete(#m.pair,#m.pair)
             end
         end
+        if not conf.overjumps then return end
+        if not m.conf.overjumps then return end
+        local opab=open_pair.open_pair_ambigous_before(m.pair,o.line,o.col)
+        local opaa=open_pair.open_pair_ambigous_after(m.pair,o.line,o.col)
+        if not (opaa and opab) then return end
+        if o.line:sub(o.col-#m.pair,o.col-1)~=m.pair then return end
+        local matching_pair_pos=m.fn.find_end_pair(m.pair,m.pair,o.line,o.col)
+        if not matching_pair_pos then return end
+        return utils.delete(#m.start_pair)..utils.addafter(matching_pair_pos-o.col-1,utils.delete(0,#m.end_pair),0)
     end
 end
 function M.init(q)

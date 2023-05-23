@@ -122,6 +122,7 @@ function M.test_backspace()
     run(d..'I(foobi','foo)',{bs={overjumps=false}})
     run(d..'I( ','( )',{bs={space=false}})
     run('(','',{bs={map={'<bs>','<C-h>'}}})
+    run(d..'I"foo0a','foo',{{'"','"',overjumps=true}})
 end
 function M.test_other_map()
     local d=':imap <C-e> <A-e>\r'

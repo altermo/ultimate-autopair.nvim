@@ -19,7 +19,6 @@
 + [x] make map use filtering pair extensions
 + [ ] auto add pairs `({| > CR > ({\n|\n})`
 + [ ] splitjoin plugin integration
-+ [ ] multicharacter pair not in string/other node
 # BS
 + [x] suport
 + [x] remove the pair `[|] > BS > |`
@@ -37,11 +36,11 @@
 + [x] remove the pair when pair with space `[ ]| > BS > |`
 + [x] remove the unbalanced space in the pair `[  | ] > BS > [ | ]`
 + [x] make map use filtering pair extensions
++ [x] remove the ambiguous pair when filled `"|abc" > BS > |abc` (not when alpha before)
 + [ ] remove the pair when multicharacter pair filled `if bool then |code end > BS > |code`
 + [ ] remove the unbalanced space in the pair `[ |  ] > BS > [ | ]`
 + [ ] remove the unbalanced space in the pair `[  |] > BS > [|]`
 + [ ] remove the space when remove pair `[| text ] > BS > |text`
-+ [ ] remove the ambiguous pair when filled `"|abc" > BS > |abc` (not when alpha before)
 # other mappings
 + [x] space `[|] > SP > [ | ]`
 + [x] smart space `[|text] > SP > [ |text ]`
@@ -146,3 +145,4 @@
 + [ ] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
 + [ ] newline backspace for ambiguous pairs
 + [ ] make keymap desc stack doc
++ [ ] multicharacter pair not in string/other node
