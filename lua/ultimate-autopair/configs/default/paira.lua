@@ -49,7 +49,7 @@ function M.backspace_wrapper(m)
             end
         end
         if not conf.overjumps then return end
-        if not m.conf.overjumps then return end
+        if not m.conf.bs_overjumps then return end
         local opab=open_pair.open_pair_ambigous_before(m.pair,o.line,o.col)
         local opaa=open_pair.open_pair_ambigous_after(m.pair,o.line,o.col)
         if not (opaa and opab) then return end
