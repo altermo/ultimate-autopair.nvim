@@ -55,8 +55,7 @@ function M.create_traceback_buf(traceback,win,mes)
             end
         end
         local file=v.source:gsub('^@','')
-        if false then
-        elseif v.what=='C' then
+        if v.what=='C' then
             line='C:'..v.name
         elseif v.what=='main' then
             line='file:'..file
@@ -109,10 +108,10 @@ function M.handel_smart_debug(o)
         vim.schedule_wrap(M.handel_err)(o,traceback,mes)
     end
 end
-M.wrapp_smart_debugger=function (f,info)
+function M.wrapp_smart_debugger(f,info)
     return M.create_debug(f,M.handel_smart_debug,info)
 end
-M.create_debug=function (f,handeler_wrapper,info)
+function M.create_debug(f,handeler_wrapper,info)
     ---@diagnostic disable-next-line: undefined-field
     if _G.DONTDEBUG then
         return function (...) return f(...) end

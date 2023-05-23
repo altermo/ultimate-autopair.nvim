@@ -34,8 +34,7 @@ function M.run(key)
         local fo=M.I.var_create_wrapper(key)
         for _,v in ipairs(M.mem) do
             local ret
-            if not v.check then
-            else
+            if v.check then
                 ret=debug.wrapp_smart_debugger(v.check,v)(fo())
             end
             if ret then

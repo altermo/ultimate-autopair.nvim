@@ -4,7 +4,7 @@ local info=vim.health.info or vim.health.report_info
 local error=vim.health.error or vim.health.report_error
 local start=vim.health.start or vim.health.report_start
 local M={}
-M.check=function ()
+function M.check()
     local save={}
     save.__FILE=_G.__FILE
     save.DONTRUNTEST=_G.DONTRUNTEST

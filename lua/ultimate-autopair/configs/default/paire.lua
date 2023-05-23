@@ -9,7 +9,7 @@ M.fn={
     is_start=function () return false end,
     is_end=function () return true end,
 }
-M.check_wrapper=function (m)
+function M.check_wrapper(m)
     return function (o)
         if o.line:sub(o.col,o.col-1+#m.pair)~=m.pair then return end
         local count2=open_pair.count_start_pair(m.start_pair,m.end_pair,o.line,o.col,#o.line)
@@ -18,7 +18,7 @@ M.check_wrapper=function (m)
         return '\x1d'..utils.movel(#m.pair)
     end
 end
-M.newline_wrapper=function (m)
+function M.newline_wrapper(m)
     return function(o)
         if m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
             if open_pair.check_start_pair(m.start_pair,m.end_pair,o.line,o.col) then
@@ -27,7 +27,7 @@ M.newline_wrapper=function (m)
         end
     end
 end
-M.backspace_wrapper=function (m)
+function M.backspace_wrapper(m)
     return function (o)
         if o.line:sub(o.col-#m.start_pair-#m.end_pair,o.col-1-#m.end_pair)==m.start_pair and m.end_pair==o.line:sub(o.col-#m.end_pair,o.col-1) then
             if not open_pair.open_end_pair_after(m.start_pair,m.end_pair,o.line,o.col) then

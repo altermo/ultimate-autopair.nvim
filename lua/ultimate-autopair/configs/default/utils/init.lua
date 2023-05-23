@@ -1,6 +1,6 @@
 local M={}
 M.type_pair={}
-M.get_type_opt=function(obj,conf)
+function M.get_type_opt(obj,conf)
     if type(conf)~='table' then conf={conf} end
     local tbl=(obj._type or {})[M.type_pair]
     if tbl then
@@ -9,12 +9,12 @@ M.get_type_opt=function(obj,conf)
         end
     end
 end
-M.sort=function (a,b)
+function M.sort(a,b)
     if M.get_type_opt(a,'pair') and M.get_type_opt(b,'pair') then
         return #a.pair>#b.pair
     end
 end
-M.get_map_wrapper=function (modes,...)
+function M.get_map_wrapper(modes,...)
     local args={...}
     return function(mode)
         if vim.tbl_contains(modes,mode) then
@@ -22,7 +22,7 @@ M.get_map_wrapper=function (modes,...)
         end
     end
 end
-M.get_mode_map_wrapper=function(key,keyc)
+function M.get_mode_map_wrapper(key,keyc)
     return function(mode)
         if mode=='i' and key then
             return type(key)=='string' and {key} or key
@@ -32,10 +32,10 @@ M.get_mode_map_wrapper=function(key,keyc)
         end
     end
 end
-M.load_extension=function (extension_name)
+function M.load_extension(extension_name)
     return require('ultimate-autopair.extensions.'..extension_name)
 end
-M.prepare_extensions=function (extensions)
+function M.prepare_extensions(extensions)
     local exts={}
     for k,v in pairs(extensions or {}) do
         table.insert(exts,{k=k,v=v})

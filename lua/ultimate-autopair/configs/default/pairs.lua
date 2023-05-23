@@ -9,14 +9,14 @@ M.fn={
     is_start=function () return true end,
     is_end=function () return false end,
 }
-M.check_wrapper=function (m)
+function M.check_wrapper(m)
     return function (o)
         if o.line:sub(o.col-#m.pair+1,o.col-1)~=m.pair:sub(0,-2) then return end
         if open_pair.open_end_pair_after(m.start_pair,m.end_pair,o.line,o.col) then return end
         return '\x1d'..m.start_pair:sub(-1)..m.end_pair..utils.moveh(#m.end_pair)
     end
 end
-M.newline_wrapper=function (m)
+function M.newline_wrapper(m)
     return function(o,_,conf)
         if m.pair==o.line:sub(o.col-#m.pair,o.col-1) and m.conf.newline then
             local matching_pair_pos=m.fn.find_end_pair(m.start_pair,m.end_pair,o.line,o.col)
@@ -29,7 +29,7 @@ M.newline_wrapper=function (m)
         end
     end
 end
-M.backspace_wrapper=function (m)
+function M.backspace_wrapper(m)
     return function (o,_,conf)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
             if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
