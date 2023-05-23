@@ -349,7 +349,36 @@ Example (`*` is cursor): >
 <
 ==============================================================================
 OBJECTS                                            *ultimate-autopair-objects*
-Todo: write documentation
+Todo: write more documentation
+------------------------------------------------------------------------------
+ultimate-autopair-objects-core-obj        *ultimate-autopair-objects-core-obj*
+The core object...
+The `p` key {required}
+The `p` sets the priority of the object. If the object is higher priority then
+it will be ran and initialized earlier then an object of the lower priority.
+The `rule(o)` {required}
+(Technically optional, thou may break non core systems)
+The `rule()` should run inside `check(o)` or other such functions. If you
+don't know what it does, set it to `local rule=function() return true end` and
+check it with `if not rule() then return end`, this is highly recommended. The
+`rule()` should define rules for particular objects, like specific filetype.
+The `check(o)` {otional}
+The `check(o)` runs whenever any mapped keys are pressed. It returns either
+nil: don't do anything and continue, or a string: run as keys.
+The `oinit(flag)` {otional}
+The `oinit(flag)` gets call on the cores initialization and destruction and
+can do whatever. Like defining autocmds and other hooks. If flag is true then
+it is called on destruction and should delete the hooks it defined.
+The `get_map(mode)` {optional}
+The `get_map(mode)` returns a list of mappings for a particular mode. This
+only defines what mapping should be overwritten, and nothing more. Do not
+do anything fancy in this function, only test for mode and return mappings.
+The `sort(a,b)` {optional}
+The `sort(a,b)` is used when two objects have the same priority. When it returns
+nil: test other sort or do nothing, if it returns true: a is bigger, if it
+returns false: a is smaller.
+The `desc` {optional}
+Describes the object.
 ==============================================================================
 API                                                    *ultimate-autopair-api*
 Todo: write documentation
