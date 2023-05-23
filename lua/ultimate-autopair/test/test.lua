@@ -182,6 +182,7 @@ function M.test_extensions()
     run(':cab s setline\r:call s(1,["foo\r','foo')
     run('I\\)I(','()\\)')
     run([[I'""(a)]],[['""()']])
+    run('I(")"','(")")')
     ----TODO: test treesitter based extensions
 end
 function M.test_complex()

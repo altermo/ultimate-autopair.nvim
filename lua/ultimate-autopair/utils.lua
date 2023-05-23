@@ -41,7 +41,7 @@ function M.addafter(num,text,textlen)
 end
 function M.gettsnode(linenr,col)
     if vim.treesitter.get_node then
-        return vim.treesitter.get_node({bufnr=0,pos={linenr,col}},{})
+        return vim.treesitter.get_node({bufnr=0,pos={linenr,col}})
     else
         return vim.treesitter.get_node_at_pos(0,linenr,col,{})
     end

@@ -44,13 +44,12 @@ function M.backspace_wrapper(m)
                 end
             end
         end
+        if o.incmd then return end
         if not conf.indent_ignore and 1~=o.col then return end
         if conf.indent_ignore and  vim.trim(o.line:sub(1,o.col))~='' then return end
         local line1=utils.getline(o.linenr-1)
         local line2=utils.getline(o.linenr+1)
-        if not line1 or not line2 then
-            return
-        end
+        if not line1 or not line2 then return end
         if line1:sub(-1)==m.start_pair and vim.trim(line2):sub(1,1)==m.end_pair then
             return '<end>'..utils.delete(0,line2:find('[^%s]'))..'<up><end>'..utils.delete(0,o.col)
         end

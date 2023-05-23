@@ -2,7 +2,7 @@ local M={}
 M.I={}
 function M.I.sbuf()
     local buf=vim.api.nvim_create_buf(false,true)
-    vim.api.nvim_buf_set_option(buf,'bufhidden','wipe')
+    vim.api.nvim_set_option_value('bufhidden','wipe',{buf=buf})
     return buf
 end
 function M.parse_error_line(line)
@@ -69,7 +69,7 @@ function M.create_traceback_buf(traceback,win,mes)
         table.insert(places,enter)
         vim.api.nvim_buf_set_lines(buf,-1,-1,false,{line})
     end
-    vim.api.nvim_buf_set_option(buf,'modifiable',false)
+    vim.api.nvim_set_option_value('modifiable',false,{buf=buf})
     vim.keymap.set('n','<cr>',function() places[vim.fn.line('.')](vim.cmd.vsplit) end,{buffer=buf})
 end
 function M.get_traceback_data(level)
@@ -93,7 +93,7 @@ function M.create_debug_buf(o,win)
     vim.api.nvim_win_set_buf(win,buf)
     vim.api.nvim_buf_set_name(buf,'info')
     vim.api.nvim_buf_set_lines(buf,0,0,false,vim.split(vim.inspect(o),'\n'))
-    vim.api.nvim_buf_set_option(buf,'modifiable',false)
+    vim.api.nvim_set_option_value('modifiable',false,{buf=buf})
 end
 function M.handel_smart_debug(o)
     return function (mes)
