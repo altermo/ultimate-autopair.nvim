@@ -145,3 +145,4 @@
 + [ ] undo map for suround/autopair/...
 + [ ] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
 + [ ] newline backspace for ambiguous pairs
++ [ ] make keymap desc stack doc
