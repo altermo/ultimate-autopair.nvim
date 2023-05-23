@@ -122,7 +122,7 @@ function M.test_backspace()
     run(d..'I(foobi','foo)',{bs={overjumps=false}})
     run(d..'I( ','( )',{bs={space=false}})
     run('(','',{bs={map={'<bs>','<C-h>'}}})
-    run(d..'I"foo0a','foo',{{'"','"',overjumps=true}})
+    run(d..'I"foo0a','foo',{{'"','"',bs_overjumps=true}})
 end
 function M.test_other_map()
     local d=':imap <C-e> <A-e>\r'
@@ -184,6 +184,7 @@ function M.test_extensions()
     run('I\\)I(','()\\)')
     run([[I'""(a)]],[['""()']])
     run('I(")"','(")")')
+    run('I"I(:setf lua\rla(','()("")',{extensions={suround=false,sub={p=200,ext={filetype={ft={'lua'},p=2},suround={p=1}}}}})
     ----TODO: test treesitter based extensions
 end
 function M.test_complex()

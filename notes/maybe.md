@@ -96,9 +96,9 @@
 + [x] auto skip multicharacter pair `/*|*/ > * > /**/|`
 + [x] open multicharacter-pair detector
 + [x] add the parens att end when logical `|{a} > [ > [|{a}]`
++ [x] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
 + [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
-+ [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|`
-+ [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
++ [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|` (requires multiline open_pair detection)
 # pairs
 + [x] multicharacter pair `py ''' and md ````
 + [x] comment pairs `/*|*/`
@@ -126,12 +126,11 @@
 + [x] set up matrix room
 + [x] filter ' in lisp not instring
 + [x] make config-types cond work with oinit and rule (while making standard)
++ [x] make extensions use other extensions
 + [ ] terminal mode integration
 + [ ] implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)
 + [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
-+ [ ] reimplement features.md as tests
 + [ ] buffer specific keybindings
-+ [ ] make extensions use other extensions
 + [ ] test non pair parts (core,other config types...)
 + [ ] make ambiguous pairs have the ability to use fastwarp
 + [ ] make everything work with multichar pair (fastwarp,space...)
@@ -146,3 +145,4 @@
 + [ ] newline backspace for ambiguous pairs
 + [ ] make keymap desc stack doc
 + [ ] multicharacter pair not in string/other node
++ [ ] extension in extension where they can return instead of continue

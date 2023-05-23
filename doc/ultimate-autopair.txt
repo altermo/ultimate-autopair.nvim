@@ -300,6 +300,22 @@ Example (`*` is cursor): >
  | a'b*'c | 'b*'    |
 <
 ------------------------------------------------------------------------------
+ultimate-autopair-ext-sub                          *ultimate-autopair-ext-sub*
+Extension config: {ext}
+Runs extensions `ext` inside a sandbox, not effecting anything unless the
+`check(o)` returns something.
+Example of config >lua
+ {extensions={
+     sub={
+         p=200,
+         ext={
+            filetype={p=2,ft={'lua'}},
+            fly={p=1,other_char={',',' '}},
+         }
+     }
+ }}
+<
+------------------------------------------------------------------------------
 ultimate-autopair-ext-suround                  *ultimate-autopair-ext-suround*
 Extension pair config: {dosuround,suround}
 If next is pair with options `suround` and the inserting pair has the option

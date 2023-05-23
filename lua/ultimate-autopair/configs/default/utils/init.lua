@@ -38,7 +38,9 @@ end
 function M.prepare_extensions(extensions)
     local exts={}
     for k,v in pairs(extensions or {}) do
-        table.insert(exts,{k=k,v=v})
+        if v then
+            table.insert(exts,{k=k,v=v})
+        end
     end
     table.sort(exts,function (a,b) return a.v.p<b.v.p end)
     local ret={}
