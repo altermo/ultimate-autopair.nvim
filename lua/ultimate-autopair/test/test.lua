@@ -197,6 +197,7 @@ function M.test_extensions()
     run([[I'""(a)]],[['""()']])
     run('I(")"','(")")')
     run('I"I(:setf lua\rla(','()("")',{extensions={suround=false,sub={p=200,ext={filetype={ft={'lua'},p=2},suround={p=1}}}}})
+    run('I?a?I(','(??&&)',{{'??','&&',suround=true}})
     ----TODO: test treesitter based extensions
 end
 function M.test_complex()
@@ -207,6 +208,7 @@ function M.test_complex()
     run(f..'Iprint "hello world!F ;s(','print("hello world!")')
     run(f..F..'Ifo\ro [bar]\r"baz"\rggI(','()fo\no [bar]\n"baz"\n',{fastwarp={nocursormove=false}})
     run(f..F..'Ifoo [bar]"baz"ggI(','()foo [bar]"baz"',{fastwarp={nocursormove=true}})
+    --run(f..F..'Ifo\ro [bar]\r"baz"\rggI\'','\'\'fo\no [bar]\n"baz"\n',{fastwarp={nocursormove=false}})
 end
 function M.test_options()
     local b=':map! <C-h> <bs>\r'
