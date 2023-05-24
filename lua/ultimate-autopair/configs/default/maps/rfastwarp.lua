@@ -25,7 +25,7 @@ function M.ext.rfastwarp_next_to_start_pair(o,ind,p,m)
     local pair=default.get_pair(o.line:sub(ind,ind))
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if not default.get_type_opt(pair,'start') then return end
+    if not pair.fn.is_start(pair,o.line,ind) then return end
     if o.col-1==ind then return not m.iconf.hopout and 1 end
     return utils.delete(0,1)..utils.moveh(o.col-ind-1)..p..utils.moveh()
 end
@@ -45,6 +45,8 @@ function M.rfastwarp_start(o,p,m)
     return utils.delete(0,1)..'<up><end>'..p..utils.moveh(),0,1
 end
 function M.rfastwarp(o,m)
+    o.line=m.iconf.filter and o.line or o.wline
+    o.col=m.iconf.filter and o.col or o.wcol
     local move
     local nocursormove=m.iconf.nocursormove
     if nocursormove then
@@ -108,7 +110,7 @@ function M.init(conf,mconf,ext)
     local check=m.check
     m.check=function (o)
         o.wline=o.line
-        o.wcol=o.coll
+        o.wcol=o.col
         if not default.key_check_cmd(o,m.map,m.map,m.cmap,m.cmap) then return end
         if not m.rule() then return end
         return check(o)

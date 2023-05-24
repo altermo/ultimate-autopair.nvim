@@ -29,7 +29,7 @@ function M.init(conf,mconf,ext)
     local check=m.check
     m.check=function (o)
         o.wline=o.line
-        o.wcol=o.coll
+        o.wcol=o.col
         if not default.key_check_cmd(o,m.map,m.map) then return end
         if not m.rule() then return end
         return check(o)

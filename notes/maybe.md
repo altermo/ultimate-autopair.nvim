@@ -127,12 +127,12 @@
 + [x] filter ' in lisp not instring
 + [x] make config-types cond work with oinit and rule (while making standard)
 + [x] make extensions use other extensions
++ [x] make ambiguous pairs have the ability to use fastwarp
 + [ ] terminal mode integration
 + [ ] implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)
 + [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
 + [ ] buffer specific keybindings
 + [ ] test non pair parts (core,other config types...)
-+ [ ] make ambiguous pairs have the ability to use fastwarp
 + [ ] make everything work with multichar pair (fastwarp,space...)
 + [ ] make wrappers for pair.fn functions (to avoid `pair.fn.is_start(pair.pair,pair.pair,...)`)
 + [ ] fastwarp nocursormove spesific map (without requiring creating new config)
