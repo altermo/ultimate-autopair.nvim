@@ -124,6 +124,8 @@ The default configuration contains a loot of options, here are those:
          do_nothing_if_fail=true,
          --add a module so that if fastwarp fails
          --then an `e` will not be inserted
+         filter=false,
+         --whether to use filters (like inside string)
      },
      extensions={-- *ultimate-autopair-extensions-default-config*
          cmdtype={types={'/','?','@'},p=90},

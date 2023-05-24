@@ -25,7 +25,7 @@ function M.ext.fastwarp_next_to_end_pair(o,ind,p,m)
     local pair=default.get_pair(o.line:sub(ind,ind))
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if not default.get_type_opt(pair,'end') then return end
+    if not pair.fn.is_end(pair,o.line,ind) then return end
     if o.col+1==ind then return not m.iconf.hopout and 1 end
     return utils.delete(0,1)..utils.movel(ind-o.col-1)..p..utils.moveh()
 end

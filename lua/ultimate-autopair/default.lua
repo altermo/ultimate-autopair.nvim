@@ -41,6 +41,7 @@ M.conf={
         multiline=true,
         nocursormove=true,
         do_nothing_if_fail=true,
+        filter=false,
     },
     extensions={
         cmdtype={types={'/','?','@'},p=90},
