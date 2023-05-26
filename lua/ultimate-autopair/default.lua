@@ -12,22 +12,26 @@ M.conf={
         overjumps=true,
         space=true,
         indent_ignore=false,
+        conf={},
     },
     cr={
         enable=true,
         map='<cr>', --string or table
         autoclose=false,
         --addsemi={}, --list of filetypes
+        conf={},
     },
     space={
         enable=true,
         map=' ',
         cmap=' ',
         check_box_ft={'markdown','vimwiki'},
+        conf={},
     },
     space2={
         enable=false,
         match=[[\a]],
+        conf={},
     },
     fastwarp={
         enable=true,
@@ -42,6 +46,7 @@ M.conf={
         nocursormove=true,
         do_nothing_if_fail=true,
         filter=false,
+        conf={},
     },
     extensions={
         cmdtype={types={'/','?','@'},p=90},

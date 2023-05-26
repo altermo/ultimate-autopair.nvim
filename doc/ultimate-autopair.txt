@@ -85,6 +85,8 @@ The default configuration contains a loot of options, here are those:
          --( |foo ) > bs > (|foo)
          indent_ignore=false,
          --(\n\t|\n) > bs > (|)
+         conf={}
+         --contains extension config
      },
      cr={-- *ultimate-autopair-map-newline-config*
          enable=true,
@@ -92,6 +94,8 @@ The default configuration contains a loot of options, here are those:
          autoclose=false,
          --(| > cr > (\n|\n)
          --addsemi={}, --list of filetypes
+         conf={}
+         --contains extension config
      },
      space={-- *ultimate-autopair-map-space-config*
          enable=true,
@@ -99,11 +103,15 @@ The default configuration contains a loot of options, here are those:
          cmap=' ',
          check_box_ft={'markdown','vimwiki'},
          --+ [|] > space > + [ ]
+         conf={}
+         --contains extension config
      },
      space2={-- *ultimate-autopair-map-space2-config*
          enable=false,
          match=[[\a]],
          --what character activate
+         conf={}
+         --contains extension config
      },
      fastwarp={-- *ultimate-autopair-map-fastwarp-config*
          enable=true,
@@ -126,6 +134,8 @@ The default configuration contains a loot of options, here are those:
          --then an `e` will not be inserted
          filter=false,
          --whether to use filters (like inside string)
+         conf={}
+         --contains extension config
      },
      extensions={-- *ultimate-autopair-extensions-default-config*
          cmdtype={types={'/','?','@'},p=90},
