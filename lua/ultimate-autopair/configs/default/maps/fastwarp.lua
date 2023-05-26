@@ -44,6 +44,7 @@ function M.fastwarp_end(o,p,m,nocursormove)
     if not m.iconf.multiline then return end
     if nocursormove then return end
     if vim.fn.line('.')==vim.fn.line('$') or o.incmd then return end
+    if default.get_type_opt(default.get_pair(p),'ambigous') then return end
     return utils.delete(0,1)..'<down><home><C-v>'..p..utils.moveh(),0,1
 end
 function M.fastwarp(o,m)
