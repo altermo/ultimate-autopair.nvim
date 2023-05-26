@@ -5,11 +5,10 @@ local debug=require'ultimate-autopair.debug'
 M.mem={}
 M.I={}
 function M.I.activate_iabbrev(key)
-    if key:sub(1,4)=='<cr>' then
-        return '<C-]>'..key
-    end
     local match=vim.api.nvim_replace_termcodes(key,true,true,true)
-    if vim.regex('[^[:keyword:][:cntrl:]\x80]'):match_str(match:sub(1,1)) then
+    if match:sub(1,1)=='\r' then
+        return '<C-]>'..key
+    elseif vim.regex('[^[:keyword:][:cntrl:]\x80]'):match_str(match:sub(1,1)) then
         return '<C-]>'..key
     end
     return key

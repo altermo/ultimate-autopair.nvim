@@ -69,6 +69,7 @@ function M.init_pair(conf,mem,mconf,ext)
             cmap=mconf.cmap~=false and default.select_opt(v.cmap,mconf.pair_cmap,true),
             map=mconf.map~=false and default.select_opt(v.imap,mconf.pair_map,true),
             type=v.type,
+            mconf=mconf,
         })) do
             table.insert(mem,i)
         end

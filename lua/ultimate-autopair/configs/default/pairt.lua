@@ -25,6 +25,7 @@ function M.init(q)
     m.conf=q.conf
     m._type={[default.type_pair]={'pairo'}}
     m.fn=M.fn
+    m.mconf=q.mconf
     m.node=q.start_pair
 
     m.check=function () end

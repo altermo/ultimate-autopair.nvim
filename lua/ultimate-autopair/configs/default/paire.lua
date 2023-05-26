@@ -46,6 +46,7 @@ function M.init(q)
     m.key=m.pair:sub(1,1)
     m._type={[default.type_pair]={'pair','end'}}
     m.fn=M.fn
+    m.mconf=q.mconf
     m.ext_checks={}
 
     m.check=M.check_wrapper(m)

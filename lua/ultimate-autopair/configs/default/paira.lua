@@ -76,6 +76,8 @@ function M.init(q)
     me._type={[default.type_pair]={'pair','ambigous-end'}}
     ms.fn=M.fn
     me.fn=M.fn
+    me.mconf=q.mconf
+    ms.mconf=q.mconf
 
     ms.rule=function () return true end
     me.rule=function () return true end
@@ -96,6 +98,7 @@ function M.init(q)
     m.conf=q.conf
     m._type={[default.type_pair]={'pair','ambigous'}}
     m.fn=M.fn
+    m.mconf=q.mconf
     m.backspace=M.backspace_wrapper(m)
     m.newline=M.newline_wrapper(m)
     m.check=function (o)
