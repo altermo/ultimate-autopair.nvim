@@ -1,5 +1,6 @@
 local M={}
 M.jobs={}
+M.NUMBER_OF_JOBS=100
 function M.info(msg)
     vim.notify(msg,vim.log.levels.INFO)
 end
@@ -59,6 +60,7 @@ local function run(keys,match,conf)
         ':edit '..outtmp,
         keys..':wq!',
     },tmp)
+    vim.wait(10000,function() return #M.jobs<M.count+M.NUMBER_OF_JOBS end)
     table.insert(M.jobs,vim.fn.jobstart({'nvim','-u','NONE','-i','NONE','-s',tmp},{
         on_exit=function()
             vim.fn.delete(tmp)
