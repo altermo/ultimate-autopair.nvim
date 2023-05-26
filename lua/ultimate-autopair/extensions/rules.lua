@@ -65,10 +65,11 @@ function M.init(rules,mem)
         end
     end
 end
-return default.wrapp_old_extension(function (o,keyconf)
-    if not keyconf.rules then return end
-    if M.check_rules(keyconf.rules,o) then
-        return
+return default.wrapp_old_extension(function (o,keyconf,conf)
+    if keyconf.rules and not M.check_rules(keyconf.rules,o) then
+        return 2
     end
-    return 2
+    if conf.rules and not M.check_rules(conf.rules,o) then
+        return 2
+    end
 end,M)

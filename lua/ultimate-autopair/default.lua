@@ -54,7 +54,7 @@ M.conf={
         escape={filter=true,p=70},
         string={p=60},
         --treenode={inside={'comment'},p=50},
-        rules={p=40},
+        rules={p=40,rules=nil},
         alpha={p=30},
         suround={p=20},
         fly={other_char={' '},nofilter=false,p=10},
