@@ -5,7 +5,9 @@ function M.get_type_opt(obj,conf)
     local tbl=(obj._type or {})[M.type_pair]
     if tbl then
         for _,i in ipairs(conf) do
-            if vim.tbl_contains(tbl,i) then return true end
+            for _,v in ipairs(tbl) do
+                if v==i then return true end
+            end
         end
     end
 end
@@ -95,11 +97,7 @@ function M.filter_pair_type(conf)
     if type(conf)=='string' then conf={conf} end
     if type(conf)=='nil' then conf={'pair'} end
     local core=require'ultimate-autopair.core'
-    return vim.tbl_filter(function (v)
-        for _,i in ipairs(conf) do
-            if M.get_type_opt(v,i) then return true end
-        end
-    end,core.mem)
+    return vim.tbl_filter(function (v) return M.get_type_opt(v,conf) end,core.mem)
 end
 function M.get_pair(pair)
     --TODO: depreciated mostly

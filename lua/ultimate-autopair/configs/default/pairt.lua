@@ -8,14 +8,15 @@ M.fn={
         if line:sub(col,col)=='\1' then return end
         if not pcall(vim.treesitter.get_parser) then return end
         local s,node=pcall(utils.gettsnode,conf.linenr-1,col-1)
-        local ns,nnode=pcall(utils.gettsnode,conf.linenr-1,col-2)
         if not s or not node then return end
-        if not ns or not nnode then return end
+        if node:type()~=m.node then return end
         local rs,start,_=node:start()
         if rs+1<conf.linenr then start=0 end
         local re,end_,_=node:end_()
         if re+1>conf.linenr then end_=#line end
-        return node:type()==m.node and nnode==node,start+1,end_
+        local ns,nnode=pcall(utils.gettsnode,conf.linenr-1,col-2)
+        if not ns or not nnode then return end
+        return nnode==node,start+1,end_
     end
 }
 function M.init(q)

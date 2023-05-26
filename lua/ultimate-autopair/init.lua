@@ -32,7 +32,7 @@ function M._old_config_detector(conf)
     local inb=', it uses a diffrent system now'
 
     if conf.extensions and vim.tbl_islist(conf.extensions) then return c('extensions option needs updating (aborting)') end
-    if conf._no_old_warn then return end
+    if conf._no_old_warn then return true end
     if conf.mapopt then return c('mapopt'..cns) end
     if conf.fastend then return c('fastend'..cns) end
     if conf.bs then

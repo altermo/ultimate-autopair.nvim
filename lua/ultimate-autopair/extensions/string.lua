@@ -11,14 +11,22 @@ end
 function M.filter_out_string(line,col,linenr,notree)
     local newline=''
     local string_pair={}
+    local inpair={}
+    local function in_pair(tbl,i)
+        if not inpair[tbl][i] then
+            inpair[tbl][i]=tbl.fn.in_pair(tbl,line,i,{notree=notree,linenr=linenr}) or false
+        end
+        return inpair[tbl][i]
+    end
     for _,i in ipairs(default.filter_pair_type({'pairo','pair'})) do
         if i.conf.string then
             table.insert(string_pair,i)
+            inpair[i]={}
         end
     end
     for i=1,#line do
         for _,v in ipairs(string_pair) do
-            if v.fn.in_pair(v,line,i,{notree=notree,linenr=linenr}) and v.fn.in_pair(v,line,i+1,{notree=notree,linenr=linenr}) then
+            if in_pair(v,i) and in_pair(v,i+1) then
                 newline=newline..'\1'
                 goto continue
             end
