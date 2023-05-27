@@ -24,7 +24,7 @@ function M._list()
         end)
 end
 function M._old_config_detector(conf)
-    if conf.config_type~='default' then return end
+    if conf.config_type~='default' then return true end
     local function c(s)
         vim.notify('ultimate-autopair:\nOld configuration detected:\n'..s)
     end

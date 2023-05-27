@@ -145,3 +145,4 @@
 + [ ] extension in extension where they can return instead of continue
 + [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
 + [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
++ [ ] make rules use rule and not just check
