@@ -1,6 +1,6 @@
 local M={}
 M.jobs={}
-M.NUMBER_OF_JOBS=100
+M.NUMBER_OF_JOBS=10
 function M.info(msg)
     vim.notify(msg,vim.log.levels.INFO)
 end
