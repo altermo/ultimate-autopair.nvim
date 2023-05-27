@@ -63,7 +63,7 @@ M.conf={
         {'[',']',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},
         {'(',')',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},
         {'{','}',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},
-        {'"','"',suround=true,rules={{'when',{'filetype','vim'},{'not',{'regex','^%s*$'}}}},string=true,fastwarp=true},
+        {'"','"',suround=true,string=true,fastwarp=true},
         {"'","'",suround=true,rules={{'when',{'option','lisp'},{'instring'}}},alpha=true,nft={'tex'},string=true,fastwarp=true},
         {'`','`',nft={'tex'},fastwarp=true},
         {'``',"''",ft={'tex'}},
