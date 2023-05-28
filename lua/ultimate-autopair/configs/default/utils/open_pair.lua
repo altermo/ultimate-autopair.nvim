@@ -50,7 +50,7 @@ function M.count_end_pair(start_pair,end_pair,Iline,cols,cole,Icount,ret_pos)
     end
     return (not ret_pos) and count
 end
-function M.count_ambigious_pair(pair,Iline,cols,cole,Icount,reverse)
+function M.count_ambigious_pair(pair,Iline,cols,cole,Icount)
     local i=cols
     local count=Icount or 0
     local index
@@ -58,7 +58,7 @@ function M.count_ambigious_pair(pair,Iline,cols,cole,Icount,reverse)
         local line=Iline:sub(i,cole)
         if M.I.match(pair,line) then
             count=count+1
-            if not reverse or not index then index=i end
+            if not index then index=i end
             i=i+#pair
         else
             i=i+1
