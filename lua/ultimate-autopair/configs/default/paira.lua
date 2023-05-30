@@ -48,15 +48,25 @@ function M.backspace_wrapper(m)
                 return utils.delete(#m.pair,#m.pair)
             end
         end
-        if not conf.overjumps then return end
-        if not m.conf.bs_overjumps then return end
-        local opab=open_pair.open_pair_ambigous_before(m.pair,o.line,o.col)
-        local opaa=open_pair.open_pair_ambigous_after(m.pair,o.line,o.col)
-        if not (opaa and opab) then return end
-        if o.line:sub(o.col-#m.pair,o.col-1)~=m.pair then return end
-        local matching_pair_pos=m.fn.find_end_pair(m.pair,m.pair,o.line,o.col)
-        if not matching_pair_pos then return end
-        return utils.delete(#m.start_pair)..utils.addafter(matching_pair_pos-o.col-1,utils.delete(0,#m.end_pair),0)
+        if conf.overjumps and m.conf.bs_overjumps then
+            local opab=open_pair.open_pair_ambigous_before(m.pair,o.line,o.col)
+            local opaa=open_pair.open_pair_ambigous_after(m.pair,o.line,o.col)
+            if opaa and opab and o.line:sub(o.col-#m.pair,o.col-1)==m.pair then
+                local matching_pair_pos=m.fn.find_end_pair(m.pair,m.pair,o.line,o.col)
+                if matching_pair_pos then
+                    return utils.delete(#m.start_pair)..utils.addafter(matching_pair_pos-o.col-1,utils.delete(0,#m.end_pair),0)
+                end
+            end
+        end
+        if o.incmd then return end
+        if not conf.indent_ignore and 1~=o.col then return end
+        if conf.indent_ignore and vim.trim(o.line:sub(1,o.col))~='' then return end
+        local line1=utils.getline(o.linenr-1)
+        local line2=utils.getline(o.linenr+1)
+        if not line1 or not line2 then return end
+        if line1:sub(-#m.start_pair)==m.start_pair and vim.trim(line2):sub(1,#m.end_pair)==m.end_pair then
+            return '<end>'..utils.delete(0,line2:find('[^%s]'))..'<up><end>'..utils.delete(0,o.col)
+        end
     end
 end
 function M.init(q)

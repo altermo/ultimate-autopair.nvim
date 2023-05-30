@@ -125,6 +125,7 @@ function M.test_backspace()
     run(d..'I( ','( )',{bs={space=false}})
     run('(','',{bs={map={'<bs>','<C-h>'}}})
     run(d..'I"foo0a','foo',{{'"','"',bs_overjumps=true}})
+    run(d..'I<a>\r','<><>',{{'<>','<>',newline=true}})
 end
 function M.test_fastwarp()
     local d=':imap <C-e> <A-e>\r'

@@ -43,12 +43,12 @@
 + [x] remove the unbalanced space in the pair `[  | ] > BS > [ | ]`
 + [x] make map use filtering pair extensions
 + [x] remove the ambiguous pair when filled `"|abc" > BS > |abc`
++ [x] newline backspace for ambiguous pairs
 + [ ] don't remove the ambiguous pair when filled if alpha `a"|bc" > BS > a|bc"`
 + [ ] remove the pair when multicharacter pair filled `if bool then |code end > BS > |code`
 + [ ] remove the unbalanced space in the pair `[ |  ] > BS > [ | ]`
 + [ ] remove the unbalanced space in the pair `[  |] > BS > [|]`
 + [ ] remove the space when remove pair `[| text ] > BS > |text`
-+ [ ] newline backspace for ambiguous pairs
 ## space
 + [x] space `[|] > SP > [ | ]`
 + [x] smart space `[|text] > SP > [ |text ]`
