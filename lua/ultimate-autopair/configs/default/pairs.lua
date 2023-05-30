@@ -66,7 +66,6 @@ function M.init(q)
     m._type={[default.type_pair]={'pair','start'}}
     m.fn=M.fn
     m.mconf=q.mconf
-    m.ext_checks={}
 
     m.check=M.check_wrapper(m)
     m.newline=M.newline_wrapper(m)
@@ -85,6 +84,6 @@ function M.init(q)
         return check(o)
     end
     m.doc=('autopairs start pair: %s,%s'):format(m.start_pair,m.end_pair)
-    return m,unpack(m.ext_checks)
+    return m
 end
 return M

@@ -73,6 +73,36 @@
 + [ ] fastwarp treesitter nodes
 + [ ] fastwarp nocursormove spesific map (without requiring creating new config)
 + [ ] fastwarp ambiguous pair multiline
+## extensions
++ [x] only filter inside or outside of string
++ [x] user defined rules
++ [x] filetype
++ [x] multiline mode with the indentation determening the block size
++ [x] disable for surtent cmdlinetypes
++ [x] treesitter integration for special blocks (aka strings)
++ [x] only filter inside or outside of comments and other user defined treesitter nodes
++ [x] make block filtering for inside/outside otpional `b|#a` > `b|\1` and `b#a|` > `b#a|` and not `\1#a|`
++ [x] filter escaped characters
++ [x] dont add pair `'` if previous is alphanumeric
++ [x] dont complete when previous is \ in string? `\| > [ > \[`
++ [x] `f > ' > f''`
++ [x] dont add pair if next is alphanumeric
++ [x] add the parens att end when logical `|"a" > [ > ["a"|]`
++ [x] dont add pair `'` in lisp
++ [x] quick hop end `[{|}] > ] > [{}]|`
++ [x] auto goto end if only space or newline `[text|  ] > ] > [text  ]|`
++ [x] auto goto end `[te|xt] > ] > [text]|`
++ [x] add the parens att end when logical `|{a} > [ > [|{a}]`
++ [x] filter ' in lisp not instring
++ [ ] markdown code block spesific behavior (like lisp code block)
++ [ ] markdown code block filter
++ [ ] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
++ [ ] user defined multiline as one (maybe using treesitter)
++ [ ] whole file detection (requires implementation of tsnode blocks)
++ [ ] extension in extension where they can return instead of continue
++ [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
++ [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
++ [ ] make rules use rule and not just check
 # other
 + [x] `'a|b' > ' > 'a'|'b'`
 + [x] `[[|] > ] > [[]|] and not [[]|`
@@ -116,33 +146,4 @@
 + [ ] newline autoclose only pairs (`if| > CR > if\n|\nend`)
 + [ ] full utf8 suport
 + [ ] make file maybe use a priority and requirement system
-## extensions
-+ [x] only filter inside or outside of string
-+ [x] user defined rules
-+ [x] filetype
-+ [x] multiline mode with the indentation determening the block size
-+ [x] disable for surtent cmdlinetypes
-+ [x] treesitter integration for special blocks (aka strings)
-+ [x] only filter inside or outside of comments and other user defined treesitter nodes
-+ [x] make block filtering for inside/outside otpional `b|#a` > `b|\1` and `b#a|` > `b#a|` and not `\1#a|`
-+ [x] filter escaped characters
-+ [x] dont add pair `'` if previous is alphanumeric
-+ [x] dont complete when previous is \ in string? `\| > [ > \[`
-+ [x] `f > ' > f''`
-+ [x] dont add pair if next is alphanumeric
-+ [x] add the parens att end when logical `|"a" > [ > ["a"|]`
-+ [x] dont add pair `'` in lisp
-+ [x] quick hop end `[{|}] > ] > [{}]|`
-+ [x] auto goto end if only space or newline `[text|  ] > ] > [text  ]|`
-+ [x] auto goto end `[te|xt] > ] > [text]|`
-+ [x] add the parens att end when logical `|{a} > [ > [|{a}]`
-+ [x] filter ' in lisp not instring
-+ [ ] markdown code block spesific behavior (like lisp code block)
-+ [ ] markdown code block filter
-+ [ ] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
-+ [ ] user defined multiline as one (maybe using treesitter)
-+ [ ] whole file detection (requires implementation of tsnode blocks)
-+ [ ] extension in extension where they can return instead of continue
-+ [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
-+ [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
-+ [ ] make rules use rule and not just check
++ [ ] everything check mconf.p

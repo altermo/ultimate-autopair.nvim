@@ -21,6 +21,7 @@ function M.init_multi(q)
 end
 function M.init_conf(conf,mem)
     local ext=default.prepare_extensions(conf.extensions)
+    M.init_ext(ext,mem,conf)
     M.init_pair(conf,mem,conf,ext)
     M.init_pair(conf.internal_pairs,mem,conf,ext)
     M.init_bs(conf.bs,mem,conf,ext)
@@ -29,6 +30,13 @@ function M.init_conf(conf,mem)
     M.init_space2(conf.space2,mem,conf,ext)
     M.init_fastwarp(conf.fastwarp,mem,conf,ext)
     M.init_rfastwarp(conf.fastwarp,mem,conf,ext)
+end
+function M.init_ext(ext,mem,mconf)
+    for _,v in ipairs(ext) do
+        if v.m.init_map then
+            table.insert(mem,v.m.init_map(v,mconf))
+        end
+    end
 end
 function M.clear()
 end

@@ -64,8 +64,6 @@ function M.init(q)
     local me={}
     ms.pair=q.start_pair
     me.pair=q.end_pair
-    me.ext_checks={}
-    ms.ext_checks={}
     ms.extensions=q.extensions
     me.extensions=q.extensions
     ms.conf=q.conf
@@ -90,7 +88,6 @@ function M.init(q)
     m.get_map=default.get_map_wrapper({q.cmap and 'c',q.map and 'i'},ms.key,me.key)
     m.sort=default.sort
     m.p=q.p or 10
-    m.ext_checks={}
     m.pair=q.start_pair
     m.start_pair=ms.pair
     m.end_pair=me.pair
@@ -116,6 +113,6 @@ function M.init(q)
     ms.doc=('autopairs ambigous start pair: %s'):format(m.pair)
     me.doc=('autopairs ambigous end pair: %s'):format(m.pair)
     m. doc=('autopairs ambigous pair: %s'):format(m.pair)
-    return m,unpack(m.ext_checks),unpack(me.ext_checks),unpack(ms.ext_checks)
+    return m
 end
 return M
