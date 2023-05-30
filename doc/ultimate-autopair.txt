@@ -217,7 +217,7 @@ Example (`*` is cursor): >
 <
 ------------------------------------------------------------------------------
 ultimate-autopair-space2                            *ultimate-autopair-space2*
-Auto balances spaces when input char is `match`.
+Auto balances spaces when input char matches `match`.
 For configuration options see: |ultimate-autopair-map-space2-config|
 Example (`*` is cursor): >
  | before | inp | after    |

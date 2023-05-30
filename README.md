@@ -1,6 +1,6 @@
-**:exclamation: Ultimate-autopair is _alpha_ software. Some things may change, and some things may break. Documentation may sometimes be inaccurate.**
+**:exclamation: Ultimate-autopair is currently in the _alpha_ stage of development. Some aspects may change or break, and documentation might occasionally be inaccurate.**
 # Ultimate-autopair.nvim 0.5.1
-Ultimate-autopair plugin aims to have **all possible features** that an auto-pairing plugin needs.\
+Ultimate-autopair plugin aims to provide all the features that an auto-pairing plugin needs.\
 Requires neovim 0.8 (recomended 0.9)
 ## Installation
 Packer:
@@ -16,10 +16,10 @@ use{
 }
 ```
 ## Configuration
-To add a pair, use `ua.setup{{'<<','>>'},}`.
-For more configuration options, read the doc (`:help ultimate-autopair-config`).
+To add a pair, use the syntax `ua.setup{{'<<','>>'},}`.
+For more configuration options, refer to the documentation (`:help ultimate-autopair-config`).
 ### Other plugins to supercharge auto-pairing
-These are some other plugins which are related to pairing which have features that ultimate-autopair does not.
+These are some other plugins which are related to pairing which have features that ultimate-autopair does not have.
 + [endwise](https://github.com/RRethy/nvim-treesitter-endwise) wisely add `end` in lua, ruby, etc...
 + [tabout](https://github.com/abecodes/tabout.nvim) tab out of parentheses
 + [surround](https://github.com/kylechui/nvim-surround) delete, change surrounding parentheses and much more...
