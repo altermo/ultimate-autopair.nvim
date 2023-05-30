@@ -21,7 +21,7 @@ function M.check(conf,o,m)
     end
     if not next_char_index then return end
     if m.fn.check_end_pair(m.start_pair,m.pair,line,col) then
-        M.save={line,col,next_char_index-col+1}
+        M.save={line,col,next_char_index-col+1,m.pair}
         return utils.movel(next_char_index-col+1)
     end
 end
@@ -30,7 +30,7 @@ function M.map_wrapper(conf)
         local line=conf.nofilter and o.wline or o.line
         local col=conf.nofilter and o.wcol or o.col
         if M.save[1]~=line or M.save[2]~=(col-M.save[3]) then return end
-        return utils.moveh(M.save[3])
+        return utils.moveh(M.save[3])..M.save[4]
     end
 end
 function M.init_map(ext,mconf)
