@@ -57,7 +57,7 @@ M.conf={
         rules={p=40,rules=nil},
         alpha={p=30},
         suround={p=20},
-        fly={other_char={' '},nofilter=false,p=10},
+        fly={other_char={' '},nofilter=false,p=10,undomapconf={},undomap=nil,undocmap=nil},
     },
     internal_pairs={
         {'[',']',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},

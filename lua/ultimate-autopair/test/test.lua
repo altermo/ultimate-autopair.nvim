@@ -202,7 +202,7 @@ function M.test_extensions()
     run('I(")"','(")")')
     run('I"I(:setf lua\rla(','()("")',{extensions={suround=false,sub={p=200,ext={filetype={ft={'lua'},p=2},suround={p=1}}}}})
     run('I?a?I(','(??&&)',{{'??','&&',suround=true}})
-    run('I({)foo','({foo})',{extensions={fly={map='<C-b>'}}})
+    run('I({)foo','({foo})',{extensions={fly={undomap='<C-b>'}}})
     ----TODO: test treesitter based extensions
 end
 function M.test_complex()

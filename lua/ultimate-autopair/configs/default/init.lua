@@ -34,7 +34,8 @@ end
 function M.init_ext(ext,mem,mconf)
     for _,v in ipairs(ext) do
         if v.m.init_map then
-            table.insert(mem,v.m.init_map(v,mconf))
+            local Iextmap=v.m.init_map(v,mconf)
+            if Iextmap then table.insert(mem,Iextmap) end
         end
     end
 end

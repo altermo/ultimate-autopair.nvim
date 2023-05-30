@@ -142,11 +142,10 @@ The default configuration contains a loot of options, here are those:
          filetype={p=80,nft={'TelescopePrompt'}},
          escape={filter=true,p=70},
          string={p=60},
-         --treenode={inside={'comment'},p=50},
          rules={p=40,rules=nil},
          alpha={p=30},
          suround={p=20},
-         fly={other_char={' '},nofilter=false,p=10},
+         fly={other_char={' '},nofilter=false,p=10,undomapconf={},undomap=nil,undocmap=nil},
      },
      internal_pairs={-- *ultimate-autopair-pairs-default-config*
          {'[',']',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},
@@ -284,10 +283,13 @@ Checks if current filetype in `ft` if `ft` is set and if current filetype is
 not in `nft` if `nft` is set.
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-fly                          *ultimate-autopair-ext-fly*
-Extension config: {other_char,nofilter}
+Extension config: {other_char,nofilter,undomapconf,undomap,undocmap}
 Extension pair config: {fly}
 Hops over all pairs with the `fly` option and all characters in `other_char`.
 To enable hop outs of strings, set `nofilter` to not filter.
+Set `undomap` for both insert and command mode or set `undocmap` separately.
+Disable undo map in command mode by setting `undocmap` to false.
+To configure undo map, use `undomapconf`
 Example (`*` is cursor) (default config): >
  | before   | key | after    |
  |----------+-----+----------|

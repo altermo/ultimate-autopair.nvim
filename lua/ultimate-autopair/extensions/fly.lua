@@ -35,10 +35,10 @@ function M.map_wrapper(conf)
 end
 function M.init_map(ext,mconf)
     local conf=ext.conf or {}
-    local mapconf=conf.mapconf or {}
+    local mapconf=conf.undomapconf or {}
     local m={}
-    m.map=mconf.map~=false and conf.map
-    m.cmap=mconf.cmap~=false and ((conf.cmap~=false and conf.map) or conf.map)
+    m.map=mconf.map~=false and conf.undomap
+    m.cmap=mconf.cmap~=false and ((conf.undocmap~=false and conf.undomap) or conf.undocmap)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.check=M.map_wrapper(conf)
     m.p=mapconf.p or 10
@@ -51,13 +51,14 @@ function M.init_map(ext,mconf)
         if not m.rule() then return end
         return check(o)
     end
+    if not m.map and not m.cmap and not mapconf.force_map then return end
     return m
 end
 function M.call(m,ext)
     local check=m.check
     local conf=ext.conf
     if not m.conf.fly then return end
-    if not default .get_type_opt(m,{'end','ambigous-end'}) then return end
+    if not default.get_type_opt(m,{'end','ambigous-end'}) then return end
     m.check=function (o)
         local ret=M.check(conf,o,m)
         if ret then return ret end
