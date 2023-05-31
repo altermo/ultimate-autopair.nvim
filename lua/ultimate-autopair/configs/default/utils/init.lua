@@ -126,7 +126,16 @@ function M.start_pair(col,line,next)
         return #a.pair>#b.pair
     end)
     for _,i in ipairs(pairs) do
-        if i.fn.is_start() then return i end
+        if i.fn.is_start(i,line,next and col or col-#i.pair) then return i end
+    end
+end
+function M.end_pair(col,line,prev)
+    local pairs=M.get_pairs_by_pos(col,line,not prev)
+    table.sort(pairs,function (a,b)
+        return #a.pair>#b.pair
+    end)
+    for _,i in ipairs(pairs) do
+        if i.fn.is_end(i,line,prev and col-#i.pair or col) then return i end
     end
 end
 function M.get_pairs_by_pos(col,line,next)

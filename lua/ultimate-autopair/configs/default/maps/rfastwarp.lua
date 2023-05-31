@@ -4,20 +4,18 @@ local M={}
 M.ext={}
 function M.ext.rfastwarp_under_pair(o,ind,p)
     if o.col-1~=ind then return end
-    local pair=default.get_pair(o.line:sub(ind,ind))
+    local pair=default.end_pair(ind+1,o.line,true)
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if not pair.fn.is_end(pair,o.line,ind) then return end
     local matching_pair_pos=pair.fn.find_start_pair(pair.start_pair,pair.end_pair,o.line,ind-1)
     if not matching_pair_pos then return end
     return utils.delete(0,1)..utils.moveh(o.col-matching_pair_pos-1)..p..utils.moveh(),matching_pair_pos
 end
 function M.ext.rfastwarp_next_to_end_pair(o,ind,p)
     if o.col-1==ind then return end
-    local pair=default.get_pair(o.line:sub(ind,ind))
+    local pair=default.end_pair(ind+1,o.line,true)
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if not pair.fn.is_end(pair,o.line,ind) then return end
     return utils.delete(0,1)..utils.moveh(o.col-ind-1)..p..utils.moveh()
 end
 function M.ext.rfastwarp_next_to_start_pair(o,ind,p,m)
