@@ -20,10 +20,9 @@ function M.ext.fastwarp_next_to_start_pair(o,ind,p)
 end
 function M.ext.fastwarp_next_to_end_pair(o,ind,p,m)
     if o.col+1==ind and m.iconf.hopout then return end
-    local pair=default.get_pair(o.line:sub(ind,ind))
+    local pair=default.end_pair(ind,o.line)
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if not pair.fn.is_end(pair,o.line,ind) then return end
     if o.col+1==ind then return not m.iconf.hopout and 1 end
     return utils.delete(0,1)..utils.movel(ind-o.col-1)..p..utils.moveh()
 end
@@ -42,7 +41,6 @@ function M.fastwarp_end(o,p,m,nocursormove)
     if not m.iconf.multiline then return end
     if nocursormove then return end
     if vim.fn.line('.')==vim.fn.line('$') or o.incmd then return end
-    if default.get_type_opt(default.get_pair(p),'ambigous') then return end
     return utils.delete(0,1)..'<down><home><C-v>'..p..utils.moveh(),0,1
 end
 function M.fastwarp(o,m,nocursormove)
@@ -50,9 +48,8 @@ function M.fastwarp(o,m,nocursormove)
     o.col=m.iconf.filter and o.col or o.wcol
     local move
     if nocursormove then
-        local sp=o.line:sub(o.col-1,o.col-1)
-        local spair=default.get_pair(sp)
-        if spair and spair.fn.is_start(spair,o.line,o.col-1) then
+        local spair=default.start_pair(o.col,o.line)
+        if spair then
             move=spair.fn.find_end_pair(spair.start_pair,spair.end_pair,o.line,o.col)
             if move then
                 move=move-o.col-1
@@ -64,11 +61,10 @@ function M.fastwarp(o,m,nocursormove)
             nocursormove=false
         end
     end
-    local p=o.line:sub(o.col,o.col)
-    local pair=default.get_pair(p)
+    local pair=default.end_pair(o.col,o.line)
     if not pair then return end
+    local p=pair.pair
     if not pair.conf.fastwarp then return end
-    if not pair.fn.is_end(pair,o.line,o.col) then return end
     if pair.rule and not pair.rule() then return end
     for i=o.col+1,#o.line do
         local ind=i
@@ -83,7 +79,10 @@ function M.fastwarp(o,m,nocursormove)
             end
         end
     end
-    local ret,s=M.fastwarp_end(o,p,m,nocursormove)
+    local ret,s
+    if not default.get_type_opt(pair,'ambigous') then
+        ret,s=M.fastwarp_end(o,p,m,nocursormove)
+    end
     if ret and nocursormove then
         return utils.movel(move)..ret..utils.moveh(s)..utils.moveh(move)
     end

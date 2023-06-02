@@ -20,10 +20,9 @@ function M.ext.rfastwarp_next_to_end_pair(o,ind,p)
 end
 function M.ext.rfastwarp_next_to_start_pair(o,ind,p,m)
     if o.col-1==ind and m.iconf.hopout then return end
-    local pair=default.get_pair(o.line:sub(ind,ind))
+    local pair=default.start_pair(ind+1,o.line)
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if not pair.fn.is_start(pair,o.line,ind) then return end
     if o.col-1==ind then return not m.iconf.hopout and 1 end
     return utils.delete(0,1)..utils.moveh(o.col-ind-1)..p..utils.moveh()
 end
@@ -42,15 +41,13 @@ function M.rfastwarp_start(o,p,m)
     if vim.fn.line('.')==1 or o.incmd then return end
     return utils.delete(0,1)..'<up><end>'..p..utils.moveh(),0,1
 end
-function M.rfastwarp(o,m)
+function M.rfastwarp(o,m,nocursormove)
     o.line=m.iconf.filter and o.line or o.wline
     o.col=m.iconf.filter and o.col or o.wcol
     local move
-    local nocursormove=m.iconf.nocursormove
     if nocursormove then
-        local sp=o.line:sub(o.col-1,o.col-1)
-        local spair=default.get_pair(sp)
-        if spair and spair.fn.is_start(spair,o.line,o.col-1) then
+        local spair=default.start_pair(o.col,o.line)
+        if spair then
             move=spair.fn.find_end_pair(spair.start_pair,spair.end_pair,o.line,o.col)
             if move then
                 move=move-o.col-1
@@ -62,11 +59,10 @@ function M.rfastwarp(o,m)
             nocursormove=false
         end
     end
-    local p=o.line:sub(o.col,o.col)
-    local pair=default.get_pair(p)
+    local pair=default.end_pair(o.col,o.line)
     if not pair then return end
+    local p=pair.pair
     if not pair.conf.fastwarp then return end
-    if not pair.fn.is_end(pair,o.line,o.col) then return end
     if pair.rule and not pair.rule() then return end
     for i=o.col-1,1,-1 do
         local ind=i
@@ -83,10 +79,10 @@ function M.rfastwarp(o,m)
     end
     return M.rfastwarp_start(o,p,m)
 end
-function M.wrapp_rfastwarp(m)
+function M.wrapp_rfastwarp(m,nocursormove)
     return function (o)
         if default.key_check_cmd(o,m.map,m.map,m.cmap,m.cmap) then
-            return M.rfastwarp(o,m)
+            return M.rfastwarp(o,m,nocursormove or m.iconf.nocursormove)
         end
     end
 end
