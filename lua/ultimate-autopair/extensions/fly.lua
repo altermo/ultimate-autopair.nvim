@@ -55,10 +55,10 @@ function M.init_map(ext,mconf)
     return m
 end
 function M.call(m,ext)
-    local check=m.check
-    local conf=ext.conf
     if not m.conf.fly then return end
     if not default.get_type_opt(m,{'end','ambigous-end'}) then return end
+    local check=m.check
+    local conf=ext.conf
     m.check=function (o)
         local ret=M.check(conf,o,m)
         if ret then return ret end

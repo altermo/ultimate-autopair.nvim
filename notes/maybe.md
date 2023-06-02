@@ -148,3 +148,4 @@
 + [ ] full utf8 suport
 + [ ] make file maybe use a priority and requirement system
 + [ ] everything check mconf.p
++ [ ] make `default.start_pair` and `default.end_pair` use `pair.rule()`

@@ -3,28 +3,28 @@ local utils=require'ultimate-autopair.utils'
 local M={}
 M.ext={}
 function M.ext.fastwarp_over_pair(o,ind,p)
-    if o.col+1~=ind then return end
+    if o.col+#p~=ind then return end
     local pair=default.start_pair(ind,o.line,true)
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    local matching_pair_pos=pair.fn.find_end_pair(pair.start_pair,pair.end_pair,o.line,ind+1)
+    local matching_pair_pos=pair.fn.find_end_pair(pair.start_pair,pair.end_pair,o.line,ind+#pair.start_pair)
     if not matching_pair_pos then return end
-    return utils.delete(0,1)..utils.movel(matching_pair_pos-o.col-1)..p..utils.moveh(),matching_pair_pos
+    return utils.delete(0,#p)..utils.movel(matching_pair_pos-o.col-#p)..p..utils.moveh(#p),matching_pair_pos
 end
 function M.ext.fastwarp_next_to_start_pair(o,ind,p)
-    if o.col+1==ind then return end
+    if o.col+#p==ind then return end
     local pair=default.start_pair(ind,o.line,true)
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    return utils.delete(0,1)..utils.movel(ind-o.col-1)..p..utils.moveh()
+    return utils.delete(0,#p)..utils.movel(ind-o.col-#p)..p..utils.moveh(#p)
 end
 function M.ext.fastwarp_next_to_end_pair(o,ind,p,m)
-    if o.col+1==ind and m.iconf.hopout then return end
+    if o.col+#p==ind and m.iconf.hopout then return end
     local pair=default.end_pair(ind,o.line)
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    if o.col+1==ind then return not m.iconf.hopout and 1 end
-    return utils.delete(0,1)..utils.movel(ind-o.col-1)..p..utils.moveh()
+    if o.col+#p==ind then return not m.iconf.hopout and 1 end
+    return utils.delete(0,#p)..utils.movel(ind-o.col-#p)..p..utils.moveh(#p)
 end
 function M.ext.fastwarp_over_word(o,ind,p)
     local regex=vim.regex([[\w]])
@@ -32,16 +32,16 @@ function M.ext.fastwarp_over_word(o,ind,p)
     while regex:match_str(o.line:sub(ind,ind)) do
         ind=ind+1
     end
-    return utils.delete(0,1)..utils.movel(ind-o.col-1)..p..utils.moveh(),ind
+    return utils.delete(0,#p)..utils.movel(ind-o.col-#p)..p..utils.moveh(#p),ind
 end
 function M.fastwarp_end(o,p,m,nocursormove)
-    if o.col~=#o.line then
-        return utils.delete(0,1)..'<end>'..p..utils.moveh(),#o.line-o.col
+    if o.col~=#o.line+1-#p then
+        return utils.delete(0,#p)..'<end>'..p..utils.moveh(#p),#o.line+1-#p-o.col
     end
     if not m.iconf.multiline then return end
     if nocursormove then return end
     if vim.fn.line('.')==vim.fn.line('$') or o.incmd then return end
-    return utils.delete(0,1)..'<down><home><C-v>'..p..utils.moveh(),0,1
+    return utils.delete(0,#p)..'<down><home><C-v>'..p..utils.moveh(#p),0,1
 end
 function M.fastwarp(o,m,nocursormove)
     o.line=m.iconf.filter and o.line or o.wline
@@ -52,7 +52,7 @@ function M.fastwarp(o,m,nocursormove)
         if spair then
             move=spair.fn.find_end_pair(spair.start_pair,spair.end_pair,o.line,o.col)
             if move then
-                move=move-o.col-1
+                move=move-o.col-#spair.end_pair
                 o.col=o.col+move
             else
                 nocursormove=false
@@ -66,14 +66,14 @@ function M.fastwarp(o,m,nocursormove)
     local p=pair.pair
     if not pair.conf.fastwarp then return end
     if pair.rule and not pair.rule() then return end
-    for i=o.col+1,#o.line do
+    for i=o.col+#p,#o.line do
         local ind=i
         for _,v in pairs(M.ext) do
             local ret,s=v(o,ind,p,m)
             if ret==1 then return end
             if ret then
                 if nocursormove then
-                    return utils.movel(move)..ret..utils.moveh((s or ind)-o.col-1)..utils.moveh(move)
+                    return utils.movel(move)..ret..utils.moveh((s or ind)-o.col-#p)..utils.moveh(move)
                 end
                 return ret
             end
