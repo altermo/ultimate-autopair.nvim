@@ -5,25 +5,22 @@ function M.space(_)
     local col=utils.getcol()
     local line=utils.getline()
     local total=0
-    local char
     local pcol
     for i=col-1,1,-1 do
-        char=line:sub(i,i)
-        if char~=' ' then
+        if line:sub(i,i)~=' ' then
             pcol=i+1
             break
         end
         total=total+1
     end
-    local prev_pair=default.get_pair(char)
+    local prev_pair=default.start_pair(pcol,line)
     if not prev_pair or not prev_pair.conf.space then return end
     if prev_pair.rule and not prev_pair.rule() then return end
-    if not default.get_type_opt(prev_pair,'start') then return end
-    local matching_pair_pos=prev_pair.fn.find_end_pair(char,prev_pair.end_pair,line,pcol)
+    local matching_pair_pos=prev_pair.fn.find_end_pair(prev_pair.start_pair,prev_pair.end_pair,line,pcol)
     if not matching_pair_pos then return end
-    local ototal=#line:sub(col,matching_pair_pos-2):reverse():match(' *')
+    local ototal=#line:sub(col,matching_pair_pos-1-#prev_pair.end_pair):reverse():match(' *')
     if ototal>=total then return end
-    return utils.movel(matching_pair_pos-col-1)..(' '):rep(total-ototal)..utils.moveh(total-ototal+matching_pair_pos-col-1)
+    return utils.movel(matching_pair_pos-col-#prev_pair.end_pair)..(' '):rep(total-ototal)..utils.moveh(total-ototal+matching_pair_pos-col-#prev_pair.end_pair)
 end
 function M.space_wrapp(m)
     return function()

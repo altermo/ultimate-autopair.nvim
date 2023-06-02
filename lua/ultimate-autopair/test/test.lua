@@ -126,6 +126,9 @@ function M.test_backspace()
     run('(','',{bs={map={'<bs>','<C-h>'}}})
     run(d..'I"foo0a','foo',{{'"','"',bs_overjumps=true}})
     run(d..'I<a>\r','<><>',{{'<>','<>',newline=true}})
+    run(d..'I<a< ','<<>>',{{'<<','>>',space=true}})
+    run(d..'I<a< foobi','<<foo>>',{{'<<','>>',space=true}})
+    run(d..'I$ ','$$',{{'$','$',space=true}})
 end
 function M.test_fastwarp()
     local d=':imap <C-e> <A-e>\r'
@@ -181,6 +184,12 @@ function M.test_other_map()
     run('Ioo ]I[ f','[ foo ]',{space={enable=false},space2={enable=true}})
     run('Ioo ]I[  f','[  foo  ]',{space={enable=false},space2={enable=true}})
     run(':setf markdown\rI+ [ ','+ [ ]')
+    run('I<a<  |','<<  |  >>',{{'<<','>>',space=true}})
+    run('I<a<foobi  ','<<  foo  >>',{{'<<','>>',space=true}})
+    run('I$ |','$ | $',{{'$','$',space=true}})
+    run('I$foobi ','$ foo $',{{'$','$',space=true}})
+    run('I$ foo','$ foo $',{{'$','$',space=true},space={enable=false},space2={enable=true}})
+    run('I<a< foo','<< foo >>',{{'<<','>>',space=true},space={enable=false},space2={enable=true}})
     --run('I(a','()') --TBD
     --run('I({a','({})') --TBD
     --run('I({(la','({()})') --TBD
