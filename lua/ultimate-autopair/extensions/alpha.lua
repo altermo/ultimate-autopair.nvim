@@ -12,7 +12,7 @@ return default.wrapp_old_extension(function (o,keyconf,conf)
         end
     end
     if conf.after or keyconf.alpha_after then
-        if vim.regex(alpha):match_str(o.line:sub(vim.str_utf_end(o.line,o.col)+o.col,o.col)) then
+        if vim.regex(alpha):match_str(o.line:sub(o.col,vim.str_utf_end(o.line,o.col)+o.col)) then
             return 3
         end
     end
