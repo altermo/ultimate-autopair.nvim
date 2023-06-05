@@ -30,7 +30,7 @@ function M.main()
     end
     local rdft=vim.fn.system('find '..M.path..'/lua -type f ! -name "*.lua" ! -name "*.md" ! -name ".luarc.json"')
     if rdft~='' then
-        M.error('A non lua file was spotted at '..rdft)
+        M.error('A non lua/md file was spotted at '..rdft)
     end
     M.info('tests starting')
     for k,v in pairs(M) do
@@ -60,7 +60,8 @@ local function run(keys,match,conf)
         ':edit '..outtmp,
         keys..':wq!',
     },tmp)
-    vim.wait(10000,function() return #M.jobs<M.count+M.NUMBER_OF_JOBS end)
+    local s=vim.wait(3000,function() return #M.jobs<M.count+M.NUMBER_OF_JOBS end)
+    if not s then error('timeout: a test possibly caught in infinite loop') end
     table.insert(M.jobs,vim.fn.jobstart({'nvim','-u','NONE','-i','NONE','-s',tmp},{
         on_exit=function()
             vim.fn.delete(tmp)
@@ -157,6 +158,7 @@ function M.test_fastwarp()
     run(d..'Ifoo,,I<a<a','<<foo>>,,',{{'<<','>>',fastwarp=true}})
     run(d..'I<a<I(','(<<>>)',{{'<<','>>'}})
     run(d..'IaøeI(','(aøe)')
+    run(d..'Ia_eI(','(a_e)')
     run(g..'I(foo)i','()foo')
     run(g..'I()i','()')
     run(g..'I(foo,bar)i','(foo),bar')

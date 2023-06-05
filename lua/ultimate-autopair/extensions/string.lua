@@ -13,9 +13,10 @@ function M.filter_out_string(line,col,linenr,notree)
     local string_pair={}
     local inpair={}
     local function in_pair(tbl,i)
-        if not inpair[tbl][i] then
-            inpair[tbl][i]=tbl.fn.in_pair(tbl,line,i,{notree=notree,linenr=linenr}) or false
+        if inpair[tbl][i] then
+            return inpair[tbl][i]
         end
+        inpair[tbl][i]=tbl.fn.in_pair(tbl,line,i,{notree=notree,linenr=linenr}) or false
         return inpair[tbl][i]
     end
     for _,i in ipairs(default.filter_pair_type({'pairo','pair'})) do

@@ -1,7 +1,7 @@
 local default=require 'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
 local M={}
-M.alpha=[=[\v[[=a=][=b=][=c=][=d=][=e=][=f=][=g=][=h=][=i=][=j=][=k=][=l=][=m=][=n=][=o=][=p=][=q=][=r=][=s=][=t=][=u=][=v=][=w=][=x=][=y=][=z=]]]=]
+M.alpha=[=[\v[[=a=][=b=][=c=][=d=][=e=][=f=][=g=][=h=][=i=][=j=][=k=][=l=][=m=][=n=][=o=][=p=][=q=][=r=][=s=][=t=][=u=][=v=][=w=][=x=][=y=][=z=][:keyword:]]]=]
 M.ext={}
 function M.ext.fastwarp_over_pair(o,ind,p)
     if o.col+#p~=ind then return end
