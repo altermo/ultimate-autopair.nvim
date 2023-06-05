@@ -38,6 +38,7 @@ function M.backspace(o,_,conf)
             break
         end
     end
+    if not newcol then return end
     local prev_pair=default.start_pair(newcol,o.line)
     if not prev_pair then return end
     local matching_pair_pos=prev_pair.fn.find_end_pair(prev_pair.start_pair,prev_pair.end_pair,o.line,newcol)

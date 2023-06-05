@@ -13,6 +13,7 @@ function M.space(_)
         end
         total=total+1
     end
+    if not pcol then return end
     local prev_pair=default.start_pair(pcol,line)
     if not prev_pair or not prev_pair.conf.space then return end
     if prev_pair.rule and not prev_pair.rule() then return end
