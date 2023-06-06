@@ -149,3 +149,4 @@
 + [ ] make file maybe use a priority and requirement system
 + [ ] everything check mconf.p
 + [ ] make `default.start_pair` and `default.end_pair` use `pair.rule()`
++ [ ] make a in_pair_map(pair,line): returns a table of bools (or maybe function) of whether in pair
