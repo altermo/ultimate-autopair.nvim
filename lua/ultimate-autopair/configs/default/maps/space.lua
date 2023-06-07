@@ -45,12 +45,26 @@ function M.backspace(o,_,conf)
     if not matching_pair_pos then return end
     if o.line:sub(newcol,matching_pair_pos-1-#prev_pair.end_pair):find('[^ ]') then
         if o.line:sub(newcol,o.col-1):find('[^ ]') then return end
+        if conf.space=='balance' then
+            local left=#o.line:sub(newcol,matching_pair_pos-1-#prev_pair.end_pair):match(' *')
+            local right=#o.line:sub(newcol,matching_pair_pos-1-#prev_pair.end_pair):reverse():match(' *')
+            if left~=right then
+                return utils.moveh(left-right)..utils.delete(0,left-right)..utils.addafter(matching_pair_pos-o.col-(right-left)-#prev_pair.end_pair,utils.delete(0,right-left),0)
+            end
+        end
         if o.line:sub(newcol,matching_pair_pos-1-#prev_pair.end_pair):match(' *')
             >o.line:sub(newcol,matching_pair_pos-1-#prev_pair.end_pair):reverse():match(' *') then return end
-        return utils.moveh()..utils.delete(0,1)..utils.movel(matching_pair_pos-o.col-1-#prev_pair.end_pair)..utils.delete(0,1)..utils.moveh(matching_pair_pos-o.col-1-#prev_pair.end_pair)
+        return utils.moveh()..utils.delete(0,1)..utils.addafter(matching_pair_pos-o.col-1-#prev_pair.end_pair,utils.delete(0,1),0)
     else
+        if conf.space=='balance' then
+            local left=o.col-newcol
+            local right=matching_pair_pos-#prev_pair.end_pair-o.col
+            if left~=right then
+                return utils.moveh(left-right)..utils.delete(0,left-right)..utils.delete(0,right-left)
+            end
+        end
         if o.line:sub(newcol,o.col-1)>o.line:sub(o.col,matching_pair_pos-1-#prev_pair.end_pair) then return end
-        return utils.moveh()..utils.delete(0,1)..utils.movel(matching_pair_pos-o.col-1-#prev_pair.end_pair)..utils.delete(0,1)..utils.moveh(matching_pair_pos-o.col-1-#prev_pair.end_pair)
+        return utils.moveh()..utils.delete(0,1)..utils.delete(0,1)
     end
 end
 function M.init(conf,mconf,ext)

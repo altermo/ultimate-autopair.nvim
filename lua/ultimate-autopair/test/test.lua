@@ -130,6 +130,9 @@ function M.test_backspace()
     run(d..'I<a< ','<<>>',{{'<<','>>',space=true}})
     run(d..'I<a< foobi','<<foo>>',{{'<<','>>',space=true}})
     run(d..'I$ ','$$',{{'$','$',space=true}})
+    run(d..'I(  i|','( | )',{bs={space='balance'}})
+    run(d..'I( la|','(|)',{bs={space='balance'}})
+    run(d..'I( foo bi','( foo )',{bs={space='balance'}})
 end
 function M.test_fastwarp()
     local d=':imap <C-e> <A-e>\r'

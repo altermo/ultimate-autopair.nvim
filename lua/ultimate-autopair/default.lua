@@ -10,7 +10,7 @@ M.conf={
         map='<bs>', --string or table
         cmap='<bs>',
         overjumps=true,
-        space=true,
+        space=true, --false, true or 'balance'
         indent_ignore=false,
         conf={},
     },

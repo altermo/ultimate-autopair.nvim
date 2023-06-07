@@ -1,6 +1,6 @@
 local M={}
 M.default_conf={
-    map='<C-b>',
+    map='<A-k>',
 }
 local default=require'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'

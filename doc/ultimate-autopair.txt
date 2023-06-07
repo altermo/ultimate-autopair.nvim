@@ -81,8 +81,11 @@ The default configuration contains a loot of options, here are those:
          cmap='<bs>',
          overjumps=true,
          --(|foo) > bs > |foo
-         space=true,
+         space=true, --false, true or 'balance'
          --( |foo ) > bs > (|foo)
+         --balance:
+         --  Will prioritize balanced spaces
+         --  ( |foo  ) > bs > ( |foo )
          indent_ignore=false,
          --(\n\t|\n) > bs > (|)
          conf={}
