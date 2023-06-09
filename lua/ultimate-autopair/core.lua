@@ -30,6 +30,9 @@ function M.I.var_create_wrapper(key)
 end
 function M.run(key)
     return function ()
+        if M.disable then
+            return M.I.activate_iabbrev(key)
+        end
         local fo=M.I.var_create_wrapper(key)
         for _,v in ipairs(M.mem) do
             local ret
