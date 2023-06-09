@@ -1,5 +1,6 @@
 local default=require 'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
+local core=require'ultimate-autopair.core'
 local M={}
 function M.space(_)
     local col=utils.getcol()
@@ -25,6 +26,7 @@ function M.space(_)
 end
 function M.space_wrapp(m)
     return function()
+        if core.disable then return end
         if not m.rule() then return end
         if not vim.regex(m.iconf.match or [[\a]]):match_str(vim.v.char) then return end
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(M.space(m) or '',true,true,true),'n',true)
