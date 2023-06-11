@@ -1,4 +1,3 @@
-local default=require'ultimate-autopair.configs.default.utils'
 local M={}
 function M.check_rule(rule,o)
     local cmd=rule[1]
@@ -65,11 +64,24 @@ function M.init(rules,mem)
         end
     end
 end
-return default.wrapp_old_extension(function (o,keyconf,conf)
-    if keyconf.rules and not M.check_rules(keyconf.rules,o) then
-        return 2
+function M.call(m,ext)
+    local check=m.check
+    m.check=function (o)
+        if m.conf.rules and not M.check_rules(m.conf.rules,o) then
+            return
+        end
+        if ext.conf.rules and not M.check_rules(ext.conf.rules,o) then
+            return
+        end
+        return check(o)
     end
-    if conf.rules and not M.check_rules(conf.rules,o) then
-        return 2
-    end
-end,M)
+end
+return M
+--return default.wrapp_old_extension(function (o,keyconf,conf)
+    --if keyconf.rules and not M.check_rules(keyconf.rules,o) then
+        --return 2
+    --end
+    --if conf.rules and not M.check_rules(conf.rules,o) then
+        --return 2
+    --end
+--end,M)
