@@ -68,24 +68,28 @@ function M.I.sort()
 end
 function M.init()
     M.I.sort()
-    local imapped={}
-    local cmapped={}
+    local imapped=vim.defaulttable()
+    local cmapped=vim.defaulttable()
     for _,v in ipairs(M.mem) do
         if v.oinit then v.oinit() end
         if v.get_map then
             for _,key in ipairs(v.get_map('i') or {}) do
-                if not imapped[key] then
-                    vim.keymap.set('i',key,M.run(key),{noremap=true,expr=true,desc=v.doc})
-                    imapped[key]=true
+                if not vim.tbl_contains(imapped[key].desc,v.doc) then
+                    table.insert(imapped[key].desc,v.doc)
                 end
             end
             for _,key in ipairs(v.get_map('c') or {}) do
-                if not cmapped[key] then
-                    vim.keymap.set('c',key,M.run(key),{noremap=true,expr=true,desc=v.doc})
-                    cmapped[key]=true
+                if not vim.tbl_contains(cmapped[key].desc,v.doc) then
+                    table.insert(cmapped[key].desc,v.doc)
                 end
             end
         end
+    end
+    for k,v in pairs(imapped) do
+        vim.keymap.set('i',k,M.run(k),{noremap=true,expr=true,desc=vim.fn.join(v.desc,'\n\t\t ')})
+    end
+    for k,v in pairs(cmapped) do
+        vim.keymap.set('c',k,M.run(k),{noremap=true,expr=true,desc=vim.fn.join(v.desc,'\n\t\t ')})
     end
 end
 return M

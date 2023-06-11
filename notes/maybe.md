@@ -126,6 +126,7 @@
 + [x] make extensions use other extensions
 + [x] make `default.start_pair` and `default.end_pair` use `pair.rule()`
 + [x] make wrappers for pair.fn functions (to avoid `pair.fn.is_start(pair.pair,pair.pair,...)`)
++ [x] make keymap desc stack instead of only setting one
 + [ ] terminal mode integration
 + [ ] implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)
 + [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
@@ -133,7 +134,6 @@
 + [ ] make everything work with multichar pair (fastwarp,space...)
 + [ ] abecodes/tabout.nvim like map
 + [ ] make use of treesitter list of nodes at pos to filter instead of one node at pos
-+ [ ] make keymap desc stack doc
 + [ ] multicharacter pair not in string/other node
 + [ ] auto escape extend in string?`'\|a' > ' > '\'|\'a'`
 + [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|` (requires multiline open_pair detection)
