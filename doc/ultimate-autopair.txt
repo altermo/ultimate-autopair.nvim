@@ -440,5 +440,8 @@ The root directory `notes` contains notes and scribbles about the plugin.
 ------------------------------------------------------------------------------
 ultimate-autopair-experimental                *ultimate-autopair-experimental*
 `experimental` directory contains experimental features.
+------------------------------------------------------------------------------
+ultimate-autopair-disable-maps                *ultimate-autopair-disable-maps*
+To disable mappings, use `require'ultimate-autopair.core'.disable=true`.
 
 vim:ft=help:
