@@ -22,7 +22,7 @@ function M.init(q)
     m.extensions=q.extensions
     m.conf=q.conf
     m._type={[default.type_pair]={'pairo'}}
-    m.fn=M.fn
+    m.fn=default.init_fns(m,M.fn)
     m.mconf=q.mconf
     m.node=q.start_pair
 

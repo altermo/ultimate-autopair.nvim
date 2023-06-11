@@ -51,7 +51,7 @@ function M.init(q)
     m.conf=q.conf
     m.key=m.pair:sub(1,1)
     m._type={[default.type_pair]={'pair','end'}}
-    m.fn=M.fn
+    m.fn=default.init_fns(m,M.fn)
     m.mconf=q.mconf
 
     m.check=M.check_wrapper(m)

@@ -17,7 +17,7 @@ function M.space(o,m)
     if not prev_pair or not prev_pair.conf.space then return end
     if not utils.incmd() and (conf.check_box_ft==true or vim.tbl_contains(conf.check_box_ft,vim.o.filetype)) and vim.regex([=[\v^\s*[+*-]|(\d+\.)\s+\[\]]=]):match_str(o.line:sub(1,o.col)) then return end
     if prev_pair.rule and not prev_pair.rule() then return end
-    local matching_pair_pos=prev_pair.fn.find_end_pair(prev_pair,o.line,pcol)
+    local matching_pair_pos=prev_pair.fn.find_end_pair(o.line,pcol)
     if not matching_pair_pos then return end
     local ototal=#o.line:sub(o.col,matching_pair_pos-#prev_pair.end_pair-1):reverse():match(' *')
     if ototal>total then return end
@@ -41,7 +41,7 @@ function M.backspace(o,_,conf)
     if not newcol then return end
     local prev_pair=default.start_pair(newcol,o.line)
     if not prev_pair then return end
-    local matching_pair_pos=prev_pair.fn.find_end_pair(prev_pair,o.line,newcol)
+    local matching_pair_pos=prev_pair.fn.find_end_pair(o.line,newcol)
     if not matching_pair_pos then return end
     if o.line:sub(newcol,matching_pair_pos-1-#prev_pair.end_pair):find('[^ ]') then
         if o.line:sub(newcol,o.col-1):find('[^ ]') then return end

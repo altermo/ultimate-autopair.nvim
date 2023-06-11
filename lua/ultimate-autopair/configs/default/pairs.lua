@@ -25,7 +25,7 @@ end
 function M.newline_wrapper(m)
     return function(o,_,conf)
         if m.pair==o.line:sub(o.col-#m.pair,o.col-1) and m.conf.newline then
-            local matching_pair_pos=m.fn.find_end_pair(m,o.line,o.col)
+            local matching_pair_pos=m.fn.find_end_pair(o.line,o.col)
             if matching_pair_pos then
                 return utils.movel(matching_pair_pos-o.col-1)..'\r<up><home>'..utils.movel(o.col-1)..'\r'
             end
@@ -44,7 +44,7 @@ function M.backspace_wrapper(m)
         end
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and conf.overjumps then
             if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
-                local matching_pair_pos=m.fn.find_end_pair(m,o.line,o.col)
+                local matching_pair_pos=m.fn.find_end_pair(o.line,o.col)
                 if matching_pair_pos then
                     return utils.delete(#m.start_pair)..utils.addafter(matching_pair_pos-o.col-1,utils.delete(0,#m.end_pair),0)
                 end
@@ -71,7 +71,7 @@ function M.init(q)
     m.conf=q.conf
     m.key=m.pair:sub(-1)
     m._type={[default.type_pair]={'pair','start'}}
-    m.fn=M.fn
+    m.fn=default.init_fns(m,M.fn)
     m.mconf=q.mconf
 
     m.check=M.check_wrapper(m)

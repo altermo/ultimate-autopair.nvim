@@ -3,7 +3,7 @@ local default=require'ultimate-autopair.configs.default.utils'
 function M.instring(line,col,linenr,notree)
     for _,i in ipairs(default.filter_pair_type({'pairo','pair'})) do
         if not i.conf.string then goto continue end
-        local isin,start,_end=i.fn.in_pair(i,line,col,{notree=notree,linenr=linenr})
+        local isin,start,_end=i.fn.in_pair(line,col,{notree=notree,linenr=linenr})
         if isin then return isin, start,_end end
         ::continue::
     end
@@ -16,7 +16,7 @@ function M.filter_out_string(line,col,linenr,notree)
         if inpair[tbl][i] then
             return inpair[tbl][i]
         end
-        inpair[tbl][i]=tbl.fn.in_pair(tbl,line,i,{notree=notree,linenr=linenr}) or false
+        inpair[tbl][i]=tbl.fn.in_pair(line,i,{notree=notree,linenr=linenr}) or false
         return inpair[tbl][i]
     end
     for _,i in ipairs(default.filter_pair_type({'pairo','pair'})) do

@@ -60,7 +60,7 @@ function M.backspace_wrapper(m)
             local opab=open_pair.open_pair_ambigous_before(m.pair,o.line,o.col)
             local opaa=open_pair.open_pair_ambigous_after(m.pair,o.line,o.col)
             if opaa and opab and o.line:sub(o.col-#m.pair,o.col-1)==m.pair then
-                local matching_pair_pos=m.fn.find_end_pair(m,o.line,o.col)
+                local matching_pair_pos=m.fn.find_end_pair(o.line,o.col)
                 if matching_pair_pos then
                     return utils.delete(#m.start_pair)..utils.addafter(matching_pair_pos-o.col-1,utils.delete(0,#m.end_pair),0)
                 end
@@ -90,8 +90,8 @@ function M.init(q)
     me.key=me.pair:sub(1,1)
     ms._type={[default.type_pair]={'pair','ambigous-start'}}
     me._type={[default.type_pair]={'pair','ambigous-end'}}
-    ms.fn=M.fn
-    me.fn=M.fn
+    ms.fn=default.init_fns(ms,M.fn)
+    me.fn=default.init_fns(me,M.fn)
     me.mconf=q.mconf
     ms.mconf=q.mconf
 
@@ -112,7 +112,7 @@ function M.init(q)
     m.extensions=q.extensions
     m.conf=q.conf
     m._type={[default.type_pair]={'pair','ambigous'}}
-    m.fn=M.fn
+    m.fn=default.init_fns(m,M.fn)
     m.mconf=q.mconf
     m.backspace=M.backspace_wrapper(m)
     m.newline=M.newline_wrapper(m)

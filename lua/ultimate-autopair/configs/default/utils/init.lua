@@ -126,7 +126,7 @@ function M.start_pair(col,line,next)
         return #a.pair>#b.pair
     end)
     for _,i in ipairs(pairs) do
-        if i.fn.is_start(i,line,next and col or col-#i.pair) and i.rule() then return i end
+        if i.fn.is_start(line,next and col or col-#i.pair) and i.rule() then return i end
     end
 end
 function M.end_pair(col,line,prev)
@@ -135,7 +135,7 @@ function M.end_pair(col,line,prev)
         return #a.pair>#b.pair
     end)
     for _,i in ipairs(pairs) do
-        if i.fn.is_end(i,line,prev and col-#i.pair or col) and i.rule() then return i end
+        if i.fn.is_end(line,prev and col-#i.pair or col) and i.rule() then return i end
     end
 end
 function M.get_pairs_by_pos(col,line,next)
@@ -151,7 +151,7 @@ function M.get_pairs_by_pos(col,line,next)
 end
 function M.init_fns(module,fns)
     return vim.tbl_map(function(v)
-        return function (...) v(module,...) end
+        return function (...) return v(module,...) end
     end,fns)
 end
 return M
