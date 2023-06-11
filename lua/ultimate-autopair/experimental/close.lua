@@ -6,29 +6,34 @@ local default=require'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
 function M.get_open_start_pairs(line,col) --TODO: refactor
     local pair={}
-    for i=1,col do
+    local i=1
+    while i<=col do
         local pair_start=default.start_pair(i,line,true)
         local pair_end=default.end_pair(i,line)
         if pair_start then
             table.insert(pair,1,pair_start)
-        end
-        if pair_end then
+            i=i+#pair_start.pair
+        elseif pair_end then
             for k,v in ipairs(pair) do
                 if v.start_pair==pair_end.start_pair then
                     table.remove(pair,k)
                     break
                 end
             end
+            i=i+#pair_end.pair
+        else
+            i=i+1
         end
     end
     local stack={}
-    for i=col+1,#line do
+    i=col+1
+    while i<=#line do
         local pair_start=default.start_pair(i,line,true)
         local pair_end=default.end_pair(i,line)
         if pair_start then
             table.insert(stack,1,pair_start)
-        end
-        if pair_end then
+            i=i+#pair_start.pair
+        elseif pair_end then
             for k,v in ipairs(stack) do
                 if v.start_pair==pair_end.start_pair then
                     table.remove(stack,k)
@@ -42,6 +47,9 @@ function M.get_open_start_pairs(line,col) --TODO: refactor
                 end
             end
             ::END::
+            i=i+#pair_end.pair
+        else
+            i=i+1
         end
     end
     return pair
