@@ -3,9 +3,15 @@ local open_pair=require'ultimate-autopair.configs.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
 local M={}
 M.fn={
-    check_start_pair=open_pair.check_start_pair,
-    check_end_pair=open_pair.check_end_pair,
-    find_end_pair=open_pair.find_corresponding_end_pair,
+    check_start_pair=function(m,line,col)
+        return open_pair.check_start_pair(m.start_pair,m.end_pair,line,col)
+    end,
+    check_end_pair=function(m,line,col)
+        return open_pair.check_end_pair(m.start_pair,m.end_pair,line,col)
+    end,
+    find_end_pair=function(m,line,col)
+        return open_pair.find_corresponding_end_pair(m.start_pair,m.end_pair,line,col)
+    end,
     is_start=function () return true end,
     is_end=function () return false end,
 }
@@ -19,7 +25,7 @@ end
 function M.newline_wrapper(m)
     return function(o,_,conf)
         if m.pair==o.line:sub(o.col-#m.pair,o.col-1) and m.conf.newline then
-            local matching_pair_pos=m.fn.find_end_pair(m.start_pair,m.end_pair,o.line,o.col)
+            local matching_pair_pos=m.fn.find_end_pair(m,o.line,o.col)
             if matching_pair_pos then
                 return utils.movel(matching_pair_pos-o.col-1)..'\r<up><home>'..utils.movel(o.col-1)..'\r'
             end
@@ -38,7 +44,7 @@ function M.backspace_wrapper(m)
         end
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and conf.overjumps then
             if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
-                local matching_pair_pos=m.fn.find_end_pair(m.start_pair,m.end_pair,o.line,o.col)
+                local matching_pair_pos=m.fn.find_end_pair(m,o.line,o.col)
                 if matching_pair_pos then
                     return utils.delete(#m.start_pair)..utils.addafter(matching_pair_pos-o.col-1,utils.delete(0,#m.end_pair),0)
                 end

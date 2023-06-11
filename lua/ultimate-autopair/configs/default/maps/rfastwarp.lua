@@ -7,7 +7,7 @@ function M.ext.rfastwarp_under_pair(o,ind,p)
     local pair=default.end_pair(ind+1,o.line,true)
     if not pair then return end
     if pair.rule and not pair.rule() then return end
-    local matching_pair_pos=pair.fn.find_start_pair(pair.start_pair,pair.end_pair,o.line,ind-#pair.end_pair)
+    local matching_pair_pos=pair.fn.find_start_pair(pair,o.line,ind-#pair.end_pair)
     if not matching_pair_pos then return end
     return utils.delete(0,#p)..utils.moveh(o.col-matching_pair_pos-1)..p..utils.moveh(#p),matching_pair_pos
 end
@@ -48,7 +48,7 @@ function M.rfastwarp(o,m,nocursormove)
     if nocursormove then
         local spair=default.start_pair(o.col,o.line)
         if spair then
-            move=spair.fn.find_end_pair(spair.start_pair,spair.end_pair,o.line,o.col)
+            move=spair.fn.find_end_pair(spair,o.line,o.col)
             if move then
                 move=move-o.col-#spair.end_pair
                 o.col=o.col+move

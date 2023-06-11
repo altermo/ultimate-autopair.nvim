@@ -124,6 +124,7 @@
 + [x] set up matrix room
 + [x] make config-types cond work with oinit and rule (while making standard)
 + [x] make extensions use other extensions
++ [x] make `default.start_pair` and `default.end_pair` use `pair.rule()`
 + [ ] terminal mode integration
 + [ ] implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)
 + [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
@@ -147,7 +148,7 @@
 + [ ] full utf8 suport
 + [ ] make file maybe use a priority and requirement system
 + [ ] everything check mconf.p
-+ [ ] make `default.start_pair` and `default.end_pair` use `pair.rule()`
 + [ ] make a in_pair_map(pair,line): returns a table of bools (or maybe function) of whether in pair
 + [ ] buffer/InsertCharPre way of keybindings
 + [ ] auto set previous imapping as fallback
++ [ ] fastwarp to broad: make an option to not make it so (maybe: only hop over treesitter nodes/functions calls with dots and calls `M.fn(a)`)

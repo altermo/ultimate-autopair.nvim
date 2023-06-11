@@ -3,10 +3,18 @@ local open_pair=require'ultimate-autopair.configs.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
 local M={}
 M.fn={
-    check_start_pair=open_pair.check_ambiguous_start_pair,
-    check_end_pair=open_pair.check_ambiguous_end_pair,
-    find_end_pair=open_pair.find_corresponding_ambiguous_end_pair,
-    find_start_pair=open_pair.find_corresponding_ambiguous_start_pair,
+    check_start_pair=function(m,line,col)
+        return open_pair.check_ambiguous_start_pair(m.pair,nil,line,col)
+    end,
+    check_end_pair=function(m,line,col)
+        return open_pair.check_ambiguous_end_pair(nil,m.pair,line,col)
+    end,
+    find_end_pair=function(m,line,col)
+        return open_pair.find_corresponding_ambiguous_end_pair(m.pair,nil,line,col)
+    end,
+    find_start_pair=function(m,line,col)
+        return open_pair.find_corresponding_ambiguous_start_pair(m.pair,nil,line,col)
+    end,
     is_start=function (m,line,col) return not open_pair.open_pair_ambigous_before(m.pair,line,col) end,
     is_end=function (m,line,col) return open_pair.open_pair_ambigous_before(m.pair,line,col) end,
     in_pair=function (m,line,col)
@@ -52,7 +60,7 @@ function M.backspace_wrapper(m)
             local opab=open_pair.open_pair_ambigous_before(m.pair,o.line,o.col)
             local opaa=open_pair.open_pair_ambigous_after(m.pair,o.line,o.col)
             if opaa and opab and o.line:sub(o.col-#m.pair,o.col-1)==m.pair then
-                local matching_pair_pos=m.fn.find_end_pair(m.pair,m.pair,o.line,o.col)
+                local matching_pair_pos=m.fn.find_end_pair(m,o.line,o.col)
                 if matching_pair_pos then
                     return utils.delete(#m.start_pair)..utils.addafter(matching_pair_pos-o.col-1,utils.delete(0,#m.end_pair),0)
                 end

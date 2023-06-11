@@ -3,9 +3,15 @@ local default=require'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
 local M={}
 M.fn={
-    check_start_pair=open_pair.check_start_pair,
-    check_end_pair=open_pair.check_end_pair,
-    find_start_pair=open_pair.find_corresponding_start_pair,
+    check_start_pair=function(m,line,col)
+        return open_pair.check_start_pair(m.start_pair,m.end_pair,line,col)
+    end,
+    check_end_pair=function(m,line,col)
+        return open_pair.check_end_pair(m.start_pair,m.end_pair,line,col)
+    end,
+    find_start_pair=function(m,line,col)
+        return open_pair.find_corresponding_start_pair(m.start_pair,m.end_pair,line,col)
+    end,
     is_start=function () return false end,
     is_end=function () return true end,
 }
