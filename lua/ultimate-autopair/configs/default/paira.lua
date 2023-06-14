@@ -21,6 +21,31 @@ M.fn={
         local opab=open_pair.open_pair_ambigous_before(m.pair,line,col)
         local opaa=open_pair.open_pair_ambigous_after(m.pair,line,col)
         return opab and opaa,opab,(opaa or 0)
+    end,
+    in_pair_map=function (m,line)
+        local i=1
+        local map={false}
+        local count=false
+        local last=0
+        while i<=#line do
+            if m.pair==line:sub(i,i+#m.pair-1) then
+                count=not count
+                last=i
+                i=i+#m.pair
+                for j=i,i+#m.pair-1 do
+                    map[j]=count
+                end
+            else
+                i=i+1
+                map[i]=count
+            end
+        end
+        if count then
+            for j=last,#map do
+                map[j]=false
+            end
+        end
+        return map
     end
 }
 function M.check_start_wrapper(m)

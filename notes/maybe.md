@@ -148,7 +148,7 @@
 + [ ] full utf8 suport
 + [ ] make file maybe use a priority and requirement system
 + [ ] everything check mconf.p
-+ [ ] make a in_pair_map(pair,line): returns a table of bools (or maybe function) of whether in pair
++ [x] make a in_pair_map(pair,line): returns a table of bools (or maybe function) of whether in pair
 + [ ] buffer/InsertCharPre way of keybindings
 + [ ] auto set previous imapping as fallback
 + [ ] fastwarp to broad: make an option to not make it so (maybe: only hop over treesitter nodes/functions calls with dots and calls `M.fn(a)`)

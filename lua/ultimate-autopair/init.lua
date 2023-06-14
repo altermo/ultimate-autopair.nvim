@@ -2,7 +2,7 @@ local config=require'ultimate-autopair.config'
 local debug=require'ultimate-autopair.debug'
 local default=require'ultimate-autopair.default'
 local M={}
-function M.extend_with_pair_opt(pair)
+function M._extend_with_pair_opt(pair)
     vim.tbl_extend('error',pair,{fly=true,dosuround=true,newline=true,space=true,fastwarp=true})
 end
 function M._list()

@@ -16,6 +16,10 @@ function M.filter_out_string(line,col,linenr,notree)
         if inpair[tbl][i] then
             return inpair[tbl][i]
         end
+        if tbl.fn.in_pair_map then
+            inpair[tbl]=tbl.fn.in_pair_map(line,{notree=notree,linenr=linenr})
+            return inpair[tbl][i]
+        end
         inpair[tbl][i]=tbl.fn.in_pair(line,i,{notree=notree,linenr=linenr}) or false
         return inpair[tbl][i]
     end
