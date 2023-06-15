@@ -77,11 +77,3 @@ function M.call(m,ext)
     end
 end
 return M
---return default.wrapp_old_extension(function (o,keyconf,conf)
-    --if keyconf.rules and not M.check_rules(keyconf.rules,o) then
-        --return 2
-    --end
-    --if conf.rules and not M.check_rules(conf.rules,o) then
-        --return 2
-    --end
---end,M)
