@@ -19,11 +19,30 @@ function M.init_multi(q)
         return {pair_s.init(q),pair_e.init(q)}
     end
 end
+function M.prepare_pairs(somepairs,configs)
+    if not configs then return somepairs end
+    local newpairs=vim.deepcopy(somepairs)
+    for _,config in ipairs(configs) do
+        local flag
+        for _,pair in ipairs(newpairs) do
+            if pair[1]==config[1]
+                and pair[2]==config[2]
+                and pair.type==config.type then
+                for k,v in pairs(config) do
+                    pair[k]=v
+                end
+                flag=true
+            end
+        end
+        if not flag then error(('internal pair config %s,%s did not match any internal pairs'):format(config[1],config[2] or config.type)) end
+    end
+    return newpairs
+end
 function M.init_conf(conf,mem)
     local ext=default.prepare_extensions(conf.extensions)
     M.init_ext(ext,mem,conf)
     M.init_pair(conf,mem,conf,ext)
-    M.init_pair(conf.internal_pairs,mem,conf,ext)
+    M.init_pair(M.prepare_pairs(conf.internal_pairs,conf.config_internal_pairs),mem,conf,ext)
     M.init_bs(conf.bs,mem,conf,ext)
     M.init_cr(conf.cr,mem,conf,ext)
     M.init_space(conf.space,mem,conf,ext)

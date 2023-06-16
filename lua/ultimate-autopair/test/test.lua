@@ -254,6 +254,8 @@ function M.test_complex()
     run(f..F..'Ifo\ro [bar]\r"baz"\rggI(','()fo\no [bar]\n"baz"\n',{fastwarp={nocursormove=false}})
     run(f..F..'Ifoo [bar]"baz"ggI(','()foo [bar]"baz"',{fastwarp={nocursormove=true}})
     run(f..F..'Ifoo [bar]"baz"ggI\'','\'\'foo [bar]"baz"',{fastwarp={nocursormove=false}})
+    run('I"("$','"()"$',{extensions={fly={nofilter=true}},config_internal_pairs={{'"','"',fly=true}}})
+    run('I{I(','({})',{config_internal_pairs={{'{','}',suround=true}}})
 end
 function M.test_options()
     local b=':map! <C-h> <bs>\r'

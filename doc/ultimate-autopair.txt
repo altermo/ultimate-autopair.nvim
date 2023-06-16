@@ -150,7 +150,7 @@ The default configuration contains a loot of options, here are those:
          suround={p=20},
          fly={other_char={' '},nofilter=false,p=10,undomapconf={},undomap=nil,undocmap=nil},
      },
-     internal_pairs={-- *ultimate-autopair-pairs-default-config*
+     internal_pairs={-- *ultimate-autopair-pairs-default-pairs*
          {'[',']',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},
          {'(',')',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},
          {'{','}',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},
@@ -164,6 +164,11 @@ The default configuration contains a loot of options, here are those:
          {"'''","'''",newline=true,ft={'python'}},
          {'string',type='tsnode',string=true},
          {'raw_string',type='tsnode',string=true},
+     },
+     config_internal_pairs={-- *ultimate-autopair-pairs-configure-default-pairs*
+         --configure internal pairs
+         --example:
+         --{'{','}',suround=true},
      },
  }
 <
