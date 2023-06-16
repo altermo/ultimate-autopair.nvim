@@ -5,7 +5,6 @@ M.fn={
     in_pair=function (m,line,col,conf)
         if conf.notree then return end
         if utils.incmd() then return end
-        if line:sub(col,col)=='\1' then return end
         local s,node=pcall(utils.gettsnode,conf.linenr-1,col-1)
         if not s or not node then return end
         if node:parent() and node:parent():type()==m.node then

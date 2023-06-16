@@ -244,6 +244,9 @@ function M.test_extensions()
     run('I({)','({)})',{extensions={fly={undomap='<C-b>'}}})
     --sub
     run('I"I(:setf lua\rla(','()("")',{extensions={suround=false,sub={p=200,ext={filetype={ft={'lua'},p=2},suround={p=1}}}}})
+    --tsnode
+    run(':setf lua\rI--a(o(','--(\n()',{extensions={tsnode={p=50,outside={'comment'}}}})
+    run(':setf lua\rI--a(o(','--()\n(',{extensions={tsnode={p=50,inside={'comment'}}}})
 end
 function M.test_complex()
     local f=':imap <C-e> <A-e>\r'

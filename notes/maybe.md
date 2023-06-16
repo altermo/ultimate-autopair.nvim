@@ -159,3 +159,4 @@
 + [ ] in_tsnode_map: same as in_pair_map but for tsnodes
 + [ ] in_pair/not_in_pair rule/another_extension
 + [ ] make pairt.in_pair node detector recursively find if in node (option)
++ [ ] make tsnode extension recursively find if in node (option)

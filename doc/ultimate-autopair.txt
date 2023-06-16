@@ -347,6 +347,17 @@ Example (`*` is cursor): >
  |--------+-----+--------|
  | *'a'   | (   | (*'a') |
 <
+------------------------------------------------------------------------------
+ultimate-autopair-ext-tsnode                    *ultimate-autopair-ext-tsnode*
+Extension config: {inside,outside}
+Extension pair config: {tsnode_inside,tsnode_outside}
+Checks if inserting inside `inside` tsnodes and outside `outside` tsnodes.
+Example (`*` is cursor) (filetype is lua): >
+ | before | key | after | config                |
+ | --*    | (   | --(   | {outside={'comment'}} |
+ | --*    | (   | --()  | {inside={'comment'}}  |
+ | *      | (   | (     | {inside={'comment'}}  |
+<
 ==============================================================================
 ADD-PAIR                                          *ultimate-autopair-add-pair*
 ------------------------------------------------------------------------------

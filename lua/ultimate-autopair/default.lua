@@ -53,7 +53,6 @@ M.conf={
         filetype={p=80,nft={'TelescopePrompt'}},
         escape={filter=true,p=70},
         string={p=60},
-        --treenode={inside={'comment'},p=50},
         rules={p=40,rules=nil},
         alpha={p=30},
         suround={p=20},
@@ -73,6 +72,8 @@ M.conf={
         {"'''","'''",newline=true,ft={'python'},string=true},
         {'string',type='tsnode',string=true},
         {'raw_string',type='tsnode',string=true},
+    },
+    config_internal_pairs={
     },
 }
 return M
