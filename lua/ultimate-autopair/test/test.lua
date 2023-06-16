@@ -88,6 +88,8 @@ function M.test_simple()
     run(':setf python\ri"""','""""""')
     run('I)I)','))')
     run('I())0a)','())')
+    run(':iab f foo\rIf()','foo()')
+    run(':cab s setline\r:call s(1,["foo\r','foo')
 end
 function M.test_newline()
     run(':set cindent\rI{a\r','{\n\t\n}')
@@ -180,56 +182,68 @@ function M.test_fastwarp()
     run(g..'I(<a<','(<<>>)',{{'<<','>>',fastwarp=true}})
 end
 function M.test_other_map()
+    --space
     run('I[ ','[  ]')
     run('I[foobi ','[ foo ]')
     run('I[fooa bi ','[ foo ]')
     run('I[ foobi ','[  foo  ]')
+    run(':setf markdown\rI+ [ ','+ [ ]')
+    run(':setf markdown\rI+ [ ]( ','+ [ ](  )')
+    run('I<a<  |','<<  |  >>',{{'<<','>>',space=true}})
+    run('I<a<foobi  ','<<  foo  >>',{{'<<','>>',space=true}})
+    run('I$ |','$ | $',{{'$','$',space=true}})
+    run('I$foobi ','$ foo $',{{'$','$',space=true}})
+    --space2
     run('I[ foo','[ foo ]',{space={enable=false},space2={enable=true}})
     run('I[  foo','[  foo  ]',{space={enable=false},space2={enable=true}})
     run('Ioo]I[ f','[ foo ]',{space={enable=false},space2={enable=true}})
     run('Ioo ]I[ f','[ foo ]',{space={enable=false},space2={enable=true}})
     run('Ioo ]I[  f','[  foo  ]',{space={enable=false},space2={enable=true}})
-    run(':setf markdown\rI+ [ ','+ [ ]')
-    run('I<a<  |','<<  |  >>',{{'<<','>>',space=true}})
-    run('I<a<foobi  ','<<  foo  >>',{{'<<','>>',space=true}})
-    run('I$ |','$ | $',{{'$','$',space=true}})
-    run('I$foobi ','$ foo $',{{'$','$',space=true}})
     run('I$ foo','$ foo $',{{'$','$',space=true},space={enable=false},space2={enable=true}})
     run('I<a< foo','<< foo >>',{{'<<','>>',space=true},space={enable=false},space2={enable=true}})
+    --close
     --run('I(a','()') --TBD
     --run('I({a','({})') --TBD
     --run('I({(la','({()})') --TBD
     --run('I({)i','({})') --TBD
 end
 function M.test_extensions()
+    --suround
     run('I"foo"I(','("foo")')
+    run('I""I(','("")')
     run('I"foo""bar"bhhi(','"foo()""bar"')
+    run('I?a?I(','(??&&)',{{'??','&&',suround=true}})
+    --string
     run('I ")"0i(','() ")"')
     run('I"")0a(','"()")')
     run([[I"'xI']],[[''"'"]])
+    run([[I'""(a)]],[['""()']])
+    run('I(")"','(")")')
+    --run(':setf lua\rI [[)0i(','') --TODO
+    --cmdline
     run(':call setline(1,["foo\r','foo')
+    run(':call setline(1,[input("\r(\r','(')
+    --alpha
     run("Idona't","don't")
     run(':setf python\rIf\'','f\'\'')
+    --filetype
     run('I"""','""""')
+    --escape
     run('I\\a(','\\(')
     run('I\\\\a(','\\\\()')
     run([[I'\\a"]],[['\\""']])
+    run('I\\)I(','()\\)')
+    --rules
     run(":set lisp\rI'","'")
     run(':set lisp\rI"\'','"\'\'"')
     run(':set lisp\rI(','(',{extensions={rules={rules={{'not',{'option','lisp'}}}}}})
+    --fly
     run('I[{( ]$','[{(  )}]$')
     run('I(")$','("")$',{{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}})
     run('I"("$','"()"$',{{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}})
-    run(':call setline(1,[input("\r(\r','(')
-    run(':iab f foo\rIf()','foo()')
-    run(':cab s setline\r:call s(1,["foo\r','foo')
-    run('I\\)I(','()\\)')
-    run([[I'""(a)]],[['""()']])
-    run('I(")"','(")")')
-    run('I"I(:setf lua\rla(','()("")',{extensions={suround=false,sub={p=200,ext={filetype={ft={'lua'},p=2},suround={p=1}}}}})
-    run('I?a?I(','(??&&)',{{'??','&&',suround=true}})
     run('I({)','({)})',{extensions={fly={undomap='<C-b>'}}})
-    ----TODO: test treesitter based extensions
+    --sub
+    run('I"I(:setf lua\rla(','()("")',{extensions={suround=false,sub={p=200,ext={filetype={ft={'lua'},p=2},suround={p=1}}}}})
 end
 function M.test_complex()
     local f=':imap <C-e> <A-e>\r'
