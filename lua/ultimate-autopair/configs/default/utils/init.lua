@@ -120,22 +120,24 @@ function M.key_check_cmd(o,key,normal,cmd,keyc)
     end
     return normal and vim.tbl_contains(key,o.key)
 end
-function M.start_pair(col,line,next)
+function M.start_pair(col,line,next,check)
     local pairs=M.get_pairs_by_pos(col,line,next)
     table.sort(pairs,function (a,b)
         return #a.pair>#b.pair
     end)
     for _,i in ipairs(pairs) do
-        if i.fn.is_start(line,next and col or col-#i.pair) and i.rule() then return i end
+        if i.fn.is_start(line,next and col or col-#i.pair)
+            and i.rule() and (not check or check(i)) then return i end
     end
 end
-function M.end_pair(col,line,prev)
+function M.end_pair(col,line,prev,check)
     local pairs=M.get_pairs_by_pos(col,line,not prev)
     table.sort(pairs,function (a,b)
         return #a.pair>#b.pair
     end)
     for _,i in ipairs(pairs) do
-        if i.fn.is_end(line,prev and col-#i.pair or col) and i.rule() then return i end
+        if i.fn.is_end(line,prev and col-#i.pair or col)
+            and i.rule() and (not check or check(i)) then return i end
     end
 end
 function M.get_pairs_by_pos(col,line,next)

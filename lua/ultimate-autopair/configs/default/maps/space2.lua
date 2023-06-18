@@ -15,9 +15,10 @@ function M.space(_)
         total=total+1
     end
     if not pcol then return end
-    local prev_pair=default.start_pair(pcol,line)
-    if not prev_pair or not prev_pair.conf.space then return end
-    if prev_pair.rule and not prev_pair.rule() then return end
+    local prev_pair=default.start_pair(pcol,line,nil,function(pair)
+        return pair.conf.space
+    end)
+    if not prev_pair then return end
     local matching_pair_pos=prev_pair.fn.find_end_pair(line,pcol)
     if not matching_pair_pos then return end
     local ototal=#line:sub(col,matching_pair_pos-1-#prev_pair.end_pair):reverse():match(' *')

@@ -6,7 +6,6 @@ function M.ext.rfastwarp_under_pair(o,ind,p)
     if o.col-1~=ind then return end
     local pair=default.end_pair(ind+1,o.line,true)
     if not pair then return end
-    if pair.rule and not pair.rule() then return end
     local matching_pair_pos=pair.fn.find_start_pair(o.line,ind-#pair.end_pair)
     if not matching_pair_pos then return end
     return utils.delete(0,#p)..utils.moveh(o.col-matching_pair_pos-1)..p..utils.moveh(#p),matching_pair_pos
@@ -15,14 +14,12 @@ function M.ext.rfastwarp_next_to_end_pair(o,ind,p)
     if o.col-1==ind then return end
     local pair=default.end_pair(ind+1,o.line,true)
     if not pair then return end
-    if pair.rule and not pair.rule() then return end
     return utils.delete(0,#p)..utils.moveh(o.col-ind-1)..p..utils.moveh(#p)
 end
 function M.ext.rfastwarp_next_to_start_pair(o,ind,p,m)
     if o.col-1==ind and m.iconf.hopout then return end
     local pair=default.start_pair(ind+1,o.line)
     if not pair then return end
-    if pair.rule and not pair.rule() then return end
     if o.col-1==ind then return not m.iconf.hopout and 1 end
     return utils.delete(0,#p)..utils.moveh(o.col-ind-1)..p..utils.moveh(#p)
 end
@@ -59,11 +56,11 @@ function M.rfastwarp(o,m,nocursormove)
             nocursormove=false
         end
     end
-    local pair=default.end_pair(o.col,o.line)
+    local pair=default.end_pair(o.col,o.line,nil,function(pair)
+        return pair.conf.fastwarp
+    end)
     if not pair then return end
     local p=pair.pair
-    if not pair.conf.fastwarp then return end
-    if pair.rule and not pair.rule() then return end
     for i=o.col-1,1,-1 do
         local ind=i
         for _,v in pairs(M.ext) do
