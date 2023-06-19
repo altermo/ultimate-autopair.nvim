@@ -30,6 +30,10 @@ function M.filter_out_string(line,col,linenr,notree)
         end
     end
     for i=1,#line do
+        if line:sub(i,i)=='\1' then
+            newline=newline..'\1'
+            goto continue
+        end
         for _,v in ipairs(string_pair) do
             if in_pair(v,i) and in_pair(v,i+1) then
                 newline=newline..'\1'

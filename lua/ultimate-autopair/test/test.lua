@@ -219,7 +219,7 @@ function M.test_extensions()
     run([[I"'xI']],[[''"'"]])
     run([[I'""(a)]],[['""()']])
     run('I(")"','(")")')
-    --run(':setf lua\rI [[)0i(','') --TODO
+    --run(':setf lua\rI [[)0i(','() [[)]]') --TODO
     --cmdline
     run(':call setline(1,["foo\r','foo')
     run(':call setline(1,[input("\r(\r','(')

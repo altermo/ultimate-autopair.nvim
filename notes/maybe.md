@@ -72,7 +72,6 @@
 + [ ] hop style fastwarp
 + [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
 + [ ] fastwarp treesitter nodes
-+ [ ] fastwarp nocursormove spesific map (without requiring creating new config)
 + [ ] fastwarp ambiguous pair multiline
 ## extensions
 + [x] only filter inside or outside of string
@@ -133,9 +132,9 @@
 + [ ] test non pair parts (core,other config types...)
 + [ ] make everything work with multichar pair (fastwarp,space...)
 + [ ] abecodes/tabout.nvim like map
-+ [ ] make use of treesitter list of nodes at pos to filter instead of one node at pos
++ [ ] make use of treesitter stack of nodes at pos to filter instead of one node at pos
 + [ ] multicharacter pair not in string/other node
-+ [ ] auto escape extend in string?`'\|a' > ' > '\'|\'a'`
++ [x] auto escape extend in string?`'\|a' > ' > '\'|\'a'`
 + [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|` (requires multiline open_pair detection)
 + [ ] multicharacter pair with word delimiter `aAND ~= AND`
 + [ ] other keywords `if ... end`?
@@ -155,6 +154,8 @@
 + [ ] caching values from open_pair functions
 + [ ] disable in comment (https://github.com/altermo/ultimate-autopair.nvim/issues/32)
 + [ ] in_tsnode_map: same as in_pair_map but for tsnodes
-+ [ ] in_pair/not_in_pair rule/another_extension
++ [ ] create and extension (or add a cmd to rule) which checks if in_pair/not_in_pair
 + [ ] make pairt.in_pair node detector recursively find if in node (option)
 + [ ] make tsnode extension recursively find if in node (option)
++ [ ] `default.matching_pair_start/end` get a pair of pairs `(|foo)` > `{(=1,)=5}`
++ [ ] multiple same file maps (like `bs`) in one config with different options
