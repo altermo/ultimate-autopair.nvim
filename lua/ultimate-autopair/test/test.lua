@@ -242,6 +242,8 @@ function M.test_extensions()
     run('I(")$','("")$',{{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}})
     run('I"("$','"()"$',{{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}})
     run('I({)','({)})',{extensions={fly={undomap='<C-b>'}}})
+    run('I( I)','(  )')
+    run('I( )I)',')(  )',{extensions={fly={only_jump_end_pair=true}}})
     --sub
     run('I"I(:setf lua\rla(','()("")',{extensions={suround=false,sub={p=200,ext={filetype={ft={'lua'},p=2},suround={p=1}}}}})
     --tsnode
