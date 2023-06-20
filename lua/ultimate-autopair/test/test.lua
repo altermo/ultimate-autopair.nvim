@@ -180,6 +180,7 @@ function M.test_fastwarp()
     run(g..'I<a<()','<<>>()',{{'<<','>>',fastwarp=true}})
     run(g..'I<a<<a<hi','<<>><<>>',{{'<<','>>',fastwarp=true}})
     run(g..'I(<a<','(<<>>)',{{'<<','>>',fastwarp=true}})
+    run(g..'I("")0a','()""')
 end
 function M.test_other_map()
     --space
