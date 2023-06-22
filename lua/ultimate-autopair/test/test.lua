@@ -181,6 +181,7 @@ function M.test_fastwarp()
     run(g..'I<a<<a<hi','<<>><<>>',{{'<<','>>',fastwarp=true}})
     run(g..'I(<a<','(<<>>)',{{'<<','>>',fastwarp=true}})
     run(g..'I("")0a','()""')
+    run('IfooI(e^{E$','(^{foo$})',{fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}})
 end
 function M.test_other_map()
     --space

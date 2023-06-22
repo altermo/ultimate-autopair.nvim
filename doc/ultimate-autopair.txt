@@ -88,8 +88,10 @@ The default configuration contains a loot of options, here are those:
          --  ( |foo  ) > bs > ( |foo )
          indent_ignore=false,
          --(\n\t|\n) > bs > (|)
-         conf={}
+         conf={},
          --contains extension config
+         multi=false,
+         --use multiple configs (|ultimate-autopair-map-multi-config|)
      },
      cr={-- *ultimate-autopair-map-newline-config*
          enable=true,
@@ -97,8 +99,10 @@ The default configuration contains a loot of options, here are those:
          autoclose=false,
          --(| > cr > (\n|\n)
          --addsemi={}, --list of filetypes
-         conf={}
+         conf={},
          --contains extension config
+         multi=false,
+         --use multiple configs (|ultimate-autopair-map-multi-config|)
      },
      space={-- *ultimate-autopair-map-space-config*
          enable=true,
@@ -106,15 +110,19 @@ The default configuration contains a loot of options, here are those:
          cmap=' ',
          check_box_ft={'markdown','vimwiki'},
          --+ [|] > space > + [ ]
-         conf={}
+         conf={},
          --contains extension config
+         multi=false,
+         --use multiple configs (|ultimate-autopair-map-multi-config|)
      },
      space2={-- *ultimate-autopair-map-space2-config*
          enable=false,
          match=[[\a]],
          --what character activate
-         conf={}
+         conf={},
          --contains extension config
+         multi=false,
+         --use multiple configs (|ultimate-autopair-map-multi-config|)
      },
      fastwarp={-- *ultimate-autopair-map-fastwarp-config*
          enable=true,
@@ -137,8 +145,10 @@ The default configuration contains a loot of options, here are those:
          --then an `e` will not be inserted
          filter=false,
          --whether to use filters (like inside string)
-         conf={}
+         conf={},
          --contains extension config
+         multi=false,
+         --use multiple configs (|ultimate-autopair-map-multi-config|)
      },
      extensions={-- *ultimate-autopair-extensions-default-config*
          cmdtype={types={'/','?','@'},p=90},
@@ -258,6 +268,21 @@ Example (`*` is cursor): >
 ultimate-autopair-rfastwarp                      *ultimate-autopair-rfastwarp*
 The rfastwarp mapping is designed to do the opposite of fastwarp.
 For configuration options see: |ultimate-autopair-map-fastwarp-config|
+------------------------------------------------------------------------------
+ultimate-autopair-map-multi-config        *ultimate-autopair-map-multi-config*
+In each map, you can set `multi` to `true` to have multiple configs at the
+same time. Each indexed item (`ipairs`) in the config gets extended with the
+root config, and passed to respective module.
+Example: >lua
+ {
+     fastwarp={
+         multi=true,
+         p=20, --all sub-configs get default value p=20, unless specified
+         {map='<A-e>',nocursormove=true},
+         {map='<A-f>',nocursormove=false},
+     }
+ }
+<
 ==============================================================================
 EXTENSIONS                                      *ultimate-autopair-extensions*
 All extensions should be in the `extensions` directory.

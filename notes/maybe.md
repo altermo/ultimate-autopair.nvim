@@ -158,4 +158,4 @@
 + [ ] make pairt.in_pair node detector recursively find if in node (option)
 + [ ] make tsnode extension recursively find if in node (option)
 + [ ] `default.matching_pair_start/end` get a pair of pairs `(|foo)` > `{(=1,)=5}`
-+ [ ] multiple same file maps (like `bs`) in one config with different options
++ [x] multiple same file maps (like `bs`) in one config with different options

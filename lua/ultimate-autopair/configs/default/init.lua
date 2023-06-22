@@ -60,31 +60,55 @@ function M.init_ext(ext,mem,mconf)
 end
 function M.clear()
 end
-function M.init_bs(conf,mem,mconf,ext)
-    local Ibs=bs.init(conf or {},mconf,ext)
-    if Ibs then table.insert(mem,Ibs) end
+function M.init_bs(confs,mem,mconf,ext)
+    if confs and not confs.multi then confs={confs} end
+    for _,conf in ipairs(confs or {}) do
+        conf=vim.tbl_extend('keep',conf,confs)
+        local Ibs=bs.init(conf or {},mconf,ext)
+        if Ibs then table.insert(mem,Ibs) end
+    end
 end
-function M.init_cr(conf,mem,mconf,ext)
-    local Icr=cr.init(conf or {},mconf,ext)
-    if Icr then table.insert(mem,Icr) end
+function M.init_cr(confs,mem,mconf,ext)
+    if confs and not confs.multi then confs={confs} end
+    for _,conf in ipairs(confs or {}) do
+        conf=vim.tbl_extend('keep',conf,confs)
+        local Icr=cr.init(conf or {},mconf,ext)
+        if Icr then table.insert(mem,Icr) end
+    end
 end
-function M.init_space(conf,mem,mconf,ext)
-    local Ispace=space.init(conf or {},mconf,ext)
-    if Ispace then table.insert(mem,Ispace) end
+function M.init_space(confs,mem,mconf,ext)
+    if confs and not confs.multi then confs={confs} end
+    for _,conf in ipairs(confs or {}) do
+        conf=vim.tbl_extend('keep',conf,confs)
+        local Ispace=space.init(conf or {},mconf,ext)
+        if Ispace then table.insert(mem,Ispace) end
+    end
 end
-function M.init_space2(conf,mem,mconf,ext)
-    local Ispace=space2.init(conf or {},mconf,ext)
-    if Ispace then table.insert(mem,Ispace) end
+function M.init_space2(confs,mem,mconf,ext)
+    if confs and not confs.multi then confs={confs} end
+    for _,conf in ipairs(confs or {}) do
+        conf=vim.tbl_extend('keep',conf,confs)
+        local Ispace=space2.init(conf or {},mconf,ext)
+        if Ispace then table.insert(mem,Ispace) end
+    end
 end
-function M.init_fastwarp(conf,mem,mconf,ext)
-    local Ifastwarp,Idont=fastwarp.init(conf or {},mconf,ext)
-    if Ifastwarp then table.insert(mem,Ifastwarp) end
-    if Idont then table.insert(mem,Idont) end
+function M.init_fastwarp(confs,mem,mconf,ext)
+    if confs and not confs.multi then confs={confs} end
+    for _,conf in ipairs(confs or {}) do
+        conf=vim.tbl_extend('keep',conf,confs)
+        local Ifastwarp,Idont=fastwarp.init(conf or {},mconf,ext)
+        if Ifastwarp then table.insert(mem,Ifastwarp) end
+        if Idont then table.insert(mem,Idont) end
+    end
 end
-function M.init_rfastwarp(conf,mem,mconf,ext)
-    local Irfastwarp,Idont=rfastwarp.init(conf or {},mconf,ext)
-    if Irfastwarp then table.insert(mem,Irfastwarp) end
-    if Idont then table.insert(mem,Idont) end
+function M.init_rfastwarp(confs,mem,mconf,ext)
+    if confs and not confs.multi then confs={confs} end
+    for _,conf in ipairs(confs or {}) do
+        conf=vim.tbl_extend('keep',conf,confs)
+        local Irfastwarp,Idont=rfastwarp.init(conf or {},mconf,ext)
+        if Irfastwarp then table.insert(mem,Irfastwarp) end
+        if Idont then table.insert(mem,Idont) end
+    end
 end
 function M.init_pair(conf,mem,mconf,ext)
     for _,v in ipairs(conf or {}) do

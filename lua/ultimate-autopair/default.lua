@@ -13,6 +13,7 @@ M.conf={
         space=true, --false, true or 'balance'
         indent_ignore=false,
         conf={},
+        multi=false,
     },
     cr={
         enable=true,
@@ -20,6 +21,7 @@ M.conf={
         autoclose=false,
         --addsemi={}, --list of filetypes
         conf={},
+        multi=false,
     },
     space={
         enable=true,
@@ -27,11 +29,13 @@ M.conf={
         cmap=' ',
         check_box_ft={'markdown','vimwiki'},
         conf={},
+        multi=false,
     },
     space2={
         enable=false,
         match=[[\a]],
         conf={},
+        multi=false,
     },
     fastwarp={
         enable=true,
@@ -47,6 +51,7 @@ M.conf={
         do_nothing_if_fail=true,
         filter=false,
         conf={},
+        multi=false,
     },
     extensions={
         cmdtype={types={'/','?','@'},p=90},
