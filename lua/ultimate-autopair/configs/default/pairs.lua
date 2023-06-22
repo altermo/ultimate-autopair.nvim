@@ -27,7 +27,7 @@ function M.newline_wrapper(m)
         if m.pair==o.line:sub(o.col-#m.pair,o.col-1) and m.conf.newline then
             local matching_pair_pos=m.fn.find_end_pair(o.line,o.col)
             if matching_pair_pos then
-                return utils.movel(matching_pair_pos-o.col-1)..'\r<up><home>'..utils.movel(o.col-1)..'\r'
+                return utils.movel(matching_pair_pos-o.col-1)..'\r<up><home>'..utils.movel(o.wcol-1)..'\r'
             end
             if not conf.autoclose then return end
             if vim.trim(utils.getline(o.linenr+1) or ''):sub(1,#m.end_pair)==m.end_pair then return end

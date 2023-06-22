@@ -96,6 +96,8 @@ function M.test_newline()
     run(':set cindent\rI{foo\r','{foo\n\t\n}')
     run(':set cindent\rI{foobi\r','{\n\tfoo\n}')
     run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
+    run(':setf lua\rIlocal x=[[\r','local x=[[\n\n]]')
+    run(':setf python\rI"""\r','"""\n\n"""')
     --run(':set cindent\rI{fooa\r','{\n\t\n}',{cr={autoclose=true}})
     --run(':setf lua\rIdoA\r','do\n\nend',{cr={autoclose=true},{'do','end',imap=false,ft='lua'}})
     --run(':setf c\r:set cindent\rI{\r','{\n\t\n};') --TBD

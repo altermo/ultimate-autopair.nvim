@@ -20,7 +20,7 @@ M.fn={
     in_pair=function (m,line,col)
         local opab=open_pair.open_pair_ambigous_before(m.pair,line,col)
         local opaa=open_pair.open_pair_ambigous_after(m.pair,line,col)
-        return opab and opaa,opab,(opaa or 0)
+        return opab and opaa,opab,(opaa or 0)+#m.pair-1
     end,
     in_pair_map=function (m,line)
         local i=1
