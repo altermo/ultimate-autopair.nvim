@@ -1,12 +1,12 @@
 local config=require'ultimate-autopair.config'
 local debug=require'ultimate-autopair.debug'
 local default=require'ultimate-autopair.default'
+local core=require'ultimate-autopair.core'
 local M={}
-function M._extend_with_pair_opt(pair)
-    vim.tbl_extend('error',pair,{fly=true,dosuround=true,newline=true,space=true,fastwarp=true})
-end
+function M.toggle() core.disable=not core.disable end
+function M.enable() core.disable=false end
+function M.disable() core.disable=true end
 function M._list()
-    local core=require'ultimate-autopair.core'
     vim.ui.select(core.mem,{format_item=function (item)
         if item.pair then
             return item.pair..' '..(item.doc or '')
