@@ -1,6 +1,7 @@
 local M={}
 local pair_s=require'ultimate-autopair.configs.default.pairs'
-local pair_a=require'ultimate-autopair.configs.default.paira'
+local pair_as=require'ultimate-autopair.configs.default.pairas'
+local pair_ae=require'ultimate-autopair.configs.default.pairae'
 local pair_t=require'ultimate-autopair.configs.default.pairt'
 local pair_e=require'ultimate-autopair.configs.default.paire'
 local default=require'ultimate-autopair.configs.default.utils'
@@ -14,7 +15,7 @@ function M.init_multi(q)
     if q.type=='tsnode' then
         return {pair_t.init(q)}
     elseif q.start_pair==q.end_pair then
-        return {pair_a.init(q)}
+        return {pair_as.init(q),pair_ae.init(q)}
     else
         return {pair_s.init(q),pair_e.init(q)}
     end

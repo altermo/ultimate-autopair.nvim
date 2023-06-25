@@ -11,8 +11,9 @@ function M.get_type_opt(obj,conf)
         end
     end
 end
-function M.sort(a,b)
+function M.sort(a,b,fn)
     if M.get_type_opt(a,'pair') and M.get_type_opt(b,'pair') then
+        if #a.pair==#b.pair and fn then return fn(a,b) end
         return #a.pair>#b.pair
     end
 end
