@@ -17,7 +17,7 @@ M.fn={
         local re,end_,_=node:end_()
         if re+1>conf.linenr then end_=#line end
         return true,start+1,end_
-    end
+    end,
 }
 function M.init(q)
     local m={}

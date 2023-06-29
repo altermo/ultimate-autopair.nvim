@@ -96,7 +96,7 @@
 + [x] filter ' in lisp not instring
 + [ ] markdown code block spesific behavior (like lisp code block)
 + [ ] markdown code block filter
-+ [ ] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
++ [x] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
 + [ ] user defined multiline as one (maybe using treesitter)
 + [ ] whole file detection (requires implementation of tsnode blocks)
 + [ ] extension in extension where they can return instead of continue

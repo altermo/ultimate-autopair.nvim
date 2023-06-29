@@ -9,7 +9,7 @@ end
 function M.wrapp_check(m)
     return function (o)
         if o.key~=m.lhs then return end
-        if not o.rule() then return end
+        if not m.rule() then return end
         if type(m.rhs)=='function' then
             return m.rhs(o,m)
         end
