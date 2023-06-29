@@ -32,11 +32,11 @@ function M.ext.rfastwarp_under_word(o,ind,p)
 end
 function M.rfastwarp_start(o,p,m)
     if o.col~=1 then
-        return utils.delete(0,#p)..'<home><C-v>'..p..utils.moveh(#p),o.col
+        return utils.delete(0,#p)..utils.key_home..''..p..utils.moveh(#p),o.col
     end
     if not m.iconf.multiline then return end
     if vim.fn.line('.')==1 or o.incmd then return end
-    return utils.delete(0,#p)..'<up><end>'..p..utils.moveh(#p),0,1
+    return utils.delete(0,#p)..utils.key_up..utils.key_end..p..utils.moveh(#p),0,1
 end
 function M.rfastwarp(o,m,nocursormove)
     o.line=m.iconf.filter and o.line or o.wline

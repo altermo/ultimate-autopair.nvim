@@ -36,12 +36,12 @@ function M.ext.fastwarp_over_word(o,ind,p)
 end
 function M.fastwarp_end(o,p,m,nocursormove)
     if o.col~=#o.line+1-#p then
-        return utils.delete(0,#p)..'<end>'..p..utils.moveh(#p),#o.line+1-#p-o.col
+        return utils.delete(0,#p)..utils.key_end..p..utils.moveh(#p),#o.line+1-#p-o.col
     end
     if not m.iconf.multiline then return end
     if nocursormove then return end
     if vim.fn.line('.')==vim.fn.line('$') or o.incmd then return end
-    return utils.delete(0,#p)..'<down><home><C-v>'..p..utils.moveh(#p),0,1
+    return utils.delete(0,#p)..utils.key_down..utils.key_home..''..p..utils.moveh(#p),0,1
 end
 function M.fastwarp(o,m,nocursormove)
     o.line=m.iconf.filter and o.line or o.wline

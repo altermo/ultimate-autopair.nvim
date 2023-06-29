@@ -1,5 +1,13 @@
 --Internal
 local M={}
+M.key_bs=vim.api.nvim_replace_termcodes('<bs>',true,true,true)
+M.key_del=vim.api.nvim_replace_termcodes('<del>',true,true,true)
+M.key_left=vim.api.nvim_replace_termcodes('<left>',true,true,true)
+M.key_right=vim.api.nvim_replace_termcodes('<right>',true,true,true)
+M.key_end=vim.api.nvim_replace_termcodes('<end>',true,true,true)
+M.key_home=vim.api.nvim_replace_termcodes('<home>',true,true,true)
+M.key_up=vim.api.nvim_replace_termcodes('<up>',true,true,true)
+M.key_down=vim.api.nvim_replace_termcodes('<down>',true,true,true)
 function M.incmd()
     return vim.fn.mode()=='c'
 end
@@ -20,21 +28,21 @@ function M.getcol()
 end
 function M.movel(num)
     if M.incmd() then
-        return ('<right>'):rep(num or 1)
+        return M.key_right:rep(num or 1)
     end
-    return ('\aU<right>'):rep(num or 1)
+    return ('\aU'..M.key_right):rep(num or 1)
 end
 function M.moveh(num)
     if M.incmd() then
-        return ('<left>'):rep(num or 1)
+        return M.key_left:rep(num or 1)
     end
-    return ('\aU<left>'):rep(num or 1)
+    return ('\aU'..M.key_left):rep(num or 1)
 end
 function M.getlinenr()
     return vim.fn.line('.')
 end
 function M.delete(pre,pos)
-    return ('<bs>'):rep(pre or 1)..('<del>'):rep(pos or 0)
+    return M.key_bs:rep(pre or 1)..M.key_del:rep(pos or 0)
 end
 function M.addafter(num,text,textlen)
     return M.movel(num)..text..M.moveh(num+(textlen or #text))

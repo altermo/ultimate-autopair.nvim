@@ -5,11 +5,10 @@ local debug=require'ultimate-autopair.debug'
 M.mem={}
 M.I={}
 function M.I.activate_iabbrev(key)
-    local match=vim.api.nvim_replace_termcodes(key,true,true,true)
-    if match:sub(1,1)=='\r' then
-        return '<C-]>'..key
-    elseif vim.regex('[^[:keyword:][:cntrl:]\x80]'):match_str(match:sub(1,1)) then
-        return '<C-]>'..key
+    if key:sub(1,1)=='\r' then
+        return ''..key
+    elseif vim.regex('[^[:keyword:][:cntrl:]\x80]'):match_str(key:sub(1,1)) then
+        return ''..key
     end
     return key
 end
@@ -43,7 +42,7 @@ function M.run(key)
                 return M.I.activate_iabbrev(ret)
             end
         end
-        return M.I.activate_iabbrev(key)
+        return vim.api.nvim_replace_termcodes(M.I.activate_iabbrev(key),true,true,true)
     end
 end
 function M.clear()
@@ -86,10 +85,10 @@ function M.init()
         end
     end
     for k,v in pairs(imapped) do
-        vim.keymap.set('i',k,M.run(k),{noremap=true,expr=true,desc=vim.fn.join(v.desc,'\n\t\t ')})
+        vim.keymap.set('i',k,M.run(k),{noremap=true,expr=true,desc=vim.fn.join(v.desc,'\n\t\t '),replace_keycodes=false})
     end
     for k,v in pairs(cmapped) do
-        vim.keymap.set('c',k,M.run(k),{noremap=true,expr=true,desc=vim.fn.join(v.desc,'\n\t\t ')})
+        vim.keymap.set('c',k,M.run(k),{noremap=true,expr=true,desc=vim.fn.join(v.desc,'\n\t\t '),replace_keycodes=false})
     end
 end
 return M

@@ -58,7 +58,7 @@ end
 function M.newline_wrapper(m)
     return function (o)
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
-            return '\r<end><up><end>\r'
+            return '\r'..utils.key_end..utils.key_up..utils.key_end..'\r'
         end
     end
 end
@@ -86,7 +86,7 @@ function M.backspace_wrapper(m)
         local line2=utils.getline(o.linenr+1)
         if not line1 or not line2 then return end
         if line1:sub(-#m.start_pair)==m.start_pair and vim.trim(line2):sub(1,#m.end_pair)==m.end_pair then
-            return '<end>'..utils.delete(0,line2:find('[^%s]'))..'<up><end>'..utils.delete(0,o.col)
+            return utils.key_end..utils.delete(0,line2:find('[^%s]'))..utils.key_up..utils.key_end..utils.delete(0,o.col)
         end
     end
 end

@@ -28,7 +28,7 @@ function M.newline_wrapper(m)
     return function(o)
         if m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
             if open_pair.check_start_pair(m.start_pair,m.end_pair,o.line,o.col) then
-                return '\r<end><up><end>\r'
+                return '\r'..utils.key_end..utils.key_up..utils.key_end..'\r'
             end
         end
     end

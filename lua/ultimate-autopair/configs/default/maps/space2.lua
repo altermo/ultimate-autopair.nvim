@@ -30,7 +30,7 @@ function M.space_wrapp(m)
         if core.disable then return end
         if not m.rule() then return end
         if not vim.regex(m.iconf.match or [[\a]]):match_str(vim.v.char) then return end
-        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(M.space(m) or '',true,true,true),'n',true)
+        vim.api.nvim_feedkeys(M.space(m) or '','n',true)
     end
 end
 function M.init(conf,mconf,ext)
