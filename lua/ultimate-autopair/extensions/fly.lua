@@ -9,7 +9,7 @@ function M.check(conf,o,m)
     if line:sub(col,col)==o.key then return end
     for i=col,#line do
         local char=line:sub(i,i)
-        local current_pair=default.get_pair(char)
+        local current_pair=default.get_pair(char) --TODO: maybe replace get_pair
         if vim.tbl_contains(conf.other_char,char)
             or vim.tbl_get(current_pair or {},'conf','fly') and
             (not conf.only_jump_end_pair or default.get_type_opt(current_pair,{'end','ambigous-end'}))

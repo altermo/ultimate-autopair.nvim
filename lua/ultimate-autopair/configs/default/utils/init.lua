@@ -101,7 +101,6 @@ function M.filter_pair_type(conf)
     return vim.tbl_filter(function (v) return M.get_type_opt(v,conf) end,core.mem)
 end
 function M.get_pair(pair)
-    --TODO: depreciated mostly
     for _,v in ipairs(M.filter_pair_type()) do
         if v.pair==pair then return v end
     end

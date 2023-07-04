@@ -1,10 +1,18 @@
 local M={}
+M.I={}
 M.default_conf={
     map='<A-)>',
 }
 local default=require'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
-function M.get_open_start_pairs(line,col) --TODO: refactor
+function M.I.tbl_find(tbl,pair_end)
+    for k,v in ipairs(tbl) do
+        if v.start_pair==pair_end.start_pair then
+            return k
+        end
+    end
+end
+function M.get_open_start_pairs(line,col)
     local pair={}
     local i=1
     while i<=col do
@@ -14,12 +22,8 @@ function M.get_open_start_pairs(line,col) --TODO: refactor
             table.insert(pair,1,pair_start)
             i=i+#pair_start.pair
         elseif pair_end then
-            for k,v in ipairs(pair) do
-                if v.start_pair==pair_end.start_pair then
-                    table.remove(pair,k)
-                    break
-                end
-            end
+            local k=M.I.tbl_find(pair,pair_end)
+            if k then table.remove(pair,k) end
             i=i+#pair_end.pair
         else
             i=i+1
@@ -34,19 +38,12 @@ function M.get_open_start_pairs(line,col) --TODO: refactor
             table.insert(stack,1,pair_start)
             i=i+#pair_start.pair
         elseif pair_end then
-            for k,v in ipairs(stack) do
-                if v.start_pair==pair_end.start_pair then
-                    table.remove(stack,k)
-                    goto END
-                end
+            local k=M.I.tbl_find(stack,pair_end)
+            if k then table.remove(stack,k)
+            else
+                local k2=M.I.tbl_find(pair,pair_end)
+                if k2 then table.remove(pair,k2) end
             end
-            for k,v in ipairs(pair) do
-                if v.start_pair==pair_end.start_pair then
-                    table.remove(pair,k)
-                    goto END
-                end
-            end
-            ::END::
             i=i+#pair_end.pair
         else
             i=i+1
@@ -67,7 +64,7 @@ end
 function M.setup(conf)
     conf=vim.tbl_extend('force',M.default_conf,conf or {})
     if conf.map then
-        vim.keymap.set('i',conf.map,M.close_pairs,{expr=true})
+        vim.keymap.set('i',conf.map,M.close_pairs,{expr=true,replace_keycodes=false})
     end
 end
 return M
