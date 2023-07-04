@@ -137,6 +137,7 @@ function M.test_backspace()
     run(d..'I(  i|','( | )',{bs={space='balance'}})
     run(d..'I( la|','(|)',{bs={space='balance'}})
     run(d..'I( foo bi','( foo )',{bs={space='balance'}})
+    run(d..':iab f foo\rIf','')
 end
 function M.test_fastwarp()
     local d=':imap <C-e> <A-e>\r'
@@ -223,7 +224,7 @@ function M.test_extensions()
     run([[I"'xI']],[[''"'"]])
     run([[I'""(a)]],[['""()']])
     run('I(")"','(")")')
-    --run(':setf lua\rI [[)0i(','() [[)]]') --TODO
+    --run(':setf lua\rI[[)I (','() [[)]]') --TODO
     --cmdline
     run(':call setline(1,["foo\r','foo')
     run(':call setline(1,[input("\r(\r','(')

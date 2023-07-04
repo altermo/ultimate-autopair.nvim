@@ -21,7 +21,7 @@ function M.check_wrapper(m)
         local count2=open_pair.count_start_pair(m.start_pair,m.end_pair,o.line,o.col,#o.line)
         local count1=open_pair.count_end_pair(m.start_pair,m.end_pair,o.line,1,o.col-1)
         if count1==0 or count1>count2 then return end --TODO: move into open_pair
-        return '\x1d'..utils.movel(#m.pair)
+        return utils.movel(#m.pair)
     end
 end
 function M.newline_wrapper(m)

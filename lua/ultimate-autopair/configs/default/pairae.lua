@@ -52,7 +52,7 @@ function M.check_wrapper(m)
     return function(o)
         if not open_pair.check_ambiguous_end_pair(m.start_pair,m.pair,o.line,o.col) then return end
         if o.line:sub(o.col,o.col-1+#m.pair)~=m.pair then return end
-        return '\x1d'..utils.movel(#m.pair) --TODO: may not need to expand abbr
+        return utils.movel(#m.pair)
     end
 end
 function M.backspace_wrapper(m)

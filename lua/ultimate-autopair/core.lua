@@ -6,9 +6,9 @@ M.mem={}
 M.I={}
 function M.I.activate_iabbrev(key)
     if key:sub(1,1)=='\r' then
-        return ''..key
+        return '\x1d'..key
     elseif vim.regex('[^[:keyword:][:cntrl:]\x80]'):match_str(key:sub(1,1)) then
-        return ''..key
+        return '\x1d'..key
     end
     return key
 end
@@ -42,7 +42,7 @@ function M.run(key)
                 return M.I.activate_iabbrev(ret)
             end
         end
-        return vim.api.nvim_replace_termcodes(M.I.activate_iabbrev(key),true,true,true)
+        return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
     end
 end
 function M.clear()

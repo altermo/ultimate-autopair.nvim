@@ -19,7 +19,7 @@ function M.check_wrapper(m)
     return function (o)
         if o.line:sub(o.col-#m.pair+1,o.col-1)~=m.pair:sub(0,-2) then return end
         if open_pair.open_end_pair_after(m.start_pair,m.end_pair,o.line,o.col) then return end
-        return '\x1d'..m.start_pair:sub(-1)..m.end_pair..utils.moveh(#m.end_pair)
+        return m.start_pair:sub(-1)..m.end_pair..utils.moveh(#m.end_pair)
     end
 end
 function M.newline_wrapper(m)
