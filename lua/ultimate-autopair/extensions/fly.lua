@@ -1,7 +1,6 @@
 local utils=require'ultimate-autopair.utils'
 local default=require'ultimate-autopair.configs.default.utils'
 local M={}
---TODO: implement undo fly keymap
 function M.check(conf,o,m)
     local next_char_index
     local line=conf.nofilter and o.wline or o.line
