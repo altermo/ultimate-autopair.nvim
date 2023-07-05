@@ -22,7 +22,7 @@ function M.add_end_pair_wrapper(start_pair,end_pair)
     end
 end
 function M.setup()
-    vim.keymap.set('t','(',M.add_start_pair_wrapper('(',')'),{expr=true})
-    vim.keymap.set('t',')',M.add_end_pair_wrapper('(',')'),{expr=true})
+    vim.keymap.set('t','(',M.add_start_pair_wrapper('(',')'),{expr=true,replace_keycodes=false})
+    vim.keymap.set('t',')',M.add_end_pair_wrapper('(',')'),{expr=true,replace_keycodes=false})
 end
 return M
