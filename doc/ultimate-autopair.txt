@@ -151,9 +151,10 @@ The default configuration contains a loot of options, here are those:
          --use multiple configs (|ultimate-autopair-map-multi-config|)
      },
      extensions={-- *ultimate-autopair-extensions-default-config*
-         cmdtype={types={'/','?','@'},p=90},
-         filetype={p=80,nft={'TelescopePrompt'}},
-         escape={filter=true,p=70},
+         cmdtype={types={'/','?','@'},p=100},
+         filetype={p=90,nft={'TelescopePrompt'}},
+         escape={filter=true,p=90},
+         utf8={p=70},
          string={p=60},
          rules={p=40,rules=nil},
          alpha={p=30},
@@ -383,6 +384,14 @@ Example (`*` is cursor) (filetype is lua): >
  | --*    | (   | --(   | {outside={'comment'}} |
  | --*    | (   | --()  | {inside={'comment'}}  |
  | *      | (   | (     | {inside={'comment'}}  |
+<
+------------------------------------------------------------------------------
+ultimate-autopair-ext-utf8                        *ultimate-autopair-ext-utf8*
+Replaces utf8 whit its some similar char.
+Example: >
+ | before | after |
+ | ÷      | \x1d  |
+ | á      | a     |
 <
 ==============================================================================
 ADD-PAIR                                          *ultimate-autopair-add-pair*

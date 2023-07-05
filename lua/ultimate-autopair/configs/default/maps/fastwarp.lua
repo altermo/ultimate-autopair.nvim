@@ -1,7 +1,6 @@
 local default=require 'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
 local M={}
-M.alpha=[=[\v[[=a=][=b=][=c=][=d=][=e=][=f=][=g=][=h=][=i=][=j=][=k=][=l=][=m=][=n=][=o=][=p=][=q=][=r=][=s=][=t=][=u=][=v=][=w=][=x=][=y=][=z=][:keyword:]]]=]
 M.ext={}
 function M.ext.fastwarp_over_pair(o,ind,p)
     if o.col+#p~=ind then return end
@@ -25,14 +24,12 @@ function M.ext.fastwarp_next_to_end_pair(o,ind,p,m)
     return utils.delete(0,#p)..utils.movel(ind-o.col-#p)..p..utils.moveh(#p)
 end
 function M.ext.fastwarp_over_word(o,ind,p)
-    local regex=vim.regex('^'..M.alpha)
-    local offset=0
+    local regex=vim.regex('^\\k')
     if not regex:match_str(o.line:sub(ind)) then return end
-    while regex:match_str(o.line:sub(ind+offset)) do
-        offset=offset+vim.str_utf_end(o.line,ind)
+    while regex:match_str(o.line:sub(ind)) do
         ind=ind+1
     end
-    return utils.delete(0,#p)..utils.movel(ind+(#('á')==1 and offset or 0)-o.col-#p)..p..utils.moveh(#p),ind
+    return utils.delete(0,#p)..utils.movel(ind-o.col-#p)..p..utils.moveh(#p),ind
 end
 function M.fastwarp_end(o,p,m,nocursormove)
     if o.col~=#o.line+1-#p then

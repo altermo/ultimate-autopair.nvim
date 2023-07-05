@@ -54,9 +54,10 @@ M.conf={
         multi=false,
     },
     extensions={
-        cmdtype={types={'/','?','@'},p=90},
-        filetype={p=80,nft={'TelescopePrompt'}},
-        escape={filter=true,p=70},
+        cmdtype={types={'/','?','@'},p=100},
+        filetype={p=90,nft={'TelescopePrompt'}},
+        escape={filter=true,p=80},
+        utf8={p=70},
         string={p=60},
         rules={p=40,rules=nil},
         alpha={p=30},

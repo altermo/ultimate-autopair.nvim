@@ -165,7 +165,6 @@ function M.test_fastwarp()
     run(d..'I(<a<a','(<<>>)',{{'<<','>>',fastwarp=true}})
     run(d..'Ifoo,,I<a<a','<<foo>>,,',{{'<<','>>',fastwarp=true}})
     run(d..'I<a<I(','(<<>>)',{{'<<','>>'}})
-    run(d..'IaøeI(','(aøe)')
     run(d..'Ia_eI(','(a_e)')
     run(g..'I(foo)i','()foo')
     run(g..'I()i','()')
@@ -254,6 +253,11 @@ function M.test_extensions()
     --tsnode
     run(':setf lua\rI--a(o(','--(\n()',{extensions={tsnode={p=50,outside={'comment'}}}})
     run(':setf lua\rI--a(o(','--()\n(',{extensions={tsnode={p=50,inside={'comment'}}}})
+    --utf8
+    run(':imap E <A-e>\rIaøeI(E','(aøe)')
+    run(':imap H <bs>\rI(aáa0aH','aáa')
+    run('I"¿qué?"I(','("¿qué?")')
+    run('Iä\'','ä\'')
 end
 function M.test_complex()
     local f=':imap <C-e> <A-e>\r'

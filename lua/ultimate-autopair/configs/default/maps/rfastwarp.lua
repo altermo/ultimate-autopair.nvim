@@ -1,7 +1,6 @@
 local default=require 'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
 local M={}
-M.alpha=[=[\v[[=a=][=b=][=c=][=d=][=e=][=f=][=g=][=h=][=i=][=j=][=k=][=l=][=m=][=n=][=o=][=p=][=q=][=r=][=s=][=t=][=u=][=v=][=w=][=x=][=y=][=z=][:keyword:]]]=]
 M.ext={}
 function M.ext.rfastwarp_under_pair(o,ind,p)
     if o.col-1~=ind then return end
@@ -26,9 +25,9 @@ function M.ext.rfastwarp_next_to_start_pair(o,ind,p,m)
 end
 function M.ext.rfastwarp_under_word(o,ind,p)
     if o.col-1==ind then return end
-    local regex=vim.regex('^'..M.alpha)
+    local regex=vim.regex('^\\k')
     if not regex:match_str(o.line:sub(ind)) then return end
-    if regex:match_str(o.line:sub(ind+1+vim.str_utf_end(o.line,ind))) then return end
+    if regex:match_str(o.line:sub(ind+1)) then return end
     return utils.delete(0,#p)..utils.moveh(o.col-ind-1)..p..utils.moveh(#p)
 end
 function M.rfastwarp_start(o,p,m)
