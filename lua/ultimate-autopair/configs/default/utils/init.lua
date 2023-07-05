@@ -2,7 +2,7 @@ local M={}
 M.type_pair={}
 function M.get_type_opt(obj,conf)
     if type(conf)~='table' then conf={conf} end
-    local tbl=(obj._type or {})[M.type_pair]
+    local tbl=obj[M.type_pair]
     if tbl then
         for _,i in ipairs(conf) do
             for _,v in ipairs(tbl) do

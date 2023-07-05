@@ -21,7 +21,7 @@ function M.init(conf,mconf,ext)
     m.map=mconf.map~=false and conf.map
     m.p=conf.p or 10
     m.extensions=ext
-    m._type={[default.type_pair]={'newline'}}
+    m[default.type_pair]={'newline'}
     m.check=M.wrapp_newline(m)
     m.get_map=default.get_mode_map_wrapper(m.map)
     m.rule=function () return true end

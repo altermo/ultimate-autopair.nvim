@@ -91,7 +91,7 @@ function M.init(conf,mconf,ext)
     m.cmap=mconf.cmap~=false and conf.rcmap
     m.p=conf.p or 10
     m.extensions=ext
-    m._type={[default.type_pair]={'rfastwarp'}}
+    m[default.type_pair]={'rfastwarp'}
     m.check=M.wrapp_rfastwarp(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end

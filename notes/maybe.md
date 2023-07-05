@@ -144,7 +144,7 @@
 + [ ] possibility of html tag suport
 + [ ] triple pair
 + [ ] newline autoclose only pairs (`if| > CR > if\n|\nend`)
-+ [ ] full utf8 suport
++ [x] full utf8 suport
 + [ ] all mappings p set depending on mconf.p if not set
 + [ ] make a in_pair_map(pair,line): returns a table of bools (or maybe function) of whether in pair
 + [ ] buffer/InsertCharPre way of keybindings

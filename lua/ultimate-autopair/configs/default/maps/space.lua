@@ -79,7 +79,7 @@ function M.init(conf,mconf,ext)
     m.cmap=mconf.cmap~=false and conf.cmap
     m.p=conf.p or 10
     m.extensions=ext
-    m._type={[default.type_pair]={'dobackspace','space'}}
+    m[default.type_pair]={'dobackspace','space'}
     m.backspace=M.backspace
     m.check=M.wrapp_space(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)

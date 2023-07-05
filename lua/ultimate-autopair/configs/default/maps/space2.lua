@@ -40,7 +40,7 @@ function M.init(conf,mconf,ext)
     m.rule=function () return true end
     m.iconf=conf
     m.conf=conf.conf or {}
-    m._type={[default.type_pair]={'space2'}}
+    m[default.type_pair]={'space2'}
     m.extensions=ext
     m.p=conf.p or 10
     m.callback=M.space_wrapp(m)

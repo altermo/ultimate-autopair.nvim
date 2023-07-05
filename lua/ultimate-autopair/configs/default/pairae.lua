@@ -72,7 +72,7 @@ function M.init(q)
     m.extensions=q.extensions
     m.conf=q.conf
     m.key=m.pair:sub(1,1)
-    m._type={[default.type_pair]={'pair','ambigous-end'}}
+    m[default.type_pair]={'pair','ambigous-end'}
     m.fn=default.init_fns(m,M.fn)
     m.mconf=q.mconf
 

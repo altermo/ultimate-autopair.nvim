@@ -3,7 +3,7 @@ local default=require'ultimate-autopair.configs.default.utils'
 function M.call(m,ext)
     local exte=default.prepare_extensions(ext.conf.ext)
     local nm=vim.deepcopy(m)
-    nm._type=m._type
+    nm[default.type_pair]=m[default.type_pair]
     ---@diagnostic disable-next-line: duplicate-set-field
     nm.check=function (_) end
     nm.rule=function () return true end
