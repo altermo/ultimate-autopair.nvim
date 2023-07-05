@@ -1,5 +1,5 @@
 local M={}
-M.map={ --TODO: make config option
+M.map={
     ['[=a=]']='a',
     ['[=b=]']='b',
     ['[=c=]']='c',
@@ -28,10 +28,10 @@ M.map={ --TODO: make config option
     ['[=z=]']='z',
     [true]='\x01',
 }
-function M.get_char(char)
-    for k,v in pairs(M.map) do
+function M.get_char(char,conf)
+    for k,v in pairs(conf.map or M.map) do
         if type(k)=='string' then
-            local regex=vim.regex([=[^\v[]=]..k..']')
+            local regex=vim.regex('\\v['..k..']')
             if regex:match_str(char) then
                 return v
             end
@@ -39,14 +39,15 @@ function M.get_char(char)
     end
     return M.map[true]
 end
-function M.call(m,_)
+function M.call(m,ext)
+    local conf=ext.conf
     local check=m.check
     m.check=function (o)
         local newline=''
         local newcol=0
         for i=1,#o.line do
             if vim.str_utf_end(o.line,i)>0 and vim.str_utf_start(o.line,i)==0 then
-                newline=newline..M.get_char(o.line:sub(i))
+                newline=newline..M.get_char(o.line:sub(i),conf)
                 newcol=newcol+1
             elseif vim.str_utf_start(o.line,i)==0 then
                 newline=newline..o.line:sub(i,i)

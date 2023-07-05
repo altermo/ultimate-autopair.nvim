@@ -57,7 +57,7 @@ M.conf={
         cmdtype={types={'/','?','@'},p=100},
         filetype={p=90,nft={'TelescopePrompt'}},
         escape={filter=true,p=80},
-        utf8={p=70},
+        utf8={p=70,map=nil},
         string={p=60},
         rules={p=40,rules=nil},
         alpha={p=30},

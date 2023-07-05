@@ -154,7 +154,7 @@ The default configuration contains a loot of options, here are those:
          cmdtype={types={'/','?','@'},p=100},
          filetype={p=90,nft={'TelescopePrompt'}},
          escape={filter=true,p=90},
-         utf8={p=70},
+         utf8={p=70,map=nil},
          string={p=60},
          rules={p=40,rules=nil},
          alpha={p=30},
@@ -387,11 +387,14 @@ Example (`*` is cursor) (filetype is lua): >
 <
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-utf8                        *ultimate-autopair-ext-utf8*
-Replaces utf8 whit its some similar char.
+Extension config: {map}
+Replaces utf8 whit its some similar char using `map` or defaults where keys
+are regexes.
 Example: >
- | before | after |
- | ÷      | \x1d  |
- | á      | a     |
+ | before | after | conf        |
+ | ÷      | \x1d  |             |
+ | á      | a     |             |
+ | á      | A     | {['á']='A'} |
 <
 ==============================================================================
 ADD-PAIR                                          *ultimate-autopair-add-pair*

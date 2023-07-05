@@ -223,7 +223,7 @@ function M.test_extensions()
     run([[I"'xI']],[[''"'"]])
     run([[I'""(a)]],[['""()']])
     run('I(")"','(")")')
-    --run(':setf lua\rI[[)I (','() [[)]]') --TODO
+    --run(':setf lua\rI[[)I (','() [[)]]') --TODO: activate treesitter
     --cmdline
     run(':call setline(1,["foo\r','foo')
     run(':call setline(1,[input("\r(\r','(')
@@ -258,6 +258,8 @@ function M.test_extensions()
     run(':imap H <bs>\rI(aáa0aH','aáa')
     run('I"¿qué?"I(','("¿qué?")')
     run('Iä\'','ä\'')
+    run('Ió\'','ó\'\'',{extensions={utf8={map={['ó']='0'}}}})
+    --run(':imap H <bs>\rI"ě""H$','"ě"$')
 end
 function M.test_complex()
     local f=':imap <C-e> <A-e>\r'
