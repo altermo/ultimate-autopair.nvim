@@ -159,3 +159,4 @@
 + [ ] make tsnode extension recursively find if in node (option)
 + [ ] `default.matching_pair_start/end` get a pair of pairs `(|foo)` > `{(=1,)=5}`
 + [x] multiple same file maps (like `bs`) in one config with different options
++ [ ] make so that extensions can be not sourced (disabled) for spesific maps (like disableing ext-string for fastwarp)

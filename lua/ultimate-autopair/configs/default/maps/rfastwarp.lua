@@ -40,8 +40,6 @@ function M.rfastwarp_start(o,p,m)
     return utils.delete(0,#p)..utils.key_up..utils.key_end..p..utils.moveh(#p),0,1
 end
 function M.rfastwarp(o,m,nocursormove)
-    o.line=m.iconf.filter and o.line or o.wline
-    o.col=m.iconf.filter and o.col or o.wcol
     local move
     if nocursormove then
         local spair=default.start_pair(o.col,o.line)
@@ -98,7 +96,7 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_rfastwarp(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
-    default.init_extensions(m,m.extensions)
+    default.init_extensions(m,vim.tbl_filter(function (k) return conf.filter_string or k.name~='string' end,m.extensions))
     local check=m.check
     m.check=function (o)
         o.wline=o.line

@@ -32,7 +32,7 @@ function M.ext.fastwarp_over_word(o,ind,p)
         offset=offset+vim.str_utf_end(o.line,ind)
         ind=ind+1
     end
-    return utils.delete(0,#p)..utils.movel(ind-o.col-#p)..p..utils.moveh(#p),ind
+    return utils.delete(0,#p)..utils.movel(ind+(#('á')==1 and offset or 0)-o.col-#p)..p..utils.moveh(#p),ind
 end
 function M.fastwarp_end(o,p,m,nocursormove)
     if o.col~=#o.line+1-#p then
@@ -44,8 +44,6 @@ function M.fastwarp_end(o,p,m,nocursormove)
     return utils.delete(0,#p)..utils.key_down..utils.key_home..''..p..utils.moveh(#p),0,1
 end
 function M.fastwarp(o,m,nocursormove)
-    o.line=m.iconf.filter and o.line or o.wline
-    o.col=m.iconf.filter and o.col or o.wcol
     local move
     if nocursormove then
         local spair=default.start_pair(o.col,o.line)
@@ -109,7 +107,7 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_fastwarp(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
-    default.init_extensions(m,m.extensions)
+    default.init_extensions(m,vim.tbl_filter(function (k) return conf.filter_string or k.name~='string' end,m.extensions))
     local check=m.check
     m.check=function (o)
         o.wline=o.line
