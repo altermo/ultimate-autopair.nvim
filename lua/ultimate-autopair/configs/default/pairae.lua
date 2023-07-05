@@ -58,7 +58,7 @@ end
 function M.backspace_wrapper(m)
     return function (o)
         if o.line:sub(o.col-#m.pair-#m.pair,o.col-1-#m.pair)==m.pair and m.pair==o.line:sub(o.col-#m.pair,o.col-1) then
-            if not open_pair.open_pair_ambigous(m.pair,o.line,o.col) then
+            if open_pair.open_pair_ambigous_before(m.pair,o.line,o.col)==open_pair.open_pair_ambigous_after(m.pair,o.line,o.col) then
                 return utils.delete(#m.pair+#m.pair)
             end
         end

@@ -3,6 +3,7 @@ local utils=require'ultimate-autopair.utils'
 local M={}
 M.fn={
     in_pair=function (m,line,col,conf)
+        col=conf.wcol or col
         if conf.notree then return end
         if utils.incmd() then return end
         local s,node=pcall(utils.gettsnode,conf.linenr-1,col-1) --Slow
