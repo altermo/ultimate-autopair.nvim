@@ -3,7 +3,17 @@ local M={}
 local utils=require'ultimate-autopair.utils'
 local debug=require'ultimate-autopair.debug'
 M.mem={}
+M.mapc={}
+M.mapi={}
 M.I={}
+function M.I.get_maps(mode)
+    local maps=vim.api.nvim_get_keymap(mode)
+    local ret={}
+    for _,v in ipairs(maps) do
+        ret[v.lhs]=v
+    end
+    return ret
+end
 function M.I.activate_iabbrev(key)
     if key:sub(1,1)=='\r' then
         return '\x1d'..key
@@ -46,8 +56,22 @@ function M.run(key)
     end
 end
 function M.clear()
-    if not vim.tbl_isempty(M.mem or {}) then error('Double initialization of plugin ultimate-autopair') end
+    for _,v in ipairs(M.mem) do
+        if v.oinit then v.oinit(true) end
+    end
+    for k,v in pairs(M.mapc) do
+        --TODO: if cmapps[k] and cmapps[k].callback==M.run() then vim.keymap.del('c',k,{}) end
+        vim.keymap.del('c',k,{})
+        if v then vim.api.nvim_set_keymap('c',v.lhsraw,v.rhs,{desc=v.desc,noremap=v.noremap,callback=v.callback,expr=v.expr}) end
+    end
+    for k,v in pairs(M.mapi) do
+        --TODO: if imapps[k] and imapps[k].callback==M.run() then vim.keymap.del('i',k,{}) end
+        vim.keymap.del('i',k,{})
+        if v then vim.api.nvim_set_keymap('i',v.lhsraw,v.rhs,{desc=v.desc,noremap=v.noremap,callback=v.callback,expr=v.expr}) end
+    end
     M.mem={}
+    M.mapc={}
+    M.mapi={}
 end
 function M.I.sort()
     table.sort(M.mem,function(a,b)
@@ -84,10 +108,22 @@ function M.init()
             end
         end
     end
+    local imapps=M.I.get_maps('i')
+    local cmapps=M.I.get_maps('c')
     for k,v in pairs(imapped) do
+        if imapps[k] then
+            M.mapi[k]=imapps[k]
+        else
+            M.mapi[k]=false
+        end
         vim.keymap.set('i',k,M.run(k),{noremap=true,expr=true,desc=vim.fn.join(v.desc,'\n\t\t '),replace_keycodes=false})
     end
     for k,v in pairs(cmapped) do
+        if cmapps[k] then
+            M.mapc[k]=cmapps[k]
+        else
+            M.mapc[k]=false
+        end
         vim.keymap.set('c',k,M.run(k),{noremap=true,expr=true,desc=vim.fn.join(v.desc,'\n\t\t '),replace_keycodes=false})
     end
 end

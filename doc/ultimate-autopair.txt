@@ -503,5 +503,8 @@ To enable ultimate-autopair, use `require'ultimate-autopair'.enable()`.
 ------------------------------------------------------------------------------
 ultimate-autopair-toggle                            *ultimate-autopair-toggle*
 To toggle ultimate-autopair, use `require'ultimate-autopair'.toggle()`.
+------------------------------------------------------------------------------
+ultimate-autopair-clear                              *ultimate-autopair-clear*
+To clear ultimate-autopair mappings, use `require'ultimate-autopair'.clear()`.
 
 vim:ft=help:

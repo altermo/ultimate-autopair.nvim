@@ -45,7 +45,7 @@ function M.init(conf,mconf,ext)
     m.p=conf.p or 10
     m.callback=M.space_wrapp(m)
     m.oinit=function (delete)
-        if delete then vim.api.nvim_del_autocmd(M.au_id) return end
+        if delete then vim.api.nvim_del_autocmd(m.au) return end
         m.au=vim.api.nvim_create_autocmd('InsertCharPre',{callback=m.callback})
     end
     default.init_extensions(m,m.extensions)

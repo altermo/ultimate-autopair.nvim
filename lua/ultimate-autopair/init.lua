@@ -76,4 +76,7 @@ end
 function M.init()
     debug.wrapp_smart_debugger(config.init,config.conf)()
 end
+function M.clear()
+    debug.wrapp_smart_debugger(core.clear)()
+end
 return M

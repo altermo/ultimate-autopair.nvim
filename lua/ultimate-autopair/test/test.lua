@@ -24,7 +24,7 @@ function M.main()
     end
     M.path=vim.fn.fnamemodify(vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1],':h:h')
     M.count=0
-    local rdps=vim.fn.system('grep -r --exclude=test.lua print '..M.path..'/lua')
+    local rdps=vim.fn.system('grep -r --exclude=test.lua --exclude=demo.lua print '..M.path..'/lua')
     if rdps~='' then
         M.error('A rouge debug prin\t statement was spotted at '..rdps)
     end

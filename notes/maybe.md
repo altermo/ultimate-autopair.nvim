@@ -148,7 +148,7 @@
 + [ ] all mappings p set depending on mconf.p if not set
 + [ ] make a in_pair_map(pair,line): returns a table of bools (or maybe function) of whether in pair
 + [ ] buffer/InsertCharPre way of keybindings
-+ [ ] auto set previous imapping as fallback
++ [ ] auto set previous mapping as fallback
 + [ ] fastwarp to broad: make an option to not make it so (maybe: only hop over treesitter nodes/functions calls with dots and calls `M.fn(a)`)
 + [ ] object which contains a list of the pairs, like `(foo'')` > `{'(',"'","'",)}` pluss extra info (position,count,...)
 + [ ] caching values from open_pair functions
