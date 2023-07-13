@@ -20,6 +20,9 @@ function M.init_map(conf,mconf)
     local m={}
     m.p=conf.p or mconf.p or 10
     m.mode=type(conf[1])=='string' and {conf[1]} or conf[1]
+    if not vim.tbl_contains({'i','c'},m.mode) then
+        error('Only command and insert modes supported')
+    end
     m.lhs=conf[2]
     m.rhs=conf[3]
     m.conf=conf

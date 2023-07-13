@@ -35,8 +35,8 @@ M.demo.part_1={
         ' --normal',
         '{{{{}} --prioritize close instead of hop',
     },
-    'i({[  ]})j',
-    '0f}i}}}}',
+    'i({[  ]})j0',
+    'f}i}}}}',
     vim.cmd.stopinsert,
 }
 function M.run_key(key)
