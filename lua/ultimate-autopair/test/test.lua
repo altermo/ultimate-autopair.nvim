@@ -206,10 +206,14 @@ function M.test_other_map()
     run('I$ foo','$ foo $',{{'$','$',space=true},space={enable=false},space2={enable=true}})
     run('I<a< foo','<< foo >>',{{'<<','>>',space=true},space={enable=false},space2={enable=true}})
     --close
-    --run('I(a','()') --TBD
-    --run('I({a','({})') --TBD
-    --run('I({(la','({()})') --TBD
-    --run('I({)i','({})') --TBD
+    local b=':imap <C-b> <A-)>\r'
+    run(b..'I(a','()')
+    run(b..'I({a','({})')
+    run(b..'I({(la','({()})')
+    run(b..'I({)i','({})')
+    run(b..'I"a','""')
+    run(b..'I("a','("")')
+    run(b..'I("a','("")')
 end
 function M.test_extensions()
     --suround

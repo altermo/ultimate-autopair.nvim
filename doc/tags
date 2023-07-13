@@ -4,6 +4,7 @@ ultimate-autopair-add-pair	ultimate-autopair.txt	/*ultimate-autopair-add-pair*
 ultimate-autopair-add-start-pair	ultimate-autopair.txt	/*ultimate-autopair-add-start-pair*
 ultimate-autopair-api	ultimate-autopair.txt	/*ultimate-autopair-api*
 ultimate-autopair-clear	ultimate-autopair.txt	/*ultimate-autopair-clear*
+ultimate-autopair-close	ultimate-autopair.txt	/*ultimate-autopair-close*
 ultimate-autopair-config	ultimate-autopair.txt	/*ultimate-autopair-config*
 ultimate-autopair-config-default	ultimate-autopair.txt	/*ultimate-autopair-config-default*
 ultimate-autopair-config-system	ultimate-autopair.txt	/*ultimate-autopair-config-system*
@@ -33,6 +34,7 @@ ultimate-autopair-fastwarp	ultimate-autopair.txt	/*ultimate-autopair-fastwarp*
 ultimate-autopair-map	ultimate-autopair.txt	/*ultimate-autopair-map*
 ultimate-autopair-map-backspace	ultimate-autopair.txt	/*ultimate-autopair-map-backspace*
 ultimate-autopair-map-backspace-config	ultimate-autopair.txt	/*ultimate-autopair-map-backspace-config*
+ultimate-autopair-map-close-config	ultimate-autopair.txt	/*ultimate-autopair-map-close-config*
 ultimate-autopair-map-fastwarp-config	ultimate-autopair.txt	/*ultimate-autopair-map-fastwarp-config*
 ultimate-autopair-map-multi-config	ultimate-autopair.txt	/*ultimate-autopair-map-multi-config*
 ultimate-autopair-map-newline	ultimate-autopair.txt	/*ultimate-autopair-map-newline*

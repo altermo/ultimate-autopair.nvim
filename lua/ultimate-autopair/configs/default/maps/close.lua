@@ -1,8 +1,5 @@
 local M={}
 M.I={}
-M.default_conf={
-    map='<A-)>',
-}
 local default=require'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
 function M.I.tbl_find(tbl,pair_end)
@@ -55,16 +52,38 @@ function M.get_pair_closes(line,col)
     local pair=M.get_open_start_pairs(line,col)
     return vim.fn.join(vim.tbl_map(function(x) return x.end_pair end,pair),'')
 end
-function M.close_pairs()
-    local pair=M.get_pair_closes(
-        utils.getline(),
-        utils.getcol())
+function M.close_pairs(line,col)
+    local pair=M.get_pair_closes(line,col)
     return pair..utils.moveh(#pair)
 end
-function M.setup(conf)
-    conf=vim.tbl_extend('force',M.default_conf,conf or {})
-    if conf.map then
-        vim.keymap.set('i',conf.map,M.close_pairs,{expr=true,replace_keycodes=false})
+function M.wrapp_close(_)
+    return function (o)
+        return M.close_pairs(o.line,o.col)
     end
+end
+function M.init(conf,mconf,ext)
+    if conf.enable==false then return end
+    local m={}
+    m.iconf=conf
+    m.conf=conf.conf or {}
+    m.map=mconf.map~=false and conf.map
+    m.cmap=mconf.cmap~=false and conf.cmap
+    m.p=conf.p or 10
+    m.extensions=ext
+    m[default.type_pair]={'close'}
+    m.check=M.wrapp_close(m)
+    m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
+    m.rule=function () return true end
+    default.init_extensions(m,m.extensions)
+    local check=m.check
+    m.check=function (o)
+        o.wline=o.line
+        o.wcol=o.col
+        if not default.key_check_cmd(o,m.map,m.map) then return end
+        if not m.rule() then return end
+        return check(o)
+    end
+    m.doc='autopairs close key map'
+    return m
 end
 return M

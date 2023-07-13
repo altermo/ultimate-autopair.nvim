@@ -11,6 +11,18 @@ local space=require'ultimate-autopair.configs.default.maps.space'
 local space2=require'ultimate-autopair.configs.default.maps.space2'
 local fastwarp=require'ultimate-autopair.configs.default.maps.fastwarp'
 local rfastwarp=require'ultimate-autopair.configs.default.maps.rfastwarp'
+local close=require'ultimate-autopair.configs.default.maps.close'
+M.I={}
+function M.I.wrapp_map(module)
+    return function (confs,mem,mconf,ext)
+        if confs and not confs.multi then confs={confs} end
+        for _,conf in ipairs(confs or {}) do
+            conf=vim.tbl_extend('keep',conf,confs)
+            local I=module.init(conf or {},mconf,ext)
+            if I then table.insert(mem,I) end
+        end
+    end
+end
 function M.init_multi(q)
     if q.type=='tsnode' then
         return {pair_t.init(q)}
@@ -50,6 +62,7 @@ function M.init_conf(conf,mem)
     M.init_space2(conf.space2,mem,conf,ext)
     M.init_fastwarp(conf.fastwarp,mem,conf,ext)
     M.init_rfastwarp(conf.fastwarp,mem,conf,ext)
+    M.init_close(conf.close,mem,conf,ext)
 end
 function M.init_ext(ext,mem,mconf)
     for _,v in ipairs(ext) do
@@ -59,40 +72,11 @@ function M.init_ext(ext,mem,mconf)
         end
     end
 end
-function M.clear()
-end
-function M.init_bs(confs,mem,mconf,ext)
-    if confs and not confs.multi then confs={confs} end
-    for _,conf in ipairs(confs or {}) do
-        conf=vim.tbl_extend('keep',conf,confs)
-        local Ibs=bs.init(conf or {},mconf,ext)
-        if Ibs then table.insert(mem,Ibs) end
-    end
-end
-function M.init_cr(confs,mem,mconf,ext)
-    if confs and not confs.multi then confs={confs} end
-    for _,conf in ipairs(confs or {}) do
-        conf=vim.tbl_extend('keep',conf,confs)
-        local Icr=cr.init(conf or {},mconf,ext)
-        if Icr then table.insert(mem,Icr) end
-    end
-end
-function M.init_space(confs,mem,mconf,ext)
-    if confs and not confs.multi then confs={confs} end
-    for _,conf in ipairs(confs or {}) do
-        conf=vim.tbl_extend('keep',conf,confs)
-        local Ispace=space.init(conf or {},mconf,ext)
-        if Ispace then table.insert(mem,Ispace) end
-    end
-end
-function M.init_space2(confs,mem,mconf,ext)
-    if confs and not confs.multi then confs={confs} end
-    for _,conf in ipairs(confs or {}) do
-        conf=vim.tbl_extend('keep',conf,confs)
-        local Ispace=space2.init(conf or {},mconf,ext)
-        if Ispace then table.insert(mem,Ispace) end
-    end
-end
+M.init_bs=M.I.wrapp_map(bs)
+M.init_cr=M.I.wrapp_map(cr)
+M.init_space=M.I.wrapp_map(space)
+M.init_space2=M.I.wrapp_map(space2)
+M.init_close=M.I.wrapp_map(close)
 function M.init_fastwarp(confs,mem,mconf,ext)
     if confs and not confs.multi then confs={confs} end
     for _,conf in ipairs(confs or {}) do

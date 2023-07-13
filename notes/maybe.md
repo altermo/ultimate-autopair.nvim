@@ -2,7 +2,7 @@
 + [x] make key spesific fallback
 + [x] make it have the ability to use extensions
 + [x] make maps use filtering pair extensions
-+ [ ] `[{"| > <A-k> > [{""}]`
++ [x] `[{"| > <A-k> > [{""}]`
 + [ ] undo map for suround/autopair/...
 ## CR
 + [x] support

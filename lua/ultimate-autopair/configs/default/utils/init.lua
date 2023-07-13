@@ -11,9 +11,17 @@ function M.get_type_opt(obj,conf)
         end
     end
 end
-function M.sort(a,b,fn)
+function M.sort(a,b)
     if M.get_type_opt(a,'pair') and M.get_type_opt(b,'pair') then
-        if #a.pair==#b.pair and fn then return fn(a,b) end
+        if #a.pair==#b.pair then
+            if M.get_type_opt(a,{'start','ambigous-start'})
+                and M.get_type_opt(b,{'end','ambigous-end'}) then
+                return false
+            elseif M.get_type_opt(a,{'end','ambigous-end'})
+                and M.get_type_opt(b,{'start','ambigous-start'}) then
+                return true
+            end
+        end
         return #a.pair>#b.pair
     end
 end

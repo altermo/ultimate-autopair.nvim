@@ -82,13 +82,7 @@ function M.init(q)
     m.rule=function () return true end
     default.init_extensions(m,m.extensions)
     m.get_map=default.get_map_wrapper({q.cmap and 'c',q.map and 'i'},m.key)
-    m.sort=function (a,b) return default.sort(a,b,function(c,d)
-        if default.get_type_opt(c,'ambigous-start') and default.get_type_opt(d,'ambigous-end') then
-            return false
-        elseif default.get_type_opt(c,'ambigous-end') and default.get_type_opt(d,'ambigous-start') then
-            return true
-        end
-    end) end
+    m.sort=default.sort
     m.p=q.p or 10
     local check=m.check
     m.check=function (o)

@@ -78,7 +78,7 @@ The default configuration contains a loot of options, here are those:
      bs={-- *ultimate-autopair-map-backspace-config*
          enable=true,
          map='<bs>', --string or table
-         cmap='<bs>',
+         cmap='<bs>', --string or table
          overjumps=true,
          --(|foo) > bs > |foo
          space=true, --false, true or 'balance'
@@ -106,8 +106,8 @@ The default configuration contains a loot of options, here are those:
      },
      space={-- *ultimate-autopair-map-space-config*
          enable=true,
-         map=' ',
-         cmap=' ',
+         map=' ', --string or table
+         cmap=' ', --string or table
          check_box_ft={'markdown','vimwiki'},
          --+ [|] > space > + [ ]
          conf={},
@@ -130,10 +130,10 @@ The default configuration contains a loot of options, here are those:
          enable_reverse=true,
          hopout=false,
          --{(|)} > fastwarp > {(}|)
-         map='<A-e>',
-         rmap='<A-E>',
-         cmap='<A-e>',
-         rcmap='<A-E>',
+         map='<A-e>', --string or table
+         rmap='<A-E>', --string or table
+         cmap='<A-e>', --string or table
+         rcmap='<A-E>', --string or table
          multiline=true,
          --(|) > fastwarp > (\n|)
          nocursormove=true,
@@ -145,6 +145,15 @@ The default configuration contains a loot of options, here are those:
          --then an `e` will not be inserted
          filter_string=false,
          --whether to use builting filter string
+         conf={},
+         --contains extension config
+         multi=false,
+         --use multiple configs (|ultimate-autopair-map-multi-config|)
+     },
+     close={-- *ultimate-autopair-map-close-config*
+         enable=true,
+         map='<A-)>', --string or table
+         cmap='<A-)>', --string or table
          conf={},
          --contains extension config
          multi=false,
@@ -269,6 +278,18 @@ Example (`*` is cursor): >
 ultimate-autopair-rfastwarp                      *ultimate-autopair-rfastwarp*
 The rfastwarp mapping is designed to do the opposite of fastwarp.
 For configuration options see: |ultimate-autopair-map-fastwarp-config|
+------------------------------------------------------------------------------
+ultimate-autopair-close                              *ultimate-autopair-close*
+The close mapping closes opened pairs.
+For configuration options see: |ultimate-autopair-map-close-config|
+Example (`*` is cursor): >
+ | before | after |
+ |--------+-------|
+ | (*     | (*)   |
+ | ({*    | ({*}) |
+ | (*)    | (*)   |
+ | "*     | "*"   |
+<
 ------------------------------------------------------------------------------
 ultimate-autopair-map-multi-config        *ultimate-autopair-map-multi-config*
 In each map, you can set `multi` to `true` to have multiple configs at the
