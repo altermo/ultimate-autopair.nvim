@@ -17,6 +17,9 @@ end
 function M.init_map(conf,mem)
     require'ultimate-autopair.configs.other.map'.init_conf(conf,mem)
 end
+function M.init_multi(conf,mem)
+    require'ultimate-autopair.configs.other.multi'.init_conf(conf,mem)
+end
 function M.init_conf(conf,mem)
     if conf.config_type=='default' then
         M.init_default(conf,mem)
@@ -26,6 +29,8 @@ function M.init_conf(conf,mem)
         M.init_cond(conf,mem)
     elseif conf.config_type=='map' then
         M.init_map(conf,mem)
+    elseif conf.config_type=='multi' then
+        M.init_multi(conf,mem)
     elseif type(conf.config_type)=='function' then
         conf.config_type(conf,mem)
     end

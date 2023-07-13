@@ -12,6 +12,7 @@ ultimate-autopair-config-system-init	ultimate-autopair.txt	/*ultimate-autopair-c
 ultimate-autopair-config-type-cond	ultimate-autopair.txt	/*ultimate-autopair-config-type-cond*
 ultimate-autopair-config-type-default	ultimate-autopair.txt	/*ultimate-autopair-config-type-default*
 ultimate-autopair-config-type-map	ultimate-autopair.txt	/*ultimate-autopair-config-type-map*
+ultimate-autopair-config-type-multi	ultimate-autopair.txt	/*ultimate-autopair-config-type-multi*
 ultimate-autopair-config-type-raw	ultimate-autopair.txt	/*ultimate-autopair-config-type-raw*
 ultimate-autopair-debug	ultimate-autopair.txt	/*ultimate-autopair-debug*
 ultimate-autopair-disable	ultimate-autopair.txt	/*ultimate-autopair-disable*
