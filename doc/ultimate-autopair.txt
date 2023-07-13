@@ -466,6 +466,32 @@ Example (`*` is cursor): >
  | ''*''  | '    | '''*''' |
 <
 ==============================================================================
+API                                                    *ultimate-autopair-api*
+------------------------------------------------------------------------------
+ultimate-autopair-disable                          *ultimate-autopair-disable*
+To disable ultimate-autopair, use `require'ultimate-autopair'.disable()`.
+------------------------------------------------------------------------------
+ultimate-autopair-enable                            *ultimate-autopair-enable*
+To enable ultimate-autopair, use `require'ultimate-autopair'.enable()`.
+------------------------------------------------------------------------------
+ultimate-autopair-toggle                            *ultimate-autopair-toggle*
+To toggle ultimate-autopair, use `require'ultimate-autopair'.toggle()`.
+------------------------------------------------------------------------------
+ultimate-autopair-clear                              *ultimate-autopair-clear*
+To clear ultimate-autopair mappings, use `require'ultimate-autopair'.clear()`.
+------------------------------------------------------------------------------
+ultimate-autopair-list                    *            ultimate-autopair-list*
+To list ultimate-autopair pairs, use `require'ultimate-autopair'.list()`.
+------------------------------------------------------------------------------
+ultimate-autopair-init                                *ultimate-autopair-init*
+To initialize ultimate-autopair, use `require'ultimate-autopair'.init()`.
+------------------------------------------------------------------------------
+ultimate-autopair-setup                              *ultimate-autopair-setup*
+To setup ultimate-autopair, use `require'ultimate-autopair'.setup()`.
+------------------------------------------------------------------------------
+ultimate-autopair-add-conf                        *ultimate-autopair-add-conf*
+To add config to ultimate-autopair, use `require'ultimate-autopair'.add_conf()`.
+==============================================================================
 OBJECTS                                            *ultimate-autopair-objects*
 Todo: write more documentation
 ------------------------------------------------------------------------------
@@ -498,9 +524,6 @@ returns false: a is smaller.
 The `desc` {optional}
 Describes the object.
 ==============================================================================
-API                                                    *ultimate-autopair-api*
-Todo: write documentation
-==============================================================================
 WRITING-EXTENSIONS                      *ultimate-autopair-writing-extensions*
 Todo: write documentation
 ==============================================================================
@@ -525,17 +548,5 @@ The root directory `notes` contains notes and scribbles about the plugin.
 ------------------------------------------------------------------------------
 ultimate-autopair-experimental                *ultimate-autopair-experimental*
 `experimental` directory contains experimental features.
-------------------------------------------------------------------------------
-ultimate-autopair-disable                          *ultimate-autopair-disable*
-To disable ultimate-autopair, use `require'ultimate-autopair'.disable()`.
-------------------------------------------------------------------------------
-ultimate-autopair-enable                            *ultimate-autopair-enable*
-To enable ultimate-autopair, use `require'ultimate-autopair'.enable()`.
-------------------------------------------------------------------------------
-ultimate-autopair-toggle                            *ultimate-autopair-toggle*
-To toggle ultimate-autopair, use `require'ultimate-autopair'.toggle()`.
-------------------------------------------------------------------------------
-ultimate-autopair-clear                              *ultimate-autopair-clear*
-To clear ultimate-autopair mappings, use `require'ultimate-autopair'.clear()`.
 
 vim:ft=help:

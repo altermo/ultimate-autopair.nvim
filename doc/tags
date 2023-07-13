@@ -1,4 +1,5 @@
 ultimate-autopair-add-ambiguous-pair	ultimate-autopair.txt	/*ultimate-autopair-add-ambiguous-pair*
+ultimate-autopair-add-conf	ultimate-autopair.txt	/*ultimate-autopair-add-conf*
 ultimate-autopair-add-end-pair	ultimate-autopair.txt	/*ultimate-autopair-add-end-pair*
 ultimate-autopair-add-pair	ultimate-autopair.txt	/*ultimate-autopair-add-pair*
 ultimate-autopair-add-start-pair	ultimate-autopair.txt	/*ultimate-autopair-add-start-pair*
@@ -32,6 +33,8 @@ ultimate-autopair-ext-utf8	ultimate-autopair.txt	/*ultimate-autopair-ext-utf8*
 ultimate-autopair-extensions	ultimate-autopair.txt	/*ultimate-autopair-extensions*
 ultimate-autopair-extensions-default-config	ultimate-autopair.txt	/*ultimate-autopair-extensions-default-config*
 ultimate-autopair-fastwarp	ultimate-autopair.txt	/*ultimate-autopair-fastwarp*
+ultimate-autopair-init	ultimate-autopair.txt	/*ultimate-autopair-init*
+ultimate-autopair-list-pairs	ultimate-autopair.txt	/*ultimate-autopair-list-pairs*
 ultimate-autopair-map	ultimate-autopair.txt	/*ultimate-autopair-map*
 ultimate-autopair-map-backspace	ultimate-autopair.txt	/*ultimate-autopair-map-backspace*
 ultimate-autopair-map-backspace-config	ultimate-autopair.txt	/*ultimate-autopair-map-backspace-config*
@@ -49,6 +52,7 @@ ultimate-autopair-other	ultimate-autopair.txt	/*ultimate-autopair-other*
 ultimate-autopair-pairs-configure-default-pairs	ultimate-autopair.txt	/*ultimate-autopair-pairs-configure-default-pairs*
 ultimate-autopair-pairs-default-pairs	ultimate-autopair.txt	/*ultimate-autopair-pairs-default-pairs*
 ultimate-autopair-rfastwarp	ultimate-autopair.txt	/*ultimate-autopair-rfastwarp*
+ultimate-autopair-setup	ultimate-autopair.txt	/*ultimate-autopair-setup*
 ultimate-autopair-space	ultimate-autopair.txt	/*ultimate-autopair-space*
 ultimate-autopair-space2	ultimate-autopair.txt	/*ultimate-autopair-space2*
 ultimate-autopair-test	ultimate-autopair.txt	/*ultimate-autopair-test*
