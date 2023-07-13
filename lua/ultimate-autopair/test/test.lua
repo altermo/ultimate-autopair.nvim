@@ -260,7 +260,6 @@ function M.test_extensions()
     run('Iä\'','ä\'')
     run('Ió\'','ó\'\'',{extensions={utf8={map={['ó']='0'}}}})
     run(':imap H <bs>\rI"ě""H$','"ě"$')
-    run('Iä\'','ä\'')
 end
 function M.test_complex()
     local f=':imap <C-e> <A-e>\r'
