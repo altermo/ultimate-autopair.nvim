@@ -14,7 +14,6 @@
 + [x] auto add multicharacter pairs `then| > CR > then\n|\nend`
 + [x] autocomplete integration
 + [x] make key spesific fallback
-+ [x] auto add ; att the end of } in c when newline
 + [x] auto add pairs `{|}; > CR > {\n|\n};`
 + [x] auto add pairs `{|} foo > CR > {\n|\n} foo`
 + [x] auto add pairs `({|}) > CR > ({\n|\n})`
@@ -23,8 +22,9 @@
 + [x] dont add multicharacter pairs `then|\nend > CR > then\n|\nend`
 + [x] auto add even if text `(|abc) > CR > (\n|abc\n)`
 + [x] make map use filtering pair extensions
-+ [ ] auto add pairs `({| > CR > ({\n|\n})`
++ [x] auto add pairs `({| > CR > ({\n|\n})`
 + [ ] splitjoin plugin integration
++ [ ] auto add ; att the end of } in c when newline
 ## BS
 + [x] suport
 + [x] remove the pair `[|] > BS > |`

@@ -29,9 +29,6 @@ function M.newline_wrapper(m)
             if matching_pair_pos then
                 return utils.movel(matching_pair_pos-o.col-1)..'\r'..utils.key_up..utils.key_home..utils.movel(o.wcol-1)..'\r'
             end
-            if not conf.autoclose then return end
-            if vim.trim(utils.getline(o.linenr+1) or ''):sub(1,#m.end_pair)==m.end_pair then return end
-            return '\r'..m.end_pair..utils.key_up..utils.key_end..'\r'
         end
     end
 end

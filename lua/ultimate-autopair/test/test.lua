@@ -95,11 +95,15 @@ function M.test_newline()
     run(':set cindent\rI{a\r','{\n\t\n}')
     run(':set cindent\rI{foo\r','{foo\n\t\n}')
     run(':set cindent\rI{foobi\r','{\n\tfoo\n}')
-    run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
     run(':setf lua\rIlocal x=[[\r','local x=[[\n\n]]')
     run(':setf python\rI"""\r','"""\n\n"""')
-    --run(':set cindent\rI{fooa\r','{\n\t\n}',{cr={autoclose=true}})
-    --run(':setf lua\rIdoA\r','do\n\nend',{cr={autoclose=true},{'do','end',imap=false,ft='lua'}})
+    run('I{a\r','{\n\n}',{cr={autoclose=true}})
+    run('I{[(a\r','{[(\n\n)]}',{cr={autoclose=true}})
+    run('o)kI({a\r','({\n\n}\n)',{cr={autoclose=true}})
+    run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
+    run(':set cindent\rI{fooa\r','{foo\n\t\n}',{cr={autoclose=true}})
+    run(':set cindent\rI{foobi\r','{\n\tfoo\n}',{cr={autoclose=true}})
+    --run(':setf lua\rIdoA\r','do\n\nend',{cr={autoclose=true},{'do','end',imap=false,ft='lua'}}) --TODO
     --run(':setf c\r:set cindent\rI{\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};') --TBD

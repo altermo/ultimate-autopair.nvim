@@ -71,13 +71,13 @@ function M.clear()
     for k,v in pairs(M.mapc) do
         if cmapps[k] and M.funcs[k] and cmapps[k].callback==M.funcs[k] then
             vim.keymap.del('c',k,{})
-            if v then vim.api.nvim_set_keymap('c',v.lhsraw,v.rhs,{desc=v.desc,noremap=v.noremap,callback=v.callback,expr=v.expr}) end
+            if v then vim.fn.mapset('c',false,v) end
         end
     end
     for k,v in pairs(M.mapi) do
         if imapps[k] and M.funcs[k] and imapps[k].callback==M.funcs[k] then
             vim.keymap.del('i',k,{})
-            if v then vim.api.nvim_set_keymap('i',v.lhsraw,v.rhs,{desc=v.desc,noremap=v.noremap,callback=v.callback,expr=v.expr}) end
+            if v then vim.fn.mapset('i',false,v) end
         end
     end
     M.mem={}

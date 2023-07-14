@@ -61,6 +61,14 @@ function M.wrapp_close(_)
         return M.close_pairs(o.line,o.col)
     end
 end
+function M.wrapp_newline(_)
+    return function(o,_,conf)
+        if not conf.autoclose then return end
+        local pairs=M.close_pairs(o.line..(utils.getline(o.linenr+1) or ''),#o.line)
+        if pairs=='' then return end
+        return utils.key_end..'\r'..pairs..utils.key_up..utils.key_home..utils.movel(o.wcol-1)..'\r'
+    end
+end
 function M.init(conf,mconf,ext)
     if conf.enable==false then return end
     local m={}
@@ -70,10 +78,11 @@ function M.init(conf,mconf,ext)
     m.cmap=mconf.cmap~=false and conf.cmap
     m.p=conf.p or 10
     m.extensions=ext
-    m[default.type_pair]={'close'}
+    m[default.type_pair]={'close','donewline'}
     m.check=M.wrapp_close(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
+    m.newline=M.wrapp_newline(m)
     default.init_extensions(m,m.extensions)
     local check=m.check
     m.check=function (o)
