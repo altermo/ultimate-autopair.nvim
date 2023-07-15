@@ -62,14 +62,7 @@ function M.init(q)
     m.get_map=default.get_map_wrapper({q.cmap and 'c',q.map and 'i'},m.key)
     m.sort=default.sort
     m.p=q.p or 10
-    local check=m.check
-    m.check=function (o)
-        o.wline=o.line
-        o.wcol=o.col
-        if not default.key_check_cmd(o,m.key,q.map,q.cmap) then return end
-        if not m.rule() then return end
-        return check(o)
-    end
+    default.init_check_pair(m,q)
     m.doc=('autopairs end pair: %s,%s'):format(m.start_pair,m.end_pair)
     return m
 end

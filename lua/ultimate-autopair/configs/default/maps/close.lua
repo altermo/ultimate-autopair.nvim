@@ -84,14 +84,7 @@ function M.init(conf,mconf,ext)
     m.rule=function () return true end
     m.newline=M.wrapp_newline(m)
     default.init_extensions(m,m.extensions)
-    local check=m.check
-    m.check=function (o)
-        o.wline=o.line
-        o.wcol=o.col
-        if not default.key_check_cmd(o,m.map,m.map) then return end
-        if not m.rule() then return end
-        return check(o)
-    end
+    default.init_check_map(m)
     m.doc='autopairs close key map'
     return m
 end

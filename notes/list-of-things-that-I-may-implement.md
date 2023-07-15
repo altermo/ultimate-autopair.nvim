@@ -94,15 +94,15 @@
 + [x] auto goto end `[te|xt] > ] > [text]|`
 + [x] add the parens att end when logical `|{a} > [ > [|{a}]`
 + [x] filter ' in lisp not instring
++ [x] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
 + [ ] markdown code block spesific behavior (like lisp code block)
 + [ ] markdown code block filter
-+ [x] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
 + [ ] user defined multiline as one (maybe using treesitter)
 + [ ] whole file detection (requires implementation of tsnode blocks)
 + [ ] extension in extension where they can return instead of continue
 + [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
 + [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
-+ [ ] make rules use rule and not just check
++ [ ] make rules use `rule` and not just `check`
 # other
 + [x] `'a|b' > ' > 'a'|'b'`
 + [x] `[[|] > ] > [[]|] and not [[]|`
@@ -133,7 +133,7 @@
 + [ ] make everything work with multichar pair (fastwarp,space...)
 + [ ] abecodes/tabout.nvim like map
 + [ ] make use of treesitter stack of nodes at pos to filter instead of one node at pos
-+ [ ] multicharacter pair not in string/other node
++ [x] multicharacter pair not in string/other node
 + [x] auto escape extend in string?`'\|a' > ' > '\'|\'a'`
 + [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|` (requires multiline open_pair detection)
 + [ ] multicharacter pair with word delimiter `aAND ~= AND`
@@ -160,3 +160,4 @@
 + [ ] `default.matching_pair_start/end` get a pair of pairs `(|foo)` > `{(=1,)=5}`
 + [x] multiple same file maps (like `bs`) in one config with different options
 + [ ] make so that extensions can be not sourced (disabled) for spesific maps (like disableing ext-string for fastwarp)
++ [ ] make core support multiple modes `M.modes={'c','i',...}`

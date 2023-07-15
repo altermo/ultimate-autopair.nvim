@@ -14,6 +14,7 @@ function M.list()
         if item.map then
             return vim.inspect(item.map)..' '..(item.doc or '')
         end
+        return ';;;; '..(item.doc or '')
     end},function (_,idx)
             vim.cmd.vnew()
             local buf=vim.api.nvim_create_buf(false,true)

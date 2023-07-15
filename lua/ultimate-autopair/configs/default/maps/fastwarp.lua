@@ -105,14 +105,7 @@ function M.init(conf,mconf,ext)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
     default.init_extensions(m,vim.tbl_filter(function (k) return conf.filter_string or k.name~='string' end,m.extensions))
-    local check=m.check
-    m.check=function (o)
-        o.wline=o.line
-        o.wcol=o.col
-        if not default.key_check_cmd(o,m.map,m.map,m.cmap,m.cmap) then return end
-        if not m.rule() then return end
-        return check(o)
-    end
+    default.init_check_map(m)
     m.doc='autopairs fastwarp key map'
     if conf.do_nothing_if_fail then
         local n={}

@@ -178,4 +178,24 @@ function M.init_fns(module,fns)
         return function (...) return v(module,...) end
     end,fns)
 end
+function M.init_check_map(m)
+    local check=m.check
+    m.check=function (o)
+        o.wline=o.line
+        o.wcol=o.col
+        if not M.key_check_cmd(o,m.map,m.map,m.cmap,m.cmap) then return end
+        if not m.rule() then return end
+        return check(o)
+    end
+end
+function M.init_check_pair(m,q)
+    local check=m.check
+    m.check=function (o)
+        o.wline=o.line
+        o.wcol=o.col
+        if not M.key_check_cmd(o,m.key,q.map,q.cmap) then return end
+        if not m.rule() then return end
+        return check(o)
+    end
+end
 return M
