@@ -9,7 +9,7 @@ function M.error(msg)
 end
 function M.main()
     local file=vim.api.nvim_get_runtime_file('lua/ultimate-autopair/test/test.lua',false)[1]
-    if vim.loader and vim.loader.enabled and _G.__FILE and _G.__FILE~=(vim.uv or vim.loop).fs_stat(file).mtime.nsec then
+    if vim.loader and vim.loader.enabled and _G.UA_FILE and _G.UA_FILE~=(vim.uv or vim.loop).fs_stat(file).mtime.nsec then
         vim.ui.select({'Do nothing','Disable vim.loader'},
             {prompt='Can\'t run modified test while vim.loader is enabled'},
             function (choice)
@@ -20,7 +20,7 @@ function M.main()
         end)
         return
     else
-        _G.__FILE=(vim.uv or vim.loop).fs_stat(file).mtime.nsec
+        _G.UA_FILE=(vim.uv or vim.loop).fs_stat(file).mtime.nsec
     end
     M.path=vim.fn.fnamemodify(vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1],':h:h')
     M.count=0
@@ -303,7 +303,7 @@ function M.test_options()
     --TODO: write more tests
 end
 ---@diagnostic disable-next-line: undefined-field
-if not _G.DONTRUNTEST then
+if not _G.UA_DONTRUNTEST then
     M.main()
 end
 return M

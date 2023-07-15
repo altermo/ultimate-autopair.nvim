@@ -114,7 +114,7 @@ function M.wrapp_smart_debugger(f,info)
 end
 function M.create_debug(f,handeler_wrapper,info)
     ---@diagnostic disable-next-line: undefined-field
-    if _G.DONTDEBUG then
+    if _G.UA_DONTDEBUG then
         return function (...) return f(...) end
     end
     return function (...)

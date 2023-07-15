@@ -6,12 +6,12 @@ local start=vim.health.start or vim.health.report_start
 local M={}
 function M.check()
     local save={}
-    save.__FILE=_G.__FILE
-    save.DONTRUNTEST=_G.DONTRUNTEST
+    save.UA_FILE=_G.UA_FILE
+    save.UA_DONTRUNTEST=_G.UA_DONTRUNTEST
     local stat,out=pcall(function()
-        _G.DONTRUNTEST=true
+        _G.UA_DONTRUNTEST=true
         start('ultimate-autopair')
-        _G.__FILE=nil
+        _G.UA_FILE=nil
         package.loaded['ultimate-autopair.test.test']=nil
         local stat,test=pcall(require,'ultimate-autopair.test.test')
         if not stat then
@@ -35,8 +35,8 @@ function M.check()
             ok('all tests finnished')
         end
     end)
-    _G.__FILE=save.__FILE
-    _G.DONTRUNTEST=save.DONTRUNTEST
+    _G.UA_FILE=save.UA_FILE
+    _G.UA_DONTRUNTEST=save.UA_DONTRUNTEST
     if not stat then
         error(('error while checking health: %s'):format(out))
     end
