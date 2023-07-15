@@ -62,5 +62,4 @@ function M.setup()
     },{},{})})
     config.init()
 end
-M.setup()
 return M

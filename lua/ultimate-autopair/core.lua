@@ -40,14 +40,13 @@ function M.I.var_create_wrapper(key)
 end
 function M.get_run(key)
     if not M.funcs[key] then
-        M.funcs[key]=M.run(key)
+        M.funcs[key]=M.run_wrapp(key)
     end
     return M.funcs[key]
 end
 function M.run(key)
-    return function ()
         if M.disable then
-            return M.I.activate_iabbrev(key)
+            return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
         end
         local fo=M.I.var_create_wrapper(key)
         for _,v in ipairs(M.mem) do
@@ -60,6 +59,10 @@ function M.run(key)
             end
         end
         return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
+    end
+function M.run_wrapp(key)
+    return function ()
+        return M.run(key)
     end
 end
 function M.clear()
@@ -83,6 +86,7 @@ function M.clear()
     M.mem={}
     M.mapc={}
     M.mapi={}
+    M.funcs={}
 end
 function M.I.sort()
     table.sort(M.mem,function(a,b)
@@ -108,33 +112,21 @@ function M.init()
         if v.oinit then v.oinit() end
         if v.get_map then
             for _,key in ipairs(v.get_map('i') or {}) do
-                if not vim.tbl_contains(imapped[key].desc,v.doc) then
-                    table.insert(imapped[key].desc,v.doc)
-                end
+                table.insert(imapped[key].desc,v.doc)
             end
             for _,key in ipairs(v.get_map('c') or {}) do
-                if not vim.tbl_contains(cmapped[key].desc,v.doc) then
-                    table.insert(cmapped[key].desc,v.doc)
-                end
+                table.insert(cmapped[key].desc,v.doc)
             end
         end
     end
     local imapps=M.I.get_maps('i')
     local cmapps=M.I.get_maps('c')
     for k,v in pairs(imapped) do
-        if imapps[k] then
-            M.mapi[k]=imapps[k]
-        else
-            M.mapi[k]=false
-        end
+        M.mapi[k]=imapps[k] or false
         vim.keymap.set('i',k,M.get_run(k),{noremap=true,expr=true,desc=vim.fn.join(v.desc,'\n\t\t '),replace_keycodes=false})
     end
     for k,v in pairs(cmapped) do
-        if cmapps[k] then
-            M.mapc[k]=cmapps[k]
-        else
-            M.mapc[k]=false
-        end
+        M.mapc[k]=cmapps[k] or false
         vim.keymap.set('c',k,M.get_run(k),{noremap=true,expr=true,desc=vim.fn.join(v.desc,'\n\t\t '),replace_keycodes=false})
     end
 end

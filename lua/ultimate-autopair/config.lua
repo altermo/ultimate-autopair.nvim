@@ -35,11 +35,14 @@ function M.init_conf(conf,mem)
         conf.config_type(conf,mem)
     end
 end
-function M.init()
-    core.clear()
+function M.init_confs()
     for _,v in ipairs(M.conf) do
         M.init_conf(v,core.mem)
     end
+end
+function M.init()
+    core.clear()
+    M.init_confs()
     core.init()
 end
 return M
