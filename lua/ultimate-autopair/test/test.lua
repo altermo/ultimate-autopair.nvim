@@ -55,7 +55,7 @@ local function run(keys,match,conf)
     local outtmp=vim.fn.tempname()
     vim.fn.writefile({
         ':set runtimepath+='..M.path,
-        ':lua _G.DONTDEBUG=true',
+        ':lua _G.UA_DONTDEBUG=true',
         ':lua require"ultimate-autopair".setup('..vim.inspect(conf)..')',
         ':edit '..outtmp,
         keys..':wq!',
