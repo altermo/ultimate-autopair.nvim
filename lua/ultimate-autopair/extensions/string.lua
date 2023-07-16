@@ -50,7 +50,6 @@ function M.filter_string(line,col,linenr,notree,wcol)
     if instring then
         return line:sub(strbeg+0,strend),col-strbeg+1
     end
-    if #line>100 then return line,col end --TODO: optimize ext and remove
     return M.filter_out_string(line,col,linenr,notree,wcol)
 end
 function M.call(m,ext)
