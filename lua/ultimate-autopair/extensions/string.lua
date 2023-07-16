@@ -2,7 +2,7 @@ local M={}
 local default=require'ultimate-autopair.configs.default.utils'
 function M.instring(line,col,linenr,notree,wcol)
     for _,i in ipairs(default.filter_pair_type({'pairo','pair'})) do
-        if not i.conf.string then goto continue end
+        if not i.conf.string or not i.fn.in_pair then goto continue end
         local isin,start,_end=i.fn.in_pair(line,col,{notree=notree,linenr=linenr,wcol=wcol})
         if isin then return isin, start,_end end
         ::continue::
@@ -13,7 +13,7 @@ function M.filter_out_string(line,col,linenr,notree,wcol)
     local string_pair={}
     local inpair={}
     local function in_pair(tbl,i)
-        if inpair[tbl][i] then
+        if inpair[tbl][i]~=nil then
             return inpair[tbl][i]
         end
         if tbl.fn.in_pair_map then
@@ -24,7 +24,7 @@ function M.filter_out_string(line,col,linenr,notree,wcol)
         return inpair[tbl][i]
     end
     for _,i in ipairs(default.filter_pair_type({'pairo','pair'})) do
-        if i.conf.string then
+        if i.conf.string and i.fn.in_pair then
             table.insert(string_pair,i)
             inpair[i]={}
         end
@@ -50,6 +50,7 @@ function M.filter_string(line,col,linenr,notree,wcol)
     if instring then
         return line:sub(strbeg+0,strend),col-strbeg+1
     end
+    if #line>100 then return line,col end --TODO: optimize ext and remove
     return M.filter_out_string(line,col,linenr,notree,wcol)
 end
 function M.call(m,ext)
