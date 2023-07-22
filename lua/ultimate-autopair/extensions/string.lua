@@ -8,7 +8,7 @@ function M.instring(line,col,linenr,notree,wcol)
         ::continue::
     end
 end
-function M.filter_out_string(line,col,linenr,notree,wcol)
+function M.filter_out_string(line,col,linenr,notree,wcol,maxlines)
     local newline=''
     local string_pair={}
     local inpair={}
@@ -23,7 +23,7 @@ function M.filter_out_string(line,col,linenr,notree,wcol)
         inpair[tbl][i]=tbl.fn.in_pair(line,i,{notree=notree,linenr=linenr,wcol=wcol}) or false
         return inpair[tbl][i]
     end
-    for _,i in ipairs(default.filter_pair_type({'pairo','pair'})) do
+    for _,i in ipairs(default.filter_pair_type({'pair',(not maxlines or #line<maxlines) and 'pairo' or nil})) do  --TODO: optimize ext and remove line check
         if i.conf.string and i.fn.in_pair then
             table.insert(string_pair,i)
             inpair[i]={}
@@ -45,18 +45,17 @@ function M.filter_out_string(line,col,linenr,notree,wcol)
     end
     return newline,col
 end
-function M.filter_string(line,col,linenr,notree,wcol)
+function M.filter_string(line,col,linenr,notree,wcol,maxlines)
     local instring,strbeg,strend=M.instring(line,col,linenr,notree,wcol)
     if instring then
         return line:sub(strbeg+0,strend),col-strbeg+1
     end
-    if #line>100 then return line,col end --TODO: optimize ext and remove
-    return M.filter_out_string(line,col,linenr,notree,wcol)
+    return M.filter_out_string(line,col,linenr,notree,wcol,maxlines)
 end
 function M.call(m,ext)
     local check=m.check
     m.check=function (o)
-        o.line,o.col=M.filter_string(o.line,o.col,o.linenr,ext.notree,o.wcol)
+        o.line,o.col=M.filter_string(o.line,o.col,o.linenr,ext.notree,o.wcol,ext.conf._maxlines)
         return check(o)
     end
 end
