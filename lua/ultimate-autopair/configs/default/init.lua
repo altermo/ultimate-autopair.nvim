@@ -23,6 +23,13 @@ function M.I.wrapp_map(module)
         end
     end
 end
+function M.I.select_opt(...)
+    for _,v in pairs({...}) do
+        if v~=nil then
+            return v
+        end
+    end
+end
 function M.init_multi(q)
     if q.type=='tsnode' then
         return {pair_t.init(q)}
@@ -103,8 +110,8 @@ function M.init_pair(conf,mem,mconf,ext)
             p=v.p or mconf.p,
             conf=v,
             extensions=ext,
-            cmap=mconf.cmap~=false and default.select_opt(v.cmap,mconf.pair_cmap,true),
-            map=mconf.map~=false and default.select_opt(v.imap,mconf.pair_map,true),
+            cmap=mconf.cmap~=false and M.I.select_opt(v.cmap,mconf.pair_cmap,true),
+            map=mconf.map~=false and M.I.select_opt(v.imap,mconf.pair_map,true),
             type=v.type,
             mconf=mconf,
         })) do

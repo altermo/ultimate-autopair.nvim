@@ -9,12 +9,12 @@ function M.I.tbl_find(tbl,pair_end)
         end
     end
 end
-function M.gettabout(line,col)
+function M.gettabout(o,col)
     local stack={}
     local i=col+1
-    while i<=#line do
-        local pair_start=default.start_pair(i,line,true)
-        local pair_end=default.end_pair(i,line)
+    while i<=#o.line do
+        local pair_start=default.start_pair(i,o,true)
+        local pair_end=default.end_pair(i,o)
         if pair_start then
             table.insert(stack,1,pair_start)
             i=i+#pair_start.pair
@@ -28,13 +28,13 @@ function M.gettabout(line,col)
         end
     end
 end
-function M.tabout(line,col)
-    local ret=M.gettabout(line,col)
+function M.tabout(o,col)
+    local ret=M.gettabout(o,col)
     if ret then return utils.movel(ret-col) end
 end
 function M.wrapp_tabout(_)
     return function (o)
-        return M.tabout(o.line,o.col)
+        return M.tabout(o,o.col)
     end
 end
 function M.init(conf,mconf,ext)
@@ -50,6 +50,7 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_tabout(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
+    m.filter=function() return true end
     default.init_extensions(m,m.extensions)
     default.init_check_map(m)
     m.doc='autopairs tabout key map'

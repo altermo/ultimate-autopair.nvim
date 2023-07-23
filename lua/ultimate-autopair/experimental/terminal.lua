@@ -18,30 +18,44 @@ function M.check_terminal()
     end
     return f(pidd)
 end
-function M.add_start_pair_wrapper(start_pair,end_pair)
+function M.add_start_pair_wrapper(pair)
     return function()
-        if M.check_terminal() then return start_pair end
-        if open_pair.check_start_pair(start_pair,end_pair,utils.getline(),utils.getcol()) then
-            return start_pair..end_pair..utils.key_left
+        if M.check_terminal() then return pair.start_pair end
+        local o={
+            line=utils.getline(),
+            col=utils.getcol(),
+            _nofilter=true,
+        }
+        if open_pair.check_start_pair(pair,o,o.col) then
+            return pair.start_pair..pair.end_pair..utils.key_left
         end
-        return start_pair
+        return pair.start_pair
     end
 end
-function M.add_end_pair_wrapper(start_pair,end_pair)
+function M.add_end_pair_wrapper(pair)
     return function()
-        if M.check_terminal() then return end_pair end
+        if M.check_terminal() then return pair.end_pair end
+        local o={
+            line=utils.getline(),
+            col=utils.getcol(),
+            _nofilter=true,
+        }
         local line=utils.getline()
         local col=utils.getcol()
-        if open_pair.check_end_pair(start_pair,end_pair,line,col) then
-            if line:sub(col,col)==end_pair then
+        if open_pair.check_end_pair(pair,o,o.col) then
+            if line:sub(col,col)==pair.end_pair then
                 return utils.key_right
             end
         end
-        return end_pair
+        return pair.end_pair
     end
 end
 function M.setup()
-    vim.keymap.set('t','(',M.add_start_pair_wrapper('(',')'),{expr=true,replace_keycodes=false})
-    vim.keymap.set('t',')',M.add_end_pair_wrapper('(',')'),{expr=true,replace_keycodes=false})
+    local pair={
+        start_pair='(',
+        end_pair=')',
+    }
+    vim.keymap.set('t','(',M.add_start_pair_wrapper(pair),{expr=true,replace_keycodes=false})
+    vim.keymap.set('t',')',M.add_end_pair_wrapper(pair),{expr=true,replace_keycodes=false})
 end
 return M
