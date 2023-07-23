@@ -3,7 +3,9 @@ local M={}
 function M.newline(o,m)
     for _,v in ipairs(default.filter_pair_type({'donewline','pair'})) do
         if v.newline then
-            local ret=(not v.rule or v.rule()) and v.newline(o,m,m.iconf)
+            local ret=(not v.rule or v.rule()) and
+            (not v.filter or v.filter(vim.tbl_extend('force',o,{col=o.col-(v.pair and #v.pair or 1)})))
+            and v.newline(o,m,m.iconf)
             if ret then return ret end
         end
     end
@@ -25,11 +27,11 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_newline(m)
     m.get_map=default.get_mode_map_wrapper(m.map)
     m.rule=function () return true end
+    m.filter=function () return true end
     default.init_extensions(m,m.extensions)
     local check=m.check
     m.check=function (o)
-        o.wline=o.line
-        o.wcol=o.col
+        o.save={}
         if not default.key_check_cmd(o,m.map,m.map) then return end
         if not m.rule() then return end
         return check(o)

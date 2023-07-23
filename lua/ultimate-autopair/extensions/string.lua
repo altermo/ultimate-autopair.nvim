@@ -1,62 +1,46 @@
 local M={}
+M.save_type={}
 local default=require'ultimate-autopair.configs.default.utils'
-function M.instring(line,col,linenr,notree,wcol)
+function M.instring(o,save,conf)
     for _,i in ipairs(default.filter_pair_type({'pairo','pair'})) do
         if not i.conf.string or not i.fn.in_pair then goto continue end
-        local isin,start,_end=i.fn.in_pair(line,col,{notree=notree,linenr=linenr,wcol=wcol})
-        if isin then return isin, start,_end end
+        local isin,start,_end=i.fn.in_pair(o,o.col,{notree=conf.notree,linenr=o.linenr,cache=save.cache})
+        if isin then return isin,start,_end end
         ::continue::
     end
 end
-function M.filter_out_string(line,col,linenr,notree,wcol,maxlines)
-    local newline=''
-    local string_pair={}
-    local inpair={}
-    local function in_pair(tbl,i)
-        if inpair[tbl][i]~=nil then
-            return inpair[tbl][i]
-        end
-        if tbl.fn.in_pair_map then
-            inpair[tbl]=tbl.fn.in_pair_map(line,{notree=notree,linenr=linenr,wcol=wcol})
-            return inpair[tbl][i]
-        end
-        inpair[tbl][i]=tbl.fn.in_pair(line,i,{notree=notree,linenr=linenr,wcol=wcol}) or false
-        return inpair[tbl][i]
+function M.filter(o,save,conf)
+    if save.instring then
+        return o.col>=save.stringstart and o.col<=save.stringend
     end
-    for _,i in ipairs(default.filter_pair_type({'pair',(not maxlines or #line<maxlines) and 'pairo' or nil})) do  --TODO: optimize ext and remove line check
-        if i.conf.string and i.fn.in_pair then
-            table.insert(string_pair,i)
-            inpair[i]={}
+    for _,i in ipairs(default.filter_pair_type({'pairo','pair'})) do
+        if i.conf.string and i.fn.in_pair and
+            i.fn.in_pair(o,o.col,{notree=conf.notree,linenr=o.linenr,cache=save.cache}) and i.fn.in_pair(o,o.col+1,{notree=conf.notree,linenr=o.linenr,cache=save.cache}) then
+            return
         end
     end
-    for i=1,#line do
-        if line:sub(i,i)=='\1' then
-            newline=newline..'\1'
-            goto continue
-        end
-        for _,v in ipairs(string_pair) do
-            if in_pair(v,i) and in_pair(v,i+1) then
-                newline=newline..'\1'
-                goto continue
-            end
-        end
-        newline=newline..line:sub(i,i)
-        ::continue::
-    end
-    return newline,col
-end
-function M.filter_string(line,col,linenr,notree,wcol,maxlines)
-    local instring,strbeg,strend=M.instring(line,col,linenr,notree,wcol)
-    if instring then
-        return line:sub(strbeg+0,strend),col-strbeg+1
-    end
-    return M.filter_out_string(line,col,linenr,notree,wcol,maxlines)
+    return true
 end
 function M.call(m,ext)
     local check=m.check
     m.check=function (o)
-        o.line,o.col=M.filter_string(o.line,o.col,o.linenr,ext.notree,o.wcol,ext.conf._maxlines)
+        local save={cache={}}
+        o.save[M.save_type]=save
+        save.currently_filtering=true
+        save.instring,save.stringstart,save.stringend=M.instring(o,save,ext.conf)
+        save.currently_filtering=nil
         return check(o)
+    end
+    local filter=m.filter
+    m.filter=function(o)
+        local save=o.save[M.save_type]
+        if not save or save.currently_filtering then return filter(o) end
+        save.currently_filtering=true
+        if M.filter(o,save,ext.conf) then
+            save.currently_filtering=nil
+            return filter(o)
+        end
+        save.currently_filtering=nil
     end
 end
 return M

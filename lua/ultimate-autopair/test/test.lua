@@ -79,7 +79,7 @@ function M.test_simple()
     run('I(','()')
     run('I"','""')
     run('I""','""')
-    run('I()','()')
+    run("I'' '","'' ''")
     run('I(()Xi(','(())')
     run('I"ab"hi"','"a""b"')
     run(':setf html\rI<!-A-','<!---->')
@@ -107,7 +107,7 @@ function M.test_newline()
     --run(':setf c\r:set cindent\rI{\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};') --TBD
-    run(':setf markdown\rI```\r','```\n\n```')
+    run(':setf markdown\rI``a`\r','```\n\n```')
 end
 function M.test_backspace()
     local d=':imap <C-h> <bs>\r'
@@ -122,7 +122,7 @@ function M.test_backspace()
     run(d..':setf html\rI<!-A-','')
     run(d..':setf html\ri<!-a-A','')
     run(d..'i<!---->hhi','<!--->')
-    run(d..'I"\'"\'\'i','"\'"')
+    run(d..[[I"'"''i]],'"\'"')
     run(d..'I{\r','{}')
     run(d..':set cindent\rI{\rcc','{}')
     run(d..':set cindent\rI{\rcc','{}',{bs={indent_ignore=true}})
@@ -133,7 +133,7 @@ function M.test_backspace()
     run(d..'I(foobi','foo)',{bs={overjumps=false}})
     run(d..'I( ','( )',{bs={space=false}})
     run('I(','',{bs={map={'<bs>','<C-h>'}}})
-    run(d..'I"foo0a','foo',{{'"','"',bs_overjumps=true}})
+    run(d..'I"foo0a','foo',{config_internal_pairs={'"','"',bs_overjumps=true}})
     run(d..'I<a>\r','<><>',{{'<>','<>',newline=true}})
     run(d..'I<a< ','<<>>',{{'<<','>>',space=true}})
     run(d..'I<a< foobi','<<foo>>',{{'<<','>>',space=true}})
@@ -170,6 +170,7 @@ function M.test_fastwarp()
     run(d..'Ifoo,,I<a<a','<<foo>>,,',{{'<<','>>',fastwarp=true}})
     run(d..'I<a<I(','(<<>>)',{{'<<','>>'}})
     run(d..'Ia_eI(','(a_e)')
+    run(d..'I")"fooI(','(")"foo)')
     run(g..'I(foo)i','()foo')
     run(g..'I()i','()')
     run(g..'I(foo,bar)i','(foo),bar')
@@ -187,6 +188,7 @@ function M.test_fastwarp()
     run(g..'I<a<<a<hi','<<>><<>>',{{'<<','>>',fastwarp=true}})
     run(g..'I(<a<','(<<>>)',{{'<<','>>',fastwarp=true}})
     run(g..'I("")0a','()""')
+    run(g..'I")"I(','()")"')
     run('IfooI(e^{E$','(^{foo$})',{fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}})
 end
 function M.test_other_map()
@@ -225,21 +227,26 @@ function M.test_extensions()
     run('I""I(','("")')
     run('I"foo""bar"bhhi(','"foo()""bar"')
     run('I?a?I(','(??&&)',{{'??','&&',suround=true}})
+    run('I"")I(','("")')
     --string
     run('I ")"0i(','() ")"')
     run('I"")0a(','"()")')
     run([[I"'xI']],[[''"'"]])
     run([[I'""(a)]],[['""()']])
     run('I(")"','(")")')
-    --run(':setf lua\rI[[)I (','() [[)]]') --TODO: activate treesitter
+    --run(':setf lua\rI [[)0i(','() [[)]]') --TODO: activate treesitter
+    run([[I '\')'0i(]],[[() '\')']])
     --cmdline
     run(':call setline(1,["foo\r','foo')
     run(':call setline(1,[input("\r(\r','(')
     --alpha
     run("Idona't","don't")
     run(':setf python\rIf\'','f\'\'')
+    --run("Iaa' '","a' ''")
     --filetype
+    run('I<!-A-','<!--')
     run('I"""','""""')
+    run(':setf html\rI<!-A-','<!---->')
     --escape
     run('I\\a(','\\(')
     run('I\\\\a(','\\\\()')
@@ -280,6 +287,7 @@ function M.test_complex()
     run(f..F..'Ifoo [bar]"baz"ggI\'','\'\'foo [bar]"baz"',{fastwarp={nocursormove=false}})
     run('I"("$','"()"$',{extensions={fly={nofilter=true}},config_internal_pairs={{'"','"',fly=true}}})
     run('I{I(','({})',{config_internal_pairs={{'{','}',suround=true}}})
+    run("Iprint'hello world!)'I('","('')print'hello world!)'")
 end
 function M.test_options()
     local b=':map! <C-h> <bs>\r'
@@ -301,6 +309,22 @@ function M.test_options()
     run(':a\r( )\r.\r','( )',{space={cmap=false}})
     run(':setf lua\rI + [ ]',' + [ ]',{space={check_box_ft={'lua'}}})
     --TODO: write more tests
+end
+function M.test_new_filter()
+    local b=':imap <C-b> <A-)>\r'
+    local d=':imap <C-h> <bs>\r'
+    local f=':imap <C-e> <A-e>\r'
+    local F=':imap <C-a> <A-E>\r'
+    run(d..'I\\a()i','\\)')
+    run(b..'I\\a(a','\\(')
+    run('I\\a()i\r','\\(\n)')
+    run(f..'I\\}}I(','(\\})}')
+    run(F..'I({\\0a','({)\\}')
+    run('I\\a()i ','\\( )')
+    run('I\\a()i af','\\( f)',{space={enable=false},space2={enable=true}})
+    run('I"\\I(','()"\\"')
+    run('I(")','("")',{extensions={fly={nofilter=true}},config_internal_pairs={{'"','"',fly=true}}})
+    run('I(")','(")")',{extensions={fly={nofilter=false}},config_internal_pairs={{'"','"',fly=true}}})
 end
 ---@diagnostic disable-next-line: undefined-field
 if not _G.UA_DONTRUNTEST then

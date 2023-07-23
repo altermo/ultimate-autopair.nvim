@@ -5,6 +5,12 @@ local M={}
 function M.space(_)
     local col=utils.getcol()
     local line=utils.getline()
+    local o={
+        line=utils.getline(),
+        linenr=utils.getlinenr(),
+        col=col,
+        save={},
+    }
     local total=0
     local pcol
     for i=col-1,1,-1 do
@@ -15,11 +21,11 @@ function M.space(_)
         total=total+1
     end
     if not pcol then return end
-    local prev_pair=default.start_pair(pcol,line,nil,function(pair)
+    local prev_pair=default.start_pair(pcol,o,nil,function(pair)
         return pair.conf.space
     end)
     if not prev_pair then return end
-    local matching_pair_pos=prev_pair.fn.find_end_pair(line,pcol)
+    local matching_pair_pos=prev_pair.fn.find_end_pair(o,pcol)
     if not matching_pair_pos then return end
     local ototal=#line:sub(col,matching_pair_pos-1-#prev_pair.end_pair):reverse():match(' *')
     if ototal>=total then return end
@@ -28,8 +34,8 @@ end
 function M.space_wrapp(m)
     return function()
         if core.disable then return end
-        if not m.rule() then return end
         if not vim.regex(m.iconf.match or [[\a]]):match_str(vim.v.char) then return end
+        if not m.rule() then return end
         vim.api.nvim_feedkeys(M.space(m) or '','n',true)
     end
 end
@@ -38,6 +44,7 @@ function M.init(conf,mconf,ext)
     if mconf.map==false then return end
     local m={}
     m.rule=function () return true end
+    m.filter=function () return true end
     m.iconf=conf
     m.conf=conf.conf or {}
     m[default.type_pair]={'space2'}

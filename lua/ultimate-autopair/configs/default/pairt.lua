@@ -2,7 +2,7 @@ local default=require'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
 local M={}
 M.fn={
-    in_pair=function (m,line,col,conf)
+    in_pair=function (m,o,col,conf)
         col=conf.wcol or col
         if conf.notree then return end
         if utils.incmd() then return end
@@ -16,29 +16,9 @@ M.fn={
         if rs+1<conf.linenr then start=0 end
         if start+1==col then return end
         local re,end_,_=node:end_()
-        if re+1>conf.linenr then end_=#line end
+        if re+1>conf.linenr then end_=#o.line end
         return true,start+1,end_
     end,
-    in_pair_map=function (m,line,conf)
-        local nodename=m.node
-        local linenr=conf.linenr
-        local i=1
-        local map={false}
-        if conf.notree then return vim.fn['repeat'](map,#line+1) end
-        while i<=#line do
-            i=i+1
-            --TODO: replace vim.treesitter.gettsnode with faster version (look at source code)
-            local s,node=pcall(utils.gettsnode,conf.linenr-1,i-1) --Slow
-            if s and node then
-                local rs,start,_=node:start()
-                map[i]=start+1~=i and (node:type()==nodename or (node:parent() and node:parent():type()==nodename))
-                if i==2 and rs+1<linenr then map[1]=true end
-            else
-                map[i]=false
-            end
-        end
-        return map
-    end
 }
 function M.init(q)
     local m={}

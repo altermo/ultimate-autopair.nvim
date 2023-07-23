@@ -3,7 +3,9 @@ local M={}
 function M.backspace(o,m)
     for _,v in ipairs(default.filter_pair_type({'dobackspace','pair'})) do
         if v.backspace then
-            local ret=(not v.rule or v.rule()) and v.backspace(o,m,m.iconf)
+            local ret=(not v.rule or v.rule()) and
+            (not v.filter or v.filter(vim.tbl_extend('force',o,{col=o.col-(v.pair and #v.pair or 1)})))
+            and v.backspace(o,m,m.iconf)
             if ret then return ret end
         end
     end
@@ -26,6 +28,7 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_backspace(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
+    m.filter=function () return true end
     default.init_extensions(m,m.extensions)
     default.init_check_map(m)
     m.doc='autopairs backspace key map'

@@ -46,7 +46,7 @@
 + [x] newline backspace for ambiguous pairs
 + [x] remove the unbalanced space in the pair `[ |  ] > BS > [ | ]`
 + [x] remove the unbalanced space in the pair `[  |] > BS > [|]`
-+ [ ] don't remove the ambiguous pair when filled if alpha `a"|bc" > BS > a|bc"`
++ [ ] don't remove the ambiguous pair when filled if alpha `a'|bc' > BS > a|bc'`
 + [ ] remove the pair when multicharacter pair filled `if bool then |code end > BS > |code`
 + [ ] remove the space when remove pair `[| text ] > BS > |text`
 ## space
@@ -152,7 +152,7 @@
 + [ ] fastwarp to broad: make an option to not make it so (maybe: only hop over treesitter nodes/functions calls with dots and calls `M.fn(a)`)
 + [ ] object which contains a list of the pairs, like `(foo'')` > `{'(',"'","'",)}` pluss extra info (position,count,...)
 + [ ] caching values from open_pair functions
-+ [ ] disable in comment (https://github.com/altermo/ultimate-autopair.nvim/issues/32)
++ [x] disable in comment (https://github.com/altermo/ultimate-autopair.nvim/issues/32)
 + [ ] in_tsnode_map: same as in_pair_map but for tsnodes
 + [ ] create and extension (or add a cmd to rule) which checks if in_pair/not_in_pair
 + [ ] make pairt.in_pair node detector recursively find if in node (option)
@@ -161,3 +161,4 @@
 + [x] multiple same file maps (like `bs`) in one config with different options
 + [ ] make so that extensions can be not sourced (disabled) for spesific maps (like disableing ext-string for fastwarp)
 + [ ] make core support multiple modes `M.modes={'c','i',...}`
++ [ ] make test not use neovim exec and instead direct function call

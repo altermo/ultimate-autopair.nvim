@@ -4,23 +4,23 @@ local utils=require'ultimate-autopair.utils'
 local M={}
 M.fn={
     check_start_pair=function(m,line,col)
-        return open_pair.check_ambiguous_start_pair(m.pair,nil,line,col)
+        return open_pair.check_ambiguous_start_pair(m,line,col)
     end,
     check_end_pair=function(m,line,col)
-        return open_pair.check_ambiguous_end_pair(nil,m.pair,line,col)
+        return open_pair.check_ambiguous_end_pair(m,line,col)
     end,
-    find_end_pair=function(m,line,col)
-        return open_pair.find_corresponding_ambiguous_end_pair(m.pair,nil,line,col)
+    find_end_pair=function(m,o,col)
+        return open_pair.find_corresponding_ambiguous_end_pair(m,o,col)
     end,
-    find_start_pair=function(m,line,col)
-        return open_pair.find_corresponding_ambiguous_start_pair(m.pair,nil,line,col)
+    find_start_pair=function(m,o,col)
+        return open_pair.find_corresponding_ambiguous_start_pair(m,o,col)
     end,
     is_start=function () return false end,
-    is_end=function (m,line,col) return open_pair.open_pair_ambigous_before(m.pair,line,col) end,
+    is_end=function (m,line,col) return open_pair.open_pair_ambigous_before(m,line,col) end,
 }
 function M.check_wrapper(m)
     return function(o)
-        if not open_pair.check_ambiguous_end_pair(m.start_pair,m.pair,o.line,o.col) then return end
+        if not open_pair.check_ambiguous_end_pair(m,o,o.col) then return end
         if o.line:sub(o.col,o.col-1+#m.pair)~=m.pair then return end
         return utils.movel(#m.pair)
     end
@@ -28,7 +28,7 @@ end
 function M.backspace_wrapper(m)
     return function (o)
         if o.line:sub(o.col-#m.pair-#m.pair,o.col-1-#m.pair)==m.pair and m.pair==o.line:sub(o.col-#m.pair,o.col-1) then
-            if open_pair.open_pair_ambigous_before(m.pair,o.line,o.col)==open_pair.open_pair_ambigous_after(m.pair,o.line,o.col) then
+            if open_pair.open_pair_ambigous_before(m,o,o.col)==open_pair.open_pair_ambigous_after(m,o,o.col) then
                 return utils.delete(#m.pair+#m.pair)
             end
         end
@@ -50,6 +50,7 @@ function M.init(q)
     --m.newline=M.newline_wrapper(m)
     m.backspace=M.backspace_wrapper(m)
     m.rule=function () return true end
+    m.filter=function () return true end
     default.init_extensions(m,m.extensions)
     m.get_map=default.get_map_wrapper({q.cmap and 'c',q.map and 'i'},m.key)
     m.sort=default.sort

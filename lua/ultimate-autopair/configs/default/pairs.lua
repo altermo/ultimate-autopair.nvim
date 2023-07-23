@@ -4,13 +4,13 @@ local utils=require'ultimate-autopair.utils'
 local M={}
 M.fn={
     check_start_pair=function(m,line,col)
-        return open_pair.check_start_pair(m.start_pair,m.end_pair,line,col)
+        return open_pair.check_start_pair(m,line,col)
     end,
     check_end_pair=function(m,line,col)
-        return open_pair.check_end_pair(m.start_pair,m.end_pair,line,col)
+        return open_pair.check_end_pair(m,line,col)
     end,
-    find_end_pair=function(m,line,col)
-        return open_pair.find_corresponding_end_pair(m.start_pair,m.end_pair,line,col)
+    find_end_pair=function(m,o,col)
+        return open_pair.find_corresponding_end_pair(m,o,col)
     end,
     is_start=function () return true end,
     is_end=function () return false end,
@@ -18,16 +18,16 @@ M.fn={
 function M.check_wrapper(m)
     return function (o)
         if o.line:sub(o.col-#m.pair+1,o.col-1)~=m.pair:sub(0,-2) then return end
-        if open_pair.open_end_pair_after(m.start_pair,m.end_pair,o.line,o.col) then return end
+        if open_pair.open_end_pair_after(m,o,o.col) then return end
         return m.start_pair:sub(-1)..m.end_pair..utils.moveh(#m.end_pair)
     end
 end
 function M.newline_wrapper(m)
-    return function(o,_,conf)
+    return function(o)
         if m.pair==o.line:sub(o.col-#m.pair,o.col-1) and m.conf.newline then
-            local matching_pair_pos=m.fn.find_end_pair(o.line,o.col)
+            local matching_pair_pos=m.fn.find_end_pair(o,o.col)
             if matching_pair_pos then
-                return utils.movel(matching_pair_pos-o.col-1)..'\r'..utils.key_up..utils.key_home..utils.movel(o.wcol-1)..'\r'
+                return utils.movel(matching_pair_pos-o.col-1)..'\r'..utils.key_up..utils.key_home..utils.movel(o.col-1)..'\r'
             end
         end
     end
@@ -35,13 +35,13 @@ end
 function M.backspace_wrapper(m)
     return function (o,_,conf)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
-            if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
+            if not open_pair.open_start_pair_before(m,o,o.col) then
                 return utils.delete(#m.start_pair,#m.end_pair)
             end
         end
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and conf.overjumps then
-            if not open_pair.open_start_pair_before(m.start_pair,m.end_pair,o.line,o.col) then
-                local matching_pair_pos=m.fn.find_end_pair(o.line,o.col)
+            if not open_pair.open_start_pair_before(m,o,o.col) then
+                local matching_pair_pos=m.fn.find_end_pair(o,o.col)
                 if matching_pair_pos then
                     return utils.delete(#m.start_pair)..utils.addafter(matching_pair_pos-o.col-1,utils.delete(0,#m.end_pair),0)
                 end
@@ -75,6 +75,7 @@ function M.init(q)
     m.newline=M.newline_wrapper(m)
     m.backspace=M.backspace_wrapper(m)
     m.rule=function () return true end
+    m.filter=function (_) return true end
     default.init_extensions(m,m.extensions)
     m.get_map=default.get_map_wrapper({q.cmap and 'c',q.map and 'i'},m.key)
     m.sort=default.sort

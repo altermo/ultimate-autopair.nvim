@@ -1,29 +1,38 @@
 local default=require'ultimate-autopair.configs.default.utils'
-return default.wrapp_old_extension(function(o,keyconf,conf)
-    if keyconf.noescape then return end
-    if not (conf.nochar or keyconf.nocharescape) then
-        local col=o.col-1
-        local escape=false
-        while o.line:sub(col,col)=='\\' do
-            col=col-1
-            escape=not escape
-        end
-        if escape then return 2 end
-    end
-    if conf.nofilter or keyconf.nofilterescape then return end
-    local newline=''
+local M={}
+function M.check(o,m,ext)
+    if m.conf.noescape then return end
+    if ext.conf.nochar or m.conf.nocharescape then return end
+    local col=o.col-1
     local escape=false
-    for i=1,#o.line do
-        local char=o.line:sub(i,i)
-        if escape then
-            escape=false
-            newline=newline..'\1'
-        elseif char=='\\' then
-            escape=true
-            newline=newline..char
-        else
-            newline=newline..char
-        end
+    while o.line:sub(col,col)=='\\' do
+        col=col-1
+        escape=not escape
     end
-    o.line=newline
-end)
+    return escape
+end
+function M.filter(o,m,ext)
+    if m.conf.noescape then return end
+    if ext.conf.nofilter or m.conf.nofilterescape then return end
+    local col=o.col-1
+    local escape=false
+    while o.line:sub(col,col)=='\\' do
+        col=col-1
+        escape=not escape
+    end
+    return escape
+end
+function M.call(m,ext)
+    if not default.get_type_opt(m,'pair') then return end
+    local check=m.check
+    m.check=function (o)
+        if M.check(o,m,ext) then return end
+        return check(o)
+    end
+    local filter=m.filter
+    m.filter=function (o)
+        if M.filter(o,m,ext) then return end
+        return filter(o)
+    end
+end
+return M

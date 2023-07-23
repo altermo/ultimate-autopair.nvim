@@ -44,7 +44,7 @@ function M.check_rule(rule,o)
     elseif cmd=='call' then
         return args[1](o,unpack(args,2))
     elseif cmd=='instring' then
-        return require'ultimate-autopair.extensions.string'.instring(o.line,o.col,o.linenr,args[1])
+        return require'ultimate-autopair.extensions.string'.instring(o,{},args[1] or {})
     else
         error(("Unknown command %s"):format(cmd))
     end

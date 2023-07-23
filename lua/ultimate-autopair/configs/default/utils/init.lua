@@ -12,21 +12,18 @@ function M.get_type_opt(obj,conf)
     end
 end
 function M.sort(a,b)
-    if M.get_type_opt(a,'pair') and M.get_type_opt(b,'pair') then
-        if #a.pair==#b.pair then
-            if M.get_type_opt(a,{'start','ambigous-start'})
-                and M.get_type_opt(b,{'end','ambigous-end'}) then
-                return false
-            elseif M.get_type_opt(a,{'end','ambigous-end'})
-                and M.get_type_opt(b,{'start','ambigous-start'}) then
-                return true
-            end
-        end
-        return #a.pair>#b.pair
+    if not (M.get_type_opt(a,'pair') and M.get_type_opt(b,'pair')) then return end
+    if #a.pair~=#b.pair then return #a.pair>#b.pair end
+    if M.get_type_opt(a,{'start','ambigous-start'})
+        and M.get_type_opt(b,{'end','ambigous-end'}) then
+        return false
+    elseif M.get_type_opt(a,{'end','ambigous-end'})
+        and M.get_type_opt(b,{'start','ambigous-start'}) then
+        return true
     end
 end
 function M.get_map_wrapper(modes,...)
-    local args={...}
+    local args={...} --TODO: maybe replaced with M.get_mode_map_wrapper()
     return function(mode)
         if vim.tbl_contains(modes,mode) then
             return args
@@ -65,43 +62,6 @@ function M.init_extensions(m,extensions)
         i.m.call(m,i)
     end
 end
-function M.wrapp_old_extension(f,I)
-    local ext=I or {}
-    ext.call=function (m,extension)
-        local map_type
-        local typ
-        if M.get_type_opt(m,'start') then
-            typ='start'
-            map_type=1
-        elseif M.get_type_opt(m,'end') then
-            typ='end'
-            map_type=2
-        elseif M.get_type_opt(m,'ambigous-start') then
-            typ='start'
-            map_type=3
-        elseif M.get_type_opt(m,'ambigous-end') then
-            typ='end'
-            map_type=3
-        else
-            return
-        end
-        local check=m.check
-        function m.check(o)
-            local ret=f(o,m.conf,extension.conf,map_type,m)
-            if type(ret)=='string' then
-                return ret
-            elseif ret==2 then
-                return
-            elseif ret==3 and typ=='start' then
-                return
-            elseif ret==4 and typ=='end' then
-                return
-            end
-            return check(o)
-        end
-    end
-    return ext
-end
 function M.filter_pair_type(conf)
     if type(conf)=='string' then conf={conf} end
     if type(conf)=='nil' then conf={'pair'} end
@@ -109,6 +69,7 @@ function M.filter_pair_type(conf)
     return vim.tbl_filter(function (v) return M.get_type_opt(v,conf) end,core.mem)
 end
 function M.get_pair(pair)
+    --TODO dep
     for _,v in ipairs(M.filter_pair_type()) do
         if v.pair==pair then return v end
     end
@@ -128,15 +89,16 @@ function M.key_check_cmd(o,key,normal,cmd,keyc)
     end
     return normal and vim.tbl_contains(key,o.key)
 end
-function M.start_pair(col,line,next,check,all)
-    local pairs=M.get_pairs_by_pos(col,line,next)
+function M.start_pair(col,o,next,check,all,nofilter)
+    local pairs=M.get_pairs_by_pos(col,o.line,next)
     table.sort(pairs,function (a,b)
         return #a.pair>#b.pair
     end)
-    local ret
+    local ret={}
     for _,i in ipairs(pairs) do
-        if i.fn.is_start(line,next and col or col-#i.pair)
-            and i.rule() and (not check or check(i)) then
+        if i.fn.is_start(o,next and col or col-#i.pair)
+            and i.rule() and (not check or check(i)) and
+            (nofilter or not i.filter or i.filter(vim.tbl_extend('force',o,{col=next and col or col-#i.pair}))) then
             if not all then
                 return i
             end
@@ -145,15 +107,16 @@ function M.start_pair(col,line,next,check,all)
     end
     return all and ret
 end
-function M.end_pair(col,line,prev,check,all)
-    local pairs=M.get_pairs_by_pos(col,line,not prev)
+function M.end_pair(col,o,prev,check,all,nofilter)
+    local pairs=M.get_pairs_by_pos(col,o.line,not prev)
     table.sort(pairs,function (a,b)
         return #a.pair>#b.pair
     end)
     local ret={}
     for _,i in ipairs(pairs) do
-        if i.fn.is_end(line,prev and col-#i.pair or col)
-            and i.rule() and (not check or check(i)) then
+        if i.fn.is_end(o,prev and col-#i.pair or col)
+            and i.rule() and (not check or check(i)) and
+            (nofilter or not i.filter or i.filter(vim.tbl_extend('force',o,{col=prev and col-#i.pair or col}))) then
             if not all then
                 return i
             end
@@ -181,8 +144,7 @@ end
 function M.init_check_map(m)
     local check=m.check
     m.check=function (o)
-        o.wline=o.line
-        o.wcol=o.col
+        o.save={}
         if not M.key_check_cmd(o,m.map,m.map,m.cmap,m.cmap) then return end
         if not m.rule() then return end
         return check(o)
@@ -191,11 +153,27 @@ end
 function M.init_check_pair(m,q)
     local check=m.check
     m.check=function (o)
-        o.wline=o.line
-        o.wcol=o.col
+        o.save={}
         if not M.key_check_cmd(o,m.key,q.map,q.cmap) then return end
         if not m.rule() then return end
         return check(o)
+    end
+end
+function M.wrapp_pair_filter(o,filter)
+    return function (pos1,pos2)
+        if o._nofilter then return true end
+        pos2=pos2 or pos1
+        for i=pos1,pos2 do
+            if not filter({
+                line=o.line,
+                col=i,
+                linenr=o.linenr,
+                save=o.save,
+            }) then
+                return false
+            end
+        end
+        return true
     end
 end
 return M

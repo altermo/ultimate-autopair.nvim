@@ -4,21 +4,21 @@ local M={}
 M.ext={}
 function M.ext.rfastwarp_under_pair(o,ind,p)
     if o.col-1~=ind then return end
-    local pair=default.end_pair(ind+1,o.line,true)
+    local pair=default.end_pair(ind+1,o,true)
     if not pair then return end
-    local matching_pair_pos=pair.fn.find_start_pair(o.line,ind-#pair.end_pair)
+    local matching_pair_pos=pair.fn.find_start_pair(o,ind-#pair.end_pair)
     if not matching_pair_pos then return end
     return utils.delete(0,#p)..utils.moveh(o.col-matching_pair_pos-1)..p..utils.moveh(#p),matching_pair_pos
 end
 function M.ext.rfastwarp_next_to_end_pair(o,ind,p)
     if o.col-1==ind then return end
-    local pair=default.end_pair(ind+1,o.line,true)
+    local pair=default.end_pair(ind+1,o,true)
     if not pair then return end
     return utils.delete(0,#p)..utils.moveh(o.col-ind-1)..p..utils.moveh(#p)
 end
 function M.ext.rfastwarp_next_to_start_pair(o,ind,p,m)
     if o.col-1==ind and m.iconf.hopout then return end
-    local pair=default.start_pair(ind+1,o.line)
+    local pair=default.start_pair(ind+1,o)
     if not pair then return end
     if o.col-1==ind then return not m.iconf.hopout and 1 end
     return utils.delete(0,#p)..utils.moveh(o.col-ind-1)..p..utils.moveh(#p)
@@ -41,9 +41,9 @@ end
 function M.rfastwarp(o,m,nocursormove)
     local move
     if nocursormove then
-        local spair=default.start_pair(o.col,o.line)
+        local spair=default.start_pair(o.col,o)
         if spair then
-            move=spair.fn.find_end_pair(o.line,o.col)
+            move=spair.fn.find_end_pair(o,o.col)
             if move then
                 move=move-o.col-#spair.end_pair
                 o.col=o.col+move
@@ -54,7 +54,7 @@ function M.rfastwarp(o,m,nocursormove)
             nocursormove=false
         end
     end
-    local pair=default.end_pair(o.col,o.line,nil,function(pair)
+    local pair=default.end_pair(o.col,o,nil,function(pair)
         return pair.conf.fastwarp
     end)
     if not pair then return end
@@ -95,6 +95,7 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_rfastwarp(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
+    m.filter=function () return true end
     default.init_extensions(m,vim.tbl_filter(function (k) return conf.filter_string or k.name~='string' end,m.extensions))
     default.init_check_map(m)
     m.doc='autopairs reverse fastwarp key map'

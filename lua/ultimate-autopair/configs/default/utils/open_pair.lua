@@ -1,20 +1,28 @@
+local default=require'ultimate-autopair.configs.default.utils'
 local M={}
 M.I={}
 function M.I.match (str,line)
     return str==line:sub(1,#str)
 end
 
-function M.count_start_pair(Istart_pair,Iend_pair,Iline,cols,cole,Icount,ret_pos)
-    local start_pair=Istart_pair:reverse()
-    local end_pair=Iend_pair:reverse()
+---@param pair table
+---@param o table
+---@param cols number
+---@param cole number
+---@param Icount number|nil
+---@param ret_pos boolean|nil
+function M.count_start_pair(pair,o,cols,cole,Icount,ret_pos)
+    local start_pair=pair.start_pair:reverse()
+    local end_pair=pair.end_pair:reverse()
     local i=cole
     local count=Icount or 0
+    local filter=default.wrapp_pair_filter(o,pair.filter)
     while i>cols-1 do
-        local line=Iline:sub(cols,i):reverse()
-        if M.I.match(start_pair,line) then
+        local line=o.line:sub(cols,i):reverse()
+        if M.I.match(start_pair,line) and filter(i,i+#start_pair-1) then
             count=count-1
             i=i-#start_pair
-        elseif M.I.match(end_pair,line) then
+        elseif M.I.match(end_pair,line) and filter(i,i+#end_pair-1) then
             count=count+1
             i=i-#end_pair
         else
@@ -28,15 +36,24 @@ function M.count_start_pair(Istart_pair,Iend_pair,Iline,cols,cole,Icount,ret_pos
     end
     return (not ret_pos) and count
 end
-function M.count_end_pair(start_pair,end_pair,Iline,cols,cole,Icount,ret_pos)
+---@param pair table
+---@param o table
+---@param cols number
+---@param cole number
+---@param Icount number|nil
+---@param ret_pos boolean|nil
+function M.count_end_pair(pair,o,cols,cole,Icount,ret_pos)
+    local start_pair=pair.start_pair
+    local end_pair=pair.end_pair
     local i=cols
     local count=Icount or 0
+    local filter=default.wrapp_pair_filter(o,pair.filter)
     while i<cole+1 do
-        local line=Iline:sub(i,cole)
-        if M.I.match(start_pair,line) then
+        local line=o.line:sub(i,cole)
+        if M.I.match(start_pair,line) and filter(i,i+#start_pair-1) then
             count=count+1
             i=i+#start_pair
-        elseif M.I.match(end_pair,line) then
+        elseif M.I.match(end_pair,line) and filter(i,i+#end_pair-1) then
             count=count-1
             i=i+#end_pair
         else
@@ -50,13 +67,20 @@ function M.count_end_pair(start_pair,end_pair,Iline,cols,cole,Icount,ret_pos)
     end
     return (not ret_pos) and count
 end
-function M.count_ambigious_pair(pair,Iline,cols,cole,Icount)
+---@param pair table
+---@param o table
+---@param cols number
+---@param cole number
+---@param Icount number|nil
+function M.count_ambigious_pair(pair,o,cols,cole,Icount)
     local i=cols
+    local filter=default.wrapp_pair_filter(o,pair.filter)
+    pair=pair.pair
     local count=Icount or 0
     local index
     while i<cole+1 do
-        local line=Iline:sub(i,cole)
-        if M.I.match(pair,line) then
+        local line=o.line:sub(i,cole)
+        if M.I.match(pair,line) and filter(i,i+#pair-1) then
             count=count+1
             if not index then index=i end
             i=i+#pair
@@ -67,63 +91,93 @@ function M.count_ambigious_pair(pair,Iline,cols,cole,Icount)
     return count%2==1 and index
 end
 
-function M.open_start_pair_before(start_pair,end_pair,line,col)
-    local count=M.count_start_pair(start_pair,end_pair,line,col,#line)
-    return M.count_start_pair(start_pair,end_pair,line,1,col-1,count+1,true)
+---@param pair table
+---@param o table
+---@param col number
+function M.open_start_pair_before(pair,o,col)
+    local count=M.count_start_pair(pair,o,col,#o.line)
+    return M.count_start_pair(pair,o,1,col-1,count+1,true)
 end
-function M.open_end_pair_after(start_pair,end_pair,line,col)
-    local count=M.count_end_pair(start_pair,end_pair,line,1,col-1)
-    return M.count_end_pair(start_pair,end_pair,line,col,#line,count+1,true)
+---@param pair table
+---@param o table
+---@param col number
+function M.open_end_pair_after(pair,o,col)
+    local count=M.count_end_pair(pair,o,1,col-1)
+    return M.count_end_pair(pair,o,col,#o.line,count+1,true)
 end
-function M.open_pair_ambigous_before(pair,line,col)
-    return M.count_ambigious_pair(pair,line,1,col-1)
+---@param pair table
+---@param o table
+---@param col number
+function M.open_pair_ambigous_before(pair,o,col)
+    return M.count_ambigious_pair(pair,o,1,col-1)
 end
-function M.open_pair_ambigous_after(pair,line,col)
-    return M.count_ambigious_pair(pair,line,col,#line)
+---@param pair table
+---@param o table
+---@param col number
+function M.open_pair_ambigous_after(pair,o,col)
+    return M.count_ambigious_pair(pair,o,col,#o.line)
 end
-function M.open_pair_ambigous(pair,line,_)
-    return M.count_ambigious_pair(pair,line,1,#line)
+---@param pair table
+---@param o table
+---@param _ number
+function M.open_pair_ambigous(pair,o,_)
+    return M.count_ambigious_pair(pair,o,1,#o.line)
 end
 
-function M.check_start_pair(start_pair,end_pair,line,col)
-    return not M.open_end_pair_after(start_pair,end_pair,line,col)
+---@param pair table
+---@param o table
+---@param col number
+function M.check_start_pair(pair,o,col)
+    return not M.open_end_pair_after(pair,o,col)
 end
-function M.check_end_pair(start_pair,end_pair,line,col)
-    return not M.open_start_pair_before(start_pair,end_pair,line,col)
+---@param pair table
+---@param o table
+---@param col number
+function M.check_end_pair(pair,o,col)
+    return not M.open_start_pair_before(pair,o,col)
 end
-function M.check_ambiguous_end_pair(_,pair,line,col)
-    local opab=M.open_pair_ambigous_before(pair,line,col)
-    local opaa=M.open_pair_ambigous_after(pair,line,col)
+---@param pair table
+---@param o table
+---@param col number
+function M.check_ambiguous_end_pair(pair,o,col)
+    local opab=M.open_pair_ambigous_before(pair,o,col)
+    local opaa=M.open_pair_ambigous_after(pair,o,col)
     return opab and opaa
 end
-function M.check_ambiguous_start_pair(pair,_,line,col)
-    return  not M.open_pair_ambigous(pair,line,col)
+---@param pair table
+---@param o table
+---@param col number
+function M.check_ambiguous_start_pair(pair,o,col)
+    return not M.open_pair_ambigous(pair,o,col)
 end
 
-function M.find_corresponding_ambiguous_end_pair(pair,_,line,col)
-    local opab=M.open_pair_ambigous_before(pair,line,col)
-    local opaa=M.open_pair_ambigous_after(pair,line,col)
+function M.find_corresponding_ambiguous_end_pair(pair,o,col)
+    local opab=M.open_pair_ambigous_before(pair,o,col)
+    local opaa=M.open_pair_ambigous_after(pair,o,col)
     if not opab==opaa then return end
-    for i=col,#line do
-        if M.I.match(pair,line:sub(i)) then
+    local filter=default.wrapp_pair_filter(o,pair.filter)
+    pair=pair.pair
+    for i=col,#o.line do
+        if M.I.match(pair,o.line:sub(i)) and filter(i,i+#pair-1) then --TODO filter i maybe of by 1
             return i+1
         end
     end
 end
-function M.find_corresponding_ambiguous_start_pair(pair,_,line,col)
-    local opab=M.open_pair_ambigous_before(pair,line,col)
-    local opaa=M.open_pair_ambigous_after(pair,line,col)
+function M.find_corresponding_ambiguous_start_pair(pair,o,col)
+    local opab=M.open_pair_ambigous_before(pair,o,col)
+    local opaa=M.open_pair_ambigous_after(pair,o,col)
     if not opab==opaa then return end
+    local filter=default.wrapp_pair_filter(o,pair.filter)
     for i=col,1,-1 do
-        if M.I.match(pair,line:sub(i)) then
+        if M.I.match(pair.pair,o.line:sub(i)) and filter(i,i+#pair-1) then --TODO filter i maybe of by 1
             return i-1
         end
     end
 end
-function M.find_corresponding_end_pair(start_pair,end_pair,line,col)
-    return M.count_end_pair(start_pair,end_pair,line,col,#line,1,true)
+function M.find_corresponding_end_pair(pair,o,col)
+    return M.count_end_pair(pair,o,col,#o.line,1,true)
 end
-function M.find_corresponding_start_pair(start_pair,end_pair,line,col)
-    return M.count_start_pair(start_pair,end_pair,line,1,col,1,true)
+function M.find_corresponding_start_pair(pair,o,col)
+    return M.count_start_pair(pair,o,1,col,1,true)
 end
 return M

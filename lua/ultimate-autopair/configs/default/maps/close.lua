@@ -9,12 +9,12 @@ function M.I.tbl_find(tbl,pair_end)
         end
     end
 end
-function M.get_open_start_pairs(line,col)
+function M.get_open_start_pairs(o,col)
     local pair={}
     local i=1
     while i<=col do
-        local pair_start=default.start_pair(i,line,true)
-        local pair_end=default.end_pair(i,line)
+        local pair_start=default.start_pair(i,o,true)
+        local pair_end=default.end_pair(i,o)
         if pair_start then
             table.insert(pair,1,pair_start)
             i=i+#pair_start.pair
@@ -28,9 +28,9 @@ function M.get_open_start_pairs(line,col)
     end
     local stack={}
     i=col+1
-    while i<=#line do
-        local pair_start=default.start_pair(i,line,true)
-        local pair_end=default.end_pair(i,line)
+    while i<=#o.line do
+        local pair_start=default.start_pair(i,o,true)
+        local pair_end=default.end_pair(i,o)
         if pair_start then
             table.insert(stack,1,pair_start)
             i=i+#pair_start.pair
@@ -48,25 +48,25 @@ function M.get_open_start_pairs(line,col)
     end
     return pair
 end
-function M.get_pair_closes(line,col)
-    local pair=M.get_open_start_pairs(line,col)
+function M.get_pair_closes(o,col)
+    local pair=M.get_open_start_pairs(o,col)
     return vim.fn.join(vim.tbl_map(function(x) return x.end_pair end,pair),'')
 end
-function M.close_pairs(line,col)
-    local pair=M.get_pair_closes(line,col)
+function M.close_pairs(o,col)
+    local pair=M.get_pair_closes(o,col)
     return pair..utils.moveh(#pair)
 end
 function M.wrapp_close(_)
     return function (o)
-        return M.close_pairs(o.line,o.col)
+        return M.close_pairs(o,o.col)
     end
 end
 function M.wrapp_newline(_)
     return function(o,_,conf)
         if not conf.autoclose then return end
-        local pairs=M.close_pairs(o.line..(utils.getline(o.linenr+1) or ''),#o.line)
+        local pairs=M.close_pairs(vim.tbl_extend('force',o,{line=o.line..(utils.getline(o.linenr+1) or '')}),#o.line) --TODO: is hack until multiline is implemented
         if pairs=='' then return end
-        return utils.key_end..'\r'..pairs..utils.key_up..utils.key_home..utils.movel(o.wcol-1)..'\r'
+        return utils.key_end..'\r'..pairs..utils.key_up..utils.key_home..utils.movel(o.col-1)..'\r'
     end
 end
 function M.init(conf,mconf,ext)
@@ -82,6 +82,7 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_close(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
+    m.filter=function () return true end
     m.newline=M.wrapp_newline(m)
     default.init_extensions(m,m.extensions)
     default.init_check_map(m)

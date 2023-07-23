@@ -3,34 +3,36 @@ local default=require'ultimate-autopair.configs.default.utils'
 local M={}
 function M.check(conf,o,m)
     local next_char_index
-    local line=conf.nofilter and o.wline or o.line
-    local col=conf.nofilter and o.wcol or o.col
-    if line:sub(col,col)==o.key then return end
-    for i=col,#line do
-        local char=line:sub(i,i)
-        local current_pair=default.get_pair(char) --TODO: maybe replace get_pair
-        if vim.tbl_contains(conf.other_char,char)
-            or vim.tbl_get(current_pair or {},'conf','fly') and
-            (not conf.only_jump_end_pair or default.get_type_opt(current_pair,{'end','ambigous-end'}))
-        then
-            if char==o.key then
-                next_char_index=i
-                break
-            end
-        else
-            return
+    local col=o.col
+    if o.line:sub(col,col)==o.key then return end
+    local i=col
+    while i<=#o.line do
+        local pair=default.end_pair(i,o,nil,function(p)
+            return p.conf.fly
+        end,nil,conf.nofilter)
+        if not pair and not conf.only_jump_end_pair then
+            pair=default.start_pair(i,o,true,function (p)
+                return p.conf.fly
+            end,nil,conf.nofilter)
         end
+        if not (vim.tbl_contains(conf.other_char,o.line:sub(i,i))
+            or pair) then return end
+        if pair and pair.end_pair==m.end_pair then
+            next_char_index=i
+            break
+        end
+        i=i+(pair and #pair.pair or 1)
     end
     if not next_char_index then return end
-    if m.fn.check_end_pair(line,col) then
-        M.save={line,col,next_char_index-col+1,m.pair}
+    if m.fn.check_end_pair(vim.tbl_extend('force',o,{_nofilter=conf.nofilter}),col) then
+        M.save={o.line,col,next_char_index-col+1,m.pair}
         return utils.movel(next_char_index-col+1)
     end
 end
-function M.map_wrapper(conf)
+function M.map_wrapper(_)
     return function(o)
-        local line=conf.nofilter and o.wline or o.line
-        local col=conf.nofilter and o.wcol or o.col
+        local line=o.line
+        local col=o.col
         if M.save[1]~=line or M.save[2]~=(col-M.save[3]) then return end
         return utils.moveh(M.save[3])..M.save[4]
     end
@@ -45,6 +47,7 @@ function M.init_map(ext,mconf)
     m.check=M.map_wrapper(conf)
     m.p=mapconf.p or 10
     m.rule=function () return true end
+    m.filter=function () return true end
     local check=m.check
     m.check=function (o)
         o.wline=o.line
