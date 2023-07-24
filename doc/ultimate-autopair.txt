@@ -176,7 +176,7 @@ The default configuration contains a loot of options, here are those:
          utf8={p=70,map=nil},
          string={p=60},
          rules={p=40,rules=nil},
-         alpha={p=30},
+         alpha={p=30,filter=false},
          suround={p=20},
          fly={other_char={' '},nofilter=false,p=10,undomapconf={},undomap=nil,undocmap=nil,only_jump_end_pair=false},
      },
@@ -322,10 +322,11 @@ For default configuration see: |ultimate-autopair-extensions-default-config|
 Every extension has a `p` flag which denotes the priority.
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-alpha                      *ultimate-autopair-ext-alpha*
-Extension config: {alpha,after,no_python}
+Extension config: {alpha,after,no_python,filter}
 Extension pair config: {alpha,alpha_after}
 If `alpha` is set and previous character is alpha then return, unless fstring.
 If `after` is set and next character is alpha then return.
+If `filter` is set then it filters.
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-cmdtype                  *ultimate-autopair-ext-cmdtype*
 Extension config: {types}

@@ -11,7 +11,7 @@ function M.check(o,m,ext)
             return true
         end
     end
-    if ext.conf.after or m.conf.alpha_after then
+    if ext.conf.after or m.conf.alpha_after then  --TODO: test and fix
         if vim.regex([[\a]]):match_str(o.line:sub(o.col,vim.str_utf_end(o.line,o.col)+o.col)) then
             return true
         end
@@ -24,10 +24,12 @@ function M.call(m,ext)
         if M.check(o,m,ext) then return end
         return check(o)
     end
-    --local filter=m.filter
-    --m.filter=function(o)
-        --if M.check(o,m,ext) then return end
-        --return filter(o)
-    --end
+    if ext.conf.filter then --TODO: test
+        local filter=m.filter
+        m.filter=function(o)
+            if M.check(o,m,ext) then return end
+            return filter(o)
+        end
+    end
 end
 return M

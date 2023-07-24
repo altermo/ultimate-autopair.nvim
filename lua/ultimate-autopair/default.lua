@@ -67,7 +67,7 @@ M.conf={
         utf8={p=70,map=nil},
         string={p=60},
         rules={p=40,rules=nil},
-        alpha={p=30},
+        alpha={p=30,filter=false},
         suround={p=20},
         fly={other_char={' '},nofilter=false,p=10,undomapconf={},undomap=nil,undocmap=nil,only_jump_end_pair=false},
     },
