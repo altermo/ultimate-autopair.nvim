@@ -2,6 +2,7 @@
 local M={}
 local utils=require'ultimate-autopair.utils'
 local debug=require'ultimate-autopair.debug'
+local cache=require'ultimate-autopair.cache'
 M.mem={}
 M.mapc={}
 M.mapi={}
@@ -45,21 +46,22 @@ function M.get_run(key)
     return M.funcs[key]
 end
 function M.run(key)
-        if M.disable then
-            return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
-        end
-        local fo=M.I.var_create_wrapper(key)
-        for _,v in ipairs(M.mem) do
-            local ret
-            if v.check then
-                ret=debug.wrapp_smart_debugger(v.check,v)(fo())
-            end
-            if ret then
-                return M.I.activate_iabbrev(ret)
-            end
-        end
+    cache.reset_cache(cache.lifetime.unalteredbuf)
+    if M.disable then
         return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
     end
+    local fo=M.I.var_create_wrapper(key)
+    for _,v in ipairs(M.mem) do
+        local ret
+        if v.check then
+            ret=debug.wrapp_smart_debugger(v.check,v)(fo())
+        end
+        if ret then
+            return M.I.activate_iabbrev(ret)
+        end
+    end
+    return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
+end
 function M.run_wrapp(key)
     return function ()
         return M.run(key)

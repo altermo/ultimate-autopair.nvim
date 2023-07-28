@@ -1,3 +1,4 @@
+--Internal
 local M={}
 M.I={}
 function M.I.sbuf()

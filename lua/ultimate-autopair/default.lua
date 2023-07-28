@@ -1,3 +1,4 @@
+--Static
 local M={}
 M.conf={
     config_type='default',

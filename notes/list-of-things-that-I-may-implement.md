@@ -131,7 +131,7 @@
 + [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
 + [ ] test non pair parts (core,other config types...)
 + [ ] make everything work with multichar pair (fastwarp,space...)
-+ [ ] abecodes/tabout.nvim like map
++ [ ] abecodes/tabout.nvim like map (and reverse version)
 + [ ] make use of treesitter stack of nodes at pos to filter instead of one node at pos
 + [x] multicharacter pair not in string/other node
 + [x] auto escape extend in string?`'\|a' > ' > '\'|\'a'`
@@ -162,3 +162,4 @@
 + [ ] make so that extensions can be not sourced (disabled) for spesific maps (like disableing ext-string for fastwarp)
 + [ ] make core support multiple modes `M.modes={'c','i',...}`
 + [ ] make test not use neovim exec and instead direct function call
++ [ ] refactor most of the code and add type annotasions (and rename o to else in filter)
