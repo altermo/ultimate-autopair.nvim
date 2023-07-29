@@ -1,5 +1,4 @@
 --Internal
-local cache=require('ultimate-autopair.cache')
 local M={}
 M.key_bs=vim.api.nvim_replace_termcodes('<bs>',true,true,true)
 M.key_del=vim.api.nvim_replace_termcodes('<del>',true,true,true)
@@ -48,13 +47,27 @@ end
 function M.addafter(num,text,textlen)
     return M.movel(num)..text..M.moveh(num+(textlen or #text))
 end
-M.gettsnode=cache.cache_fn(function (linenr,col)
+function M.gettsnode(linenr,col,cache)
+    if cache and cache.no_parser then return end
+    if cache and cache[tostring(linenr)..';'..tostring(col)] then
+        return cache[tostring(linenr)..';'..tostring(col)] or nil
+    end
+    if not pcall(vim.treesitter.get_parser,0) then
+        (cache or {}).no_parser=true
+        return
+    end
+    local s,ret
     if vim.treesitter.get_node then
-        return vim.treesitter.get_node({bufnr=0,pos={linenr,col}})
+        s,ret=pcall(vim.treesitter.get_node,{bufnr=0,pos={linenr,col}})
     else
         ---@diagnostic disable-next-line: deprecated
-        return vim.treesitter.get_node_at_pos(0,linenr,col,{})
+        s,ret=pcall(vim.treesitter.get_node_at_pos,0,linenr,col,{})
     end
-end,cache.lifetime.unalteredbuf)
+    if not s then ret=nil end
+    if cache then
+        cache[tostring(linenr)..';'..tostring(col)]=ret
+    end
+    return ret
+end
 
 return M

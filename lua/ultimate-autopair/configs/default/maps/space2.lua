@@ -1,7 +1,6 @@
 local default=require 'ultimate-autopair.configs.default.utils'
 local utils=require'ultimate-autopair.utils'
 local core=require'ultimate-autopair.core'
-local cache=require'ultimate-autopair.cache'
 local M={}
 function M.space(_)
     local col=utils.getcol()
@@ -34,7 +33,6 @@ function M.space(_)
 end
 function M.space_wrapp(m)
     return function()
-        cache.reset_cache(cache.lifetime.unalteredbuf)
         if core.disable then return end
         if not vim.regex(m.iconf.match or [[\a]]):match_str(vim.v.char) then return end
         if not m.rule() then return end

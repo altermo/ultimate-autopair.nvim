@@ -1,11 +1,10 @@
 local utils=require'ultimate-autopair.utils'
 local M={}
 function M.check(m,ext,o)
-    local err,node=pcall(utils.gettsnode,o.linenr-1,o.col-2)
+    local node=utils.gettsnode(o.linenr-1,o.col-2)
     if o.col==1 then
-        err,node=pcall(utils.gettsnode,o.linenr-1,o.col-1)
+        node=utils.gettsnode(o.linenr-1,o.col-1)
     end
-    if not err then return end
     if not node then return end
     if o.col==1 and node:start()>=o.linenr-1 then return end
     local ntype=node:type()

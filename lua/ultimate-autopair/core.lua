@@ -2,7 +2,6 @@
 local M={}
 local utils=require'ultimate-autopair.utils'
 local debug=require'ultimate-autopair.debug'
-local cache=require'ultimate-autopair.cache'
 M.mem={}
 M.mapc={}
 M.mapi={}
@@ -46,7 +45,6 @@ function M.get_run(key)
     return M.funcs[key]
 end
 function M.run(key)
-    cache.reset_cache(cache.lifetime.unalteredbuf)
     if M.disable then
         return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
     end

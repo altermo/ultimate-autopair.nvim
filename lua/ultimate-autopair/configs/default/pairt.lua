@@ -6,8 +6,8 @@ M.fn={
         col=conf.wcol or col
         if conf.notree then return end
         if utils.incmd() then return end
-        local s,node=pcall(utils.gettsnode,conf.linenr-1,col-1) --Slow
-        if not s or not node then return end
+        local node=utils.gettsnode(conf.linenr-1,col-1,conf.cache) --Slow
+        if not node then return end
         if node:parent() and node:parent():type()==m.node then
             node=node:parent()
         end
