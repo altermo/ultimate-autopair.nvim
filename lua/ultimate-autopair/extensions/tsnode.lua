@@ -20,5 +20,13 @@ function M.call(m,ext)
         if M.check(m,ext,o) then return end
         return check(o)
     end
+    if ext.conf.filter then
+        local filter=m.filter
+        m.filter=function(o)
+            --TODO: option to filter both inside and outside of tsnode
+            if M.check(m,ext,o) then return end
+            return filter(o)
+        end
+    end
 end
 return M

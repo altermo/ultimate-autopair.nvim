@@ -408,14 +408,16 @@ Example (`*` is cursor): >
 <
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-tsnode                    *ultimate-autopair-ext-tsnode*
-Extension config: {inside,outside}
+Extension config: {inside,outside,filter}
 Extension pair config: {tsnode_inside,tsnode_outside}
 Checks if inserting inside `inside` tsnodes and outside `outside` tsnodes.
+If `filter` is set then filters ts_nodes.
 Example (`*` is cursor) (filetype is lua): >
- | before | key | after | config                |
- | --*    | (   | --(   | {outside={'comment'}} |
- | --*    | (   | --()  | {inside={'comment'}}  |
- | *      | (   | (     | {inside={'comment'}}  |
+ | before | key | after | config                           |
+ | --*    | (   | --(   | {outside={'comment'}}            |
+ | --*    | (   | --()  | {inside={'comment'}}             |
+ | *      | (   | (     | {inside={'comment'}}             |
+ | *--)   | (   | ()--) | {inside={'comment'},filter=true} |
 <
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-utf8                        *ultimate-autopair-ext-utf8*
