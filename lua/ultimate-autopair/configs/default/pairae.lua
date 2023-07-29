@@ -3,11 +3,11 @@ local open_pair=require'ultimate-autopair.configs.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
 local M={}
 M.fn={
-    check_start_pair=function(m,line,col)
-        return open_pair.check_ambiguous_start_pair(m,line,col)
+    check_start_pair=function(m,o,col)
+        return open_pair.check_ambiguous_start_pair(m,o,col)
     end,
-    check_end_pair=function(m,line,col)
-        return open_pair.check_ambiguous_end_pair(m,line,col)
+    check_end_pair=function(m,o,col)
+        return open_pair.check_ambiguous_end_pair(m,o,col)
     end,
     find_end_pair=function(m,o,col)
         return open_pair.find_corresponding_ambiguous_end_pair(m,o,col)

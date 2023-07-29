@@ -128,13 +128,18 @@ end
 ---@param o table
 ---@param col number
 function M.check_start_pair(pair,o,col)
+    if o.line:sub(col-#pair.pair+1,col-1)~=pair.pair:sub(0,-2) then return end
     return not M.open_end_pair_after(pair,o,col)
 end
 ---@param pair table
 ---@param o table
 ---@param col number
 function M.check_end_pair(pair,o,col)
-    return not M.open_start_pair_before(pair,o,col)
+    if o.line:sub(col,col-1+#pair.pair)~=pair.pair then return end
+    local count2=M.count_start_pair(pair,o,col,#o.line)
+    local count1=M.count_end_pair(pair,o,1,col-1)
+    if count1==0 or count1>count2 then return end
+    return true
 end
 ---@param pair table
 ---@param o table

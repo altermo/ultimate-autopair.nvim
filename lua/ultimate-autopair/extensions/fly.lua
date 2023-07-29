@@ -10,23 +10,25 @@ function M.check(conf,o,m)
         local pair=default.end_pair(i,o,nil,function(p)
             return p.conf.fly
         end,nil,conf.nofilter)
+        local is_start=false
         if not pair and not conf.only_jump_end_pair then
             pair=default.start_pair(i,o,true,function (p)
                 return p.conf.fly
             end,nil,conf.nofilter)
+            is_start=true
         end
         if not (vim.tbl_contains(conf.other_char,o.line:sub(i,i))
             or pair) then return end
-        if pair and pair.end_pair==m.end_pair then
+        if not is_start and pair and pair.end_pair==m.end_pair then
             next_char_index=i
             break
         end
         i=i+(pair and #pair.pair or 1)
     end
     if not next_char_index then return end
-    if m.fn.check_end_pair(vim.tbl_extend('force',o,{_nofilter=conf.nofilter}),col) then
-        M.save={o.line,col,next_char_index-col+1,m.pair}
-        return utils.movel(next_char_index-col+1)
+    if m.fn.check_end_pair(vim.tbl_extend('force',o,{_nofilter=conf.nofilter}),i) then
+        M.save={o.line,col,next_char_index-col+#m.pair,m.pair}
+        return utils.movel(next_char_index-col+#m.pair)
     end
 end
 function M.map_wrapper(_)

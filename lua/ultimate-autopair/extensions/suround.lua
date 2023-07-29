@@ -8,8 +8,8 @@ function M.check(o,m,_)
     end)
     if not pair then return end
     local index=pair.fn.find_end_pair(o,o.col+#pair.pair)
-    if index then
-        return m.pair..utils.addafter(index-o.col+#pair.pair-1,m.end_pair)
+    if index and m.fn.check_start_pair(o,o.col) then
+        return m.pair:sub(-1)..utils.addafter(index-o.col+#pair.pair-1,m.end_pair)
     end
 end
 function M.call(m,ext)
