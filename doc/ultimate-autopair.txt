@@ -175,7 +175,7 @@ The default configuration contains a loot of options, here are those:
          escape={filter=true,p=90},
          utf8={p=70,map=nil},
          string={p=60},
-         rules={p=40,rules=nil},
+         rules={p=40,rules=nil,filter=false},
          alpha={p=30,filter=false},
          suround={p=20},
          fly={other_char={' '},nofilter=false,p=10,undomapconf={},undomap=nil,undocmap=nil,only_jump_end_pair=false},
@@ -364,9 +364,10 @@ Example (`*` is cursor) (default config): >
 <
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-rules                      *ultimate-autopair-ext-rules*
-Extension pair config: {rules}
+Extension pair config: {rules,filter}
 Checks all rules in `rules` and if one of them returns false then return.
 The `rules` uses a lisp style syntax, example: `{'not',{'instring'}}`
+If `filter` is set then filter.
 For full list of functions, read source code.
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-string                    *ultimate-autopair-ext-string*

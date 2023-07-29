@@ -75,5 +75,17 @@ function M.call(m,ext)
         end
         return check(o)
     end
+    if ext.conf.filter then
+        local filter=m.filter
+        m.filter=function (o)
+            if m.conf.rules and not M.check_rules(m.conf.rules,o) then
+                return
+            end
+            if ext.conf.rules and not M.check_rules(ext.conf.rules,o) then
+                return
+            end
+            return filter(o)
+        end
+    end
 end
 return M

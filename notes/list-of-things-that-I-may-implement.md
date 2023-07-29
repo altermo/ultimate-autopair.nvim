@@ -102,7 +102,7 @@
 + [ ] extension in extension where they can return instead of continue
 + [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
 + [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
-+ [ ] make rules use `rule` and not just `check`
++ [x] make rules use `filter` and not just `check`
 # other
 + [x] `'a|b' > ' > 'a'|'b'`
 + [x] `[[|] > ] > [[]|] and not [[]|`
@@ -154,7 +154,7 @@
 + [ ] caching values from open_pair functions
 + [x] disable in comment (https://github.com/altermo/ultimate-autopair.nvim/issues/32)
 + [ ] in_tsnode_map: same as in_pair_map but for tsnodes
-+ [ ] create and extension (or add a cmd to rule) which checks if in_pair/not_in_pair
++ [ ] create an extension (or add a cmd to rule) which checks if in_pair/not_in_pair
 + [ ] make pairt.in_pair node detector recursively find if in node (option)
 + [ ] make tsnode extension recursively find if in node (option)
 + [ ] `default.matching_pair_start/end` get a pair of pairs `(|foo)` > `{(=1,)=5}`
@@ -163,3 +163,4 @@
 + [ ] make core support multiple modes `M.modes={'c','i',...}`
 + [ ] make test not use neovim exec and instead direct function call
 + [ ] refactor most of the code and add type annotasions (and rename o to else in filter)
++ [ ] did `rules` just kinda become useless with `filter`?

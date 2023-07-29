@@ -261,6 +261,7 @@ function M.test_extensions()
     run(":set lisp\rI'","'")
     run(':set lisp\rI"\'','"\'\'"')
     run(':set lisp\rI(','(',{extensions={rules={rules={{'not',{'option','lisp'}}}}}})
+    run('I#)I(','()#)',{extensions={rules={rules={{'not',{'previous','#'}}},filter=true}}})
     --fly
     run('I[{( ]$','[{(  )}]$')
     run('I(")$','("")$',{{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}})
