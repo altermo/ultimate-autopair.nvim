@@ -163,7 +163,7 @@ function M.find_corresponding_ambiguous_end_pair(pair,o,col)
     local filter=default.wrapp_pair_filter(o,pair.filter)
     pair=pair.pair
     for i=col,#o.line do
-        if M.I.match(pair,o.line:sub(i)) and filter(i,i+#pair-1) then --TODO filter i maybe of by 1
+        if M.I.match(pair,o.line:sub(i)) and filter(i,i+#pair-1) then
             return i+1
         end
     end
@@ -174,7 +174,7 @@ function M.find_corresponding_ambiguous_start_pair(pair,o,col)
     if not opab==opaa then return end
     local filter=default.wrapp_pair_filter(o,pair.filter)
     for i=col,1,-1 do
-        if M.I.match(pair.pair,o.line:sub(i)) and filter(i,i+#pair-1) then --TODO filter i maybe of by 1
+        if M.I.match(pair.pair,o.line:sub(i)) and filter(i,i+#pair-1) then
             return i-1
         end
     end

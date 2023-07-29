@@ -12,7 +12,6 @@ function M.check(m,ext,o)
         or (vim.tbl_contains(m.conf.tsnode_outside or {},ntype))
         or (ext.conf.inside and not vim.tbl_contains(ext.conf.inside or {},ntype))
         or (vim.tbl_contains(ext.conf.outside or {},ntype))
-    --TODO: filtering; requires: in_tsnode_map
 end
 function M.call(m,ext)
     local check=m.check
@@ -23,7 +22,8 @@ function M.call(m,ext)
     if ext.conf.filter then
         local filter=m.filter
         m.filter=function(o)
-            --TODO: option to filter both inside and outside of tsnode
+            --TODO: option to only filter outside of tsnode, but don't disable
+            --TODO: option to only filter insde of tsnode, but don't disable
             if M.check(m,ext,o) then return end
             return filter(o)
         end

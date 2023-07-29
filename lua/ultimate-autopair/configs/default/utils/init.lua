@@ -22,14 +22,6 @@ function M.sort(a,b)
         return true
     end
 end
-function M.get_map_wrapper(modes,...)
-    local args={...} --TODO: maybe replaced with M.get_mode_map_wrapper()
-    return function(mode)
-        if vim.tbl_contains(modes,mode) then
-            return args
-        end
-    end
-end
 function M.get_mode_map_wrapper(key,keyc)
     return function(mode)
         if mode=='i' and key then

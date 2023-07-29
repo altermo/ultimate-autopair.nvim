@@ -60,7 +60,7 @@ function M.init(q)
     m.rule=function () return true end
     m.filter=function () return true end
     default.init_extensions(m,m.extensions)
-    m.get_map=default.get_map_wrapper({q.cmap and 'c',q.map and 'i'},m.key)
+    m.get_map=default.get_mode_map_wrapper(q.map and m.key,q.cmap and m.key)
     m.sort=default.sort
     m.p=q.p or 10
     default.init_check_pair(m,q)
