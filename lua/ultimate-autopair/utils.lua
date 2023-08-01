@@ -11,20 +11,25 @@ M.key_down=vim.api.nvim_replace_termcodes('<down>',true,true,true)
 function M.incmd()
     return vim.fn.mode()=='c'
 end
+function M.getlines()
+    --TODO: only load the necessary lines and cache for like 100 (+ maybe depending on line length)
+    if M.incmd() then
+        return {M.getline()}
+    end
+    return vim.api.nvim_buf_get_lines(0,0,-1,false)
+end
 function M.getline(linenr)
     if M.incmd() then
         return vim.fn.getcmdline()
-    else
-        linenr=linenr or M.getlinenr()
-        return vim.api.nvim_buf_get_lines(0,linenr-1,linenr,false)[1]
     end
+    linenr=linenr or M.getlinenr()
+    return vim.api.nvim_buf_get_lines(0,linenr-1,linenr,false)[1]
 end
 function M.getcol()
     if M.incmd() then
         return vim.fn.getcmdpos()
-    else
-        return vim.fn.col('.')
     end
+    return vim.fn.col('.')
 end
 function M.movel(num)
     if M.incmd() then
@@ -39,6 +44,9 @@ function M.moveh(num)
     return ('\aU'..M.key_left):rep(num or 1)
 end
 function M.getlinenr()
+    if M.incmd() then
+        return 1
+    end
     return vim.fn.line('.')
 end
 function M.delete(pre,pos)
@@ -48,6 +56,8 @@ function M.addafter(num,text,textlen)
     return M.movel(num)..text..M.moveh(num+(textlen or #text))
 end
 function M.gettsnode(linenr,col,cache)
+    if cache and not not cache[M.gettsnode] then cache[M.gettsnode]={} end --TODO: write better
+    if cache then cache=cache[M.gettsnode] end --TODO: write better
     if cache and cache.no_parser then return end
     if cache and cache[tostring(linenr)..';'..tostring(col)] then
         return cache[tostring(linenr)..';'..tostring(col)] or nil

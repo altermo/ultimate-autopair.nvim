@@ -82,7 +82,7 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_close(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
-    m.filter=function () return true end
+    m.filter=function () return m.rule() end
     m.newline=M.wrapp_newline(m)
     default.init_extensions(m,m.extensions)
     default.init_check_map(m)

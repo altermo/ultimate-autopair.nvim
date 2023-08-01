@@ -25,6 +25,7 @@ function M.I.activate_iabbrev(key)
 end
 function M.I.var_create_wrapper(key)
     local line=utils.getline()
+    --local lines=utils.getlines()
     local col=utils.getcol()
     local linenr=utils.getlinenr()
     local incmd=utils.incmd()
@@ -32,6 +33,7 @@ function M.I.var_create_wrapper(key)
         return {
             key=key,
             line=line,
+            --lines=lines,
             col=col,
             linenr=linenr,
             incmd=incmd

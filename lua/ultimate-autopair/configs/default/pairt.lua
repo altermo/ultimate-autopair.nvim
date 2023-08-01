@@ -31,6 +31,7 @@ function M.init(q)
 
     m.check=function () end
     m.rule=function () return true end
+    m.filter=function () return m.rule() end
     default.init_extensions(m,m.extensions)
     m.check=nil
     m.p=q.p or 10

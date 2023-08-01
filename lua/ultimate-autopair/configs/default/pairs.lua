@@ -76,7 +76,7 @@ function M.init(q)
     m.newline=M.newline_wrapper(m)
     m.backspace=M.backspace_wrapper(m)
     m.rule=function () return true end
-    m.filter=function (_) return true end
+    m.filter=function () return m.rule() end
     default.init_extensions(m,m.extensions)
     m.get_map=default.get_mode_map_wrapper(q.map and m.key,q.cmap and m.key)
     m.sort=default.sort

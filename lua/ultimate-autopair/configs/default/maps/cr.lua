@@ -27,7 +27,7 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_newline(m)
     m.get_map=default.get_mode_map_wrapper(m.map)
     m.rule=function () return true end
-    m.filter=function () return true end
+    m.filter=function () return m.rule() end
     default.init_extensions(m,m.extensions)
     local check=m.check
     m.check=function (o)

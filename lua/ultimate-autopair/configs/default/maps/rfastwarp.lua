@@ -95,7 +95,7 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_rfastwarp(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
-    m.filter=function () return true end
+    m.filter=function () return m.rule() end
     default.init_extensions(m,vim.tbl_filter(function (k) return conf.filter_string or k.name~='string' end,m.extensions))
     default.init_check_map(m)
     m.doc='autopairs reverse fastwarp key map'

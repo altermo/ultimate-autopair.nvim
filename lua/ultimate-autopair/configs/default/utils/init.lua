@@ -145,6 +145,7 @@ function M.wrapp_pair_filter(o,filter)
         for i=pos1,pos2 do
             if not filter({
                 line=o.line,
+                --lines=o.lines,
                 col=i,
                 linenr=o.linenr,
                 save=o.save,

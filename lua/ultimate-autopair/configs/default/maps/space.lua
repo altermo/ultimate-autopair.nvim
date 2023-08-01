@@ -84,7 +84,7 @@ function M.init(conf,mconf,ext)
     m.check=M.wrapp_space(m)
     m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
     m.rule=function () return true end
-    m.filter=function () return true end
+    m.filter=function () return m.rule() end
     default.init_extensions(m,m.extensions)
     default.init_check_map(m)
     m.doc='autopairs space key map'

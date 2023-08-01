@@ -5,12 +5,6 @@ function M.I.match (str,line)
     return str==line:sub(1,#str)
 end
 
----@param pair table
----@param o table
----@param cols number
----@param cole number
----@param Icount number|nil
----@param ret_pos boolean|nil
 function M.count_start_pair(pair,o,cols,cole,Icount,ret_pos)
     local start_pair=pair.start_pair:reverse()
     local end_pair=pair.end_pair:reverse()
@@ -36,12 +30,6 @@ function M.count_start_pair(pair,o,cols,cole,Icount,ret_pos)
     end
     return (not ret_pos) and count
 end
----@param pair table
----@param o table
----@param cols number
----@param cole number
----@param Icount number|nil
----@param ret_pos boolean|nil
 function M.count_end_pair(pair,o,cols,cole,Icount,ret_pos)
     local start_pair=pair.start_pair
     local end_pair=pair.end_pair
@@ -67,11 +55,6 @@ function M.count_end_pair(pair,o,cols,cole,Icount,ret_pos)
     end
     return (not ret_pos) and count
 end
----@param pair table
----@param o table
----@param cols number
----@param cole number
----@param Icount number|nil
 function M.count_ambigious_pair(pair,o,cols,cole,Icount)
     local i=cols
     local filter=default.wrapp_pair_filter(o,pair.filter)
@@ -91,49 +74,28 @@ function M.count_ambigious_pair(pair,o,cols,cole,Icount)
     return count%2==1 and index
 end
 
----@param pair table
----@param o table
----@param col number
 function M.open_start_pair_before(pair,o,col)
     local count=M.count_start_pair(pair,o,col,#o.line)
     return M.count_start_pair(pair,o,1,col-1,count+1,true)
 end
----@param pair table
----@param o table
----@param col number
 function M.open_end_pair_after(pair,o,col)
     local count=M.count_end_pair(pair,o,1,col-1)
     return M.count_end_pair(pair,o,col,#o.line,count+1,true)
 end
----@param pair table
----@param o table
----@param col number
 function M.open_pair_ambigous_before(pair,o,col)
     return M.count_ambigious_pair(pair,o,1,col-1)
 end
----@param pair table
----@param o table
----@param col number
 function M.open_pair_ambigous_after(pair,o,col)
     return M.count_ambigious_pair(pair,o,col,#o.line)
 end
----@param pair table
----@param o table
----@param _ number
 function M.open_pair_ambigous(pair,o,_)
     return M.count_ambigious_pair(pair,o,1,#o.line)
 end
 
----@param pair table
----@param o table
----@param col number
 function M.check_start_pair(pair,o,col)
     if o.line:sub(col-#pair.pair+1,col-1)~=pair.pair:sub(0,-2) then return end
     return not M.open_end_pair_after(pair,o,col)
 end
----@param pair table
----@param o table
----@param col number
 function M.check_end_pair(pair,o,col)
     if o.line:sub(col,col-1+#pair.pair)~=pair.pair then return end
     local count2=M.count_start_pair(pair,o,col,#o.line)
@@ -141,17 +103,11 @@ function M.check_end_pair(pair,o,col)
     if count1==0 or count1>count2 then return end
     return true
 end
----@param pair table
----@param o table
----@param col number
 function M.check_ambiguous_end_pair(pair,o,col)
     local opab=M.open_pair_ambigous_before(pair,o,col)
     local opaa=M.open_pair_ambigous_after(pair,o,col)
     return opab and opaa
 end
----@param pair table
----@param o table
----@param col number
 function M.check_ambiguous_start_pair(pair,o,col)
     return not M.open_pair_ambigous(pair,o,col)
 end

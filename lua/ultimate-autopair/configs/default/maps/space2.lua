@@ -44,7 +44,7 @@ function M.init(conf,mconf,ext)
     if mconf.map==false then return end
     local m={}
     m.rule=function () return true end
-    m.filter=function () return true end
+    m.filter=function () return m.rule() end
     m.iconf=conf
     m.conf=conf.conf or {}
     m[default.type_pair]={'space2'}
