@@ -1,8 +1,9 @@
 local M={}
 local default=require'ultimate-autopair.configs.default.utils'
+local utils=require'ultimate-autopair.utils'
 function M.check(o,m,ext)
     if ext.conf.alpha or m.conf.alpha then
-        if o.key=='"' or o.key=="'" and vim.o.filetype=='python' and not ext.conf.no_python then
+        if o.key=='"' or o.key=="'" and utils.getsmartft(o.linenr-1,o.col-1,o.save)=='python' and not ext.conf.no_python then
             if vim.regex([[\v\c<((r[fb])|([fb]r)|[frub])$]]):match_str(o.line:sub(o.col-1-#m.pair,o.col-#m.pair)) then
                 return
             end

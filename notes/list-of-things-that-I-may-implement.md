@@ -95,7 +95,7 @@
 + [x] add the parens att end when logical `|{a} > [ > [|{a}]`
 + [x] filter ' in lisp not instring
 + [x] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
-+ [ ] markdown code block spesific behavior (like lisp code block)
++ [x] markdown code block spesific behavior (like lisp code block)
 + [ ] markdown code block filter
 + [ ] user defined multiline as one (maybe using treesitter)
 + [ ] whole file detection (requires implementation of tsnode blocks)
@@ -147,7 +147,7 @@
 + [x] full utf8 suport
 + [ ] all mappings p set depending on mconf.p if not set
 + [ ] make a in_pair_map(pair,line): returns a table of bools (or maybe function) of whether in pair
-+ [ ] buffer/InsertCharPre way of keybindings
++ [ ] core option to have buffer/InsertCharPre way of keybindings
 + [ ] auto set previous mapping as fallback
 + [ ] fastwarp to broad: make an option to not make it so (maybe: only hop over treesitter nodes/functions calls with dots and calls `M.fn(a)`)
 + [ ] object which contains a list of the pairs, like `(foo'')` > `{'(',"'","'",)}` pluss extra info (position,count,...)
@@ -164,3 +164,5 @@
 + [ ] make test not use neovim exec and instead direct function call
 + [ ] refactor most of the code and add type annotasions (and rename o to else in filter)
 + [ ] did `rules` just kinda become useless with `filter`?
++ [ ] core option
++ [ ] smartly cache in_pair so that it only needs to max loop the hole line once

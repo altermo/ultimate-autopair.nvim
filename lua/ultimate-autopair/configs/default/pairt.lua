@@ -5,7 +5,7 @@ M.fn={
     in_pair=function (m,o,col,conf)
         col=conf.wcol or col
         if conf.notree then return end
-        if utils.incmd() then return end
+        if o.incmd then return end
         local node=utils.gettsnode(conf.linenr-1,col-1,conf.cache) --Slow
         if not node then return end
         if node:parent() and node:parent():type()==m.node then

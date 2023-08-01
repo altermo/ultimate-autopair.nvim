@@ -33,6 +33,7 @@ function M.get_mode_map_wrapper(key,keyc)
     end
 end
 function M.load_extension(extension_name)
+    if type(extension_name)=='table' then return extension_name end
     return require('ultimate-autopair.extensions.'..extension_name)
 end
 function M.prepare_extensions(extensions)

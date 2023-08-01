@@ -17,8 +17,8 @@ function M.space(o,m)
         return pair.conf.space
     end)
     if not prev_pair then return end
-    if not utils.incmd()
-        and (conf.check_box_ft==true or vim.tbl_contains(conf.check_box_ft or {},vim.o.filetype))
+    if not o.incmd
+        and (conf.check_box_ft==true or vim.tbl_contains(conf.check_box_ft or {},utils.getsmartft(o.linenr-1,o.col-1,o.save)))
         and vim.regex([=[\v^\s*([+*-]|(\d+\.))\s\[\]$]=]):match_str(o.line:sub(1,o.col)) then return end
     local matching_pair_pos=prev_pair.fn.find_end_pair(o,pcol)
     if not matching_pair_pos then return end

@@ -79,5 +79,24 @@ function M.gettsnode(linenr,col,cache)
     end
     return ret
 end
-
+function M.getsmartft(linenr,col,cache)
+    if cache and not not cache[M.getsmartft] then cache[M.getsmartft]={} end --TODO: write better
+    if cache then cache=cache[M.getsmartft] end --TODO: write better
+    if cache and cache.no_parser then return vim.o.filetype end
+    if cache and cache[tostring(linenr)..';'..tostring(col)] then
+        return cache[tostring(linenr)..';'..tostring(col)] or vim.o.filetype
+    end
+    local stat,parser=pcall(vim.treesitter.get_parser,0)
+    if not stat then
+        (cache or {}).no_parser=true
+        return vim.o.filetype
+    end
+    local pos={linenr,col,linenr,col}
+    local ret=parser:language_for_range(pos):lang()
+    if ret=='markdown_inline' then ret='markdown' end
+    if cache then
+        cache[tostring(linenr)..';'..tostring(col)]=ret
+    end
+    return ret
+end
 return M
