@@ -16,7 +16,7 @@ end
 function M.call(m,ext)
     local check=m.check
     m.check=function (o)
-        if M.check(m,ext,o) then return end
+        if not o.incmd and M.check(m,ext,o) then return end
         return check(o)
     end
     if ext.conf.filter then
@@ -24,7 +24,7 @@ function M.call(m,ext)
         m.filter=function(o)
             --TODO: option to only filter outside of tsnode, but don't disable
             --TODO: option to only filter insde of tsnode, but don't disable
-            if M.check(m,ext,o) then return end
+            if not o.incmd and M.check(m,ext,o) then return end
             return filter(o)
         end
     end

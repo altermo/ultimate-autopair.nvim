@@ -50,7 +50,7 @@ M.conf={
         multiline=true,
         nocursormove=true,
         do_nothing_if_fail=true,
-        filter_string=false, --TODO: refactor {r}fastwarp.lua so that it can be removed
+        filter_string=false,
         conf={},
         multi=false,
     },
