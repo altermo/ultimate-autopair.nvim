@@ -150,6 +150,7 @@ function M.wrapp_pair_filter(o,filter)
                 col=i,
                 linenr=o.linenr,
                 save=o.save,
+                incmd=o.incmd,
             }) then
                 return false
             end
