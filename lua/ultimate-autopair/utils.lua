@@ -1,4 +1,4 @@
---Internal
+--Internal Utils
 local M={}
 M.key_bs=vim.api.nvim_replace_termcodes('<bs>',true,true,true)
 M.key_del=vim.api.nvim_replace_termcodes('<del>',true,true,true)
@@ -8,9 +8,17 @@ M.key_end=vim.api.nvim_replace_termcodes('<end>',true,true,true)
 M.key_home=vim.api.nvim_replace_termcodes('<home>',true,true,true)
 M.key_up=vim.api.nvim_replace_termcodes('<up>',true,true,true)
 M.key_down=vim.api.nvim_replace_termcodes('<down>',true,true,true)
-function M.incmd()
-    return vim.fn.mode()=='c'
+M.key_noundo=vim.api.nvim_replace_termcodes('<C-g>U',true,true,true)
+---@param linenr? number
+---@return string
+function M.getline(linenr)
+    if M.incmd() then
+        return vim.fn.getcmdline()--[[@as string]]
+    end
+    linenr=linenr or M.getlinenr()
+    return unpack(vim.api.nvim_buf_get_lines(0,linenr-1,linenr,false))
 end
+---@return string[]
 function M.getlines()
     --TODO: only load the necessary lines and cache for like 100 (+ maybe depending on line length)
     if M.incmd() then
@@ -18,49 +26,60 @@ function M.getlines()
     end
     return vim.api.nvim_buf_get_lines(0,0,-1,false)
 end
-function M.getline(linenr)
-    if M.incmd() then
-        return vim.fn.getcmdline()
-    end
-    linenr=linenr or M.getlinenr()
-    return vim.api.nvim_buf_get_lines(0,linenr-1,linenr,false)[1]
+---@return boolean
+function M.incmd()
+    return vim.fn.mode()=='c'
 end
+---@return number
 function M.getcol()
     if M.incmd() then
-        return vim.fn.getcmdpos()
+        return vim.fn.getcmdpos()--[[@as number]]
     end
-    return vim.fn.col('.')
+    return vim.fn.col('.')--[[@as number]]
 end
+---@param num? number
+---@return string
 function M.movel(num)
     if M.incmd() then
         return M.key_right:rep(num or 1)
     end
-    return ('\aU'..M.key_right):rep(num or 1)
+    return (M.key_noundo..M.key_right):rep(num or 1)
 end
+---@param num? number
+---@return string
 function M.moveh(num)
     if M.incmd() then
         return M.key_left:rep(num or 1)
     end
-    return ('\aU'..M.key_left):rep(num or 1)
+    return (M.key_noundo..M.key_left):rep(num or 1)
 end
+---@return number
 function M.getlinenr()
     if M.incmd() then
         return 1
     end
-    return vim.fn.line('.')
+    return vim.fn.line('.')--[[@as number]]
 end
+---@param pre? number
+---@param pos? number
+---@return string
 function M.delete(pre,pos)
     return M.key_bs:rep(pre or 1)..M.key_del:rep(pos or 0)
 end
-function M.addafter(num,text,textlen)
-    return M.movel(num)..text..M.moveh(num+(textlen or #text))
-end
-function M.gettsnode(linenr,col,cache)
-    if cache and not not cache[M.gettsnode] then cache[M.gettsnode]={} end --TODO: write better
-    if cache then cache=cache[M.gettsnode] end --TODO: write better
-    if cache and cache.no_parser then return end
-    if cache and cache[tostring(linenr)..';'..tostring(col)] then
-        return cache[tostring(linenr)..';'..tostring(col)] or nil
+
+---@param o core.o
+---@return TSNode?
+function M.gettsnode(o)
+    --TODO: use vim.treesitter.get_string_parser for cmdline
+    local cache=o.save
+    local linenr,col=o.row-1,o.col-1
+    if cache then
+        if not cache[M.gettsnode] then cache[M.gettsnode]={} end
+        cache=cache[M.gettsnode]
+        if cache.no_parser then return end
+        if cache[tostring(linenr)..';'..tostring(col)] then
+            return cache[tostring(linenr)..';'..tostring(col)] or nil
+        end
     end
     if not pcall(vim.treesitter.get_parser,0) then
         (cache or {}).no_parser=true
@@ -74,17 +93,24 @@ function M.gettsnode(linenr,col,cache)
         s,ret=pcall(vim.treesitter.get_node_at_pos,0,linenr,col,{})
     end
     if not s then ret=nil end
-    if cache then
-        cache[tostring(linenr)..';'..tostring(col)]=ret
-    end
+    (cache or {})[tostring(linenr)..';'..tostring(col)]=ret
     return ret
 end
-function M.getsmartft(linenr,col,cache)
-    if cache and not not cache[M.getsmartft] then cache[M.getsmartft]={} end --TODO: write better
-    if cache then cache=cache[M.getsmartft] end --TODO: write better
-    if cache and cache.no_parser then return vim.o.filetype end
-    if cache and cache[tostring(linenr)..';'..tostring(col)] then
-        return cache[tostring(linenr)..';'..tostring(col)] or vim.o.filetype
+---@param o core.o
+---@param notree boolean?
+---@return string
+function M.getsmartft(o,notree) --TODO: fix for empty lines
+    --TODO: use vim.treesitter.get_string_parser for cmdline
+    local cache=o.save
+    local linenr,col=o.row-1,o.col-1
+    if notree then return vim.o.filetype end
+    if cache then
+        if not cache[M.getsmartft] then cache[M.getsmartft]={} end
+        cache=cache[M.getsmartft]
+        if cache.no_parser then return vim.o.filetype end
+        if cache[tostring(linenr)..';'..tostring(col)] then
+            return cache[tostring(linenr)..';'..tostring(col)] or vim.o.filetype
+        end
     end
     local stat,parser=pcall(vim.treesitter.get_parser,0)
     if not stat then
@@ -94,9 +120,11 @@ function M.getsmartft(linenr,col,cache)
     local pos={linenr,col,linenr,col}
     local ret=parser:language_for_range(pos):lang()
     if ret=='markdown_inline' then ret='markdown' end
-    if cache then
-        cache[tostring(linenr)..';'..tostring(col)]=ret
-    end
+    (cache or {})[tostring(linenr)..';'..tostring(col)]=ret
     return ret
+end
+---@return string
+function M.getcmdtype()
+    return vim.fn.getcmdtype() --[[@as string]]
 end
 return M

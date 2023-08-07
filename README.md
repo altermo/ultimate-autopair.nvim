@@ -1,8 +1,8 @@
 **:exclamation: Ultimate-autopair is currently in the _alpha_ stage of development. Some aspects may change or break, and documentation might occasionally be inaccurate.**
-# Ultimate-autopair.nvim 0.5.3
-Ultimate-autopair plugin aims to provide all the features that an auto-pairing plugin needs.\
+# Ultimate-autopair.nvim 0.6.0
+[Ultimate-autopair](https://github.com/altermo/ultimate-autopair.nvim) plugin aims to always work as you expect, while making it relatively easy to configure.\
 For development version, check out [development](https://github.com/altermo/ultimate-autopair.nvim/tree/development)\
-Requires neovim 0.8 (recomended 0.9)
+Requires neovim 0.9 (for older versions of neovim, check previous versions of plugin)
 ## Installation
 Packer:
 ```lua
@@ -16,9 +16,8 @@ use{
     end,
 }
 ```
-## Configuration
-To add a pair, use the syntax `ua.setup{{'<<','>>'},}`.
-For more configuration options, refer to the documentation (`:help ultimate-autopair-config-default`).
+## Default configuration
+For the default configuration, refer to the documentation (`:help ultimate-autopair-config-default`).
 ### Other plugins to supercharge auto-pairing
 These are some other plugins which are related to pairing which have features that ultimate-autopair does not have.
 + [endwise](https://github.com/RRethy/nvim-treesitter-endwise) wisely add `end` in lua, ruby, etc...

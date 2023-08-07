@@ -166,3 +166,7 @@
 + [ ] did `rules` just kinda become useless with `filter`?
 + [ ] core option
 + [ ] smartly cache in_pair so that it only needs to max loop the hole line once
++ [ ] create object of things for better in checking (`{obj={string={tsnode('string')},comment={tsnode('comment'),regex('\\s*/\\*.*\\*/')}}}`)
++ [ ] move things like open_pair.start_pair_can_check to maybe m.fn or other...
++ [ ] utf8 pairs
++ [ ] maybe add unbalanced detection into filter

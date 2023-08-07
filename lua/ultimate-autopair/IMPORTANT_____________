@@ -1,0 +1,5 @@
+WHAT TO DO:
+1. have o.ischeck and run both filter() and check() on run()
+2. have check() be extended by the same functions as filter()
+
+I FAVOR THE 2 OPTION
