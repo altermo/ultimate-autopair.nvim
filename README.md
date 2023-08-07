@@ -1,5 +1,9 @@
 **:exclamation: Ultimate-autopair is currently in the _alpha_ stage of development. Some aspects may change or break, and documentation might occasionally be inaccurate.**
-# Ultimate-autopair.nvim 0.6.0
+# Ultimate-autopair.nvim 0.6.0-pre-alpha
+
+IMPORTANT:
+If your comming from a previous verson with broken config, check out the [Q&A](./Q&A.md) first
+
 [Ultimate-autopair](https://github.com/altermo/ultimate-autopair.nvim) plugin aims to always work as you expect, while making it relatively easy to configure.\
 For development version, check out [development](https://github.com/altermo/ultimate-autopair.nvim/tree/development)\
 Requires neovim 0.9 (for older versions of neovim, check previous versions of plugin)
@@ -21,7 +25,7 @@ For the default configuration, refer to the documentation (`:help ultimate-autop
 ### Other plugins to supercharge auto-pairing
 These are some other plugins which are related to pairing which have features that ultimate-autopair does not have.
 + [endwise](https://github.com/RRethy/nvim-treesitter-endwise) wisely add `end` in lua, ruby, etc...
-+ [tabout](https://github.com/abecodes/tabout.nvim) tab out of parentheses
++ [tabout](https://github.com/abecodes/tabout.nvim) tab out of tsnode objects
 + [surround](https://github.com/kylechui/nvim-surround) delete, change surrounding parentheses and much more...
 + [autotag](https://github.com/windwp/nvim-ts-autotag) auto add html tags
 + <a href="https://github.com/windwp/nvim-autopairs">nvim-autopairs</a> integration: Use [npairs-integrate-upair](https://github.com/altermo/npairs-integrate-upair) with `require('npairs-int-upair').setup({map='u'})`

@@ -170,3 +170,4 @@
 + [ ] move things like open_pair.start_pair_can_check to maybe m.fn or other...
 + [ ] utf8 pairs
 + [ ] maybe add unbalanced detection into filter
+IMPORTANT: add disable in macro
