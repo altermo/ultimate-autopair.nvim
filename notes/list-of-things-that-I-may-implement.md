@@ -166,3 +166,4 @@
 + [ ] did `rules` just kinda become useless with `filter`?
 + [ ] core option
 + [ ] smartly cache in_pair so that it only needs to max loop the hole line once
++ [ ] make alpha filter filetype(ts_ft) dependend

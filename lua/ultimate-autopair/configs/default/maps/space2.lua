@@ -56,7 +56,7 @@ function M.init(conf,mconf,ext)
         m.au=vim.api.nvim_create_autocmd('InsertCharPre',{callback=m.callback})
     end
     default.init_extensions(m,m.extensions)
-    m.check=nil
+    m.check=nil --TODO: make it so that it runs through check: (utf8 suport...)
     m.doc='autopairs autocmd for space2'
     return m
 end

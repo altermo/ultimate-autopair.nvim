@@ -2,6 +2,7 @@ local utils=require'ultimate-autopair.utils'
 local default=require'ultimate-autopair.configs.default.utils'
 local M={}
 function M.check(conf,o,m)
+    --TODO: don't just nofilter, create something better so that '"' "(|)" with " works
     local next_char_index
     local col=o.col
     if o.line:sub(col,col)==o.key then return end
