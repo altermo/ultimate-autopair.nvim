@@ -42,25 +42,28 @@ function M.get_char(char,conf)
     end
     return M.map[true]
 end
----@param o core.o
+---@param col number
+---@param line string
 ---@param conf table
-function M.transform(o,conf)
-    if o.save[M.type] then return end
+---@return string
+---@return number
+function M.transform(col,line,conf)
     local newline=''
     local newcol=0
-    for i=1,#o.line do
-        if vim.str_utf_end(o.line,i)>0 and
-            vim.str_utf_start(o.line,i)==0 then
-            newline=newline..M.get_char(o.line:sub(i),conf)
+    local ncol
+    for i=1,#line do
+        if vim.str_utf_end(line,i)>0 and
+            vim.str_utf_start(line,i)==0 then
+            newline=newline..M.get_char(line:sub(i),conf)
             newcol=newcol+1
-        elseif vim.str_utf_start(o.line,i)==0 then
-            newline=newline..o.line:sub(i,i)
+        elseif vim.str_utf_start(line,i)==0 then
+            newline=newline..line:sub(i,i)
             newcol=newcol+1
         end
+        if i==col then ncol=newcol end
     end
-    if o.col==#o.line+1 then o.col=newcol+1 end
-    o.line=newline
-    o.save[M.type]=true
+    if col==#line+1 then ncol=newcol+1 end
+    return newline,ncol
 end
 ---@param m prof.def.module
 ---@param ext prof.def.ext
@@ -68,11 +71,15 @@ function M.call(m,ext)
     local conf=ext.conf
     local check=m.check
     m.check=function (o)
-        --for _,v in ipairs(o.lines) do
-        --end --TODO
-        M.transform(o,conf)
+        local col
+        for row,line in ipairs(o.lines) do
+            o.lines[row],col=M.transform(o.col,line,conf)
+            if row==o.row then
+                o.col=col
+            end
+        end
+        o.line=o.lines[o.row]
         return check(o)
     end
-    --TODO: maybe implement for filter
 end
 return M

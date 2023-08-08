@@ -128,6 +128,14 @@ function M.open_end_pair_after(pair,o,col)
 end
 ---@param pair prof.def.m.pair
 ---@param o core.o
+---@param col number
+---@return number|false
+function M.open_start_pair_before(pair,o,col)
+    local count=M.count_start_pair(pair,o,col)
+    return M.count_start_pair(pair,o,col-1,true,count+1,true)
+end
+---@param pair prof.def.m.pair
+---@param o core.o
 ---@param _ number?
 ---@return false|number
 function M.open_pair_ambigous(pair,o,_)

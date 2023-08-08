@@ -42,6 +42,7 @@
 ---@field cmap? boolean
 ---@field imap? boolean
 ---@field multiline? boolean
+---@field [string] any
 ---@class prof.def.q
 ---@field start_pair string
 ---@field end_pair string

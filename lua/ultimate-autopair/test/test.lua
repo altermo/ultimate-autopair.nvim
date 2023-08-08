@@ -237,13 +237,14 @@ return {
         {'|','(','(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
     },
     SKIP_ext_utf8={
-        {"'ø',|","'","'ø','|'",{ft='lua',ts=true}},
-        {'(|)aøe','','(|aøe)'},
-        {'(|aáa)','','|aøe'},
-        {'|"¿qué?"','(','(|"¿qué")'},
-        {"ä|","'","ä'|"},
-        {"ó|","'","ó'|'",{c={extensions={utf8={map={['ó']='0'}}}}}},
-        {'"ě""|"','','"ě"|'},
+        {"'á|'","'","'á'|"}, --simple
+        {'(|)aøe','','(|aøe)'}, --rfaswarp
+        {'(|aáa)','','|aøe'}, --backspace
+        {'|"¿qué?"','(','(|"¿qué")'}, --ext.suround
+        {"ä|","'","ä'|"}, --ext.alpha
+        {"ó|","'","ó'|'",{c={extensions={utf8={map={['ó']='0'}}}}}}, --ext.alpha
+        {'"ě""|"','','"ě"|'}, --backspace
+        {"'ø',|","'","'ø','|'",{ft='lua',ts=true}}, --treesitter
     },
     SKIP_options={
         ---pair

@@ -22,7 +22,7 @@ end
 function M.backspace_wrapper(m)
     return function (o)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
-            if open_pair.count_end_pair(m,o,o.col)==0 then
+            if not open_pair.open_start_pair_before(m,o,o.col) then
                 return utils.delete(#m.start_pair,#m.end_pair)
             end
         end

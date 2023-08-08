@@ -16,6 +16,17 @@ function M.check_wrapper(m)
         return m.start_pair:sub(-1)..m.end_pair..utils.moveh(#m.end_pair)
     end
 end
+---@param m prof.def.m.pair
+---@return prof.def.map.bs.fn
+function M.backspace_wrapper(m)
+    return function (o)
+        if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.pair==o.line:sub(o.col,o.col+#m.pair-1) then
+            if not open_pair.open_pair_ambigous(m,o,o.col) then
+                return utils.delete(#m.pair,#m.pair)
+            end
+        end
+    end
+end
 ---@param q prof.def.q
 ---@return prof.def.m.pair
 function M.init(q)
@@ -26,7 +37,7 @@ function M.init(q)
     m.extensions=q.extensions
     m.conf=q.conf
     m.key=m.pair:sub(-1)
-    m[default.type_def]={'charins','pair','start','ambiguous'}
+    m[default.type_def]={'charins','pair','start','ambiguous','dobackspace'}
     m.mconf=q.mconf
     m.p=q.p
     m.doc=('autopairs ambigous start pair: %s'):format(m.pair)
@@ -34,6 +45,7 @@ function M.init(q)
     m.multiline=q.multiline
 
     m.check=M.check_wrapper(m)
+    m.backspace=M.backspace_wrapper(m)
     m.filter=default.def_filter_wrapper(m)
     default.init_extensions(m,m.extensions)
     m.get_map=default.def_pair_get_map_wrapper(m,q)
