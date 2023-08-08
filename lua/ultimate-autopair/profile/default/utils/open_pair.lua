@@ -1,3 +1,4 @@
+local utils=require'ultimate-autopair.utils'
 local M={}
 M.I={match=function (str,line)
     return str==line:sub(1,#str)
@@ -14,24 +15,21 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     local start_pair=pair.start_pair:reverse()
     local end_pair=pair.end_pair:reverse()
     local count=Icount or 0
-    local filter=function(_,_) return true end --TODO: temp: and aslo seperate for start/end pair
-    local lines
-    local row
+    local filter=function(row,col_) return utils.filter_pos(pair.filter,o,row,col_) end
+    local lines={o.line}
+    local row=1
     if pair.multiline then
         lines=vim.fn.reverse(vim.list_slice(o.lines,(not gotostart) and o.row or nil,gotostart==true and o.row or nil))
         row=#o.lines-o.row+1
-    else
-        lines={o.line}
-        row=1
     end
     for rrow,line in pairs(lines)do
         local i=(gotostart==true and rrow==row and col) or #line
         while ((not gotostart) and rrow==row and i>col-1) or ((gotostart or rrow~=row) and i>0) do
             local lline=line:sub((not gotostart) and rrow==row and col or 1,i):reverse()
-            if M.I.match(start_pair,lline) and filter(i,#o.lines-rrow+1) then
+            if M.I.match(start_pair,lline) and filter(#o.lines-rrow+1,i-#start_pair+1) then
                 count=count-1
                 i=i-#start_pair
-            elseif M.I.match(end_pair,lline) and filter(i,#o.lines-rrow+1) then
+            elseif M.I.match(end_pair,lline) and filter(#o.lines-rrow+1,i-#end_pair+1) then
                 count=count+1
                 i=i-#end_pair
             else
@@ -58,24 +56,21 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
     local start_pair=pair.start_pair
     local end_pair=pair.end_pair
     local count=Icount or 0
-    local filter=function(_,_) return true end --TODO: temp: and aslo seperate for start/end pair
-    local lines
-    local row
+    local filter=function(row,col_) return utils.filter_pos(pair.filter,o,row,col_) end
+    local lines={o.line}
+    local row=1
     if pair.multiline then
         lines=vim.list_slice(o.lines,gotoend==true and o.row or nil,(not gotoend) and o.row or nil)
         row=o.row
-    else
-        lines={o.line}
-        row=1
     end
     for rrow,line in pairs(lines) do
         local i=(gotoend==true and rrow==row and col) or 1
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
-            if M.I.match(start_pair,lline) and filter(i,rrow) then
+            if M.I.match(start_pair,lline) and filter(rrow,i) then
                 count=count+1
                 i=i+#start_pair
-            elseif M.I.match(end_pair,lline) and filter(i,rrow) then
+            elseif M.I.match(end_pair,lline) and filter(rrow,i) then
                 count=count-1
                 i=i+#end_pair
             else
@@ -98,23 +93,20 @@ end
 ---@return false|number
 function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
     local spair=pair.pair
-    local filter=function(_,_) return true end --TODO: temp: and aslo seperate for start/end pair
+    local filter=function(row,col_) return utils.filter_pos(pair.filter,o,row,col_) end
     local count=Icount or 0
     local index
-    local lines
-    local row
+    local lines={o.line}
+    local row=1
     if pair.multiline then
         lines=vim.list_slice(o.lines,gotoend==true and o.row or nil,(not gotoend) and o.row or nil)
         row=o.row
-    else
-        lines={o.line}
-        row=1
     end
     for rrow,line in pairs(lines) do
         local i=(gotoend==true and rrow==row and col) or 1
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
-            if M.I.match(spair,lline) and filter(i,rrow) then
+            if M.I.match(spair,lline) and filter(rrow,i) then
                 count=count+1
                 if not index then index=i end
                 i=i+#spair

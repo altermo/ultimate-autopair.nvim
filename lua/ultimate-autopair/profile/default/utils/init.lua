@@ -99,4 +99,13 @@ function M.filter_for_opt(conf)
     local core=require'ultimate-autopair.core'
     return vim.tbl_filter(function (v) return M.get_type_opt(v,conf) end,core.mem)
 end
+---@param m prof.def.module
+---@param extensions prof.def.ext[]
+function M.init_extensions(m,extensions)
+    for _,i in ipairs(extensions) do
+        if i.m.call then
+            i.m.call(m,i)
+        end
+    end
+end
 return M

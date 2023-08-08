@@ -22,9 +22,9 @@ end
 function M.backspace_wrapper(m)
     return function (o)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
-            --if not open_pair.open_start_pair_before(m,o,o.col) then --TODO: continue
-            return utils.delete(#m.start_pair,#m.end_pair)
-            --end
+            if open_pair.count_end_pair(m,o,o.col)==0 then
+                return utils.delete(#m.start_pair,#m.end_pair)
+            end
         end
     end
 end
@@ -47,6 +47,7 @@ function M.init(q)
 
     m.check=M.check_wrapper(m)
     m.filter=default.def_filter_wrapper(m)
+    default.init_extensions(m,m.extensions)
     m.get_map=default.def_pair_get_map_wrapper(m,q)
     m.backspace=M.backspace_wrapper(m)
     m.sort=default.def_pair_sort

@@ -104,7 +104,7 @@ end
 function M.gettsnode(o)
     --TODO: use vim.treesitter.get_string_parser for cmdline
     local cache=o.save
-    local linenr,col=o.row+o._offset-1,o.col-1
+    local linenr,col=o.row+o._offset(o.row)-1,o.col-1
     if cache then
         if not cache[M.gettsnode] then cache[M.gettsnode]={} end
         cache=cache[M.gettsnode]
@@ -134,7 +134,7 @@ end
 function M.getsmartft(o,notree) --TODO: fix for empty lines
     --TODO: use vim.treesitter.get_string_parser for cmdline
     local cache=o.save
-    local linenr,col=o.row+o._offset-1,o.col-1
+    local linenr,col=o.row+o._offset(o.row)-1,o.col-1
     if notree then return vim.o.filetype end
     if cache then
         if not cache[M.getsmartft] then cache[M.getsmartft]={} end
@@ -158,5 +158,23 @@ end
 ---@return string
 function M.getcmdtype()
     return vim.fn.getcmdtype() --[[@as string]]
+end
+---@param fn core.filter-fn
+---@param o core.o
+---@param row any
+---@param col any
+---@return boolean?
+function M.filter_pos(fn,o,row,col)
+    local new_o={
+        key=o.key,
+        line=o.lines[row],
+        lines=o.lines,
+        col=col,
+        row=row,
+        _offset=o._offset,
+        incmd=o.incmd,
+        save=o.save,
+    }
+    return fn(new_o)
 end
 return M

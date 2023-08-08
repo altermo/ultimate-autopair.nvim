@@ -186,6 +186,8 @@ return {
     SKIP_ext_cmdtype={
         {'|','I="("\r','()',{interactive=true,c={extensions={cmdtype={skip={}}}}}},
         {'|','I="("\r','(',{interactive=true,c={extensions={cmdtype={skip={'='}}}}}},
+        {'|','(','(|)',{incmd=':'}},
+        {'|','(','(|',{incmd='/'}},
     },
     SKIP_ext_alpha={
         {"don|t","'","don'|t"},
@@ -202,12 +204,15 @@ return {
         {'<!-|','-','<!--|'},
         {'""|','"','"""|"'},
         {'<!-|','-','<!--|-->',{ft='html'}},
+        {'|','(','(|',{ft='TelescopePrompt'}},
     },
     SKIP_ext_escape={
         {'\\|','(','\\(|'},
         {'\\\\|','(','\\\\(|)'},
         {[['\\|']],'"',[['\\"|"']]},
         {'|\\)','(','(|)\\)'},
+        {'\\(|)',')','\\()|)'},
+        {'\\<!-|','-','\\<!--|',{ft='html'}},
     },
     SKIP_ext_cond={
         {'|',"'","'",{ft='lisp'}},
@@ -275,7 +280,7 @@ return {
         {'|"\\"','(','(|)"\\"'},
         {'("|")',')','(")|")',{c={{'"','"',fly=true,p=11},extensions={fly={nofilter=false}}}}},
     },
-    multiline={
+    SKIP_multiline={
         {'|\n)','(','(|\n)'},
         {'(\n|)',')','(\n)|'},
         {'\n|)',')','\n)|)'},
@@ -291,7 +296,7 @@ return {
         {'(|)\n',')','()|\n'},
         {'\n(|)\n',')','\n()|\n'},
     },
-    test_run_multiline={
+    SKIP_test_run_multiline={
         {'\n|','a','\na|'},
         {'\n|\n','','|\n'},
         {'foo\n|bar\n','','foo|bar\n'},

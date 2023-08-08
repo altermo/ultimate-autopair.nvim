@@ -140,12 +140,12 @@ function M.switch_ua_utils_fn(ua_utils_,opt,lines,linenr,line,col)
     ua_utils.maxlines=math.huge --TODO: remove and test for large files
     ua_utils_._getlines=function () return lines end
     ua_utils_.getline=function () return line end
-    ua_utils_.incmd=function () return false end
+    ua_utils_.incmd=function () return opt.incmd end
     ua_utils_.getcol=function () return col end
     ua_utils_.getlinenr=function () return linenr end
     ua_utils_.gettsnode=function () end
     ua_utils_.getsmartft=function () return opt.ft or '' end
-    ua_utils_.getcmdtype=function () return ':' end
+    ua_utils_.getcmdtype=function () return opt.incmd end
 end
 function M.parse_unparsed_line(line)
     local lines=vim.split(line,'\n')
@@ -197,7 +197,7 @@ function M.run_action(action,lines,row,col,opt)
                     delete(#k) insert(v) break
                 end
             end
-        elseif action:sub(i,i+4)=='\aU\x80kl' then
+        elseif action:sub(i,i+4)==(opt.incmd and '\x80kl' or '\aU\x80kl') then
             col=col-1
             i=i+4
         elseif action:sub(i,i+2)=='\x80kb' then
@@ -206,7 +206,7 @@ function M.run_action(action,lines,row,col,opt)
         elseif action:sub(i,i+2)=='\x80kD' then
             delete(0,1)
             i=i+2
-        elseif action:sub(i,i+4)=='\aU\x80kr' then
+        elseif action:sub(i,i+4)==(opt.incmd and '\x80kr' or '\aU\x80kr') then
             col=col+1
             i=i+4
         else

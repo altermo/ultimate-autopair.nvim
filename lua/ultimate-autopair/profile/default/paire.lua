@@ -40,6 +40,7 @@ function M.init(q)
 
     m.check=M.check_wrapper(m)
     m.filter=default.def_filter_wrapper(m)
+    default.init_extensions(m,m.extensions)
     m.get_map=default.def_pair_get_map_wrapper(m,q)
     m.sort=default.def_pair_sort
     default.extend_pair_check_with_map_check(m)

@@ -23,6 +23,7 @@ function M.list()
 end
 ---@param conf? prof.config
 function M.setup(conf)
+    M.configs={}
     if not M.skipversioncheck and vim.fn.has('nvim-0.9.0')~=1 then error('Requires at least version nvim-0.9.0') end
     table.insert(M.configs,vim.tbl_deep_extend('force',default.conf,conf or {}))
     M.init()

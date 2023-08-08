@@ -47,6 +47,7 @@ function M.init(conf,mconf,ext)
 
     m.check=M.wrapp_backspace(m)
     m.filter=default.def_filter_wrapper(m)
+    default.init_extensions(m,m.extensions)
     m.get_map=default.def_map_get_map_wrapper(m)
     default.extend_map_check_with_map_check(m)
     return m
