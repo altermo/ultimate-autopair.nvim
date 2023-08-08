@@ -10,6 +10,7 @@
 ---@field key string
 ---@field conf prof.def.conf.pair
 ---@field mconf prof.def.conf
+---@field multiline boolean
 ---@class prof.def.m.map:prof.def.module
 ---@field map string|string[]
 ---@field cmap string|string[]
@@ -33,12 +34,14 @@
 ---@field fastwarp? table --TODO: create spesific conf
 ---@field close? table --TODO: create spesific conf
 ---@field [number]? prof.def.conf.pair
+---@field multiline? boolean
 ---@class prof.def.conf.pair
 ---@field [1] string
 ---@field [2] string
 ---@field p? number
 ---@field cmap? boolean
 ---@field imap? boolean
+---@field multiline? boolean
 ---@class prof.def.q
 ---@field start_pair string
 ---@field end_pair string
@@ -48,6 +51,7 @@
 ---@field cmap boolean
 ---@field map boolean
 ---@field mconf prof.def.conf
+---@field multiline boolean
 
 local default=require'ultimate-autopair.profile.default.utils'
 local pair_s=require'ultimate-autopair.profile.default.pairs'
@@ -107,7 +111,8 @@ function M.create_q_value(conf,ext,pair)
         conf=pair,
         extensions=ext,
         cmap=conf.cmap~=false and (pair.cmap or(pair.cmap~=false and conf.pair_cmap~=false)),
-        map=conf.map~=false and (pair.imap or (pair.imap~=false and conf.pair_map~=false))
+        map=conf.map~=false and (pair.imap or (pair.imap~=false and conf.pair_map~=false)),
+        multiline=conf.multiline~=false and pair.multiline~=false and (pair.multiline or conf.multiline),
     }
 end
 ---@param somepairs table

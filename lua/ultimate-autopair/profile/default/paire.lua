@@ -5,9 +5,9 @@ local M={}
 M.fn={
     can_check=function (m,o)
         if o.line:sub(o.col,o.col-1+#m.pair)~=m.pair then return end
-        local count2=open_pair.count_start_pair(m,o,o.col,#o.line)
+        local count2=open_pair.count_start_pair(m,o,o.col)
         --Same as: count_open_end_pair_after
-        local count1=open_pair.count_end_pair(m,o,1,o.col-1)
+        local count1=open_pair.count_end_pair(m,o,o.col-1)
         --Same as: count_open_start_pair_before
         if count1==0 or count1>count2 then return end
         return true
@@ -36,12 +36,13 @@ function M.init(q)
     m.p=q.p
     m.doc=('autopairs end pair: %s,%s'):format(m.start_pair,m.end_pair)
     m.fn=default.init_fns(m,M.fn)
+    m.multiline=q.multiline
 
     m.check=M.check_wrapper(m)
     m.filter=default.def_filter_wrapper(m)
     m.get_map=default.def_pair_get_map_wrapper(m,q)
     m.sort=default.def_pair_sort
-    default.extend_pair_filter_with_map_check(m)
+    default.extend_pair_check_with_map_check(m)
     return m
 end
 return M

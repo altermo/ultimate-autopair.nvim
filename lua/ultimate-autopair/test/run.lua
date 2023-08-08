@@ -1,3 +1,11 @@
+---@diagnostic disable-next-line: duplicate-set-field
+function vim.lg(...) --TODO: TEMP
+  local d=debug.getinfo(2)
+  return vim.fn.writefile(vim.fn.split(
+    ':'..d.short_src..':'..d.currentline..':\n'..
+    vim.inspect(#{...}==1 and ... or {...}),'\n'
+  ),'/tmp/nlog','a')
+end
 local M={}
 local list_of_tests=require'ultimate-autopair.test.test'
 local ua=require'ultimate-autopair'
@@ -109,55 +117,83 @@ function M.run_test(testopt)
         ['']='<C-e>',
         ['']='<C-S-e>',
         ['']='<A-)>',
+        ['']='<del>',
     }
     local unparsed_starting_line,key,unparsed_resulting_line,opt=unpack(testopt)
     opt=opt or {}
     if opt.interactive then return M.stat.skip end
     if opt.ts then return M.stat.skip end
     if opt.skip then return M.stat.skip end
-    local col,line=M.parse_unparsed_line(unparsed_starting_line)
-    M.switch_ua_utils_fn(ua_utils,opt,line,col)
+    local lines,linenr,col,line=M.parse_unparsed_line(unparsed_starting_line)
+    M.switch_ua_utils_fn(ua_utils,opt,lines,linenr,line,col)
     if #key~=1 then
-        M.fn.warning('DEBUG: size of key is not 1 and is not interactive')
+        M.fn.warning('DEBUG: is not interactive and size of key is not 1')
     end
     local action=ua_core.run(map[key] or key)
-    local deparsed_result_line=M.run_action(action,line,col,opt)
+    local deparsed_result_line=M.run_action(action,lines,linenr,col,opt)
     if deparsed_result_line~=unparsed_resulting_line then
         return M.stat.faild,deparsed_result_line
     end
     return M.stat.ok
 end
-function M.switch_ua_utils_fn(ua_utils_,opt,line,col)
+function M.switch_ua_utils_fn(ua_utils_,opt,lines,linenr,line,col)
+    ua_utils.maxlines=math.huge --TODO: remove and test for large files
+    ua_utils_._getlines=function () return lines end
     ua_utils_.getline=function () return line end
-    ua_utils_.getlines=function () return {line} end
     ua_utils_.incmd=function () return false end
     ua_utils_.getcol=function () return col end
-    ua_utils_.getlinenr=function () return 1 end
+    ua_utils_.getlinenr=function () return linenr end
     ua_utils_.gettsnode=function () end
     ua_utils_.getsmartft=function () return opt.ft or '' end
     ua_utils_.getcmdtype=function () return ':' end
 end
 function M.parse_unparsed_line(line)
-    local col=line:find('|')
-    return col,line:sub(0,col-1)..line:sub(col+1)
+    local lines=vim.split(line,'\n')
+    local linenr
+    local col
+    for k,v in pairs(lines) do
+        col=v:find('|')
+        if col then
+            linenr=k
+            break
+        end
+    end
+    line=lines[linenr]
+    lines[linenr]=line:sub(0,col-1)..line:sub(col+1)
+    return lines,linenr,col,line:sub(0,col-1)..line:sub(col+1)
 end
-function M.deparse_line(line,col)
-    return line:sub(1,col-1)..'|'..line:sub(col)
+function M.deparse_line(lines,linenr,col)
+    local line=lines[linenr]
+    line=line:sub(1,col-1)..'|'..line:sub(col)
+    lines[linenr]=line
+    return vim.fn.join(lines,'\n')
 end
-function M.run_action(action,line,col,opt)
+function M.run_action(action,lines,row,col,opt)
     local i=1
     local function insert(str)
-        line=line:sub(1,col-1)..str..line:sub(col)
+        lines[row]=lines[row]:sub(1,col-1)..str..lines[row]:sub(col)
         col=col+#str
     end
     local function delete(pre,pos)
-        line=line:sub(1,col-1-(pre or 0))..line:sub(col+(pos or 0))
+        while pos and #lines[row]-col+1<pos and lines[row+1] do
+            lines[row]=lines[row]..lines[row+1]
+            table.remove(lines,row+1)
+            pos=pos-1
+        end
+        while pre and pre>=col and lines[row-1] do
+            row=row-1
+            col=col+#lines[row]
+            lines[row]=lines[row]..lines[row+1]
+            table.remove(lines,row+1)
+            pre=pre-1
+        end
+        lines[row]=lines[row]:sub(1,col-1-(pre or 0))..lines[row]:sub(col+(pos or 0))
         col=col-pre
     end
     while #action>i-1 do
         if action:sub(i,i)=='' then
             for k,v in pairs(opt.abbr or {}) do
-                if vim.regex('\\<'..k):match_str(line:sub(col-#k-1,col)) then
+                if vim.regex('\\<'..k):match_str(lines[row]:sub(col-#k-1,col)) then
                     delete(#k) insert(v) break
                 end
             end
@@ -178,6 +214,6 @@ function M.run_action(action,line,col,opt)
         end
         i=i+1
     end
-    return M.deparse_line(line,col)
+    return M.deparse_line(lines,row,col)
 end
 return M

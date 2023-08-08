@@ -12,6 +12,8 @@ M.conf={
     --whether to allow pair insert map
     pair_cmap=true,
     --whether to allow pair cmd-line map
+    multiline=true,
+    --enable/disable multiline
     bs={-- *ultimate-autopair-map-backspace-config*
         enable=true,
         map='<bs>', --string or table
@@ -111,9 +113,9 @@ M.conf={
         {'[',']',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},
         {'(',')',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},
         {'{','}',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},
-        {'"','"',suround=true,string=true,fastwarp=true},
-        {"'","'",suround=true,cond=function(fn) return fn.ft()~='lisp' or fn.instring() end,alpha=true,nft={'tex'},string=true,fastwarp=true},
-        {'`','`',nft={'tex'},fastwarp=true},
+        {'"','"',suround=true,string=true,fastwarp=true,multiline=false},
+        {"'","'",suround=true,cond=function(fn) return fn.ft()~='lisp' or fn.instring() end,alpha=true,nft={'tex'},string=true,fastwarp=true,multiline=false},
+        {'`','`',nft={'tex'},fastwarp=true,multiline=false},
         {'``',"''",ft={'tex'}},
         {'```','```',newline=true,ft={'markdown'}},
         {'<!--','-->',ft={'markdown','html'}},

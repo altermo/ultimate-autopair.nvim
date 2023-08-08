@@ -1,17 +1,18 @@
 local M={}
 M.type_def={} --TODO: maybe add type hint
 ---@param obj core.module
----@param conf string[]|string
----@return boolean?
+---@param conf string[]|string?
+---@return boolean
 function M.get_type_opt(obj,conf)
     if type(conf)~='table' then conf={conf} end
     local tbl=obj[M.type_def]
-    if not tbl then return end
+    if not tbl then return false end
     for _,i in ipairs(conf) do
         for _,v in ipairs(tbl) do
             if v==i then return true end
         end
     end
+    return false
 end
 ---@param extension_name string
 ---@return table
@@ -60,28 +61,26 @@ function M.def_pair_sort(a,b)
     end
 end
 ---@param m prof.def.m.pair
-function M.extend_pair_filter_with_map_check(m)
-    local filter=m.filter
-    m.filter=function (o)
-        if o.incheck and o.key~=m.key then return false end
-        return filter(o)
+function M.extend_pair_check_with_map_check(m)
+    local check=m.check
+    m.check=function (o)
+        if o.key~=m.key then return end
+        return check(o)
     end
 end
 ---@param m prof.def.m.map
-function M.extend_map_filter_with_map_check(m)
-    local filter=m.filter
-    m.filter=function (o)
-        if o.incheck then
-            local key=type(m.map)=='table' and m.map or {m.map}
-            ---@cast key string[]
-            local keyc=m.cmap and (type(m.cmap)=='table' and m.cmap or {m.cmap}) or key
-            ---@cast keyc string[]
-            if not ((o.incmd and vim.tbl_contains(keyc,o.key))
-                or (not o.incmd and vim.tbl_contains(key,o.key))) then
-                return
-            end
+function M.extend_map_check_with_map_check(m)
+    local check=m.check
+    m.check=function (o)
+        local key=type(m.map)=='table' and m.map or {m.map}
+        ---@cast key string[]
+        local keyc=m.cmap and (type(m.cmap)=='table' and m.cmap or {m.cmap}) or key
+        ---@cast keyc string[]
+        if not ((o.incmd and vim.tbl_contains(keyc,o.key))
+            or (not o.incmd and vim.tbl_contains(key,o.key))) then
+            return
         end
-        return filter(o)
+        return check(o)
     end
 end
 ---@generic T

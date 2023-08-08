@@ -5,9 +5,9 @@
 ---@field lines string[]
 ---@field col number
 ---@field row number
+---@field _offset number
 ---@field incmd boolean
 ---@field save table
----@field incheck? boolean
 ---@class core.module
 ---@field get_map? core.get_map-fn
 ---@field oinit? core.oinit-fn
@@ -56,7 +56,7 @@ end
 ---@return core.o
 function M.get_o_value(key)
     local line=utils.getline()
-    local lines=utils.getlines()
+    local row,lines=utils.getlines()
     local col=utils.getcol()
     local linenr=utils.getlinenr()
     local incmd=utils.incmd()
@@ -65,7 +65,8 @@ function M.get_o_value(key)
         line=line,
         lines=lines,
         col=col,
-        row=linenr,
+        row=row,
+        _offset=linenr-row,
         incmd=incmd,
         save={},
     }
@@ -77,7 +78,6 @@ function M.run(key)
         return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
     end
     local o=M.get_o_value(key)
-    o.incheck=true
     for _,v in ipairs(M.mem) do
         if v.check then
             if not v.filter or v.filter(o) then

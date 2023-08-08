@@ -15,7 +15,7 @@ return {
         {'(|))',')','()|)'},
         {'f|','(','foo(|)',{abbr={f='foo'}}},
     },
-    interactive={
+    SKIP_interactive={
         {'|','a(..','(((|)))',{interactive=true}},
         {'|','3a(','(((|)))',{interactive=true}},
         {'|foo','R(','()o',{interactive=true}},
@@ -31,7 +31,7 @@ return {
         {'|','I{I(','(|{})',{interactive=true,c={config_internal_pairs={{'{','}',suround=true}}}}},
         {'|',"Iprint'hello world!)'I('","('')print'hello world!)'",{interactive=true}}
     },
-    newline={
+    SKIP_newline={
         {'{|}','\r','{\n\t|\n}',{cindent=true}},
         {'{foo|}','\r','{foo\n\t|\n}',{cindent=true}},
         {'{|foo}','\r','{\n\t|foo\n}',{cindent=true}},
@@ -48,7 +48,7 @@ return {
         {'{|};','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'},autoclose=true}}},
         {'```|','\r','```\n|\n```'},
     },
-    backspace={
+    SKIP_backspace={
         {'[|]','','|'},
         {'"|"','','|'},
         {'""|','','|'},
@@ -82,7 +82,7 @@ return {
         {'( |foo  )','','( |foo )',{bs={space='balance'}}},
         {'f|','','',{abrv={f='foo'}}},
     },
-    fastwarp={
+    SKIP_fastwarp={
         {'{|}[]','','{|[]}'},
         {'{|}foo','','{|foo}'},
         {'{|}foo,','','{|foo},'},
@@ -131,7 +131,7 @@ return {
         {'(|)foo','e','(|foo)',{fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}}},
         {'(|)foo','E','(foo|)',{fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}}},
     },
-    space={
+    SKIP_space={
         {'[|]',' ','[ | ]'},
         {'[|foo]',' ','[ |foo ]'},
         {'[|foo ]',' ','[ |foo ]'},
@@ -146,7 +146,7 @@ return {
         {'$|foo$',' ','$ foo $',{c={{'$','$',space=true}}}},
         {'|','I="( \r','( | )',{interactive=true}},
     },
-    space2={
+    SKIP_space2={
         {'[ |]','afoo','[ foo| ]',{interactive=true,c={space2={enable=true}}}},
         {'[  |','afoo','[  foo|  ]',{interactive=true,c={space2={enable=true}}}},
         {'[ |oo]','f','[ f|oo ]',{interactive=true,c={space2={enable=true}}}},
@@ -155,7 +155,7 @@ return {
         {'$ |$','foo','$ foo| $',{interactive=true,c={{'$','$',space=true},space2={enable=true}}}},
         {'<< |>>','foo','<< foo| >>',{interactive=true,c={{'<<','>>',space=true},space2={enable=true}}}},
     },
-    close={
+    SKIP_close={
         {'(|','','(|)'},
         {'({|','','({|})'},
         {'({()|','','({()|})'},
@@ -164,7 +164,7 @@ return {
         {'("|','','("|")'},
         {'("|")','','("|")'},
     },
-    ext_suround={
+    SKIP_ext_suround={
         {'|"foo"','(','(|"foo")'},
         {'|""','(','(|"")'},
         {'"foo|""bar"','(','"foo(|)""bar"'},
@@ -173,7 +173,7 @@ return {
         {'<|""','<','<<"">>',{c={{'<<','>>',dosuround=true}}}},
         {'|""','<','<|""',{c={{'<<','>>',dosuround=true}}}},
     },
-    ext_string={
+    SKIP_ext_string={
         {'| ")"','(','(|) ")"'},
         {'"|")','(','"()")'},
         {[[|"'"]],"'",[['|'"'"]]},
@@ -183,11 +183,11 @@ return {
         {'| [[)]]','(','(|) [[)]]',{ft='lua',ts=true}},
         {[["'"|"'"]],'"',[["'""|""'"]]},
     },
-    ext_cmdtype={
+    SKIP_ext_cmdtype={
         {'|','I="("\r','()',{interactive=true,c={extensions={cmdtype={skip={}}}}}},
         {'|','I="("\r','(',{interactive=true,c={extensions={cmdtype={skip={'='}}}}}},
     },
-    ext_alpha={
+    SKIP_ext_alpha={
         {"don|t","'","don'|t"},
         {"f|","'","f''",{ft='python'}},
         {"fr|","'","fr''",{ft='python'}},
@@ -198,24 +198,24 @@ return {
         {'<|a','<','<<a',{c={{'<<','>>',alpha_after=true}}}},
         {'b""|','"','b"""|"""',{ft='python',c={config_internal_pairs={{'"""','"""',alpha=true}}}}},
     },
-    ext_filetype={
+    SKIP_ext_filetype={
         {'<!-|','-','<!--|'},
         {'""|','"','"""|"'},
         {'<!-|','-','<!--|-->',{ft='html'}},
     },
-    ext_escape={
+    SKIP_ext_escape={
         {'\\|','(','\\(|'},
         {'\\\\|','(','\\\\(|)'},
         {[['\\|']],'"',[['\\"|"']]},
         {'|\\)','(','(|)\\)'},
     },
-    ext_cond={
+    SKIP_ext_cond={
         {'|',"'","'",{ft='lisp'}},
         {'"|"',"'",[["'|'"]],{ft='lisp'}},
         {'|','(','(|',{skip=true,c={extensions={cond='ret false'}}}},
         {'#|','(','#(|',{skip=true,c={extensions={cond='ret not prev #'}}}},
     },
-    ext_fly={
+    SKIP_ext_fly={
         {'[{( | )}]',')','[{(  )}]|'},
         {'("|")',')','("")|',{c={{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}}}},
         {'"(|)"','"','"()"|',{c={{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}}}},
@@ -225,13 +225,13 @@ return {
         {'|(  )',')',')|(  )',{c={extensions={fly={only_jump_end_pair=true}}}}},
         {'<<(|)>>','>','<<()>>|',{c={{'<<','>>',fly=true}}}},
     },
-    ext_tsnode={
+    SKIP_ext_tsnode={
         {'--|','(','--(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,outside={'comment'}}}}}}},
         {'|','(','(|)',{ft='lua',ts=true,{c={extensions={tsnode={p=50,outside={'comment'}}}}}}},
         {'--|','(','--(|)',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
         {'|','(','(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
     },
-    ext_utf8={
+    SKIP_ext_utf8={
         {"'ø',|","'","'ø','|'",{ft='lua',ts=true}},
         {'(|)aøe','','(|aøe)'},
         {'(|aáa)','','|aøe'},
@@ -264,7 +264,7 @@ return {
         {'+ [|]',' ','+ [ |]',{ft='lua',c={space={check_box_ft={'lua'}}}}},
         --TODO: write more tests
     },
-    test_filter={
+    SKIP_filter={
         {'\\(|)','','\\|)'},
         {'\\(|','','\\(|'},
         {'\\(|)','\r','\\(\n|)'},
@@ -274,5 +274,25 @@ return {
         {'\\( |)','f','\\( f)',{interactive=true,c={space2={enable=true}}}},
         {'|"\\"','(','(|)"\\"'},
         {'("|")',')','(")|")',{c={{'"','"',fly=true,p=11},extensions={fly={nofilter=false}}}}},
+    },
+    multiline={
+        {'|\n)','(','(|\n)'},
+        {'(\n|)',')','(\n)|'},
+        {'\n|)',')','\n)|)'},
+        {'(|\n)','(','((|)\n)'},
+        {'(\n|\n)','(','(\n(|)\n)'},
+        {'()\n|)',')','()\n)|)'},
+        {'(\n(|)',')','(\n()|)'},
+        {'(|\n))','(','((|\n))'},
+        --{'"""\n|"""','"','"""\n"""|',{ft='python'}},
+        {'"\n|"','"','"\n"|"'},
+        {'|\n>','<','<|>\n>',{c={{'<','>',multiline=false}}}},
+        {'<\n|>','>','<\n>|>',{c={{'<','>',multiline=false}}}},
+    },
+    test_run_multiline={
+        {'\n|','a','\na|'},
+        {'\n|\n','','|\n'},
+        {'foo\n|bar\n','','foo|bar\n'},
+        {'\n|\n','','\n|'},
     },
 }

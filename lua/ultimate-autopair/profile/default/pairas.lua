@@ -31,12 +31,13 @@ function M.init(q)
     m.p=q.p
     m.doc=('autopairs ambigous start pair: %s'):format(m.pair)
     m.fn=default.init_fns(m,M.fn)
+    m.multiline=q.multiline
 
     m.check=M.check_wrapper(m)
     m.filter=default.def_filter_wrapper(m)
     m.get_map=default.def_pair_get_map_wrapper(m,q)
     m.sort=default.def_pair_sort
-    default.extend_pair_filter_with_map_check(m)
+    default.extend_pair_check_with_map_check(m)
     return m
 end
 return M

@@ -1,5 +1,7 @@
 --Internal Utils
 local M={}
+M.maxlines=100
+M.mextra=5
 M.key_bs=vim.api.nvim_replace_termcodes('<bs>',true,true,true)
 M.key_del=vim.api.nvim_replace_termcodes('<del>',true,true,true)
 M.key_left=vim.api.nvim_replace_termcodes('<left>',true,true,true)
@@ -18,13 +20,43 @@ function M.getline(linenr)
     linenr=linenr or M.getlinenr()
     return unpack(vim.api.nvim_buf_get_lines(0,linenr-1,linenr,false))
 end
+---@param start number
+---@param end_ number
 ---@return string[]
+function M._getlines(start,end_)
+    return vim.api.nvim_buf_get_lines(0,start,end_,true)
+end
+---@return integer
+---@return table
 function M.getlines()
-    --TODO: only load the necessary lines and cache for like 100 (+ maybe depending on line length)
     if M.incmd() then
-        return {M.getline()}
+        return 1,{M.getline()}
     end
-    return vim.api.nvim_buf_get_lines(0,0,-1,false)
+    local linenr=M.getlinenr()
+    local linecount=M.getlinecount()
+    if linecount<M.maxlines*2+M.mextra*2+1 then
+        return linenr,M._getlines(0,-1)
+    elseif linenr<M.maxlines+M.mextra+1 then
+        return linenr,vim.list_extend(
+            M._getlines(0,M.maxlines*2+M.mextra+1),
+            M._getlines(-M.mextra-1,-1))
+    elseif linenr>linecount-M.maxlines-M.mextra then
+        return M.maxlines*2+M.mextra*2+linenr-linecount+1,vim.list_extend(
+            M._getlines(0,M.mextra),
+            M._getlines(-M.maxlines*2-M.mextra-2,-1))
+    else
+        return M.maxlines+M.mextra+1,vim.list_extend(vim.list_extend(
+            M._getlines(0,M.mextra),
+            M._getlines(linenr-M.maxlines-1,linenr+M.maxlines)),
+            M._getlines(-M.mextra-1,-1))
+    end
+end
+---@return number
+function M.getlinecount()
+    if M.incmd() then
+        return 1
+    end
+    return vim.fn.line('$')--[[@as number]]
 end
 ---@return boolean
 function M.incmd()
@@ -72,7 +104,7 @@ end
 function M.gettsnode(o)
     --TODO: use vim.treesitter.get_string_parser for cmdline
     local cache=o.save
-    local linenr,col=o.row-1,o.col-1
+    local linenr,col=o.row+o._offset-1,o.col-1
     if cache then
         if not cache[M.gettsnode] then cache[M.gettsnode]={} end
         cache=cache[M.gettsnode]
@@ -102,7 +134,7 @@ end
 function M.getsmartft(o,notree) --TODO: fix for empty lines
     --TODO: use vim.treesitter.get_string_parser for cmdline
     local cache=o.save
-    local linenr,col=o.row-1,o.col-1
+    local linenr,col=o.row+o._offset-1,o.col-1
     if notree then return vim.o.filetype end
     if cache then
         if not cache[M.getsmartft] then cache[M.getsmartft]={} end

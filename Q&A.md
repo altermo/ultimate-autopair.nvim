@@ -21,9 +21,12 @@ Use `{extensions={fly={undomap='your_map'}}}`
 If you want to to do that, recommended is `{space={enable=false},space2={enable=true}}`
 ### Set multiple mapping for, for example, backspace
 Use `{bs={map={'your_map1','your_map2'}}}`
-<!--### Disable in lisp (TODO: not yet implemented perfectly)-->
+<!--### Disable the plugin in lisp (TODO: not yet implemented perfectly)
+TEXT-->
 ### Toggle the plugin
 Use `require'ultimate-autopair'.toggle()`
 ### Disable in comment
 Recommended is `{extensions={tsnode={outside={'comment'},p=50,filter=true}}}` \
-Note: some languages don't detect the node containing comment as `comment` in a weird way, use `:=vim.treesitter.get_node({}):type()` to get the actual node type (I will fix this later). <!--TODO-->
+Note: some languages don't detect the node containing comment as `comment` in a weird way, use `:=vim.treesitter.get_node({}):type()` to get the actual node type (I will fix this later). <!--TODO: treesitter recursive-->
+### Disable in macros
+<!--TODO-->

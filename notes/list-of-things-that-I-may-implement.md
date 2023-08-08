@@ -171,3 +171,4 @@
 + [ ] utf8 pairs
 + [ ] maybe add unbalanced detection into filter
 IMPORTANT: add disable in macro
+IMPORTANT: multiline support
