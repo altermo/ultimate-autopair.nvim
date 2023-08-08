@@ -80,11 +80,9 @@ function M.run(key)
     local o=M.get_o_value(key)
     for _,v in ipairs(M.mem) do
         if v.check then
-            if not v.filter or v.filter(o) then
-                ---@type string?
-                local ret=debug.run(v.check,{info=v,args={vim.deepcopy(o)}})
-                if ret then return M.I.activate_iabbrev(ret) end
-            end
+            ---@type string?
+            local ret=debug.run(v.check,{info=v,args={vim.deepcopy(o)}})
+            if ret then return M.I.activate_iabbrev(ret) end
         end
     end
     return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
