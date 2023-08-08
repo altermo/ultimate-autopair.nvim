@@ -19,7 +19,7 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     local row
     if pair.multiline then
         lines=vim.fn.reverse(vim.list_slice(o.lines,(not gotostart) and o.row or nil,gotostart==true and o.row or nil))
-        row=o.row
+        row=#o.lines-o.row+1
     else
         lines={o.line}
         row=1
@@ -28,10 +28,10 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
         local i=(gotostart==true and rrow==row and col) or #line
         while ((not gotostart) and rrow==row and i>col-1) or ((gotostart or rrow~=row) and i>0) do
             local lline=line:sub((not gotostart) and rrow==row and col or 1,i):reverse()
-            if M.I.match(start_pair,lline) and filter(i,rrow) then
+            if M.I.match(start_pair,lline) and filter(i,#o.lines-rrow+1) then
                 count=count-1
                 i=i-#start_pair
-            elseif M.I.match(end_pair,lline) and filter(i,rrow) then
+            elseif M.I.match(end_pair,lline) and filter(i,#o.lines-rrow+1) then
                 count=count+1
                 i=i-#end_pair
             else
