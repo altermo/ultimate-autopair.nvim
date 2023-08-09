@@ -20,7 +20,7 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     local row=1
     if pair.multiline then
         lines=vim.fn.reverse(vim.list_slice(o.lines,(not gotostart) and o.row or nil,gotostart==true and o.row or nil))
-        row=#o.lines-o.row+1
+        row=(gotostart==true and 1) or #o.lines-o.row+1
     end
     for rrow,line in pairs(lines)do
         local i=(gotostart==true and rrow==row and col) or #line
@@ -61,7 +61,7 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
     local row=1
     if pair.multiline then
         lines=vim.list_slice(o.lines,gotoend==true and o.row or nil,(not gotoend) and o.row or nil)
-        row=o.row
+        row=(gotoend==true and 1) or o.row
     end
     for rrow,line in pairs(lines) do
         local i=(gotoend==true and rrow==row and col) or 1
@@ -100,7 +100,7 @@ function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
     local row=1
     if pair.multiline then
         lines=vim.list_slice(o.lines,gotoend==true and o.row or nil,(not gotoend) and o.row or nil)
-        row=o.row
+        row=(gotoend==true and 1) or o.row
     end
     for rrow,line in pairs(lines) do
         local i=(gotoend==true and rrow==row and col) or 1

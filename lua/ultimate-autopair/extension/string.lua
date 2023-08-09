@@ -7,8 +7,8 @@ M.savetype={}
 ---@param node string
 ---@return number?
 ---@return number?
-function M.in_tsnode(o,col,node)
-    
+function M._in_tsnode(o,col,row,node)
+    col=col+o._coloffset(col,row)
 end
 ---@param o core.o
 ---@param conf table
@@ -23,7 +23,7 @@ function M.instring(o,conf)
         ::continue::
     end
     for _,i in ipairs(conf.tsnode or {}) do
-        local start,_end=M.in_tsnode(o,o.col,i)
+        local start,_end=M._in_tsnode(o,o.col,i)
         if start then return start,_end end
     end
 end

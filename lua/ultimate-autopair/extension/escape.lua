@@ -8,7 +8,7 @@ local M={}
 ---@return boolean?
 function M.filter(m,ext,o,incheck)
     if m.conf.noescape then return end
-    if ext.conf.nochar or m.conf.nocharescape then return end
+    if ext.conf.disable then return end
     local col=o.col-1
     if incheck and default.get_type_opt(m,'start') then
         ---@cast m prof.def.m.pair

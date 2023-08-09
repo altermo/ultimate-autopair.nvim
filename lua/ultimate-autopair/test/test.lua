@@ -163,6 +163,9 @@ return {
         {'"|','','"|"'},
         {'("|','','("|")'},
         {'("|")','','("|")'},
+        {'<!--|','','<!--|-->',{ft='html'}},
+        {'<!--|-->','','<!--|-->',{ft='html'}},
+        {'<!---->|','','<!---->|',{ft='html'}},
     },
     SKIP_ext_suround={
         {'|"foo"','(','(|"foo")'},
@@ -170,10 +173,11 @@ return {
         {'"foo|""bar"','(','"foo(|)""bar"'},
         {'|??&&','(','(|??&&)',{c={{'??','&&',suround=true}}}},
         {'|"")','(','(|"")'},
-        {'<|""','<','<<"">>',{c={{'<<','>>',dosuround=true}}}},
+        {'<|""','<','<<|"">>',{c={{'<<','>>',dosuround=true}}}},
         {'|""','<','<|""',{c={{'<<','>>',dosuround=true}}}},
+        {'<|"">>','<','<<|"">>',{c={{'<<','>>',dosuround=true}}}},
     },
-    SKIP_ext_string={
+    ext_string={
         {'| ")"','(','(|) ")"'},
         {'"|")','(','"()")'},
         {[[|"'"]],"'",[['|'"'"]]},
@@ -182,8 +186,11 @@ return {
         {[[| '\')']],'(',[[(|) '\')']]},
         {'| [[)]]','(','(|) [[)]]',{ft='lua',ts=true}},
         {[["'"|"'"]],'"',[["'""|""'"]]},
+        {'|\n")"','(','(|)\n")"'},
+        {'"|"\n)','(','"(|)"\n)'},
+        --TODO: test multiline string
     },
-    SKIP_ext_cmdtype={
+    ext_cmdtype={
         {'|','I="("\r','()',{interactive=true,c={extensions={cmdtype={skip={}}}}}},
         {'|','I="("\r','(',{interactive=true,c={extensions={cmdtype={skip={'='}}}}}},
         {'|','(','(|)',{incmd=':'}},
@@ -194,25 +201,31 @@ return {
         {"f|","'","f''",{ft='python'}},
         {"fr|","'","fr''",{ft='python'}},
         {"a' |","'","a' '|'",{c={extensions={alpha={filter=true}}}}},
+        {"a' |","'","a' '|",{c={extensions={alpha={filter={'txt'}}}}}},
+        {"a' |","'","a' '|'",{ft='txt',c={extensions={alpha={filter={'txt'}}}}}},
         {'|a','<','<a',{c={{'<','>',alpha_after=true}}}},
         {'a|','<','a<',{c={{'<','>',alpha=true}}}},
         {'a<|','<','a<<',{c={{'<<','>>',alpha=true}}}},
         {'<|a','<','<<a',{c={{'<<','>>',alpha_after=true}}}},
-        {'b""|','"','b"""|"""',{ft='python',c={config_internal_pairs={{'"""','"""',alpha=true}}}}},
+        {'b""|','"','b"""|"',{ft='python',c={config_internal_pairs={{'"""','"""',alpha=true}}}}},
     },
-    SKIP_ext_filetype={
+    ext_filetype={
         {'<!-|','-','<!--|'},
         {'""|','"','"""|"'},
         {'<!-|','-','<!--|-->',{ft='html'}},
         {'|','(','(|',{ft='TelescopePrompt'}},
     },
-    SKIP_ext_escape={
+    ext_escape={
         {'\\|','(','\\(|'},
         {'\\\\|','(','\\\\(|)'},
         {[['\\|']],'"',[['\\"|"']]},
         {'|\\)','(','(|)\\)'},
         {'\\(|)',')','\\()|)'},
         {'\\<!-|','-','\\<!--|',{ft='html'}},
+        {'<!--\\-->|-->','-','<!--\\-->-->|',{ft='html'}},
+        {'\\|','(','\\(|\\)',{c={{'\\(','\\)'}}}},
+        {'\\\\|','(','\\\\(|)',{c={{'\\(','\\)'}}}},
+        {'\\(|\\)','\\','\\(\\)|',{c={{'\\(','\\)'}}}},
     },
     SKIP_ext_cond={
         {'|',"'","'",{ft='lisp'}},
@@ -229,6 +242,7 @@ return {
         {'|(  )',')','(  )|'},
         {'|(  )',')',')|(  )',{c={extensions={fly={only_jump_end_pair=true}}}}},
         {'<<(|)>>','>','<<()>>|',{c={{'<<','>>',fly=true}}}},
+        {'(<<|>>)',')','(<<>>)|',{c={{'<<','>>',fly=true}}}},
     },
     SKIP_ext_tsnode={
         {'--|','(','--(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,outside={'comment'}}}}}}},
@@ -236,13 +250,12 @@ return {
         {'--|','(','--(|)',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
         {'|','(','(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
     },
-    SKIP_ext_utf8={
+    SKIP_utf8={
         {"'á|'","'","'á'|"}, --simple
         {'(|)aøe','','(|aøe)'}, --rfaswarp
         {'(|aáa)','','|aøe'}, --backspace
         {'|"¿qué?"','(','(|"¿qué")'}, --ext.suround
         {"ä|","'","ä'|"}, --ext.alpha
-        {"ó|","'","ó'|'",{c={extensions={utf8={map={['ó']='0'}}}}}}, --ext.alpha
         {'"ě""|"','','"ě"|'}, --backspace
         {"'ø',|","'","'ø','|'",{ft='lua',ts=true}}, --treesitter
     },
@@ -281,7 +294,7 @@ return {
         {'|"\\"','(','(|)"\\"'},
         {'("|")',')','(")|")',{c={{'"','"',fly=true,p=11},extensions={fly={nofilter=false}}}}},
     },
-    SKIP_multiline={
+    multiline={
         {'|\n)','(','(|\n)'},
         {'(\n|)',')','(\n)|'},
         {'\n|)',')','\n)|)'},
@@ -296,8 +309,11 @@ return {
         {'<\n|>','>','<\n>|>',{c={{'<','>',multiline=false}}}},
         {'(|)\n',')','()|\n'},
         {'\n(|)\n',')','\n()|\n'},
+        {'\n |\n()','(','\n (|)\n()'},
+        {'\n "|"\n""','"','\n ""|\n""',{c={config_internal_pairs={{'"','"',multiline=true}}}}},
+        {'(\n  (|)\n)','','(\n  |\n)'},
     },
-    SKIP_test_run_multiline={
+    test_run_multiline={
         {'\n|','a','\na|'},
         {'\n|\n','','|\n'},
         {'foo\n|bar\n','','foo|bar\n'},

@@ -6,6 +6,7 @@
 ---@field col number
 ---@field row number
 ---@field _offset fun(row:number):number
+---@field _coloffset fun(col:number,row:number?):number
 ---@field incmd boolean
 ---@field save table
 ---@class core.module
@@ -66,9 +67,10 @@ function M.get_o_value(key)
         lines=lines,
         col=col,
         row=row,
-        _offset=function(r)
-            return linenr-r --TODO
+        _offset=function(r) return
+            linenr-r --TODO: wither rewamp getlines to only get one sector instead of 3, or...
         end,
+        _coloffset=function (c) return col-c end,
         incmd=incmd,
         save={},
     }

@@ -33,7 +33,7 @@ function M.getlines()
         return 1,{M.getline()}
     end
     local linenr=M.getlinenr()
-    local linecount=M.getlinecount()
+    local linecount=M._getlinecount()
     if linecount<M.maxlines*2+M.mextra*2+1 then
         return linenr,M._getlines(0,-1)
     elseif linenr<M.maxlines+M.mextra+1 then
@@ -52,7 +52,7 @@ function M.getlines()
     end
 end
 ---@return number
-function M.getlinecount()
+function M._getlinecount()
     if M.incmd() then
         return 1
     end
@@ -60,7 +60,12 @@ function M.getlinecount()
 end
 ---@return boolean
 function M.incmd()
-    return vim.fn.mode()=='c'
+    return M.getmode()=='c'
+end
+---@param complex boolean?
+---@return string
+function M.getmode(complex)
+    return vim.fn.mode(complex) --[[@as string]]
 end
 ---@return number
 function M.getcol()
@@ -104,7 +109,7 @@ end
 function M.gettsnode(o)
     --TODO: use vim.treesitter.get_string_parser for cmdline
     local cache=o.save
-    local linenr,col=o.row+o._offset(o.row)-1,o.col-1
+    local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col)-1
     if cache then
         if not cache[M.gettsnode] then cache[M.gettsnode]={} end
         cache=cache[M.gettsnode]
@@ -134,7 +139,7 @@ end
 function M.getsmartft(o,notree) --TODO: fix for empty lines
     --TODO: use vim.treesitter.get_string_parser for cmdline
     local cache=o.save
-    local linenr,col=o.row+o._offset(o.row)-1,o.col-1
+    local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col)-1
     if notree then return vim.o.filetype end
     if cache then
         if not cache[M.getsmartft] then cache[M.getsmartft]={} end
@@ -172,6 +177,7 @@ function M.filter_pos(fn,o,row,col)
         col=col,
         row=row,
         _offset=o._offset,
+        _coloffset=o._coloffset,
         incmd=o.incmd,
         save=o.save,
     }
