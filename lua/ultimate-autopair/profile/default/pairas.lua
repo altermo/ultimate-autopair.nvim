@@ -8,9 +8,10 @@ M.fn={
         return not open_pair.open_pair_ambigous(m,o)
     end,
     in_pair=function (m,o)
-        local opab=open_pair.open_pair_ambigous_before(m,o,o.col)
-        local opaa=open_pair.open_pair_ambigous_after(m,o,o.col)
-        return opab,(opaa or 0)+#m.pair-1
+        local opab,opabr=open_pair.open_pair_ambigous_before(m,o,o.col)
+        local opaa,opaar=open_pair.open_pair_ambigous_after(m,o,o.col)
+        if not (opaa and opab) then return end
+        return opab,opaa+#m.pair-1,opabr,opaar
     end,
 }
 ---@param m prof.def.m.pair

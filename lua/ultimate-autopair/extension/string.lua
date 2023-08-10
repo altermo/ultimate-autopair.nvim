@@ -7,6 +7,8 @@ M.savetype={}
 ---@param nodetype string
 ---@return number?
 ---@return number?
+---@return number?
+---@return number?
 function M._in_tsnode(o,nodetype)
     local node=utils.gettsnode(o)
     if not node then return end
@@ -14,16 +16,15 @@ function M._in_tsnode(o,nodetype)
         node=node:parent()
     end
     if node:type()~=nodetype then return end
-    local linenr=o.row+o._offset(o.row)
     local rs,start,_=node:start()
-    if rs+1<linenr then start=0 end
     if start+1==o.col+o._coloffset(o.col,o.row) then return end
     local re,end_,_=node:end_()
-    if re+1>linenr then end_=#o.line end
-    return start+1,end_
+    return start+1,end_,rs+1,re+1
 end
 ---@param o core.o
 ---@param conf table
+---@return number?
+---@return number?
 ---@return number?
 ---@return number?
 function M.instring(o,conf)
@@ -32,14 +33,15 @@ function M.instring(o,conf)
     ---TODO: implement multi_row return value, needs: in_pair and count_ambigous_pair to return row
     ---TODO: a way of recursive string detection as "'" | "'", detected as in string '" | "'
     for _,i in ipairs(conf.tsnode or {}) do
-        local start,_end=M._in_tsnode(o,i)
-        if start then return start,_end end
+        local start,_end,startrow,endrow=M._in_tsnode(o,i)
+        if start then return start,_end,startrow,endrow end
     end
+    if conf.nopair then return end
     for _,i in ipairs(default.filter_for_opt({'pair'})) do
         ---@cast i prof.def.m.pair
         if not i.conf.string or not i.fn.in_pair then goto continue end
-        local start,_end=i.fn.in_pair(o)
-        if start then return start,_end end
+        local start,_end,startrow,endrow=i.fn.in_pair(o)
+        if start then return start,_end,startrow,endrow end
         ::continue::
     end
 end
@@ -67,8 +69,7 @@ function M.call(m,ext)
         local save={}
         o.save[M.savetype]=save
         save.currently_filtering=true
-        save.stringstart,save.stringend=M.instring(o,conf)
-        save.stringrowstart,save.stringrowsend=o.row,o.row
+        save.stringstart,save.stringend,save.stringrowstart,save.stringrowsend=M.instring(o,conf)
         save.currently_filtering=nil
         return check(o)
     end

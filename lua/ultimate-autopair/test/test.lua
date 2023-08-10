@@ -189,7 +189,7 @@ return {
         {[["'"|"'"]],'"',[["'""|""'"]]},
         {'|\n")"','(','(|)\n")"'},
         {'"|"\n)','(','"(|)"\n)'},
-        --TODO: test multiline string
+        --TODO: test multiline string (python)
     },
     SKIP_ext_cmdtype={
         {'|','I="("\r','()',{interactive=true,c={extensions={cmdtype={skip={}}}}}},
@@ -295,7 +295,7 @@ return {
         {'|"\\"','(','(|)"\\"'},
         {'("|")',')','(")|")',{c={{'"','"',fly=true,p=11},extensions={fly={nofilter=false}}}}},
     },
-    SKIP_multiline={
+    multiline={
         {'|\n)','(','(|\n)'},
         {'(\n|)',')','(\n)|'},
         {'\n|)',')','\n)|)'},
@@ -313,6 +313,7 @@ return {
         {'\n |\n()','(','\n (|)\n()'},
         {'\n "|"\n""','"','\n ""|\n""',{c={config_internal_pairs={{'"','"',multiline=true}}}}},
         {'(\n  (|)\n)','','(\n  |\n)'},
+        {'\n"|"','"','\n""|'},
     },
     SKIP_test_run_multiline={
         {'\n|','a','\na|'},

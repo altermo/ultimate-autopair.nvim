@@ -29,6 +29,7 @@ end
 ---@return integer
 ---@return table
 function M.getlines()
+    --TODO: dont do anyting special with getting end and begining, only return surtaint range...
     if M.incmd() then
         return 1,{M.getline()}
     end

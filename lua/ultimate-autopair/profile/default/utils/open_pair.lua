@@ -20,9 +20,10 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     local row=1
     if pair.multiline then
         lines=vim.fn.reverse(vim.list_slice(o.lines,(not gotostart) and o.row or nil,gotostart==true and o.row or nil))
-        row=(gotostart==true and 1) or #o.lines-o.row+1
+        row=o.row
     end
-    for rrow,line in pairs(lines)do
+    for rrow,line in ipairs(lines)do
+        rrow=(gotostart==true and row+1 or #o.lines+1)-rrow
         local i=(gotostart==true and rrow==row and col) or #line
         while ((not gotostart) and rrow==row and i>col-1) or ((gotostart or rrow~=row) and i>0) do
             local lline=line:sub((not gotostart) and rrow==row and col or 1,i):reverse()
@@ -61,9 +62,10 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
     local row=1
     if pair.multiline then
         lines=vim.list_slice(o.lines,gotoend==true and o.row or nil,(not gotoend) and o.row or nil)
-        row=(gotoend==true and 1) or o.row
+        row=o.row
     end
-    for rrow,line in pairs(lines) do
+    for rrow,line in ipairs(lines) do
+        rrow=(gotoend==true and row-1 or 0)+rrow
         local i=(gotoend==true and rrow==row and col) or 1
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
@@ -90,32 +92,56 @@ end
 ---@param col number?
 ---@param gotoend "both"|boolean?
 ---@param Icount number?
----@return false|number
+---@return number?
+---@return number?
 function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
+    --TODO! OPTIMIZE: is called over 3000 times in large file...
+    ---TEMP/
+    --if not o.save[M.count_ambigious_pair] then
+        --o.save[M.count_ambigious_pair]=vim.defaulttable()
+    --end
+    --local save=o.save[M.count_ambigious_pair]
+    --if save[pair][o][col or -1][gotoend or -1][Icount or false]~=nil then
+        --return unpack(save[pair][o][col or -1][gotoend or -1][Icount or false])
+    --end
+    ---/TEMP
     local spair=pair.pair
     local filter=function(row,col_) return utils._filter_pos(pair.filter,o,col_,row) end
     local count=Icount or 0
     local index
+    local rowindex
     local lines={o.line}
     local row=1
     if pair.multiline then
         lines=vim.list_slice(o.lines,gotoend==true and o.row or nil,(not gotoend) and o.row or nil)
-        row=(gotoend==true and 1) or o.row
+        row=o.row
     end
-    for rrow,line in pairs(lines) do
+    for rrow,line in ipairs(lines) do
+        rrow=(gotoend==true and row-1 or 0)+rrow
         local i=(gotoend==true and rrow==row and col) or 1
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
             if M.I.match(spair,lline) and filter(rrow,i) then
                 count=count+1
-                if not index then index=i end
+                if not index then
+                    index=i
+                    rowindex=rrow
+                end
                 i=i+#spair
             else
                 i=i+1
             end
         end
     end
-    return count%2==1 and index
+    ---TEMP/
+    --if count%2~=1 then
+        --save[pair][o][col or -1][gotoend or -1][Icount or false]=false
+    --else
+        --save[pair][o][col or -1][gotoend or -1][Icount or false]={index,rowindex}
+    --end
+    ---/TEMP
+    if count%2~=1 then return end
+    return index,rowindex
 end
 
 ---@param pair prof.def.m.pair
@@ -137,21 +163,24 @@ end
 ---@param pair prof.def.m.pair
 ---@param o core.o
 ---@param _ number?
----@return false|number
+---@return number?
+---@return number?
 function M.open_pair_ambigous(pair,o,_)
     return M.count_ambigious_pair(pair,o,nil,'both')
 end
 ---@param pair prof.def.m.pair
 ---@param o core.o
 ---@param col number
----@return false|number
+---@return number?
+---@return number?
 function M.open_pair_ambigous_before(pair,o,col)
     return M.count_ambigious_pair(pair,o,col-1)
 end
 ---@param pair prof.def.m.pair
 ---@param o core.o
 ---@param col number
----@return false|number
+---@return number?
+---@return number?
 function M.open_pair_ambigous_after(pair,o,col)
     return M.count_ambigious_pair(pair,o,col,true)
 end
