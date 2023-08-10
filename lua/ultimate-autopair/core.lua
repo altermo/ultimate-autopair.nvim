@@ -6,7 +6,7 @@
 ---@field col number
 ---@field row number
 ---@field _offset fun(row:number):number
----@field _coloffset fun(col:number,row:number?):number
+---@field _coloffset fun(col:number,row:number):number
 ---@field incmd boolean
 ---@field save table
 ---@class core.module

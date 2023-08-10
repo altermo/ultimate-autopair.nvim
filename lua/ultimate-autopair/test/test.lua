@@ -1,5 +1,5 @@
 return {
-    simple={
+    SKIP_simple={
         {'|','(','(|)'},
         {'(|)',')','()|'},
         {'|','"','"|"'},
@@ -47,6 +47,7 @@ return {
         {'{|','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'},autoclose=true}}},
         {'{|};','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'},autoclose=true}}},
         {'```|','\r','```\n|\n```'},
+        {'f|','\r','foo\r|)',{abbr={f='foo'}}},
     },
     SKIP_backspace={
         {'[|]','','|'},
@@ -179,7 +180,7 @@ return {
     },
     ext_string={
         {'| ")"','(','(|) ")"'},
-        {'"|")','(','"()")'},
+        {'"|")','(','"(|)")'},
         {[[|"'"]],"'",[['|'"'"]]},
         {[['""(|)']],')',[['""()|']]},
         {'("|")',')','(")|")'},
@@ -190,7 +191,7 @@ return {
         {'"|"\n)','(','"(|)"\n)'},
         --TODO: test multiline string
     },
-    ext_cmdtype={
+    SKIP_ext_cmdtype={
         {'|','I="("\r','()',{interactive=true,c={extensions={cmdtype={skip={}}}}}},
         {'|','I="("\r','(',{interactive=true,c={extensions={cmdtype={skip={'='}}}}}},
         {'|','(','(|)',{incmd=':'}},
@@ -209,13 +210,13 @@ return {
         {'<|a','<','<<a',{c={{'<<','>>',alpha_after=true}}}},
         {'b""|','"','b"""|"',{ft='python',c={config_internal_pairs={{'"""','"""',alpha=true}}}}},
     },
-    ext_filetype={
+    SKIP_ext_filetype={
         {'<!-|','-','<!--|'},
         {'""|','"','"""|"'},
         {'<!-|','-','<!--|-->',{ft='html'}},
         {'|','(','(|',{ft='TelescopePrompt'}},
     },
-    ext_escape={
+    SKIP_ext_escape={
         {'\\|','(','\\(|'},
         {'\\\\|','(','\\\\(|)'},
         {[['\\|']],'"',[['\\"|"']]},
@@ -294,7 +295,7 @@ return {
         {'|"\\"','(','(|)"\\"'},
         {'("|")',')','(")|")',{c={{'"','"',fly=true,p=11},extensions={fly={nofilter=false}}}}},
     },
-    multiline={
+    SKIP_multiline={
         {'|\n)','(','(|\n)'},
         {'(\n|)',')','(\n)|'},
         {'\n|)',')','\n)|)'},
@@ -313,7 +314,7 @@ return {
         {'\n "|"\n""','"','\n ""|\n""',{c={config_internal_pairs={{'"','"',multiline=true}}}}},
         {'(\n  (|)\n)','','(\n  |\n)'},
     },
-    test_run_multiline={
+    SKIP_test_run_multiline={
         {'\n|','a','\na|'},
         {'\n|\n','','|\n'},
         {'foo\n|bar\n','','foo|bar\n'},

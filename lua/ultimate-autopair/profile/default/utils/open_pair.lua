@@ -15,7 +15,7 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     local start_pair=pair.start_pair:reverse()
     local end_pair=pair.end_pair:reverse()
     local count=Icount or 0
-    local filter=function(row,col_) return utils.filter_pos(pair.filter,o,row,col_) end
+    local filter=function(row,col_) return utils._filter_pos(pair.filter,o,col_,row) end
     local lines={o.line}
     local row=1
     if pair.multiline then
@@ -56,7 +56,7 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
     local start_pair=pair.start_pair
     local end_pair=pair.end_pair
     local count=Icount or 0
-    local filter=function(row,col_) return utils.filter_pos(pair.filter,o,row,col_) end
+    local filter=function(row,col_) return utils._filter_pos(pair.filter,o,col_,row) end
     local lines={o.line}
     local row=1
     if pair.multiline then
@@ -93,7 +93,7 @@ end
 ---@return false|number
 function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
     local spair=pair.pair
-    local filter=function(row,col_) return utils.filter_pos(pair.filter,o,row,col_) end
+    local filter=function(row,col_) return utils._filter_pos(pair.filter,o,col_,row) end
     local count=Icount or 0
     local index
     local lines={o.line}

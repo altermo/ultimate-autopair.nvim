@@ -6,7 +6,12 @@ M.fn={
     can_check=function(m,o)
         if o.line:sub(o.col-#m.pair+1,o.col-1)~=m.pair:sub(0,-2) then return end
         return not open_pair.open_pair_ambigous(m,o)
-    end
+    end,
+    in_pair=function (m,o)
+        local opab=open_pair.open_pair_ambigous_before(m,o,o.col)
+        local opaa=open_pair.open_pair_ambigous_after(m,o,o.col)
+        return opab,(opaa or 0)+#m.pair-1
+    end,
 }
 ---@param m prof.def.m.pair
 ---@return core.check-fn

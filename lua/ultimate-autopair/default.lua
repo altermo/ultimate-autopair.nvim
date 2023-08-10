@@ -102,7 +102,7 @@ M.conf={
         cmdtype={skip={'/','?','@'},p=100},
         filetype={p=90,nft={'TelescopePrompt'},tree=true},
         escape={filter=true,p=80},
-        --string={p=60,tsnode={'string','raw_string'}},
+        string={p=60,tsnode={'string','raw_string'}},
         --cond={p=40,filter=false},
         --alpha={p=30,filter=false},
         --suround={p=20},

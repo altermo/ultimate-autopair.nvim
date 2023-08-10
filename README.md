@@ -20,6 +20,11 @@ use{
     end,
 }
 ```
+## Features
++ Smart open pair detecting:
+  + TODO
++ multiline and multichar pair support:
+  + TODO
 ## Default configuration
 For the default configuration, refer to the documentation (`:help ultimate-autopair-config-default`).
 ### Other plugins to supercharge auto-pairing

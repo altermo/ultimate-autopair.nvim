@@ -18,7 +18,6 @@ M.fn={
         gettsnode=utils.gettsnode,
         getsmartft=utils.getsmartft,
         getcmdtype=utils.getcmdtype,
-        filter_pos=utils.filter_pos,
     },
     _utils={
         _getlinenr=utils.getlinenr,
@@ -26,6 +25,8 @@ M.fn={
         _getline=utils.getline,
         _getlines=utils._getlines,
         _getlinecount=utils._getlinecount,
+        _get_o_pos=utils._get_o_pos,
+        _filter_pos=utils._filter_pos,
     },
     ---@param o core.o
     o=function (o) return o end

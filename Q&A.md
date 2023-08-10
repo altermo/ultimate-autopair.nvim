@@ -1,5 +1,4 @@
 # This is a collection of all the issue questions, updated to the latest release
-The configuration answers are in the format `{opt={opt=flag}}`.
 Ones own choice is ALWAYS prefixed with `your_`.
 
 ## Common questions
