@@ -1,96 +1,101 @@
 ---FI
 local M={}
 local utils=require'ultimate-autopair.utils'
----@type fun(o:core.o,m:prof.def.module)[]
+local default=require'ultimate-autopair.profile.default.utils'
+---@type fun(opt:table,...)[]
 M.fns={
     in_macro=function ()
         return vim.fn.reg_recording()~='' or vim.fn.reg_executing()~=''
     end,
-    in_string=function (o,_,col,row,conf)
-        local new_o=utils._get_o_pos(o,col,row)
+    in_string=function (opt,col,row,conf)
+        local new_o=utils._get_o_pos(opt.o,col,row)
         local str=require'ultimate-autopair.extension.string'
-        str.instring(new_o,conf or {tsnode={'string','raw_string'}})
+        return str.instring(new_o,conf or {tsnode={'string','raw_string'}})
     end,
-    get_tsnode=function (o,_,col,row)
-        local new_o=utils._get_o_pos(o,col,row)
+    in_check=function (opt)
+        return opt.incheck
+    end,
+    in_cmdline=function (opt)
+        return opt.o.incmd
+    end,
+    in_lisp=function ()
+        vim.lg(vim.o.filetype)
+        return vim.o.lisp --TODO tsnode_get_ft and filetype.get_option
+    end,
+    --in_pair=function () end --TODO
+    is_pair=function (opt)
+        return default.get_type_opt(opt.m,'pair')
+    end,
+    is_start_pair=function (opt)
+        return default.get_type_opt(opt.m,'start')
+    end,
+    is_end_pair=function (opt)
+        return default.get_type_opt(opt.m,'end')
+    end,
+    is_ambigous_pair=function (opt)
+        return default.get_type_opt(opt.m,'ambiguous')
+    end,
+    get_tsnode=function (opt,col,row)
+        local new_o=utils._get_o_pos(opt.o,col,row)
         return utils.gettsnode(new_o)
     end,
+    get_ft=function (opt,col,row,notree)
+        local new_o=utils._get_o_pos(opt.o,col,row)
+        return utils.getsmartft(new_o,notree)
+    end,
+    get_mode=function (_,complex)
+        return utils.getmode(complex)
+    end,
+    get_cmdtype=function ()
+        return utils.getcmdtype()
+    end,
 }
-M.fn={
-    preset={
-        --initializes and takes no arg, like default.init_fns
-        in_macro=function () end,
-        get_tsnode=function () end,
-        in_string=function () end,
-        in_check=function () end,
-        is_start_pair=function () end,
-        is_ambigous_pair=function () end,
-        is_pair=function () end,
-        is_end_pair=function () end,
-        get_node=function () end,
-        get_module_type=function() end,
-        get_filetype=function () end,
-    },
-    utils={
-        getmode=utils.getmode,
-        getsmartft=utils.getsmartft,
-        getcmdtype=utils.getcmdtype,
-    },
-    _utils={
-        _gettsnode=utils.gettsnode,
-        _getlinenr=utils.getlinenr,
-        _getcol=utils.getcol,
-        _getline=utils.getline,
-        _getlines=utils._getlines,
-        _getlinecount=utils._getlinecount,
-        _get_o_pos=utils._get_o_pos,
-        _filter_pos=utils._filter_pos,
-    },
-    ---@param o core.o
-    o=function (o) return o end,
-}
----@param m prof.def.module
----@param o core.o
+---@param opt table
 ---@return function[]
-function M.init_fns(o,m)
+function M.init_fns(opt)
     return vim.tbl_map(function(fn)
-        return function (...) fn(o,m,...) end
+        return function (...) return fn(opt,...) end
     end,M.fns)
 end
----@param conds fun(fn:function[],o:core.o,m:prof.def.module)[]
+---@param conds fun(fn:function[],o:core.o,m:prof.def.module)[]|fun(fn:function[],o:core.o,m:prof.def.module)?
 ---@param m prof.def.module
 ---@param o core.o
----@return boolean?
-function M.cond(conds,o,m)
-    local fns=M.init_fns(o,m)
-    for _,v in ipairs(conds) do
-        v(fns,o,m)
+---@param incheck boolean?
+---@return boolean
+function M.cond(conds,o,m,incheck)
+    ---@cast conds table
+    local fns=M.init_fns({o=o,m=m,incheck=incheck})
+    for _,v in ipairs(type(conds)=='function' and {conds} or conds or {}) do
+        if not v(fns,o,m) then
+            return false
+        end
     end
+    return true
 end
 ---@param m prof.def.module
 ---@param ext prof.def.ext
 function M.call(m,ext)
     local conf=ext.conf
     local check=m.check
-    local cond=type(m.conf.cond)=='function' and {m.conf.cond} or m.conf.cond
+    local cond=m.conf.cond
     m.check=function(o)
-        if cond and not M.cond(cond,o,m) then
+        if cond and not M.cond(cond,o,m,true) then
             return
         end
-        if conf.cond and not M.cond(conf.cond,o,m) then
+        if conf.cond and not M.cond(conf.cond,o,m,true) then
             return
         end
         return check(o)
     end
-    local filter=m.filter
-    m.filter=function(o)
-        if not M.cond(cond,m,o) then
-            return
-        end
-        if conf.cond and not M.cond(conf.cond,m,o) then
-            return
-        end
-        return filter(o)
-    end
+    --local filter=m.filter
+    --m.filter=function(o)
+        --if cond and not M.cond(cond,o,m) then
+            --return
+        --end
+        --if conf.cond and not M.cond(conf.cond,o,m) then
+            --return
+        --end
+        --return filter(o)
+    --end
 end
 return M

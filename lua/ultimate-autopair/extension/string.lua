@@ -20,8 +20,6 @@ function M._in_tsnode(o,nodetype)
     if start+1==o.col+o._coloffset(o.col,o.row) then return end
     local re,end_,_=node:end_()
     return start+1,end_,rs+1,re+1
-    ---TODO: fix: off by one error:
-    ---\n'|' > ' > \n''|''
 end
 ---@param o core.o
 ---@param conf table

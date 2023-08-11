@@ -229,11 +229,12 @@ return {
         {'\\(|\\)','\\','\\(\\)|',{c={{'\\(','\\)'}}}},
         {'\\(|)','','\\|)'},
     },
-    SKIP_ext_cond={
-        {'|',"'","'",{ft='lisp'}},
-        {'"|"',"'",[["'|'"]],{ft='lisp'}},
-        {'|','(','(|',{skip=true,c={extensions={cond='ret false'}}}},
-        {'#|','(','#(|',{skip=true,c={extensions={cond='ret not prev #'}}}},
+    ext_cond={
+        {'|',"'","'|",{lisp=true}},
+        {'"|"',"'",[["'|'"]],{lisp=true}},
+        --{'|','(','(|',{c={extensions={cond='ret false'}}}},
+        --{'#|','(','#(|',{c={extensions={cond='ret not prev #'}}}},
+        --{'"|"','(','"(|"',{c={extensions={cond={cond=function(fns) return not fns.in_string() end}}}}},
     },
     SKIP_ext_fly={
         {'[{( | )}]',')','[{(  )}]|'},

@@ -137,6 +137,7 @@ function M.run_test(testopt)
     if #key~=1 then
         M.fn.warning('DEBUG: is not interactive and size of key is not 1')
     end
+    vim.o.lisp=opt.lisp or false
     local action=ua_core.run(map[key] or key)
     local deparsed_result_line=M.run_action(action,lines,linenr,col,opt)
     if deparsed_result_line~=unparsed_resulting_line then

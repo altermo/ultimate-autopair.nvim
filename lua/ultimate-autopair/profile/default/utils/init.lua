@@ -2,7 +2,7 @@ local M={}
 ---@type prof.def.m_type
 M.type_def={}
 ---@param obj core.module
----@param conf string[]|string?
+---@param conf string[]|string
 ---@return boolean
 function M.get_type_opt(obj,conf)
     if type(conf)~='table' then conf={conf} end
@@ -93,7 +93,7 @@ function M.init_fns(module,fns)
         return function (...) return v(module,...) end
     end,fns)
 end
----@param conf string[]|string?
+---@param conf string[]|string
 ---@return prof.def.module[]
 function M.filter_for_opt(conf)
     if type(conf)=='string' then conf={conf} end
