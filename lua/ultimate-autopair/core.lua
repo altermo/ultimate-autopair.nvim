@@ -6,7 +6,9 @@
 ---@field col number
 ---@field row number
 ---@field _offset fun(row:number):number
+---@field _deoffset fun(row:number):number
 ---@field _coloffset fun(col:number,row:number):number
+---@field _decoloffset fun(col:number,row:number):number
 ---@field incmd boolean
 ---@field save table
 ---@class core.module
@@ -67,10 +69,10 @@ function M.get_o_value(key)
         lines=lines,
         col=col,
         row=row,
-        _offset=function(r) return
-            linenr-r
-        end,
-        _coloffset=function (c) return col-c end,
+        _offset=function(_) return linenr-row end,
+        _deoffset=function(_) return row-linenr end,
+        _coloffset=function (_) return 0 end,
+        _decoloffset=function (_) return 0 end,
         incmd=incmd,
         save={},
     }

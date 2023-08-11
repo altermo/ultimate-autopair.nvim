@@ -19,7 +19,6 @@ M.fns={
         return opt.o.incmd
     end,
     in_lisp=function ()
-        vim.lg(vim.o.filetype)
         return vim.o.lisp --TODO tsnode_get_ft and filetype.get_option
     end,
     --in_pair=function () end --TODO

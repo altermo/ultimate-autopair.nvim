@@ -16,10 +16,10 @@ function M._in_tsnode(o,nodetype)
         node=node:parent()
     end
     if node:type()~=nodetype then return end
-    local rs,start,_=node:start()
-    if start+1==o.col+o._coloffset(o.col,o.row) then return end
-    local re,end_,_=node:end_()
-    return start+1,end_,rs+1,re+1
+    local _,startcol,_=node:start()
+    if startcol+1==o.col+o._coloffset(o.col,o.row) then return end
+    local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
+    return scol,ecol+1,srow+1,erow+1
 end
 ---@param o core.o
 ---@param conf table

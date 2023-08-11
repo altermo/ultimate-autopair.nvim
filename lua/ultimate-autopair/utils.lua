@@ -1,6 +1,6 @@
 --Internal Utils
 local M={}
-M.maxlines=100
+M.maxlines=1
 M.key_bs=vim.api.nvim_replace_termcodes('<bs>',true,true,true)
 M.key_del=vim.api.nvim_replace_termcodes('<del>',true,true,true)
 M.key_left=vim.api.nvim_replace_termcodes('<left>',true,true,true)
@@ -95,7 +95,16 @@ end
 function M.delete(pre,pos)
     return M.key_bs:rep(pre or 1)..M.key_del:rep(pos or 0)
 end
-
+---@param node TSNode
+---@param o core.o
+---@return number?
+---@return number?
+---@return number?
+---@return number?
+function M.gettsnodepos(node,o)
+    local srow,scol,erow,ecol=node:range()
+    return srow+o._deoffset(srow),scol+o._decoloffset(scol,srow),erow+o._deoffset(erow),ecol+o._decoloffset(ecol,erow)
+end
 ---@param o core.o
 ---@return TSNode?
 function M.gettsnode(o)
@@ -176,7 +185,9 @@ function M._get_o_pos(o,col,row)
         col=col or o.col,
         row=row or o.row,
         _offset=o._offset,
+        _deoffset=o._deoffset,
         _coloffset=o._coloffset,
+        _decoloffset=o._decoloffset,
         incmd=o.incmd,
         save=o.save,
     }
