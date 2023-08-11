@@ -20,6 +20,8 @@ function M._in_tsnode(o,nodetype)
     if start+1==o.col+o._coloffset(o.col,o.row) then return end
     local re,end_,_=node:end_()
     return start+1,end_,rs+1,re+1
+    ---TODO: fix: off by one error:
+    ---\n'|' > ' > \n''|''
 end
 ---@param o core.o
 ---@param conf table
@@ -30,7 +32,6 @@ end
 function M.instring(o,conf)
     ---TODO: cache
     ---TODO fix: '"|"' > "|" but should '"|"'
-    ---TODO: implement multi_row return value, needs: in_pair and count_ambigous_pair to return row
     ---TODO: a way of recursive string detection as "'" | "'", detected as in string '" | "'
     for _,i in ipairs(conf.tsnode or {}) do
         local start,_end,startrow,endrow=M._in_tsnode(o,i)
@@ -85,5 +86,4 @@ function M.call(m,ext)
         save.currently_filtering=nil
     end
 end
---TODO: continue
 return M

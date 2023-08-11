@@ -1,5 +1,6 @@
 local M={}
-M.type_def={} --TODO: maybe add type hint
+---@type prof.def.m_type
+M.type_def={}
 ---@param obj core.module
 ---@param conf string[]|string?
 ---@return boolean

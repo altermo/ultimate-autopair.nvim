@@ -19,6 +19,13 @@
 ---@field conf table
 ---@field name string
 ---@field m table
+---@class prof.def.conf.map
+---@field enable boolean?
+---@field conf table?
+---@field map false?|string|string[]
+---@field cmap false?|string|string[]
+---@field p number?
+---@field multi boolean?
 ---@class prof.def.conf:prof.mconf
 ---@field map? boolean
 ---@field cmap? boolean
@@ -28,11 +35,12 @@
 ---@field internal_pairs? table
 ---@field config_internal_pairs? table
 ---@field bs? prof.def.map.bs.conf
----@field cr? table --TODO: create spesific conf
----@field space? table --TODO: create spesific conf
----@field space2? table --TODO: create spesific conf
----@field fastwarp? table --TODO: create spesific conf
----@field close? table --TODO: create spesific conf
+---@field cr? prof.def.map.cr.conf
+---@field space? prof.def.map.space.conf
+---@field space2? prof.def.map.space2.conf
+---@field fastwarp? prof.def.map.fastwarp.conf
+---@field close? prof.def.map.close.conf
+---@field tabout? prof.def.map.tabout.conf
 ---@field [number]? prof.def.conf.pair
 ---@field multiline? boolean
 ---@class prof.def.conf.pair
@@ -53,6 +61,7 @@
 ---@field map boolean
 ---@field mconf prof.def.conf
 ---@field multiline boolean
+---@class prof.def.m_type
 
 local default=require'ultimate-autopair.profile.default.utils'
 local pair_s=require'ultimate-autopair.profile.default.pairs'

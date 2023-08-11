@@ -14,8 +14,7 @@ M.fn={
     end,
 }
 function M.get_paths()
-    --local path=vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1]
-    local path='/home/user/.config/nvim/.other/ua/lua/ultimate-autopair' --TODO:temp
+    local path=vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1]
     return{
         path=path,
         root=vim.fn.fnamemodify(path,':h:h'),
@@ -29,7 +28,11 @@ function M.check_not_alowed_files_and_strings(paths)
             end
         end
     end
-    --TODO: check if executable exsists and also in dvelopment
+    if not (vim.fn.executable('grep') and vim.fn.executable('find')) then
+        M.fn.warning('Some of the required executables are missing for dev testing')
+        M.fn.info('INFO Pleas make sure that find and grep are installed')
+        return
+    end
     local string_check=vim.fn.jobstart({
         'grep','-r','--exclude-dir=test','print',paths.path,
     },{on_stdout=handle_stdout})
@@ -51,12 +54,15 @@ function M.check_other(_)
         M.fn.info('UA_DEBUG_DONT is set: no debugging will happen')
     end
     if not pcall(require,'nvim-treesitter') then
-        M.fn.warning('treesitter not installed: most of treesitter spesific behavior will not work')
+        M.fn.warning('nvim-treesitter not installed: most of treesitter spesific behavior will not work')
     end
 end
 function M.start()
     local paths=M.get_paths()
-    M.check_not_alowed_files_and_strings(paths)
+    ---@diagnostic disable-next-line: undefined-field
+    if _G.UA_DEV then
+        M.check_not_alowed_files_and_strings(paths)
+    end
     M.check_other(paths)
     M.start_test_runner_and_test(paths)
 end
@@ -66,6 +72,8 @@ function M.start_test_runner_and_test(paths)
     vim.fn.writefile({
         'vim.opt.runtimepath:append("'..paths.root..'")',
         '_G.UA_DEBUG_DONT=true',
+        ---@diagnostic disable-next-line: undefined-field
+        '_G.UA_DEV='..vim.inspect(_G.UA_DEV),
         'require("ultimate-autopair.test.run").run("'..outfile..'")',
     },source)
     local job=vim.fn.jobstart({'nvim','-u','NONE','-i','NONE','-l',source})

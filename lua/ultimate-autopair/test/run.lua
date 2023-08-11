@@ -40,6 +40,10 @@ function M.sort_test_by_conf(list_tests)
             if category:sub(1,4)=='SKIP' then
                 goto continue
             end
+            ---@diagnostic disable-next-line: undefined-field
+            if category:sub(1,3)=='DEV' and not _G.UA_DEV then
+                goto continue
+            end
             testopt._category=category
             if testopt[4] and testopt[4].skip then
                 table.insert(ret.skip,testopt)
@@ -67,7 +71,8 @@ function M.run(outfile)
         M.run_tests(conf,tests,has_not_ok)
     end
     for _,category in pairs(categorys) do
-        if not has_not_ok[category] and not category:sub(1,4)=='SKIP' then
+        ---@diagnostic disable-next-line: undefined-field
+        if (not has_not_ok[category]) and category:sub(1,4)~='SKIP' and (_G.UA_DEV or category:sub(1,3)~='DEV') then
             M.fn.ok('all test in category `'..category..'` have passed')
         end
     end
@@ -96,16 +101,19 @@ function M.run_tests(conf,tests,has_not_ok)
             info=stat
             stat=M.stat.err
         end
-        if stat~=M.stat.ok then has_not_ok[category]=true end
+        ---@diagnostic disable-next-line: undefined-field
+        if stat~=M.stat.ok and (_G.UA_DEV or stat~=M.stat.skip) then has_not_ok[category]=true end
         local testrepr=vim.inspect(testopt,{newline='',indent=''})
         if stat==M.stat.err then
             M.fn.error(('test(%s) %s errord: %s'):format(category,testrepr,info))
         elseif stat==M.stat.faild then
             M.fn.error(('test(%s) %s failed, actuall result: %s'):format(category,testrepr,vim.inspect(info)))
-        elseif stat==M.stat.ok then --TODO: optio
-            M.fn.ok(('test(%s) %s passed'):format(category,testrepr))
+        elseif stat==M.stat.ok then
+            ---@diagnostic disable-next-line: undefined-field
+            if _G.UA_DEV=='ok' then M.fn.ok(('test(%s) %s passed'):format(category,testrepr)) end
         elseif stat==M.stat.skip then
-            M.fn.info(('INFO test(%s) %s skiped'):format(category,testrepr))
+            ---@diagnostic disable-next-line: undefined-field
+            if _G.UA_DEV then M.fn.info(('INFO test(%s) %s skiped'):format(category,testrepr)) end
         else
             M.fn.warning('DEBUG: something went wrong')
         end

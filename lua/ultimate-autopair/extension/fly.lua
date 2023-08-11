@@ -29,7 +29,6 @@ function M.check(conf,o,m)
     end
     if not next_char_index then return end
     if m.fn.check_end_pair(utils.set_o(o,{filter=conf.filter}),i) then
-        --TODO: implement set_o
         M.save={o.line,o.col,next_char_index-o.col+#m.pair,m.pair}
         return utils.movel(next_char_index-o.col+#m.pair)
     end

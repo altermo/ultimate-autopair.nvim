@@ -1,7 +1,6 @@
 --Internal Utils
 local M={}
 M.maxlines=100
-M.mextra=5
 M.key_bs=vim.api.nvim_replace_termcodes('<bs>',true,true,true)
 M.key_del=vim.api.nvim_replace_termcodes('<del>',true,true,true)
 M.key_left=vim.api.nvim_replace_termcodes('<left>',true,true,true)
@@ -29,27 +28,19 @@ end
 ---@return integer
 ---@return table
 function M.getlines()
-    --TODO: dont do anyting special with getting end and begining, only return surtaint range...
     if M.incmd() then
         return 1,{M.getline()}
     end
     local linenr=M.getlinenr()
     local linecount=M._getlinecount()
-    if linecount<M.maxlines*2+M.mextra*2+1 then
+    if linecount<M.maxlines*2+1 then
         return linenr,M._getlines(0,-1)
-    elseif linenr<M.maxlines+M.mextra+1 then
-        return linenr,vim.list_extend(
-            M._getlines(0,M.maxlines*2+M.mextra+1),
-            M._getlines(-M.mextra-1,-1))
-    elseif linenr>linecount-M.maxlines-M.mextra then
-        return M.maxlines*2+M.mextra*2+linenr-linecount+1,vim.list_extend(
-            M._getlines(0,M.mextra),
-            M._getlines(-M.maxlines*2-M.mextra-2,-1))
+    elseif linenr<M.maxlines+1 then
+        return linenr,M._getlines(0,M.maxlines*2+1)
+    elseif linenr>linecount-M.maxlines then
+        return M.maxlines*2+linenr-linecount+1,M._getlines(-M.maxlines*2-2,-1)
     else
-        return M.maxlines+M.mextra+1,vim.list_extend(vim.list_extend(
-            M._getlines(0,M.mextra),
-            M._getlines(linenr-M.maxlines-1,linenr+M.maxlines)),
-            M._getlines(-M.mextra-1,-1))
+        return M.maxlines+1,M._getlines(linenr-M.maxlines-1,linenr+M.maxlines)
     end
 end
 ---@return number

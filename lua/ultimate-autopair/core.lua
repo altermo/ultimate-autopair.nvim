@@ -68,7 +68,7 @@ function M.get_o_value(key)
         col=col,
         row=row,
         _offset=function(r) return
-            linenr-r --TODO: wither rewamp getlines to only get one sector instead of 3, or...
+            linenr-r
         end,
         _coloffset=function (c) return col-c end,
         incmd=incmd,

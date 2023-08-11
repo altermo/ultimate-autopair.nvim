@@ -1,9 +1,7 @@
----@class prof.def.map.bs.conf
----@field enable boolean?
----@field conf table?
----@field map false?|string|string[]
----@field cmap false?|string|string[]
----@field p number?
+---@class prof.def.map.bs.conf:prof.def.conf.map
+---@field overjumps boolean?
+---@field space boolean?
+---@field indent boolean?
 ---@class prof.def.map.bs.m.backspace:prof.def.module
 ---@field backspace prof.def.map.bs.fn
 ---@alias prof.def.map.bs.fn fun(o:core.o,m:prof.def.m.map,conf:prof.def.map.bs.conf):string?
@@ -16,7 +14,6 @@ local M={}
 function M.backspace(o,m)
     for _,v in ipairs(default.filter_for_opt('dobackspace')) do
         ---@cast v prof.def.map.bs.m.backspace
-        --TODO: filter
         local ret=v.backspace(o,m,m.iconf)
         if ret then return ret end
     end
@@ -25,7 +22,6 @@ end
 ---@return core.check-fn
 function M.wrapp_backspace(m)
     return function (o)
-        --TODO: filter
         return M.backspace(o,m)
     end
 end

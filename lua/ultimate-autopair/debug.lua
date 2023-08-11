@@ -36,7 +36,7 @@ function M.create_traceback_buf(traceback,win,mes)
             enter=file_open_wrapper(file)
         elseif vim.startswith(v.source,'@vim/') then
             line='vim:'..v.name..':'..file
-            enter=function () --TODO: check if works
+            enter=function ()
                 vim.cmd.help('vim.'..v.name)
             end
         else
