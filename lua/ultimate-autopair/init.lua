@@ -25,7 +25,7 @@ end
 function M.setup(conf)
     M.configs={}
     if not M.skipversioncheck and vim.fn.has('nvim-0.9.0')~=1 then error('Requires at least version nvim-0.9.0') end
-    table.insert(M.configs,vim.tbl_deep_extend('force',default.conf,conf or {}))
+    table.insert(M.configs,M.extend_default(conf or {}))
     M.init()
 end
 ---@param configs? prof.config[]
@@ -37,5 +37,10 @@ function M.init(configs)
 end
 function M.clear()
     debug.run(core.clear,{})
+end
+---@param conf prof.config
+---@return prof.config
+function M.extend_default(conf)
+    return vim.tbl_deep_extend('force',default.conf,conf or {})
 end
 return M
