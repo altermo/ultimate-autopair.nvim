@@ -1,6 +1,6 @@
 --Internal Utils
 local M={}
-M.maxlines=1
+M.maxlines=100
 M.key_bs=vim.api.nvim_replace_termcodes('<bs>',true,true,true)
 M.key_del=vim.api.nvim_replace_termcodes('<del>',true,true,true)
 M.key_left=vim.api.nvim_replace_termcodes('<left>',true,true,true)

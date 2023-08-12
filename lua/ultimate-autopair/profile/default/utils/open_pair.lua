@@ -123,7 +123,7 @@ function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
             if M.I.match(spair,lline) and filter(rrow,i) then
                 count=count+1
-                if not index then
+                if not gotoend or not index then
                     index=i
                     rowindex=rrow
                 end

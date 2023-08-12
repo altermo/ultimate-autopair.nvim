@@ -1,10 +1,10 @@
 ---@diagnostic disable-next-line: duplicate-set-field
 function vim.lg(...) --TODO: TEMP
-  local d=debug.getinfo(2)
-  return vim.fn.writefile(vim.fn.split(
-    ':'..d.short_src..':'..d.currentline..':\n'..
-    vim.inspect(#{...}==1 and ... or {...}),'\n'
-  ),'/tmp/nlog','a')
+    local d=debug.getinfo(2)
+    return vim.fn.writefile(vim.fn.split(
+        ':'..d.short_src..':'..d.currentline..':\n'..
+        vim.inspect(#{...}==1 and ... or {...}),'\n'
+    ),'/tmp/nlog','a')
 end
 local M={}
 local list_of_tests=require'ultimate-autopair.test.test'
@@ -84,7 +84,9 @@ function M.run_tests(conf,tests,has_not_ok)
             local category=testopt._category
             testopt._category=nil
             local testrepr=vim.inspect(testopt,{newline='',indent=''})
-            M.fn.info(('INFO test(%s) %s skiped'):format(category,testrepr))
+            if _G.UA_DEV then
+                M.fn.info(('INFO test(%s) %s skiped'):format(category,testrepr))
+            end
         end
         return
     else
@@ -130,7 +132,6 @@ function M.run_test(testopt)
     local unparsed_starting_line,key,unparsed_resulting_line,opt=unpack(testopt)
     opt=opt or {}
     if opt.interactive then return M.stat.skip end
-    if opt.ts then return M.stat.skip end
     if opt.skip then return M.stat.skip end
     local lines,linenr,col,line=M.parse_unparsed_line(unparsed_starting_line)
     M.switch_ua_utils_fn(ua_utils,opt,lines,linenr,line,col)
@@ -146,13 +147,20 @@ function M.run_test(testopt)
     return M.stat.ok
 end
 function M.switch_ua_utils_fn(ua_utils_,opt,lines,linenr,line,col)
-    ua_utils.maxlines=math.huge --TODO: remove and test for large files
     ua_utils_._getlines=function () return lines end
     ua_utils_.getline=function () return line end
+    ua_utils_._getlinecount=function() return #lines end
+    ua_utils_.getmode=function () return opt.incmd and 'c' or 'i' end
     ua_utils_.incmd=function () return opt.incmd end
     ua_utils_.getcol=function () return col end
     ua_utils_.getlinenr=function () return linenr end
-    ua_utils_.gettsnode=function () end
+    ua_utils_.gettsnode=function (o)
+        if not opt.ts then return end
+        local parser=vim.treesitter.get_string_parser(vim.fn.join(lines),opt.ft)
+        parser:parse()
+        local linenr_,col_=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
+        return parser:named_node_for_range({linenr_,col_,linenr_,col_},{})
+    end
     ua_utils_.getsmartft=function () return opt.ft or '' end
     ua_utils_.getcmdtype=function () return opt.incmd end
 end
@@ -173,13 +181,13 @@ function M.parse_unparsed_line(line)
 end
 function M.deparse_line(lines,linenr,col)
     local line=lines[linenr]
-    line=line:sub(1,col-1)..'|'..line:sub(col)
-    lines[linenr]=line
+    lines[linenr]=line:sub(1,col-1)..'|'..line:sub(col)
     return vim.fn.join(lines,'\n')
 end
 function M.run_action(action,lines,row,col,opt)
     local i=1
     local function insert(str)
+        --TODO:work with newline
         lines[row]=lines[row]:sub(1,col-1)..str..lines[row]:sub(col)
         col=col+#str
     end

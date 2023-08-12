@@ -189,6 +189,7 @@ return {
         --{[["'"|"'"]],'"',[["'""|""'"]]}, --TODO: fix
         {'|\n")"','(','(|)\n")"'},
         {'"|"\n)','(','"(|)"\n)'},
+        {"'''|'","'","''''|",{ts=true,ft='lua'}},
         --TODO: test multiline string (python)
     },
     ext_cmdtype={
@@ -230,11 +231,11 @@ return {
         {'\\(|)','','\\|)'},
     },
     ext_cond={
-        {'|',"'","'|",{lisp=true}},
-        {'"|"',"'",[["'|'"]],{lisp=true}},
-        --{'|','(','(|',{c={extensions={cond='ret false'}}}},
-        --{'#|','(','#(|',{c={extensions={cond='ret not prev #'}}}},
-        --{'"|"','(','"(|"',{c={extensions={cond={cond=function(fns) return not fns.in_string() end}}}}},
+        {'|',"'","'|",{ft='fennel'}},
+        {'"|"',"'",[["'|'"]],{ft='fennel'}},
+        {'|','(','(|',{c={extensions={cond={cond=function () return false end}}}}},
+        {'#|','(','#(|',{c={extensions={cond={cond=function (_,o) return o.line:sub(o.col-1,o.col-1)~='#' end}}}}},
+        {'"|"','(','"(|"',{c={extensions={cond={cond=function(fns) return not fns.in_string() end}}}}},
     },
     SKIP_ext_fly={
         {'[{( | )}]',')','[{(  )}]|'},
@@ -316,7 +317,8 @@ return {
         {'\n "|"\n""','"','\n ""|\n""',{c={config_internal_pairs={{'"','"',multiline=true}}}}},
         {'(\n  (|)\n)','','(\n  |\n)'},
         {'\n"|"','"','\n""|'},
-        {"\n'|'","'","\n''|",{ts=true}},
+        {"\n'|'","'","\n''|",{ts=true,ft='lua'}},
+        {'(\n\n|\n)','(','(\n\n(|)\n)'},
     },
     DEV_run_multiline={
         {'\n|','a','\na|'},

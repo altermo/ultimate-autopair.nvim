@@ -19,7 +19,7 @@ function M._in_tsnode(o,nodetype)
     local _,startcol,_=node:start()
     if startcol+1==o.col+o._coloffset(o.col,o.row) then return end
     local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
-    return scol,ecol+1,srow+1,erow+1
+    return scol+1,ecol,srow+1,erow+1
 end
 ---@param o core.o
 ---@param conf table

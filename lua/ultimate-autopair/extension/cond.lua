@@ -18,8 +18,11 @@ M.fns={
     in_cmdline=function (opt)
         return opt.o.incmd
     end,
-    in_lisp=function ()
-        return vim.o.lisp --TODO tsnode_get_ft and filetype.get_option
+    in_lisp=function (opt,col,row,notree)
+        if notree then return vim.o.lisp end
+        local new_o=utils._get_o_pos(opt.o,col,row)
+        local ft=utils.getsmartft(new_o)
+        return vim.filetype.get_option(ft,'lisp')
     end,
     --in_pair=function () end --TODO
     is_pair=function (opt)

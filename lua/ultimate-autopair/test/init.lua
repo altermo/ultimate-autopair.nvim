@@ -33,15 +33,15 @@ function M.check_not_alowed_files_and_strings(paths)
         M.fn.info('INFO Pleas make sure that find and grep are installed')
         return
     end
-    local string_check=vim.fn.jobstart({
-        'grep','-r','--exclude-dir=test','print',paths.path,
+    local string_check_log=vim.fn.jobstart({ --TODO:temp
+        'grep','-r','--exclude-dir=test','vim.lg',paths.path,
     },{on_stdout=handle_stdout})
     local file_check=vim.fn.jobstart({
         'find',paths.path,'-type','f','!','-name','*.lua','!','-name','*.md'
     },{on_stdout=handle_stdout})
-    if vim.tbl_contains(vim.fn.jobwait({file_check,string_check},5000),-1) then
+    if vim.tbl_contains(vim.fn.jobwait({file_check,string_check_log},5000),-1) then
         vim.fn.jobstop(file_check)
-        vim.fn.jobstop(string_check)
+        vim.fn.jobstop(string_check_log)
         M.fn.warning('timeout: could not run all string/file checks,') return
     end
 end
@@ -76,7 +76,7 @@ function M.start_test_runner_and_test(paths)
         '_G.UA_DEV='..vim.inspect(_G.UA_DEV),
         'require("ultimate-autopair.test.run").run("'..outfile..'")',
     },source)
-    local job=vim.fn.jobstart({'nvim','-u','NONE','-i','NONE','-l',source})
+    local job=vim.fn.jobstart({'nvim','--clean','-l',source})
     --TODO: multiple instances (per category?)
     --TODO: use rpc/tcp server for out instead of file
     local jobstat=vim.fn.jobwait({job},10000)[1]
