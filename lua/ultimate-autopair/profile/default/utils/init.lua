@@ -84,10 +84,9 @@ function M.extend_map_check_with_map_check(m)
         return check(o)
     end
 end
----@generic T
 ---@param module prof.def.module
----@param fns fun(m:prof.def.module,T)[]
----@return fun(T)[]
+---@param fns function[]
+---@return prof.def.pair.fn[]
 function M.init_fns(module,fns)
     return vim.tbl_map(function(v)
         return function (...) return v(module,...) end
@@ -108,5 +107,42 @@ function M.init_extensions(m,extensions)
             i.m.call(m,i)
         end
     end
+end
+---@param o core.o
+---@param col number
+---@param prev boolean?
+---@param filter fun(pair:prof.def.m.pair):boolean?
+---@param _ boolean? --all
+---@return prof.def.m.pair?
+---@return number?
+---@return number?
+function M.get_pair_and_end_pair_pos_from_start(o,col,prev,filter,_)
+    local spairs=M.get_pairs_by_pos(o,col,'start',not prev,filter)
+    table.sort(spairs,function (a,b)
+        return #a.pair>#b.pair
+    end)
+    for _,i in ipairs(spairs) do
+        local pcol,row=i.fn.find_corresponding_pair(o,o.col)
+        if pcol then return i,pcol,row end
+    end
+end
+---@param o core.o
+---@param col number
+---@param next boolean?
+---@param type string?
+---@param filter fun(pair:prof.def.m.pair):boolean?
+---@return prof.def.m.pair[]
+function M.get_pairs_by_pos(o,col,type,next,filter)
+    type=type or 'pair'
+    local ret={}
+    for _,i in ipairs(M.filter_for_opt(type)) do
+        ---@cast i prof.def.m.pair
+        if (not next and i.pair==o.line:sub(col-#i.pair,col-1)) or
+            (next and i.pair==o.line:sub(col,col+#i.pair-1)) and
+            (not filter or filter(i)) and i.filter(o) then
+            table.insert(ret,i)
+        end
+    end
+    return ret
 end
 return M

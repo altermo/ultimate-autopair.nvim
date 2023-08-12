@@ -4,10 +4,16 @@ local open_pair=require'ultimate-autopair.profile.default.utils.open_pair'
 local M={}
 M.fn={
     can_check=function (m,o)
-        if o.line:sub(o.col-#m.pair+1,o.col-1)~=m.pair:sub(0,-2) then return end
+        if not m.fn.can_check_pre(o) then return end
         if open_pair.open_end_pair_after(m,o,o.col) then return end
         return true
     end,
+    find_corresponding_pair=function (m,o,col)
+        return open_pair.open_end_pair_after(m,o,col+1)
+    end,
+    can_check_pre=function(m,o)
+        return o.line:sub(o.col-#m.pair+1,o.col-1)==m.pair:sub(0,-2)
+    end
 }
 ---@param m prof.def.m.pair
 ---@return core.check-fn

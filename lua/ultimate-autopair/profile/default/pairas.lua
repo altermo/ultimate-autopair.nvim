@@ -4,7 +4,7 @@ local open_pair=require'ultimate-autopair.profile.default.utils.open_pair'
 local M={}
 M.fn={
     can_check=function(m,o)
-        if o.line:sub(o.col-#m.pair+1,o.col-1)~=m.pair:sub(0,-2) then return end
+        if not m.fn.can_check_pre(o) then return end
         return not open_pair.open_pair_ambigous(m,o)
     end,
     in_pair=function (m,o)
@@ -13,6 +13,16 @@ M.fn={
         if not (opaa and opab) then return end
         return opab,opaa+#m.pair-1,opabr,opaar
     end,
+    find_corresponding_pair=function (m,o,col)
+        col=col+#m.pair
+        local opab,_=open_pair.open_pair_ambigous_before(m,o,col)
+        local opaa,opaar=open_pair.open_pair_ambigous_after(m,o,col)
+        if opab and not opaa then return end
+        return opaa,opaar
+    end,
+    can_check_pre=function(m,o)
+        return o.line:sub(o.col-#m.pair+1,o.col-1)==m.pair:sub(0,-2)
+    end
 }
 ---@param m prof.def.m.pair
 ---@return core.check-fn

@@ -6,7 +6,7 @@
 ---@field pair string
 ---@field end_pair string
 ---@field start_pair string
----@field fn table<string,function>
+---@field fn prof.def.pair.fn
 ---@field key string
 ---@field conf prof.def.conf.pair
 ---@field mconf prof.def.conf
@@ -62,6 +62,11 @@
 ---@field mconf prof.def.conf
 ---@field multiline boolean
 ---@class prof.def.m_type
+---@class prof.def.pair.fn
+---@field in_pair? fun(o:core.o):number?,number?,number?,number?
+---@field can_check fun(o:core.o):boolean?
+---@field can_check_pre fun(o:core.o):boolean?
+---@field find_corresponding_pair fun(o:core.o,col:number):number?,number?
 
 local default=require'ultimate-autopair.profile.default.utils'
 local pair_s=require'ultimate-autopair.profile.default.pairs'

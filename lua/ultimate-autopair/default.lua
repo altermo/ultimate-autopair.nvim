@@ -105,7 +105,7 @@ M.conf={
         string={p=60,tsnode={'string','raw_string'}},
         cond={p=40,filter=false},
         alpha={p=30,filter=false},
-        --suround={p=20},
+        suround={p=20},
         --fly={other_char={' '},nofilter=false,p=10,undomapconf={},undomap=nil,undocmap=nil,only_jump_end_pair=false},
     },
     internal_pairs={-- *ultimate-autopair-pairs-default-pairs*

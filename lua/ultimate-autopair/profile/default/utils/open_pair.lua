@@ -37,7 +37,7 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
                 i=i-1
             end
             if ret_pos and count<=0 then
-                return rrow,i
+                return i+#start_pair,rrow
             elseif count<0 then
                 count=0
             end
@@ -79,7 +79,7 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
                 i=i+1
             end
             if ret_pos and count==0 then
-                return rrow,i
+                return i-#end_pair,rrow
             elseif count<0 then
                 count=0
             end
@@ -148,6 +148,7 @@ end
 ---@param o core.o
 ---@param col number
 ---@return number|false
+---@return number?
 function M.open_end_pair_after(pair,o,col)
     local count=M.count_end_pair(pair,o,col-1)
     return M.count_end_pair(pair,o,col,true,count+1,true)
@@ -156,6 +157,7 @@ end
 ---@param o core.o
 ---@param col number
 ---@return number|false
+---@return number?
 function M.open_start_pair_before(pair,o,col)
     local count=M.count_start_pair(pair,o,col)
     return M.count_start_pair(pair,o,col-1,true,count+1,true)
