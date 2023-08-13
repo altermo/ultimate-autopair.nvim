@@ -40,9 +40,9 @@ end
 ---@return number?
 ---@return number?
 function M.instring(o,conf)
-    ---TODO: cache
-    ---TODO fix: '"|"' > "|" but should '"|"'
-    ---TODO: a way of recursive string detection as "'" | "'", detected as in string '" | "'
+    ---TO_DO: cache
+    ---TO_DO fix: '"|"' > "|" but should '"|"'
+    ---TO_DO: a way of recursive string detection as "'" | "'", detected as in string '" | "'
     local save=M.get_save(o)
     for _,i in ipairs(conf.tsnode or {}) do
         local start,_end,startrow,endrow=M._in_tsnode(o,i)
@@ -101,4 +101,70 @@ function M.call(m,ext)
         end
     end
 end
+--in_pair=function (m,o,holeline)
+    --if holeline then
+        --if o.save[m.fn.in_pair]==nil then
+            --o.save[m.fn.in_pair]=m.fn._in_pair_map(o)
+        --end
+        --if not o.save[m.fn.in_pair] then return end
+        --return unpack(o.save[m.fn.in_pair][o.row][o.col] or {})
+    --end
+    --local opab,opabr=open_pair.open_pair_ambigous_before(m,o,o.col)
+    --local opaa,opaar=open_pair.open_pair_ambigous_after(m,o,o.col)
+    --if not (opaa and opab) then return end
+    --return opab,opaa+#m.pair-1,opabr,opaar
+--end,
+--_in_pair_map=function (m,o)
+    --local function match(str,line)
+        --return str==line:sub(1,#str)
+    --end
+    --local single=not m.multiline
+    --local sfilter=function(row,col_) return utils._filter_pos(m.start_m.filter,o,col_,row) end
+    --local efilter=function(row,col_) return utils._filter_pos(m.end_m.filter,o,col_,row) end
+    --local map={}
+    --local flag
+    --local spair=m.pair
+    --local current=nil
+    --for row,line in ipairs(o.lines) do
+        --local i=1
+        --map[row]={}
+        --local ma=map[row]
+        --while i<=#line do
+            --local lline=line:sub(i)
+            --if current then
+                --ma[o.col]=current
+            --else
+                --ma[o.col]={}
+            --end
+            --if match(spair,lline) and
+                --(current and sfilter(row,i) or
+                --(not current and efilter(row,i)))
+            --then
+                --flag=true
+                --if current then
+                    --current[2]=i
+                    --current[4]=row
+                    --current=nil
+                --else
+                    --current={i,nil,row}
+                --end
+                --i=i+#spair
+            --else
+                --i=i+1
+            --end
+        --end
+        --if single and current then
+            --map[row]={}
+        --end
+    --end
+    --if not single and current then
+        --for k,_ in ipairs(map) do
+            --map[k]={}
+        --end
+    --end
+    --if not flag then
+        --return false
+    --end
+    --return map
+--end,
 return M

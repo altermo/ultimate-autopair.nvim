@@ -7,10 +7,10 @@ M.fns={
     in_macro=function ()
         return vim.fn.reg_recording()~='' or vim.fn.reg_executing()~=''
     end,
-    in_string=function (opt,col,row,conf)
+    in_string=function (opt,col,row)
         local new_o=utils._get_o_pos(opt.o,col,row)
         local tsnode=require'ultimate-autopair.extension.tsnode'
-        return false --TODO
+        return tsnode._in_tsnode(new_o,{'string','raw_string'})
     end,
     in_check=function (opt)
         return opt.incheck

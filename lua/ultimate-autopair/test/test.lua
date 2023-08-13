@@ -179,18 +179,18 @@ return {
         {'<|"">>','<','<<|"">>',{c={{'<<','>>',dosuround=true}}}},
     },
     ext_string={
-        {'| ")"','(','(|) ")"'},
-        {'"|")','(','"(|)")'},
-        {[[|"'"]],"'",[['|'"'"]]},
-        {[['""(|)']],')',[['""()|']]},
-        {'("|")',')','(")|")'},
-        {[[| '\')']],'(',[[(|) '\')']]},
+        {'| ")"','(','(|) ")"',{ts=true}},
+        {'"|")','(','"(|)")',{ts=true}},
+        {[[|"'"]],"'",[['|'"'"]],{ts=true}},
+        {[['""(|)']],')',[['""()|']],{ts=true}},
+        {'("|")',')','(")|")',{ts=true}},
+        {[[| '\')']],'(',[[(|) '\')']],{ts=true}},
         {'| [[)]]','(','(|) [[)]]',{ft='lua',ts=true}},
-        {'|\n")"','(','(|)\n")"'},
-        {'"|"\n)','(','"(|)"\n)'},
+        {'|\n")"','(','(|)\n")"',{ts=true}},
+        {'"|"\n)','(','"(|)"\n)',{ts=true}},
         {"'''|'","'","''''|",{ts=true,ft='lua'}},
-        --{[["'"|"'"]],'"',[["'""|""'"]]}, --TODO: fix
-        --{[['"' '"' |]],"'",[['"' '"' '|']]}, --TODO: fix
+        {[["'"|"'"]],'"',[["'""|""'"]],{ts=true}}, --TODO: fix
+        {[['"' '"' |]],"'",[['"' '"' '|']],{ts=true}}, --TODO: fix
         --TODO: test multiline string (python)
     },
     ext_cmdtype={
@@ -234,12 +234,16 @@ return {
     },
     ext_cond={
         {'|',"'","'|",{ft='fennel'}},
-        {'"|"',"'",[["'|'"]],{ft='fennel'}},
+        {'"|"',"'",[["'|'"]],{ts=true,ft='fennel',tsft='lua'}},
         {'|','(','(|',{c={extensions={cond={cond=function () return false end}}}}},
         {'#|','(','#(|',{c={extensions={cond={cond=function (_,o) return o.line:sub(o.col-1,o.col-1)~='#' end}}}}},
         {'|#)','(','(|)#)',{c={extensions={cond={cond=function (_,o)
             return o.line:sub(o.col-1,o.col-1)~='#' end,filter=true}}}}},
-        {'"|"','(','"(|"',{c={extensions={cond={cond=function(fns) return not fns.in_string() end}}}}},
+        {'"|"','(','"(|"',{ts=true,c={extensions={cond={cond=function(fns) return not fns.in_string() end}}}}},
+        --{'--|','(','--(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,outside={'comment'}}}}}}}, --TODO
+        --{'|','(','(|)',{ft='lua',ts=true,{c={extensions={tsnode={p=50,outside={'comment'}}}}}}},
+        --{'--|','(','--(|)',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
+        --{'|','(','(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
     },
     ext_fly={
         {'[{( | )}]',']','[{(  )}]|'},
@@ -253,11 +257,10 @@ return {
         {'<<(|)>>','>','<<()>>|',{c={{'<<','>>',fly=true}}}},
         {'(<<|>>)',')','(<<>>)|',{c={{'<<','>>',fly=true}}}},
     },
-    SKIP_ext_tsnode={
-        {'--|','(','--(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,outside={'comment'}}}}}}},
-        {'|','(','(|)',{ft='lua',ts=true,{c={extensions={tsnode={p=50,outside={'comment'}}}}}}},
-        {'--|','(','--(|)',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
-        {'|','(','(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
+    ext_tsnode={
+        {'|--)','(','(|)--)',{ts=true}},
+        {'/*(*/|)',')','/*(*/)|)',{ts=true,ft='c'}},
+        --TODO: write more tests
     },
     SKIP_utf8={
         {"'á|'","'","'á'|"}, --simple

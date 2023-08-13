@@ -138,7 +138,6 @@ function M.run_test(testopt)
     if #key~=1 then
         M.fn.warning('DEBUG: is not interactive and size of key is not 1')
     end
-    vim.o.lisp=opt.lisp or false
     local action=ua_core.run(map[key] or key)
     local deparsed_result_line=M.run_action(action,lines,linenr,col,opt)
     if deparsed_result_line~=unparsed_resulting_line then
@@ -156,7 +155,7 @@ function M.switch_ua_utils_fn(ua_utils_,opt,lines,linenr,line,col)
     ua_utils_.getlinenr=function () return linenr end
     ua_utils_.gettsnode=function (o)
         if not opt.ts then return end
-        local parser=vim.treesitter.get_string_parser(vim.fn.join(lines),opt.ft)
+        local parser=vim.treesitter.get_string_parser(vim.fn.join(lines,'\n'),opt.tsft or opt.ft or 'lua')
         parser:parse()
         local linenr_,col_=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
         return parser:named_node_for_range({linenr_,col_,linenr_,col_},{})
