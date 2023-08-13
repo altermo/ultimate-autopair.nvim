@@ -11,6 +11,8 @@
 ---@field conf prof.def.conf.pair
 ---@field mconf prof.def.conf
 ---@field multiline boolean
+---@field start_m? prof.def.m.pair
+---@field end_m? prof.def.m.pair
 ---@class prof.def.m.map:prof.def.module
 ---@field map string|string[]
 ---@field cmap string|string[]
@@ -109,10 +111,17 @@ end
 ---@return prof.def.m.pair[]
 function M.init_pair(conf,ext,pair)
     local q=M.create_q_value(conf,ext,pair)
+    local ps,pe
     if q.start_pair==q.end_pair then
-        return {pair_as.init(q),pair_ae.init(q)}
+        ps,pe=pair_as.init(q),pair_ae.init(q)
+    else
+        ps,pe=pair_s.init(q),pair_e.init(q)
     end
-    return {pair_s.init(q),pair_e.init(q)}
+    ps.end_m=pe
+    pe.end_m=pe
+    ps.start_m=ps
+    pe.start_m=ps
+    return {ps,pe}
 end
 ---@param conf prof.def.conf
 ---@param ext prof.def.ext[]

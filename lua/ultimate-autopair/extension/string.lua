@@ -31,18 +31,32 @@ function M.instring(o,conf)
     ---TODO: cache
     ---TODO fix: '"|"' > "|" but should '"|"'
     ---TODO: a way of recursive string detection as "'" | "'", detected as in string '" | "'
+    local save=o.save[M.savetype]
+    if not save then
+        save={}
+        o.save[M.savetype]=save
+    end
+if save.currently_filtering then return end
+    save.currently_filtering=true
     for _,i in ipairs(conf.tsnode or {}) do
         local start,_end,startrow,endrow=M._in_tsnode(o,i)
-        if start then return start,_end,startrow,endrow end
+        if start then
+            save.currently_filtering=nil
+            return start,_end,startrow,endrow
+        end
     end
     if conf.nopair then return end
     for _,i in ipairs(default.filter_for_opt({'pair'})) do
         ---@cast i prof.def.m.pair
         if not i.conf.string or not i.fn.in_pair then goto continue end
         local start,_end,startrow,endrow=i.fn.in_pair(o)
-        if start then return start,_end,startrow,endrow end
+        if start then
+            save.currently_filtering=nil
+            return start,_end,startrow,endrow
+        end
         ::continue::
     end
+    save.currently_filtering=nil
 end
 ---@param o core.o
 ---@param save table
@@ -67,21 +81,16 @@ function M.call(m,ext)
     m.check=function (o)
         local save={}
         o.save[M.savetype]=save
-        save.currently_filtering=true
         save.stringstart,save.stringend,save.stringrowstart,save.stringrowsend=M.instring(o,conf)
-        save.currently_filtering=nil
         return check(o)
     end
     local filter=m.filter
     m.filter=function(o)
         local save=o.save[M.savetype]
-        if not save or save.currently_filtering then return filter(o) end
-        save.currently_filtering=true
+        if not save then save={} o.save[M.savetype]=save end
         if M.filter(o,save,conf) then
-            save.currently_filtering=nil
             return filter(o)
         end
-        save.currently_filtering=nil
     end
 end
 return M

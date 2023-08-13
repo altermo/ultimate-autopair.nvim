@@ -186,10 +186,11 @@ return {
         {'("|")',')','(")|")'},
         {[[| '\')']],'(',[[(|) '\')']]},
         {'| [[)]]','(','(|) [[)]]',{ft='lua',ts=true}},
-        --{[["'"|"'"]],'"',[["'""|""'"]]}, --TODO: fix
         {'|\n")"','(','(|)\n")"'},
         {'"|"\n)','(','"(|)"\n)'},
         {"'''|'","'","''''|",{ts=true,ft='lua'}},
+        --{[["'"|"'"]],'"',[["'""|""'"]]}, --TODO: fix
+        --{[['"' '"' |]],"'",[['"' '"' '|']]}, --TODO: fix
         --TODO: test multiline string (python)
     },
     ext_cmdtype={
@@ -198,17 +199,17 @@ return {
         {'|','(','(|)',{incmd=':'}},
         {'|','(','(|',{incmd='/'}},
     },
-    SKIP_ext_alpha={
+    ext_alpha={
         {"don|t","'","don'|t"},
-        {"f|","'","f''",{ft='python'}},
-        {"fr|","'","fr''",{ft='python'}},
+        {"f|","'","f'|'",{ft='python'}},
+        {"fr|","'","fr'|'",{ft='python'}},
         {"a' |","'","a' '|'",{c={extensions={alpha={filter=true}}}}},
-        {"a' |","'","a' '|",{c={extensions={alpha={filter={'txt'}}}}}},
+        {'a" |','"','a" "|',{c={extensions={alpha={filter={'txt'}}}}}},
         {"a' |","'","a' '|'",{ft='txt',c={extensions={alpha={filter={'txt'}}}}}},
-        {'|a','<','<a',{c={{'<','>',alpha_after=true}}}},
-        {'a|','<','a<',{c={{'<','>',alpha=true}}}},
-        {'a<|','<','a<<',{c={{'<<','>>',alpha=true}}}},
-        {'<|a','<','<<a',{c={{'<<','>>',alpha_after=true}}}},
+        {'|a','<','<|a',{c={{'<','>',alpha_after=true}}}},
+        {'a|','<','a<|',{c={{'<','>',alpha=true}}}},
+        {'a<|','<','a<<|',{c={{'<<','>>',alpha=true}}}},
+        {'<|a','<','<<|a',{c={{'<<','>>',alpha_after=true}}}},
         {'b""|','"','b"""|"',{ft='python',c={config_internal_pairs={{'"""','"""',alpha=true}}}}},
     },
     ext_filetype={
@@ -235,6 +236,8 @@ return {
         {'"|"',"'",[["'|'"]],{ft='fennel'}},
         {'|','(','(|',{c={extensions={cond={cond=function () return false end}}}}},
         {'#|','(','#(|',{c={extensions={cond={cond=function (_,o) return o.line:sub(o.col-1,o.col-1)~='#' end}}}}},
+        {'|#)','(','(|)#)',{c={extensions={cond={cond=function (_,o)
+            return o.line:sub(o.col-1,o.col-1)~='#' end,filter=true}}}}},
         {'"|"','(','"(|"',{c={extensions={cond={cond=function(fns) return not fns.in_string() end}}}}},
     },
     SKIP_ext_fly={

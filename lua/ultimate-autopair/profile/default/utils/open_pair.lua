@@ -15,7 +15,8 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     local start_pair=pair.start_pair:reverse()
     local end_pair=pair.end_pair:reverse()
     local count=Icount or 0
-    local filter=function(row,col_) return utils._filter_pos(pair.filter,o,col_,row) end
+    local sfilter=function(row,col_) return utils._filter_pos(pair.start_m.filter,o,col_,row) end
+    local efilter=function(row,col_) return utils._filter_pos(pair.end_m.filter,o,col_,row) end
     local lines={o.line}
     local row=o.row
     if pair.multiline then
@@ -27,10 +28,10 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
         assert(o.lines[rrow]==line)
         while ((not gotostart) and rrow==row and i>col-1) or ((gotostart or rrow~=row) and i>0) do
             local lline=line:sub((not gotostart) and rrow==row and col or 1,i):reverse()
-            if M.I.match(start_pair,lline) and filter(rrow,i-#start_pair+1) then
+            if M.I.match(start_pair,lline) and sfilter(rrow,i-#start_pair+1) then
                 count=count-1
                 i=i-#start_pair
-            elseif M.I.match(end_pair,lline) and filter(rrow,i-#end_pair+1) then
+            elseif M.I.match(end_pair,lline) and efilter(rrow,i-#end_pair+1) then
                 count=count+1
                 i=i-#end_pair
             else
@@ -57,7 +58,8 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
     local start_pair=pair.start_pair
     local end_pair=pair.end_pair
     local count=Icount or 0
-    local filter=function(row,col_) return utils._filter_pos(pair.filter,o,col_,row) end
+    local sfilter=function(row,col_) return utils._filter_pos(pair.start_m.filter,o,col_,row) end
+    local efilter=function(row,col_) return utils._filter_pos(pair.end_m.filter,o,col_,row) end
     local lines={o.line}
     local row=o.row
     if pair.multiline then
@@ -69,10 +71,10 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
         assert(o.lines[rrow]==line)
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
-            if M.I.match(start_pair,lline) and filter(rrow,i) then
+            if M.I.match(start_pair,lline) and sfilter(rrow,i) then
                 count=count+1
                 i=i+#start_pair
-            elseif M.I.match(end_pair,lline) and filter(rrow,i) then
+            elseif M.I.match(end_pair,lline) and efilter(rrow,i) then
                 count=count-1
                 i=i+#end_pair
             else
@@ -106,7 +108,8 @@ function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
     --end
     ---/TEMP
     local spair=pair.pair
-    local filter=function(row,col_) return utils._filter_pos(pair.filter,o,col_,row) end
+    local sfilter=function(row,col_) return utils._filter_pos(pair.start_m.filter,o,col_,row) end
+    local efilter=function(row,col_) return utils._filter_pos(pair.end_m.filter,o,col_,row) end
     local count=Icount or 0
     local index
     local rowindex
@@ -121,7 +124,9 @@ function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
         local i=(gotoend==true and rrow==row and col) or 1
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
-            if M.I.match(spair,lline) and filter(rrow,i) then
+            if M.I.match(spair,lline) and
+                ((count%2==1 and sfilter(rrow,i)) or
+                (count%2==0 and efilter(row,i))) then
                 count=count+1
                 if not gotoend or not index then
                     index=i

@@ -89,15 +89,16 @@ function M.call(m,ext)
         end
         return check(o)
     end
-    --local filter=m.filter
-    --m.filter=function(o)
-        --if cond and not M.cond(cond,o,m) then
-            --return
-        --end
-        --if conf.cond and not M.cond(conf.cond,o,m) then
-            --return
-        --end
-        --return filter(o)
-    --end
+    if not conf.filter then return end
+    local filter=m.filter
+    m.filter=function(o)
+        if cond and not M.cond(cond,o,m) then
+            return
+        end
+        if conf.cond and not M.cond(conf.cond,o,m) then
+            return
+        end
+        return filter(o)
+    end
 end
 return M
