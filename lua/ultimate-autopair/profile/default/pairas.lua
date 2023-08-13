@@ -29,7 +29,11 @@ M.fn={
 function M.check_wrapper(m)
     return function(o)
         if not m.fn.can_check(o) then return end
-        return m.start_pair:sub(-1)..m.end_pair..utils.moveh(#m.end_pair)
+        return utils.create_act({
+            m.start_pair:sub(-1),
+            m.end_pair,
+            {'h',#m.end_pair},
+        },o)
     end
 end
 ---@param m prof.def.m.pair
@@ -38,7 +42,7 @@ function M.backspace_wrapper(m)
     return function (o)
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.pair==o.line:sub(o.col,o.col+#m.pair-1) then
             if not open_pair.open_pair_ambigous(m,o,o.col) then
-                return utils.delete(#m.pair,#m.pair)
+                return utils.create_act({{'delete',#m.pair,#m.pair}},o)
             end
         end
     end

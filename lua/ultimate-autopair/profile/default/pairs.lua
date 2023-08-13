@@ -20,7 +20,11 @@ M.fn={
 function M.check_wrapper(m)
     return function(o)
         if not m.fn.can_check(o) then return end
-        return m.start_pair:sub(-1)..m.end_pair..utils.moveh(#m.end_pair)
+        return utils.create_act({
+            m.start_pair:sub(-1),
+            m.end_pair,
+            {'h',#m.end_pair},
+        },o)
     end
 end
 ---@param m prof.def.m.pair
@@ -30,7 +34,7 @@ function M.backspace_wrapper(m)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
             if m.filter(utils._get_o_pos(o,o.col-1)) then --TODO: maybe _get_o_pos is wrong and filter is the problem
                 if not open_pair.open_start_pair_before(m,o,o.col) then
-                    return utils.delete(#m.start_pair,#m.end_pair)
+                    return utils.create_act({{'delete',#m.start_pair,#m.end_pair}},o)
                 end
             end
         end

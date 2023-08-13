@@ -201,6 +201,7 @@ return {
     },
     ext_alpha={
         {"don|t","'","don'|t"},
+        {"'a|'","'","'a'|"},
         {"f|","'","f'|'",{ft='python'}},
         {"fr|","'","fr'|'",{ft='python'}},
         {"a' |","'","a' '|'",{c={extensions={alpha={filter=true}}}}},
@@ -240,8 +241,8 @@ return {
             return o.line:sub(o.col-1,o.col-1)~='#' end,filter=true}}}}},
         {'"|"','(','"(|"',{c={extensions={cond={cond=function(fns) return not fns.in_string() end}}}}},
     },
-    SKIP_ext_fly={
-        {'[{( | )}]',')','[{(  )}]|'},
+    ext_fly={
+        {'[{( | )}]',']','[{(  )}]|'},
         {'("|")',')','("")|',{c={{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}}}},
         {'"(|)"','"','"()"|',{c={{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}}}},
         {[['"' "(|)"]],'"',[['"' "()"|]],{skip=true,c={{'"','"',p=11,fly=true}}}},

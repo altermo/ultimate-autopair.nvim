@@ -4,7 +4,7 @@ local open_pair=require'ultimate-autopair.profile.default.utils.open_pair'
 local M={}
 M.fn={
     can_check=function (m,o)
-        if o.line:sub(o.col,o.col-1+#m.pair)~=m.pair then return end
+        if not m.fn.can_check_pre(o) then return end
         local count2=open_pair.count_start_pair(m,o,o.col)
         --Same as: count_open_end_pair_after
         local count1=open_pair.count_end_pair(m,o,o.col-1)
@@ -12,13 +12,16 @@ M.fn={
         if count1==0 or count1>count2 then return end
         return true
     end,
+    can_check_pre=function (m,o)
+        return o.line:sub(o.col,o.col-1+#m.pair)==m.pair
+    end
 }
 ---@param m prof.def.m.pair
 ---@return core.check-fn
 function M.check_wrapper(m)
     return function (o)
         if not m.fn.can_check(o) then return end
-        return utils.movel(#m.pair)
+        return utils.create_act({{'l',#m.pair}},o)
     end
 end
 ---@param q prof.def.q

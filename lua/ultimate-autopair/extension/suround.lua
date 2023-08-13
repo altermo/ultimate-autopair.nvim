@@ -13,7 +13,12 @@ function M.check(o,m)
     if not m.fn.can_check_pre(o) then return end
     if m.fn.find_corresponding_pair(o,o.col-#m.pair+1) then return end
     local num=index-o.col+#pair.end_pair
-    return m.pair:sub(-1)..utils.movel(num)..m.end_pair..utils.moveh(num+#m.end_pair)
+    return utils.create_act({
+        m.pair:sub(-1),
+        {'l',num},
+        m.end_pair,
+        {'h',num+#m.end_pair}
+    },o)
 end
 ---@param m prof.def.module
 ---@param _ prof.def.ext

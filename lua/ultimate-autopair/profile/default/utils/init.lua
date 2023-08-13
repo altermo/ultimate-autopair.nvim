@@ -131,15 +131,17 @@ end
 ---@param next boolean?
 ---@param type string?
 ---@param filter fun(pair:prof.def.m.pair):boolean?
+---@param nofilter boolean?
 ---@return prof.def.m.pair[]
-function M.get_pairs_by_pos(o,col,type,next,filter)
+function M.get_pairs_by_pos(o,col,type,next,filter,nofilter)
+    local utils=require'ultimate-autopair.utils'
     type=type or 'pair'
     local ret={}
     for _,i in ipairs(M.filter_for_opt(type)) do
         ---@cast i prof.def.m.pair
         if (not next and i.pair==o.line:sub(col-#i.pair,col-1)) or
             (next and i.pair==o.line:sub(col,col+#i.pair-1)) and
-            (not filter or filter(i)) and i.filter(o) then
+            (not filter or filter(i)) and (nofilter or i.filter(utils._get_o_pos(o,col-(next and 0 or #i.pair)))) then
             table.insert(ret,i)
         end
     end

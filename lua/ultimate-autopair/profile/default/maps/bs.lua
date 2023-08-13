@@ -35,8 +35,8 @@ function M.init(conf,mconf,ext)
     m.iconf=conf
     m.conf=conf.conf or {}
     m.map=mconf.map~=false and conf.map
-    m.extensions=ext
     m.cmap=mconf.cmap~=false and conf.cmap
+    m.extensions=ext
     m[default.type_def]={'backspace'}
     m.p=conf.p or mconf.p or 10
     m.doc='autopairs backspace key map'

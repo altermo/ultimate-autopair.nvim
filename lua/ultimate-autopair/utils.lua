@@ -68,7 +68,7 @@ function M.getcol()
 end
 ---@param num? number
 ---@return string
-function M.movel(num)
+function M._movel(num)
     if M.incmd() then
         return M.key_right:rep(num or 1)
     end
@@ -76,7 +76,7 @@ function M.movel(num)
 end
 ---@param num? number
 ---@return string
-function M.moveh(num)
+function M._moveh(num)
     if M.incmd() then
         return M.key_left:rep(num or 1)
     end
@@ -92,8 +92,30 @@ end
 ---@param pre? number
 ---@param pos? number
 ---@return string
-function M.delete(pre,pos)
+function M._delete(pre,pos)
     return M.key_bs:rep(pre or 1)..M.key_del:rep(pos or 0)
+end
+---@param actions ({[1]:("home"|"end"|"delete"|"l"|"h"|"k"|"j"|"newline"),[number]:any}|string)[]
+---@param o core.o
+---@return string
+function M.create_act(actions,o)
+    --TODO: implement for utf8
+    _=o
+    local ret=''
+    for _,v in ipairs(actions) do
+        local c=v[1]
+        if type(v)=='string' then ret=ret..v
+        elseif c=='newline' then ret=ret..'\r'
+        elseif c=='home' then ret=ret..M.key_home
+        elseif c=='end' then ret=ret..M.key_end
+        elseif c=='j' then ret=ret..M.key_down
+        elseif c=='k' then ret=ret..M.key_up
+        elseif c=='h' then ret=ret..M._moveh(v[2])
+        elseif c=='l' then ret=ret..M._movel(v[2])
+        elseif c=='delete' then ret=ret..M._delete(v[2],v[3])
+        end
+    end
+    return ret
 end
 ---@param node TSNode
 ---@param o core.o

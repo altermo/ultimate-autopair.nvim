@@ -103,10 +103,11 @@ M.conf={
         filetype={p=90,nft={'TelescopePrompt'},tree=true},
         escape={filter=true,p=80},
         string={p=60,tsnode={'string','raw_string'}},
+        --tsnode={p=50,seperate={'comment'}},
         cond={p=40,filter=true},
-        alpha={p=30,filter=true},
+        alpha={p=30,filter=false},
         suround={p=20},
-        --fly={other_char={' '},nofilter=false,p=10,undomapconf={},undomap=nil,undocmap=nil,only_jump_end_pair=false},
+        fly={other_char={' '},nofilter=false,p=10,undomapconf={},undomap=nil,undocmap=nil,only_jump_end_pair=false},
     },
     internal_pairs={-- *ultimate-autopair-pairs-default-pairs*
         {'[',']',fly=true,dosuround=true,newline=true,space=true,fastwarp=true},

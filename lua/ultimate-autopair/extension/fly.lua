@@ -7,19 +7,20 @@ local M={}
 ---@param m prof.def.m.pair
 ---@return string?
 function M.check(conf,o,m)
-    if o.line:sub(o.col,o.col-1+#m.pair)==m.pair then return end
+    if m.fn.can_check_pre(o) then return end
     local next_char_index
     local i=o.col
     while i<=#o.line do
-        local pair=default.end_pair(i,o,nil,function (p)
+        local pair=default.get_pairs_by_pos(o,i,'end',true,function (p)
             return p.conf.fly
-        end,conf.nofilter)
+        end,conf.nofilter)[1]
         if pair and pair.pair==m.pair then
             next_char_index=i
             break
+        elseif pair and pair.conf.fly then
         elseif vim.tbl_contains(conf.other_char,o.line:sub(i,i)) then
-        elseif conf.only_jump_end_pair
-            and default.start_pair(i,o,true,function (p)
+        elseif not conf.only_jump_end_pair
+            and default.get_pairs_by_pos(o,i,'start',true,function (p)
                 return p.conf.fly
             end,conf.nofilter) then
         else
@@ -28,43 +29,44 @@ function M.check(conf,o,m)
         i=i+(pair and #pair.pair or 1)
     end
     if not next_char_index then return end
-    if m.fn.check_end_pair(utils.set_o(o,{filter=conf.filter}),i) then
-        M.save={o.line,o.col,next_char_index-o.col+#m.pair,m.pair}
-        return utils.movel(next_char_index-o.col+#m.pair)
-    end
-end
----@param o core.o
----@return string?
-function M.map_check(o)
-    if M.save[1]~=o.line or M.save[2]~=(o.col-M.save[3]) then return end
-    return utils.moveh(M.save[3])..M.save[4]
+    M.save={o.line,o.col,next_char_index-o.col+#m.pair,m.pair}
+    return utils.create_act({{'l',next_char_index-o.col+#m.pair}},o)
 end
 ---@param ext prof.def.ext
 ---@param mconf prof.def.conf
----@return prof.def.m.map?
-function M.init_map(ext,mconf)
-    local conf=ext.conf.undoconf
-    if not conf then return end
+---@return prof.def.m.map[]
+function M.init_module(ext,mconf)
     local m={}
-    m.map=mconf.map~=false and conf.map
-    m.cmap=mconf.cmap~=false and (conf.cmap or (conf.cmap~=false and conf.map))
-    m.conf=conf
-    m.get_map=default.get_mode_map_wrapper(m.map,m.cmap)
-    m.p=conf.p or mconf.p or 10
-    m.filter=function (_) return true end
-    m.check=function (o)
-        if not default.key_check_cmd(o,m.map,m.cmap) then return end
-        if not m.filter(o) then return end
-        return M.map_check(o)
+    m.iconf=ext.conf
+    m.conf=ext.conf.undomapconf or {}
+    m.map=mconf.map~=false and ext.conf.undomap
+    m.cmap=mconf.cmap~=false and ext.conf.undocmap
+    m.extensions=ext
+    m[default.type_def]={}
+    m.p=m.conf.p or mconf.p or 10
+    m.doc='autopairs undo fly keymap'
+
+    m.check=M.wrapp_undo(m)
+    m.filter=default.def_filter_wrapper(m)
+    default.init_extensions(m,m.extensions)
+    m.get_map=default.def_map_get_map_wrapper(m)
+    default.extend_map_check_with_map_check(m)
+    return {m}
+end
+---@param _ prof.def.m.map
+---@return core.check-fn
+function M.wrapp_undo(_)
+    return function (o)
+        if M.save[1]~=o.line or M.save[2]~=(o.col-M.save[3]) then return end
+        return utils.create_act({{'h',M.save[3]},M.save[4]},o)
     end
-    return m
 end
 ---@param m prof.def.module
 ---@param ext prof.def.ext
 function M.call(m,ext)
     if not default.get_type_opt(m,{'end'}) then return end
     local conf=ext.conf
-    if not conf.fly then return end
+    if not m.conf.fly then return end
     ---@cast m prof.def.m.pair
     local check=m.check
     m.check=function (o)
