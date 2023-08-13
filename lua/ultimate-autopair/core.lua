@@ -1,16 +1,16 @@
 --Internal
 ---@class core.o
----@field key string
----@field line string
----@field lines string[]
----@field col number
----@field row number
----@field _offset fun(row:number):number
----@field _deoffset fun(row:number):number
----@field _coloffset fun(col:number,row:number):number
----@field _decoloffset fun(col:number,row:number):number
----@field incmd boolean
----@field save table
+---@field key string --C
+---@field line string --C
+---@field lines string[] --C
+---@field col number --*
+---@field row number --*
+---@field _offset fun(row:number):number --C
+---@field _deoffset fun(row:number):number --C
+---@field _coloffset fun(col:number,row:number):number --C
+---@field _decoloffset fun(col:number,row:number):number --C
+---@field incmd boolean --C
+---@field save table --*
 ---@class core.module
 ---@field get_map? core.get_map-fn
 ---@field oinit? core.oinit-fn

@@ -98,13 +98,18 @@ end
 ---@return number?
 function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
     --TODO! OPTIMIZE: is called over 3000 times in large file...
+    --CURRENT PROBLEM: o.save[...] gets reset?
     ---TEMP/
     --if not o.save[M.count_ambigious_pair] then
-        --o.save[M.count_ambigious_pair]=vim.defaulttable()
+        --o.save[M.count_ambigious_pair]={}
     --end
-    --local save=o.save[M.count_ambigious_pair]
-    --if save[pair][o][col or -1][gotoend or -1][Icount or false]~=nil then
-        --return unpack(save[pair][o][col or -1][gotoend or -1][Icount or false])
+    --if not o.save[M.count_ambigious_pair][pair] then
+        --o.save[M.count_ambigious_pair][pair]={}
+    --end
+    --local save=o.save[M.count_ambigious_pair][pair]
+    --local key=o.row..';'..(col or -1)..';'..(({[true]=1,[false]=0})[gotoend] or -1)..';'..(Icount or -1)
+    --if save[key] then
+        --return unpack(save[key])
     --end
     ---/TEMP
     local spair=pair.pair
@@ -140,9 +145,9 @@ function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
     end
     ---TEMP/
     --if count%2~=1 then
-        --save[pair][o][col or -1][gotoend or -1][Icount or false]=false
+        --save[key]={}
     --else
-        --save[pair][o][col or -1][gotoend or -1][Icount or false]={index,rowindex}
+        --save[key]={index,rowindex}
     --end
     ---/TEMP
     if count%2~=1 then return end

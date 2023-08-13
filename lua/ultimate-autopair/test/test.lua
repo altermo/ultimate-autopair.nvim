@@ -243,6 +243,7 @@ return {
     },
     ext_fly={
         {'[{( | )}]',']','[{(  )}]|'},
+        {'(|a)',')','()|a)'},
         {'("|")',')','("")|',{c={{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}}}},
         {'"(|)"','"','"()"|',{c={{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}}}},
         {[['"' "(|)"]],'"',[['"' "()"|]],{skip=true,c={{'"','"',p=11,fly=true}}}},

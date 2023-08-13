@@ -20,9 +20,9 @@ function M.check(conf,o,m)
         elseif pair and pair.conf.fly then
         elseif vim.tbl_contains(conf.other_char,o.line:sub(i,i)) then
         elseif not conf.only_jump_end_pair
-            and default.get_pairs_by_pos(o,i,'start',true,function (p)
+            and #default.get_pairs_by_pos(o,i,'start',true,function (p)
                 return p.conf.fly
-            end,conf.nofilter) then
+            end,conf.nofilter)>0 then
         else
             return
         end
