@@ -97,21 +97,6 @@ end
 ---@return number?
 ---@return number?
 function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
-    --TODO! OPTIMIZE: is called over 3000 times in large file...
-    --CURRENT PROBLEM: o.save[...] gets reset?
-    ---TEMP/
-    --if not o.save[M.count_ambigious_pair] then
-        --o.save[M.count_ambigious_pair]={}
-    --end
-    --if not o.save[M.count_ambigious_pair][pair] then
-        --o.save[M.count_ambigious_pair][pair]={}
-    --end
-    --local save=o.save[M.count_ambigious_pair][pair]
-    --local key=o.row..';'..(col or -1)..';'..(({[true]=1,[false]=0})[gotoend] or -1)..';'..(Icount or -1)
-    --if save[key] then
-        --return unpack(save[key])
-    --end
-    ---/TEMP
     local spair=pair.pair
     local sfilter=function(row,col_) return utils._filter_pos(pair.start_m.filter,o,col_,row) end
     local efilter=function(row,col_) return utils._filter_pos(pair.end_m.filter,o,col_,row) end
@@ -131,7 +116,7 @@ function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
             if M.I.match(spair,lline) and
                 ((count%2==1 and sfilter(rrow,i)) or
-                (count%2==0 and efilter(row,i))) then
+                (count%2==0 and efilter(rrow,i))) then
                 count=count+1
                 if not gotoend or not index then
                     index=i
@@ -143,13 +128,6 @@ function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
             end
         end
     end
-    ---TEMP/
-    --if count%2~=1 then
-        --save[key]={}
-    --else
-        --save[key]={index,rowindex}
-    --end
-    ---/TEMP
     if count%2~=1 then return end
     return index,rowindex
 end

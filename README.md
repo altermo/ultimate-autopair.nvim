@@ -1,12 +1,17 @@
 **:exclamation: Ultimate-autopair is currently in the _alpha_ stage of development. Some aspects may change or break, and documentation might occasionally be inaccurate.**
 # Ultimate-autopair.nvim 0.6.0-pre-alpha
 
-IMPORTANT:
-If your comming from a previous verson with broken config, check out the [Q&A](./Q&A.md) first
 
 [Ultimate-autopair](https://github.com/altermo/ultimate-autopair.nvim) plugin aims to always work as you expect, while making it relatively easy to configure.\
 For development version, check out [development](https://github.com/altermo/ultimate-autopair.nvim/tree/development)\
-Requires neovim 0.9 (for older versions of neovim, check previous versions of plugin)
+Requires **neovim 0.9** (for older versions of neovim, check previous versions of plugin)\
+For many features, including string filtering, requires **treesitter**.
+## Added/removed features of version 0.6
+If your comming from a previous version with broken config, check out the [Q&A](./Q&A.md) first
++ String extension got removed in favour of tsnode string detection.
++ UTF8 extension got removed in favour of builtin UTF8 support
++ Rule extension got removed in favour of new extension cond
++ New extension cond: create conditions
 ## Installation
 Packer:
 ```lua

@@ -9,8 +9,8 @@ M.fns={
     end,
     in_string=function (opt,col,row,conf)
         local new_o=utils._get_o_pos(opt.o,col,row)
-        local str=require'ultimate-autopair.extension.string'
-        return str.instring(new_o,conf or {tsnode={'string','raw_string'}})
+        local tsnode=require'ultimate-autopair.extension.tsnode'
+        return false --TODO
     end,
     in_check=function (opt)
         return opt.incheck
@@ -24,7 +24,6 @@ M.fns={
         local ft=utils.getsmartft(new_o)
         return vim.filetype.get_option(ft,'lisp')
     end,
-    --in_pair=function () end --TODO
     is_pair=function (opt)
         return default.get_type_opt(opt.m,'pair')
     end,

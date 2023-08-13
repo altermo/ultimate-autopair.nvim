@@ -146,16 +146,13 @@
 + [ ] newline autoclose only pairs (`if| > CR > if\n|\nend`)
 + [x] full utf8 suport
 + [ ] all mappings p set depending on mconf.p if not set
-+ [ ] make a in_pair_map(pair,line): returns a table of bools (or maybe function) of whether in pair
 + [ ] core option to have buffer/InsertCharPre way of keybindings
 + [ ] auto set previous mapping as fallback
 + [ ] fastwarp to broad: make an option to not make it so (maybe: only hop over treesitter nodes/functions calls with dots and calls `M.fn(a)`)
 + [ ] object which contains a list of the pairs, like `(foo'')` > `{'(',"'","'",)}` pluss extra info (position,count,...)
 + [ ] caching values from open_pair functions
 + [x] disable in comment (https://github.com/altermo/ultimate-autopair.nvim/issues/32)
-+ [ ] in_tsnode_map: same as in_pair_map but for tsnodes
 + [ ] create an extension (or add a cmd to rule) which checks if in_pair/not_in_pair
-+ [ ] make pairt.in_pair node detector recursively find if in node (option)
 + [ ] make tsnode extension recursively find if in node (option)
 + [ ] `default.matching_pair_start/end` get a pair of pairs `(|foo)` > `{(=1,)=5}`
 + [x] multiple same file maps (like `bs`) in one config with different options

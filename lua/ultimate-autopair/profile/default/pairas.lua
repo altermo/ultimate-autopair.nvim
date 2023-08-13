@@ -7,12 +7,6 @@ M.fn={
         if not m.fn.can_check_pre(o) then return end
         return not open_pair.open_pair_ambigous(m,o)
     end,
-    in_pair=function (m,o)
-        local opab,opabr=open_pair.open_pair_ambigous_before(m,o,o.col)
-        local opaa,opaar=open_pair.open_pair_ambigous_after(m,o,o.col)
-        if not (opaa and opab) then return end
-        return opab,opaa+#m.pair-1,opabr,opaar
-    end,
     find_corresponding_pair=function (m,o,col)
         col=col+#m.pair
         local opab,_=open_pair.open_pair_ambigous_before(m,o,col)

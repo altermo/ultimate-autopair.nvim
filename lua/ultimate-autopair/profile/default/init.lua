@@ -65,7 +65,6 @@
 ---@field multiline boolean
 ---@class prof.def.m_type
 ---@class prof.def.pair.fn
----@field in_pair? fun(o:core.o):number?,number?,number?,number?
 ---@field can_check fun(o:core.o):boolean?
 ---@field can_check_pre fun(o:core.o):boolean?
 ---@field find_corresponding_pair fun(o:core.o,col:number):number?,number?
