@@ -1,29 +1,27 @@
 *ultimate-autopair.nvim* The ultimate-autopair plugin
 ==============================================================================
-ultimate-autopair-workings
-------------------------------------------------------------------------------
-pair-insertion-rules *ultimate-autopair-pair-insertion-rules*
-UA uses a complex and sophisticated method to detect whether to
-insert/hop pair.
-Start-pair checks if there is no open end-pair.
-End-pair checks if it has a corresponding start-pair and no open start-pair.
-Start-ambiguous-pair checks if the number of such pairs is even.
-End-ambiguous-pair checks if its inside a pair of itself.
-==============================================================================
-SETUP                                                *ultimate-autopair-setup*
+SETUP                                                *ultimate-autopair-SETUP*
 ------------------------------------------------------------------------------
 setup-system                                *ultimate-autopair-setup-system*
-Here are the list of functions, and table, which gets return by `require'ua'`.
-`ua.setup(conf?)` clears `ua.configs`, adds `conf` to `ua.configs` and runs `ua.init()`.
-`ua.configs` is a table that contains all the configs to be used.
-`ua.init(confs?)` (clears and) initializes the plugin with configs from
-  `ua.configs` or `confs` if `confs` is set. {NOTE}: it doesn't check for version.
+Here are the list of functions which gets return by `require'ultimate-autopair'`.
+ *ultimate-autopair-setup*
+`ua.setup(conf?)` checks version and runs `ua.init({ua.extend_default(conf)})`.
+ *ultimate-autopair-init*
+`ua.init(confs)` (clears and) initializes the plugin with configs from `confs`.
+  {NOTE}: it doesn't check for version.
+ *ultimate-autopair-clear*
 `ua.clear()` clears the mappings and autocmds.
-`ua.list()` list the values from mem (pairs,mappings,autocmds)
+ *ultimate-autopair-list*
+`ua.list()` list the values from mem (mem contains: pairs,mappings,autocmds)
+ *ultimate-autopair-toggle*
 `ua.toggle()` toggle the maps/autocmds, does not delete.
+ *ultimate-autopair-disable*
 `ua.disable()` disables the maps/autocmds, does not delete.
+ *ultimate-autopair-enable*
 `ua.enable()` enables the maps/autocmds.
+ *ultimate-autopair-isenabled*
 `ua.isenabled()` returns a boolean value of whether UA is enabled.
+ *ultimate-autopair-extend-default*
 `ua.extend_default(conf)` extends `conf` with the default config.
 ------------------------------------------------------------------------------
 config                                              *ultimate-autopair-config*
@@ -93,4 +91,89 @@ Example: >lua
 prof-default                                  *ultimate-autopair-prof-default*
 The default profile is the default pair profile.
 Options can be found at: |ultimate-autopair-default-config|
+==============================================================================
+ultimate-autopair-workings
+------------------------------------------------------------------------------
+start-pair-insertion              *ultimate-autopair-add-start-pair-insertion*
+When inserting start pair, then if there is not already a corresponding end
+pair in the line, then insert an end pair.
+Example (`*` is cursor): >
+ | before | keys | after |
+ | *      | (    | (*)   |
+ | *      | ((   | ((*)) |
+ | *)     | (    | (*)   |
+ | (*))   | (    | ((*)) |
+<
+------------------------------------------------------------------------------
+end-pair-insertion                      *ultimate-autopair-end-pair-insertion*
+When inserting end pair and next is end pair, then if there is a corresponding
+start pair in the line, then hop over the end pair.
+Example (`*` is cursor): >
+ | before | keys | after |
+ | (*)    | )    | ()*   |
+ | (*     | )    | ()*   |
+ | ((*)   | )    | (()*) |
+ | (*))   | )    | ()*)  |
+<
+------------------------------------------------------------------------------
+ambiguous-pair-insertion          *ultimate-autopair-ambiguous-pair-insertion*
+When inserting ambiguous pair, if the next is ambiguous pair which has a
+corresponding pair then hop over, otherwise if there's not already a
+corresponding pair on the line then insert the ambiguous pair double
+Example (`*` is cursor): >
+ | before | keys | after   |
+ | *      | '    | '*'     |
+ | '*     | '    | ''*     |
+ | *'     | '    | '*'     |
+ | '*'    | '    | ''*     |
+ | ' * '  | '    | ' '*' ' |
+ | ''*''  | '    | '''*''' |
+<
+==============================================================================
+OTHER                                                *ultimate-autopair-other*
+------------------------------------------------------------------------------
+ultimate-autopair-debug                              *ultimate-autopair-debug*
+Ultimate-autopair has a few scripts to run debug. The first one is `ua._list`
+which will allow you to select wanted pair and see information about sed pair.
+The second one is `debug` which automatically activates when a mapping throws
+an error.
+------------------------------------------------------------------------------
+ultimate-autopair-test                                *ultimate-autopair-test*
+The test file sits in the `test` directory. You can run the test by sourcing
+it with neovim or by running `:checkhealth ultimate-autopair`. Set values
+`_G.UA_DEV=true` for dev testing (and `_G.UA_DEV='ok'` to also report OKs).
+------------------------------------------------------------------------------
+ultimate-autopair-notes                              *ultimate-autopair-notes*
+The root directory `notes` contains notes and scribbles about the plugin.
+------------------------------------------------------------------------------
+ultimate-autopair-experimental                *ultimate-autopair-experimental*
+`experimental` directory contains experimental features.
+==============================================================================
+WRITING-EXTENSIONS                      *ultimate-autopair-writing-extensions*
+Todo: write documentation
+==============================================================================
+WRITING-PROFILE                             *ultimate-autopair-writing-prilfe*
+Todo: write documentation
+==============================================================================
+GUIDE                                                *ultimate-autopair-guide*
+------------------------------------------------------------------------------
+start-here                                                 *ultimate-autopair*
+This is a quick guide of the plugin, it is intended for people who just want
+to use it with only a few changes.
+The default setup is: >lua
+ require'ultimate-autopair'.setup{}
+< Though you can also do this:(if you later want to use multiple configs) >lua
+ local ua=require'ultimate-autopair'
+ local configs={ua.extend_default({})}
+ ua.init(configs)
+<
+TODO: continue about:
++ enabling maybe wanted features
++ link to Q&A.md
++ creating simple pairs
++ how extensions work
++ how profiles work (and how they push to mem (and what mem is))
+
+
+
 vim:ft=help:

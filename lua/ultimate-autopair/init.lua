@@ -3,7 +3,6 @@ local debug=require'ultimate-autopair.debug'
 local default=require'ultimate-autopair.default'
 local core=require'ultimate-autopair.core'
 local M={}
-M.configs={}
 function M.toggle() core.disable=not core.disable end
 function M.enable() core.disable=false end
 function M.disable() core.disable=true end
@@ -23,14 +22,11 @@ function M.list()
 end
 ---@param conf? prof.config
 function M.setup(conf)
-    M.configs={}
     if not M.skipversioncheck and vim.fn.has('nvim-0.9.0')~=1 then error('Requires at least version nvim-0.9.0') end
-    table.insert(M.configs,M.extend_default(conf or {}))
-    M.init()
+    M.init({M.extend_default(conf or {})})
 end
 ---@param configs? prof.config[]
 function M.init(configs)
-    configs=configs or M.configs
     debug.run(core.clear,{})
     debug.run(prof.init,{info=configs,args={configs}})
     debug.run(core.init,{info=configs})
