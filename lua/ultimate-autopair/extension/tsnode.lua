@@ -86,6 +86,7 @@ function M.filter(o,save,conf)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         if vim.tbl_contains({'string','raw_string'},node:type()) and erow+1==o.row and ecol==o.col then return true end --TODO: hack
+        --TODO: maybe offset by one
         return false
     end
     return true

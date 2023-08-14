@@ -94,12 +94,15 @@ end
 ---@param col number?
 ---@param gotoend "both"|boolean?
 ---@param Icount number?
+---@param ret_pos boolean?
 ---@return number?
 ---@return number?
-function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
+function M.count_ambigious_pair(pair,o,col,gotoend,Icount,ret_pos)
     local spair=pair.pair
     local sfilter=function(row,col_) return utils._filter_pos(pair.start_m.filter,o,col_,row) end
-    local efilter=function(row,col_) return utils._filter_pos(pair.end_m.filter,o,col_,row) end
+    local efilter=function(row,col_)
+        return utils._filter_pos(pair.end_m.filter,o,col_,row)
+    end
     local count=Icount or 0
     local index
     local rowindex
@@ -115,8 +118,8 @@ function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
             if M.I.match(spair,lline) and
-                ((count%2==1 and sfilter(rrow,i)) or
-                (count%2==0 and efilter(rrow,i))) then
+                ((count%2==1 and efilter(rrow,i)) or
+                (count%2==0 and sfilter(rrow,i))) then
                 count=count+1
                 if not gotoend or not index then
                     index=i
@@ -128,7 +131,7 @@ function M.count_ambigious_pair(pair,o,col,gotoend,Icount)
             end
         end
     end
-    if count%2~=1 then return end
+    if not ret_pos and count%2==0 then return end
     return index,rowindex
 end
 
@@ -161,17 +164,10 @@ end
 ---@param pair prof.def.m.pair
 ---@param o core.o
 ---@param col number
----@return number?
----@return number?
-function M.open_pair_ambigous_before(pair,o,col)
-    return M.count_ambigious_pair(pair,o,col-1)
-end
----@param pair prof.def.m.pair
----@param o core.o
----@param col number
----@return number?
----@return number?
-function M.open_pair_ambigous_after(pair,o,col)
-    return M.count_ambigious_pair(pair,o,col,true)
+---@return boolean?
+function M.open_pair_ambigous_before_and_after(pair,o,col)
+    local count=M.count_ambigious_pair(pair,o,col-1) and 1 or 0
+    local end_count=M.count_ambigious_pair(pair,o,col,true,count)
+    return count==1 and not end_count
 end
 return M

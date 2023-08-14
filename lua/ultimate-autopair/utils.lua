@@ -17,7 +17,7 @@ function M.getline(linenr)
         return vim.fn.getcmdline()--[[@as string]]
     end
     linenr=linenr or M.getlinenr()
-    return unpack(vim.api.nvim_buf_get_lines(0,linenr-1,linenr,false))
+    return unpack(M._getlines(linenr-1,linenr))
 end
 ---@param start number
 ---@param end_ number
@@ -137,7 +137,7 @@ function M.gettsnode(o)
         if not cache[M.gettsnode] then cache[M.gettsnode]={} end
         cache=cache[M.gettsnode]
         if cache.no_parser then return end
-        if cache[tostring(linenr)..';'..tostring(col)] then
+        if cache[tostring(linenr)..';'..tostring(col)]~=nil then
             return cache[tostring(linenr)..';'..tostring(col)] or nil
         end
     end
@@ -145,21 +145,35 @@ function M.gettsnode(o)
         (cache or {}).no_parser=true
         return
     end
-    local s,ret
+    local getnode
     if vim.treesitter.get_node then
-        s,ret=pcall(vim.treesitter.get_node,{bufnr=0,pos={linenr,col}})
+        getnode=function (linenr_,col_)
+            return pcall(vim.treesitter.get_node,{bufnr=0,pos={linenr_,col_}})
+        end
     else
-        ---@diagnostic disable-next-line: deprecated
-        s,ret=pcall(vim.treesitter.get_node_at_pos,0,linenr,col,{})
+        getnode=function (linenr_,col_)
+            ---@diagnostic disable-next-line: deprecated
+            return pcall(vim.treesitter.get_node_at_pos,0,linenr_,col_,{})
+        end
     end
+    local s,ret=getnode(linenr,col)
     if not s then ret=nil end
-    (cache or {})[tostring(linenr)..';'..tostring(col)]=ret
+    if ret and col==#unpack(M._getlines(linenr,linenr+1)) then
+        local st,node=getnode(linenr,col-1)
+        if st and node then
+            local _,end_=node:end_()
+            if o.col==end_+1 then ret=node end
+        end
+    end
+    (cache or {})[tostring(linenr)..';'..tostring(col)]=ret or false
+    if not ret then ret=nil end
     return ret
 end
 ---@param o core.o
 ---@param notree boolean?
 ---@return string
-function M.getsmartft(o,notree) --TODO: fix for empty lines
+function M.getsmartft(o,notree)
+    --TODO: fix for empty lines
     --TODO: use vim.treesitter.get_string_parser for cmdline
     local cache=o.save
     local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1

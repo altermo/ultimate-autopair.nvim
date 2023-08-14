@@ -104,7 +104,7 @@ M.conf={
         escape={filter=true,p=80},
         tsnode={p=60,seperate={'comment','string','raw_string'},tree=true,notree={'markdown_inline'}},
         cond={p=40,filter=true},
-        alpha={p=30,filter=false},
+        alpha={p=30,filter=false,all=false},
         suround={p=20},
         fly={other_char={' '},nofilter=false,p=10,undomapconf={},undomap=nil,undocmap=nil,only_jump_end_pair=false},
     },

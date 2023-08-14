@@ -21,14 +21,17 @@ If you want to to do that, recommended is `{space={enable=false},space2={enable=
 ### Set multiple mapping for, for example, backspace
 Use `{bs={map={'your_map1','your_map2'}}}`
 ### Disable the plugin in lisp
-<!--TODO-->
+Use `{extensions={cond={cond=function(fn) return not fn.in_lisp() end}}}`
 ### Toggle the plugin
 Use `require'ultimate-autopair'.toggle()`
 ### Disable in comment
-<!--TODO Recommended is `{extensions={tsnode={outside={'comment'},p=50,filter=true}}}` \
-Note: some languages don't detect the node containing comment as `comment` in a weird way, use `:=vim.treesitter.get_node({}):type()` to get the actual node type (I will fix this later).-->
+Use `{extensions={cond={cond=function(fn) return fn.get_tsnode_type()~='comment' end}}}`\
+NOTE: in markdown, comments have the ts type `html_block`.\
+If you want to detect those use:\
+`{extensions={cond={cond=function(fn) return fn.get_tsnode_type()~='comment' and fn.get_tsnode_type()~='html_block' end}}}`
+
 ### Disable in macros
-<!--TODO-->
+Use `{extensions={cond={cond=function(fn) return not fn.in_macro() end}}}`
 
 ## Why questions about update
 ### Why was `UTF8` moved to the core

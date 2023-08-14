@@ -8,15 +8,13 @@ M.alpha_re=[=[\v[[=a=][=b=][=c=][=d=][=e=][=f=][=g=][=h=][=i=][=j=][=k=][=l=][=m
 ---@return number
 ---@return number
 function M.get_len(m,incheck)
-    local offset=incheck and 1 or 0
     if m.pair then
-        if default.get_type_opt(m,'start') then
-            return #m.pair-offset,0
-        elseif default.get_type_opt(m,'end') then
-            return 0,#m.pair
+        if incheck and default.get_type_opt(m,'start') then
+            return #m.pair-1,0
         end
+        return 0,#m.pair
     end
-    return 0,1-offset
+    return 0,(incheck and 0 or 1)
 end
 ---@param o core.o
 ---@param m prof.def.module
@@ -51,7 +49,7 @@ end
 ---@param m prof.def.module
 ---@param ext prof.def.ext
 function M.call(m,ext)
-    if not default.get_type_opt(m,'charins') then return end
+    if not default.get_type_opt(m,ext.conf.all and 'charins' or 'start') then return end
     local check=m.check
     m.check=function(o)
         if M.check(o,m,ext,true) then return end

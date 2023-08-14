@@ -40,6 +40,11 @@ M.fns={
         local new_o=utils._get_o_pos(opt.o,col,row)
         return utils.gettsnode(new_o)
     end,
+    get_tsnode_type=function (opt,col,row)
+        local new_o=utils._get_o_pos(opt.o,col,row)
+        local node=utils.gettsnode(new_o)
+        return not node or node:type()
+    end,
     get_ft=function (opt,col,row,notree)
         local new_o=utils._get_o_pos(opt.o,col,row)
         return utils.getsmartft(new_o,notree)
