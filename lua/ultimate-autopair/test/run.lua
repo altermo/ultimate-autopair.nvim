@@ -222,6 +222,15 @@ function M.run_action(action,lines,row,col,opt)
         elseif action:sub(i,i+2)=='\x80kD' then
             delete(0,1)
             i=i+2
+        elseif action:sub(i,i+2)=='\x80kd' then
+            row=row+1
+            i=i+2
+        elseif action:sub(i,i+2)=='\x80ku' then
+            row=row-1
+            i=i+2
+        elseif action:sub(i,i+2)=='\x80kh' then
+            col=1
+            i=i+2
         elseif action:sub(i,i+4)==(opt.incmd and '\x80kr' or '\aU\x80kr') then
             col=col+1
             i=i+4

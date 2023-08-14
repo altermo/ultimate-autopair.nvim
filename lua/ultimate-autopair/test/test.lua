@@ -58,6 +58,7 @@ return {
         {'[[|]]','','[|]'},
         {'[[|]','','[|]'},
         {'[|foo]','','|foo'},
+        {'[|\n]','','|\n'},
         {'[ ]|','','|',{skip=true}},
         {'[ |foo ]','','[foo]',{skip=true}},
         {'(|)','H','|',{c={bs={map={'<bs>','H'}}}}},
@@ -75,6 +76,7 @@ return {
         {'(|foo)','','|foo)',{c={bs={overjumps=false}}}},
         {'( | )','','(| )',{c={bs={space=false}},skip=true}},
         {'"|foo"','','|foo',{c={config_internal_pairs={{'"','"',bs_overjumps=true}}}}},
+        {'"|\n"','','|\n',{c={config_internal_pairs={{'"','"',bs_overjumps=true,multiline=true}}}}},
         {'<>\n|\n<>','','<>|<>',{c={{'<>','<>',newline=true}},skip=true}},
         {'<< | >>','','<<|>>',{c={{'<<','>>',space=true}},skip=true}},
         {'<< |foo >>','','<<|foo>>',{c={{'<<','>>',space=true}},skip=true}},
@@ -269,8 +271,9 @@ return {
         {'|\n")"','(','(|)\n")"',{ts=true}},
         {'"|"\n)','(','"(|)"\n)',{ts=true}},
         {"'''|'","'","''''|",{ts=true,ft='lua'}},
-        {[["'"|"'"]],'"',[["'""|""'"]],{ts=true}}, --TODO: fix
-        {[['"' '"' |]],"'",[['"' '"' '|']],{ts=true}}, --TODO: fix
+        {[["'"|"'"]],'"',[["'""|""'"]],{ts=true}},
+        {[['"' '"' |]],"'",[['"' '"' '|']],{ts=true}},
+        {"f'|","'","f'|'",{ts=true,ft='lua',skip=true}}, --TODO: fix
         --TODO: test multiline string (python)
     },
     SKIP_options={

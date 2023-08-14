@@ -44,12 +44,14 @@ function M.backspace_wrapper(m)
                     local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
                     if col then
                         return utils.create_act({
-                            {'delete',#m.start_pair},
-                            {'down',row-o.row},
-                            {'move',col-o.col},
+                            {'j',row-o.row},
+                            {'home'},
+                            {'move',col-1},
                             {'delete',0,#m.end_pair},
-                            {'up',row-o.row},
-                            {'move',o.col-col},
+                            {'k',row-o.row},
+                            {'home'},
+                            {'move',o.col-1},
+                            {'delete',#m.start_pair},
                         },o)
                     end
                 end
