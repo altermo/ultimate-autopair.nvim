@@ -104,15 +104,27 @@ function M.create_act(actions,o)
     local ret=''
     for _,v in ipairs(actions) do
         local c=v[1]
+        local a1,a2
+        if type(v)~='string' then a1,a2=unpack(v,2) end
+        if c=='move' then
+            if a1<0 then c='h' a1=-a1
+            else c='l' end
+        end
         if type(v)=='string' then ret=ret..v
         elseif c=='newline' then ret=ret..'\r'
         elseif c=='home' then ret=ret..M.key_home
         elseif c=='end' then ret=ret..M.key_end
-        elseif c=='j' then ret=ret..M.key_down
-        elseif c=='k' then ret=ret..M.key_up
-        elseif c=='h' then ret=ret..M._moveh(v[2])
-        elseif c=='l' then ret=ret..M._movel(v[2])
-        elseif c=='delete' then ret=ret..M._delete(v[2],v[3])
+        elseif c=='j' then ret=ret..M.key_down:rep(a1 or 1)
+        elseif c=='k' then ret=ret..M.key_up:rep(a1 or 1)
+        elseif c=='h' then ret=ret..M._moveh(a1)
+        elseif c=='l' then ret=ret..M._movel(a1)
+        elseif c=='delete' then ret=ret..M._delete(a1,a2)
+        elseif c=='move' then
+            if a1<0 then
+                ret=ret..M._moveh(-a1)
+            else
+                ret=ret..M._movel(a1)
+            end
         end
     end
     return ret

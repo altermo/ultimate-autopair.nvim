@@ -1,6 +1,7 @@
 ---A
 local M={}
 local default=require'ultimate-autopair.profile.default.utils'
+local open_pair=require'ultimate-autopair.profile.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
 ---@param o core.o
 ---@param m prof.def.m.pair
@@ -11,7 +12,7 @@ function M.check(o,m)
     end)
     if not pair or rindex~=o.row then return end
     if not m.fn.can_check_pre(o) then return end
-    if m.fn.find_corresponding_pair(o,o.col-#m.pair+1) then return end
+    if open_pair.open_end_pair_after(m,o,o.col-#m.pair+1) then return end
     local num=index-o.col+#pair.end_pair
     return utils.create_act({
         m.pair:sub(-1),

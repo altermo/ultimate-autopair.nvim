@@ -170,4 +170,13 @@ function M.open_pair_ambigous_before_and_after(pair,o,col)
     local end_count=M.count_ambigious_pair(pair,o,col,true,count)
     return count==1 and not end_count
 end
+---@param pair prof.def.m.pair
+---@param o core.o
+---@param col number
+---@return boolean?
+function M.open_pair_ambigous_before_nor_after(pair,o,col)
+    local count=M.count_ambigious_pair(pair,o,col-1) and 1 or 0
+    local end_count=M.count_ambigious_pair(pair,o,col,true,count)
+    return not end_count and count~=1
+end
 return M

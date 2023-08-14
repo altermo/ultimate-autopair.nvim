@@ -9,7 +9,7 @@ M.fn={
         return true
     end,
     find_corresponding_pair=function (m,o,col)
-        return open_pair.open_end_pair_after(m,o,col+1)
+        return open_pair.count_end_pair(m,o,col+#m.start_pair,true,1,true)
     end,
     can_check_pre=function(m,o)
         return o.line:sub(o.col-#m.pair+1,o.col-1)==m.pair:sub(0,-2)
@@ -35,6 +35,23 @@ function M.backspace_wrapper(m)
             if m.filter(utils._get_o_pos(o,o.col-1)) then
                 if not open_pair.open_start_pair_before(m,o,o.col) then
                     return utils.create_act({{'delete',#m.start_pair,#m.end_pair}},o)
+                end
+            end
+        end
+        if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and conf.overjumps then
+            if m.filter(utils._get_o_pos(o,o.col-1)) then
+                if not open_pair.open_start_pair_before(m,o,o.col) then
+                    local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
+                    if col then
+                        return utils.create_act({
+                            {'delete',#m.start_pair},
+                            {'down',row-o.row},
+                            {'move',col-o.col},
+                            {'delete',0,#m.end_pair},
+                            {'up',row-o.row},
+                            {'move',o.col-col},
+                        },o)
+                    end
                 end
             end
         end

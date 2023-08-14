@@ -34,10 +34,25 @@ end
 ---@param m prof.def.m.pair
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapper(m)
-    return function (o)
+    return function (o,_,conf)
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.pair==o.line:sub(o.col,o.col+#m.pair-1) then
             if not open_pair.open_pair_ambigous(m,o,o.col) then
                 return utils.create_act({{'delete',#m.pair,#m.pair}},o)
+            end
+        end
+        if conf.overjumps and m.conf.bs_overjumps and o.line:sub(o.col-#m.pair,o.col-1)==m.pair then
+            if open_pair.open_pair_ambigous_before_and_after(m,o,o.col) then
+                local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
+                if col then
+                    return utils.create_act({
+                        {'delete',#m.start_pair},
+                        {'down',row-o.row},
+                        {'move',col-o.col},
+                        {'delete',0,#m.end_pair},
+                        {'up',row-o.row},
+                        {'move',o.col-col},
+                    },o)
+                end
             end
         end
     end
