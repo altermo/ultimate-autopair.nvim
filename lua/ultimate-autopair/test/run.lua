@@ -124,8 +124,8 @@ end
 function M.run_test(testopt)
     local map={
         ['']='<bs>',
-        ['']='<C-e>',
-        ['']='<C-S-e>',
+        ['']='<A-e>',
+        ['']='<A-S-e>',
         ['']='<A-)>',
         ['']='<del>',
     }
@@ -230,6 +230,9 @@ function M.run_action(action,lines,row,col,opt)
             i=i+2
         elseif action:sub(i,i+2)=='\x80kh' then
             col=1
+            i=i+2
+        elseif action:sub(i,i+2)=='\x80@7' then
+            col=#lines[row]+1
             i=i+2
         elseif action:sub(i,i+4)==(opt.incmd and '\x80kr' or '\aU\x80kr') then
             col=col+1

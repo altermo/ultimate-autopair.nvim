@@ -119,6 +119,7 @@ function M.create_act(actions,o)
         elseif c=='h' then ret=ret..M._moveh(a1)
         elseif c=='l' then ret=ret..M._movel(a1)
         elseif c=='delete' then ret=ret..M._delete(a1,a2)
+        elseif c=='sub' then ret=ret..M.create_act(a1,o)
         elseif c=='move' then
             if a1<0 then
                 ret=ret..M._moveh(-a1)

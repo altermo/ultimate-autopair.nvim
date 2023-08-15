@@ -111,7 +111,7 @@ end
 ---@param o core.o
 ---@param col number
 ---@param prev boolean?
----@param filter fun(pair:prof.def.m.pair):boolean?
+---@param filter? fun(pair:prof.def.m.pair):boolean?
 ---@param _ boolean? --all
 ---@return prof.def.m.pair?
 ---@return number?
@@ -122,7 +122,7 @@ function M.get_pair_and_end_pair_pos_from_start(o,col,prev,filter,_)
         return #a.pair>#b.pair
     end)
     for _,i in ipairs(spairs) do
-        local pcol,row=i.fn.find_corresponding_pair(o,o.col)
+        local pcol,row=i.fn.find_corresponding_pair(o,col-(prev and #i.pair or 0))
         if pcol then return i,pcol,row end
     end
 end
@@ -130,7 +130,7 @@ end
 ---@param col number
 ---@param next boolean?
 ---@param type string?
----@param filter fun(pair:prof.def.m.pair):boolean?
+---@param filter? fun(pair:prof.def.m.pair):boolean?
 ---@param nofilter boolean?
 ---@return prof.def.m.pair[]
 function M.get_pairs_by_pos(o,col,type,next,filter,nofilter)
