@@ -79,8 +79,11 @@ end
 ---@return boolean?
 function M.filter(o,save,conf)
     if save.in_node then
-        return o.col>=save.scol and o.col<=save.ecol
-            and o.row>=save.srow and o.row<=save.erow
+        if o.row<save.srow then return end
+        if o.row>save.erow then return end
+        if o.row==save.srow and o.col<save.scol then return end
+        if o.row==save.erow and o.col>save.ecol then return end
+        return true
     end
     local node=M._in_tsnode(o,conf.seperate)
     if node then

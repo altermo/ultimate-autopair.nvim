@@ -239,7 +239,7 @@ return {
         {'(|a)',')','()|a)'},
         {'("|")',')','("")|',{c={{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}}}},
         {'"(|)"','"','"()"|',{c={{'"','"',p=11,fly=true},extensions={fly={nofilter=true}}}}},
-        {[['"' "(|)"]],'"',[['"' "()"|]],{skip=true,c={{'"','"',p=11,fly=true}}}},
+        {[['"' "(|)"]],'"',[['"' "()"|]],{c={{'"','"',p=11,fly=true}}}},
         {'({|})',')','({)|})',{interactive=true,c={extensions={fly={undomap='<C-u>'}}}}},
         {'|(  )',')','(  )|'},
         {'|(  )',')',')|(  )',{c={extensions={fly={only_jump_end_pair=true}}}}},
@@ -273,7 +273,7 @@ return {
         {"'''|'","'","''''|",{ts=true,ft='lua'}},
         {[["'"|"'"]],'"',[["'""|""'"]],{ts=true}},
         {[['"' '"' |]],"'",[['"' '"' '|']],{ts=true}},
-        {"f'|","'","f'|'",{ts=true,ft='lua',skip=true}}, --TODO: fix
+        {"f'|","'","f''|",{ts=true,ft='lua'}},
         --TODO: test multiline string (python)
     },
     SKIP_options={
