@@ -31,7 +31,7 @@ return {
         {'|','I{I(','(|{})',{interactive=true,c={config_internal_pairs={{'{','}',suround=true}}}}},
         {'|',"Iprint'hello world!)'I('","('')print'hello world!)'",{interactive=true}}
     },
-    OK_newline={
+    newline={
         {'{|}','\r','{\n|\n}'},
         {'{foo|}','\r','{foo\n|\n}'},
         {'{|foo}','\r','{\n|foo\n}',},
@@ -137,7 +137,7 @@ return {
         {'(|"")','','(|)""'},
         {'(|")")','','(|)")"',{c={fastwarp={filter_string=true}}}},
     },
-    SKIP_space={
+    OK_space={
         {'[|]',' ','[ | ]'},
         {'[|foo]',' ','[ |foo ]'},
         {'[|foo ]',' ','[ |foo ]'},
@@ -149,7 +149,7 @@ return {
         {'<<|foo>>',' ','<< |foo >>',{c={{'<<','>>',space=true}}}},
         {'<< |foo >>',' ','<<  |foo  >>',{c={{'<<','>>',space=true}}}},
         {'$|$',' ','$ | $',{c={{'$','$',space=true}}}},
-        {'$|foo$',' ','$ foo $',{c={{'$','$',space=true}}}},
+        {'$|foo$',' ','$ |foo $',{c={{'$','$',space=true}}}},
         {'|','I="( \r','( | )',{interactive=true}},
     },
     SKIP_space2={
