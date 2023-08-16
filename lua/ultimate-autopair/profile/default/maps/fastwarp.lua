@@ -35,8 +35,10 @@ end
 ---@param o core.o
 ---@param ind number
 ---@param p string
+---@param m prof.def.m.map
 ---@return table?
-function M.act.fastwarp_next_to_start_pair(o,ind,p)
+function M.act.fastwarp_next_to_start_pair(o,ind,p,m)
+    if m.iconf.faster then return end
     if o.col+#p==ind then return end
     local pair=default.get_pairs_by_pos(o,ind,'start',true)[1]
     if not pair then return end
@@ -67,8 +69,10 @@ end
 ---@param o core.o
 ---@param ind number
 ---@param p string
+---@param m prof.def.m.map
 ---@return table?
-function M.act.fastwarp_over_word(o,ind,p)
+function M.act.fastwarp_over_word(o,ind,p,m)
+    if m.iconf.faster then return end
     local regex=vim.regex('^\\k') --[[@as vim.regex]]
     if not regex:match_str(o.line:sub(ind)) then return end
     while regex:match_str(o.line:sub(ind)) do
@@ -144,9 +148,9 @@ function M.fastwarp(o,m)
             end
         end
     end
-    local ret,r=M.fastwarp_end(o,p)
+    local ret,r=M.fastwarp_end(new_o,p)
     if not ret and pair.multiline then
-        ret,r=M.fastwarp_line(o,p,m)
+        ret,r=M.fastwarp_line(new_o,p,m)
     end
     if ret then
         if nocurmove then

@@ -35,6 +35,23 @@ function M.backspace_wrapper(m)
         end
     end
 end
+---@param m prof.def.m.pair
+---@return prof.def.map.cr.fn
+function M.newline_wrapper(m)
+    return function (o)
+        if m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
+            --TODO
+            --local _,row=m.fn.find_corresponding_pair(o,o.col)
+            --if row~=o.row then return end
+            return utils.create_act({
+                {'newline'},
+                {'k'},
+                {'l',o.col-1},
+                {'newline'},
+            },o)
+        end
+    end
+end
 ---@param q prof.def.q
 ---@return prof.def.m.pair
 function M.init(q)
@@ -45,7 +62,7 @@ function M.init(q)
     m.extensions=q.extensions
     m.conf=q.conf
     m.key=m.pair:sub(1,1)
-    m[default.type_def]={'charins','pair','end','dobackspace'}
+    m[default.type_def]={'charins','pair','end','dobackspace','donewline'}
     m.mconf=q.mconf
     m.p=q.p
     m.doc=('autopairs end pair: %s,%s'):format(m.start_pair,m.end_pair)
@@ -53,6 +70,7 @@ function M.init(q)
     m.multiline=q.multiline
 
     m.check=M.check_wrapper(m)
+    m.newline=M.newline_wrapper(m)
     m.backspace=M.backspace_wrapper(m)
     m.filter=default.def_filter_wrapper(m)
     default.init_extensions(m,m.extensions)

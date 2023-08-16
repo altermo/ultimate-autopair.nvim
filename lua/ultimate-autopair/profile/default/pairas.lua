@@ -32,6 +32,20 @@ function M.check_wrapper(m)
     end
 end
 ---@param m prof.def.m.pair
+---@return prof.def.map.cr.fn
+function M.newline_wrapper(m)
+    return function (o)
+        if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and o.line:sub(o.col,o.col+#m.pair-1)==m.pair and m.conf.newline then
+            return utils.create_act({
+                {'newline'},
+                {'k'},
+                {'end'},
+                {'newline'},
+            },o)
+        end
+    end
+end
+---@param m prof.def.m.pair
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapper(m)
     return function (o,_,conf)
@@ -69,7 +83,7 @@ function M.init(q)
     m.extensions=q.extensions
     m.conf=q.conf
     m.key=m.pair:sub(-1)
-    m[default.type_def]={'charins','pair','start','ambiguous','dobackspace'}
+    m[default.type_def]={'charins','pair','start','ambiguous','dobackspace','donewline'}
     m.mconf=q.mconf
     m.p=q.p
     m.doc=('autopairs ambigous start pair: %s'):format(m.pair)
@@ -77,6 +91,7 @@ function M.init(q)
     m.multiline=q.multiline
 
     m.check=M.check_wrapper(m)
+    m.newline=M.newline_wrapper(m)
     m.backspace=M.backspace_wrapper(m)
     m.filter=default.def_filter_wrapper(m)
     default.init_extensions(m,m.extensions)

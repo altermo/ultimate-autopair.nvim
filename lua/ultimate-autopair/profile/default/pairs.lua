@@ -59,6 +59,23 @@ function M.backspace_wrapper(m)
         end
     end
 end
+---@param m prof.def.m.pair
+---@return prof.def.map.cr.fn
+function M.newline_wrapper(m)
+    return function (o)
+        if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.conf.newline then
+            local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
+            if row~=o.row then return end
+            return utils.create_act({
+                {'l',col-o.col},
+                {'newline'},
+                {'k'},
+                {'l',o.col-1},
+                {'newline'},
+            },o)
+        end
+    end
+end
 ---@param q prof.def.q
 ---@return prof.def.m.pair
 function M.init(q)
@@ -69,7 +86,7 @@ function M.init(q)
     m.extensions=q.extensions
     m.conf=q.conf
     m.key=m.pair:sub(-1)
-    m[default.type_def]={'charins','pair','start','dobackspace'}
+    m[default.type_def]={'charins','pair','start','dobackspace','donewline'}
     m.mconf=q.mconf
     m.p=q.p
     m.doc=('autopairs start pair: %s,%s'):format(m.start_pair,m.end_pair)
@@ -80,6 +97,7 @@ function M.init(q)
     m.filter=default.def_filter_wrapper(m)
     default.init_extensions(m,m.extensions)
     m.get_map=default.def_pair_get_map_wrapper(m,q)
+    m.newline=M.newline_wrapper(m)
     m.backspace=M.backspace_wrapper(m)
     m.sort=default.def_pair_sort
     default.extend_pair_check_with_map_check(m)

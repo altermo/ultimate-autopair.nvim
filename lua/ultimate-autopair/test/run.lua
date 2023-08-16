@@ -112,7 +112,7 @@ function M.run_tests(conf,tests,has_not_ok)
             M.fn.error(('test(%s) %s failed, actuall result: %s'):format(category,testrepr,vim.inspect(info)))
         elseif stat==M.stat.ok then
             ---@diagnostic disable-next-line: undefined-field
-            if _G.UA_DEV=='ok' then M.fn.ok(('test(%s) %s passed'):format(category,testrepr)) end
+            if _G.UA_DEV=='ok' or category:sub(1,2)=='OK' then M.fn.ok(('test(%s) %s passed'):format(category,testrepr)) end
         elseif stat==M.stat.skip then
             ---@diagnostic disable-next-line: undefined-field
             if _G.UA_DEV then M.fn.info(('INFO test(%s) %s skiped'):format(category,testrepr)) end
@@ -124,6 +124,7 @@ end
 function M.run_test(testopt)
     local map={
         ['']='<bs>',
+        ['\r']='<cr>',
         ['']='<A-e>',
         ['']='<A-S-e>',
         ['']='<A-)>',
@@ -237,6 +238,11 @@ function M.run_action(action,lines,row,col,opt)
         elseif action:sub(i,i+4)==(opt.incmd and '\x80kr' or '\aU\x80kr') then
             col=col+1
             i=i+4
+        elseif action:sub(i,i)=='\r' then
+            table.insert(lines,row+1,lines[row]:sub(col))
+            lines[row]=lines[row]:sub(1,col-1)
+            row=row+1
+            col=1
         else
             insert(action:sub(i,i))
         end

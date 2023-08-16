@@ -56,7 +56,7 @@ M.conf={
     },
     space2={-- *ultimate-autopair-map-space2-config*
         enable=false,
-        match=[[\a]],
+        match=[[\k]],
         --what character activate
         conf={},
         --contains extension config
