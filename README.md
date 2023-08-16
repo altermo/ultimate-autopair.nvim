@@ -9,7 +9,6 @@ For many features, including string filtering, requires **treesitter**.
 ## Added/removed features of version 0.6
 If your comming from a previous version with broken config, check out the [Q&A](./Q&A.md) first
 + String extension got removed in favour of tsnode string detection.
-+ UTF8 extension got removed in favour of builtin UTF8 support
 + Rule extension got removed in favour of new extension cond
 + New extension cond: create conditions
 ## Installation

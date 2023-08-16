@@ -34,8 +34,6 @@ If you want to detect those use:\
 Use `{extensions={cond={cond=function(fn) return not fn.in_macro() end}}}`
 
 ## Why questions about update
-### Why was `UTF8` moved to the core
-Cause it was incompatible with multiline editing. The problem is that transforming o.col to usable column is not the easiest. There's a functionality for this but it was easier to implement UTF8 into core.
 ### Why was `rule` extension removed and replaced with `cond` extension
 It was a bad idea to create conditions using lisp language, making other things harder
 ### Why was `string` extension removed and replaced with `tsnode` detection

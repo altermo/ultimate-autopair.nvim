@@ -99,7 +99,6 @@ end
 ---@param o core.o
 ---@return string
 function M.create_act(actions,o)
-    --TODO: implement for utf8
     _=o
     local ret=''
     for _,v in ipairs(actions) do
@@ -120,12 +119,6 @@ function M.create_act(actions,o)
         elseif c=='l' then ret=ret..M._movel(a1)
         elseif c=='delete' then ret=ret..M._delete(a1,a2)
         elseif c=='sub' then ret=ret..M.create_act(a1,o)
-        elseif c=='move' then
-            if a1<0 then
-                ret=ret..M._moveh(-a1)
-            else
-                ret=ret..M._movel(a1)
-            end
         end
     end
     return ret
@@ -138,7 +131,7 @@ end
 ---@return number?
 function M.gettsnodepos(node,o)
     local srow,scol,erow,ecol=node:range()
-    return srow+o._deoffset(srow),scol+o._decoloffset(scol,srow),erow+o._deoffset(erow),ecol+o._decoloffset(ecol,erow)
+    return srow+1+o._deoffset(srow+1),scol+1+o._decoloffset(scol+1,srow+1),erow+1+o._deoffset(erow+1),ecol+o._decoloffset(ecol,erow+1)
 end
 ---@param o core.o
 ---@return TSNode?

@@ -47,6 +47,7 @@ end
 ---@param conf table
 ---@return string
 ---@return number
+---@return table<number,number>
 function M.transform(col,line,conf)
     local newline=''
     local newcol=0
@@ -63,7 +64,17 @@ function M.transform(col,line,conf)
         if i==col then ncol=newcol end
     end
     if col==#line+1 then ncol=newcol+1 end
-    return newline,ncol
+    local offsets=vim.str_utf_pos(line) --[[@as table]]
+    offsets[#offsets+1]=#line+1
+    return newline,ncol,offsets
+end
+---@param off (table<number,number>)[]
+---@param neg? boolean
+---@return fun(col:number,row:number):number
+function M.wrapp_coloffset(off,neg)
+    return function (col,row)
+        return (col-off[row][col])*(neg and -1 or 1)
+    end
 end
 ---@param m prof.def.module
 ---@param ext prof.def.ext
@@ -72,13 +83,24 @@ function M.call(m,ext)
     local check=m.check
     m.check=function (o)
         local col
+        local off={}
         for row,line in ipairs(o.lines) do
-            o.lines[row],col=M.transform(o.col,line,conf)
+            o.lines[row],col,off[row]=M.transform(o.col,line,conf)
             if row==o.row then
                 o.col=col
             end
         end
         o.line=o.lines[o.row]
+        o._coloffset=M.wrapp_coloffset(off)
+        local deoff={}
+        for row,of in pairs(off) do
+            deoff[row]={}
+            for k,v in pairs(of) do
+                deoff[row][v]=k
+            end
+        end
+        o.s=deoff
+        o._decoloffset=M.wrapp_coloffset(deoff,true)
         return check(o)
     end
 end

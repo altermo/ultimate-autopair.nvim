@@ -257,14 +257,14 @@ return {
         {'/*(*/|)',')','/*(*/)|)',{ts=true,ft='c'}},
         --TODO: write more tests (like multiline empty line...)
     },
-    SKIP_utf8={
-        {"'á|'","'","'á'|"}, --simple
-        {'(|)aøe','','(|aøe)'}, --rfaswarp
-        {'(|aáa)','','|aøe'}, --backspace
-        {'|"¿qué?"','(','(|"¿qué")'}, --ext.suround
-        {"ä|","'","ä'|"}, --ext.alpha
-        {'"ě""|"','','"ě"|'}, --backspace
-        {"'ø',|","'","'ø','|'",{ft='lua',ts=true}}, --treesitter
+    utf8={ --TODO: everything interactive (as test/run.lua can't handle utf8)
+        {"'á|',","'","'á'|,",{skip=true}}, --simple
+        {'(|)aøe,','','(|aøe),',{skip=true}}, --faswarp
+        {'(|aáa),','','|aáa,',{skip=true}}, --backspace
+        {'|"¿qué?",','(','(|"¿qué?"),',{skip=true}}, --ext.suround
+        {"ä|,","'","ä'|,",{skip=true}}, --ext.alpha
+        {'"ě""|",','','"ě"|,',{ts=true,skip=true}}, --backspace
+        {"'ø',|","'","'ø','|'",{ts=true,skip=true}}, --treesitter
     },
     string={
         {'| ")"','(','(|) ")"',{ts=true}},

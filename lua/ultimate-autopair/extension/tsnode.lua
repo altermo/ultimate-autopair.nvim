@@ -3,7 +3,7 @@ local utils=require'ultimate-autopair.utils'
 local M={}
 M.savetype={}
 ---@param o core.o
----@param nodetypes table<string,boolean>
+---@param nodetypes string[]
 ---@return TSNode?
 function M._in_tsnode(o,nodetypes)
     local node=utils.gettsnode(o)
@@ -11,7 +11,7 @@ function M._in_tsnode(o,nodetypes)
         local _,startcol,_=n:start()
         return startcol+1==o.col+o._coloffset(o.col,o.row)
     end
-    while node and (not nodetypes[node:type()] or fn(node)) do
+    while node and (not vim.tbl_contains(nodetypes,node:type()) or fn(node)) do
         node=node:parent()
     end
     if (not node) or fn(node) then
@@ -61,27 +61,25 @@ function M.get_save(o)
     return save
 end
 ---@param o core.o
----@param _ table
+---@param conf table
 ---@param save table
----@param seperate table<string,boolean>
-function M.set_in_node_or_lang(o,_,save,seperate)
+function M.set_in_node_or_lang(o,conf,save)
     --TODO: implement lang
-    local node=M._in_tsnode(o,seperate)
+    local node=M._in_tsnode(o,conf.seperate)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
-        save.scol=scol+1
-        save.srow=srow+1
+        save.scol=scol
+        save.srow=srow
         save.ecol=ecol
-        save.erow=erow+1
+        save.erow=erow
         save.in_node=true
     end
 end
 ---@param o core.o
 ---@param save table
----@param _ table
----@param seperate table<string,boolean>
+---@param conf table
 ---@return boolean?
-function M.filter(o,save,_,seperate)
+function M.filter(o,save,conf)
     if save.in_node then
         if o.row<save.srow then return end
         if o.row>save.erow then return end
@@ -89,11 +87,10 @@ function M.filter(o,save,_,seperate)
         if o.row==save.erow and o.col>save.ecol then return end
         return true
     end
-    local node=M._in_tsnode(o,seperate)
+    local node=M._in_tsnode(o,conf.seperate)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
-        if vim.tbl_contains({'string','raw_string'},node:type()) and erow+1==o.row and ecol==o.col then return true end --TODO: hack
-        --TODO: maybe offset by one
+        if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --TODO: hack
         return false
     end
     return true
@@ -103,17 +100,15 @@ end
 function M.call(m,ext)
     local check=m.check
     local conf=ext.conf
-    local seperate={}
-    for _,v in pairs(conf.seperate or {}) do seperate[v]=true end
     m.check=function (o)
         local save=M.get_save(o)
-        M.set_in_node_or_lang(o,conf,save,seperate)
+        M.set_in_node_or_lang(o,conf,save)
         return check(o)
     end
     local filter=m.filter
     m.filter=function(o)
         local save=M.get_save(o)
-        if M.filter(o,save,conf,seperate) then
+        if M.filter(o,save,conf) then
             return filter(o)
         end
     end
