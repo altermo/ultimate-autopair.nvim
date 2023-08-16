@@ -1,7 +1,7 @@
 --Internal
 ---@class core.o
 ---@field key string --C
----@field line string --C
+---@field line string --D*
 ---@field lines string[] --C
 ---@field col number --*
 ---@field row number --*
@@ -10,7 +10,7 @@
 ---@field _coloffset fun(col:number,row:number):number --C
 ---@field _decoloffset fun(col:number,row:number):number --C
 ---@field incmd boolean --C
----@field save table --*
+---@field save table --S*
 ---@class core.module
 ---@field get_map? core.get_map-fn
 ---@field oinit? core.oinit-fn

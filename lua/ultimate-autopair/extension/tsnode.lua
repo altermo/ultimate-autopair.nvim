@@ -3,7 +3,7 @@ local utils=require'ultimate-autopair.utils'
 local M={}
 M.savetype={}
 ---@param o core.o
----@param nodetypes string[]
+---@param nodetypes table<string,boolean>
 ---@return TSNode?
 function M._in_tsnode(o,nodetypes)
     local node=utils.gettsnode(o)
@@ -11,10 +11,12 @@ function M._in_tsnode(o,nodetypes)
         local _,startcol,_=n:start()
         return startcol+1==o.col+o._coloffset(o.col,o.row)
     end
-    while node and (not vim.tbl_contains(nodetypes,node:type()) or fn(node)) do
+    while node and (not nodetypes[node:type()] or fn(node)) do
         node=node:parent()
     end
-    if (not node) or fn(node) then return end
+    if (not node) or fn(node) then
+        return
+    end
     return node
 end
 function M._in_tree(o)
@@ -59,11 +61,12 @@ function M.get_save(o)
     return save
 end
 ---@param o core.o
----@param conf table
+---@param _ table
 ---@param save table
-function M.set_in_node_or_lang(o,conf,save)
+---@param seperate table<string,boolean>
+function M.set_in_node_or_lang(o,_,save,seperate)
     --TODO: implement lang
-    local node=M._in_tsnode(o,conf.seperate)
+    local node=M._in_tsnode(o,seperate)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         save.scol=scol+1
@@ -75,9 +78,10 @@ function M.set_in_node_or_lang(o,conf,save)
 end
 ---@param o core.o
 ---@param save table
----@param conf table
+---@param _ table
+---@param seperate table<string,boolean>
 ---@return boolean?
-function M.filter(o,save,conf)
+function M.filter(o,save,_,seperate)
     if save.in_node then
         if o.row<save.srow then return end
         if o.row>save.erow then return end
@@ -85,7 +89,7 @@ function M.filter(o,save,conf)
         if o.row==save.erow and o.col>save.ecol then return end
         return true
     end
-    local node=M._in_tsnode(o,conf.seperate)
+    local node=M._in_tsnode(o,seperate)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         if vim.tbl_contains({'string','raw_string'},node:type()) and erow+1==o.row and ecol==o.col then return true end --TODO: hack
@@ -99,15 +103,17 @@ end
 function M.call(m,ext)
     local check=m.check
     local conf=ext.conf
+    local seperate={}
+    for _,v in pairs(conf.seperate or {}) do seperate[v]=true end
     m.check=function (o)
         local save=M.get_save(o)
-        M.set_in_node_or_lang(o,conf,save)
+        M.set_in_node_or_lang(o,conf,save,seperate)
         return check(o)
     end
     local filter=m.filter
     m.filter=function(o)
         local save=M.get_save(o)
-        if M.filter(o,save,conf) then
+        if M.filter(o,save,conf,seperate) then
             return filter(o)
         end
     end

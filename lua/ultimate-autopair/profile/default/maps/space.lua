@@ -18,6 +18,7 @@ function M.space(o,m)
         end
         total=total+1
     end
+    if not pcol then return end
     local prev_pair=default.get_pairs_by_pos(o,pcol,'start',false,function(pair)
         return pair.conf.space
     end)[1]

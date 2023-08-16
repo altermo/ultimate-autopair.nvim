@@ -144,42 +144,37 @@ end
 ---@return TSNode?
 function M.gettsnode(o)
     --TODO: use vim.treesitter.get_string_parser for cmdline
-    local cache=o.save
     local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
-    if cache then
-        if not cache[M.gettsnode] then cache[M.gettsnode]={} end
-        cache=cache[M.gettsnode]
-        if cache.no_parser then return end
-        if cache[tostring(linenr)..';'..tostring(col)]~=nil then
-            return cache[tostring(linenr)..';'..tostring(col)] or nil
-        end
+    local save=o.save[M.gettsnode] or {} o.save[M.gettsnode]=save
+    if save.no_parser then return end
+    if save[tostring(linenr)..';'..tostring(col)]~=nil then
+        return save[tostring(linenr)..';'..tostring(col)] or nil
     end
     if not pcall(vim.treesitter.get_parser,0) then
-        (cache or {}).no_parser=true
+        (save or {}).no_parser=true
         return
     end
     local getnode
     if vim.treesitter.get_node then
         getnode=function (linenr_,col_)
-            return pcall(vim.treesitter.get_node,{bufnr=0,pos={linenr_,col_}})
+            return vim.treesitter.get_node({bufnr=0,pos={linenr_,col_}})
         end
     else
         getnode=function (linenr_,col_)
             ---@diagnostic disable-next-line: deprecated
-            return pcall(vim.treesitter.get_node_at_pos,0,linenr_,col_,{})
+            return vim.treesitter.get_node_at_pos(0,linenr_,col_,{})
         end
     end
-    local s,ret=getnode(linenr,col)
-    if not s then ret=nil end
-    if ret and col==#unpack(M._getlines(linenr,linenr+1)) then
-        local st,node=getnode(linenr,col-1)
-        if st and node then
+    local ret=getnode(linenr,col)
+    if ret and col==#unpack(M._getlines(linenr,linenr+1)) and col~=0 then
+        local node=getnode(linenr,col-1)
+        if  node then
             local _,end_=node:end_()
             if o.col==end_+1 then ret=node end
         end
     end
-    (cache or {})[tostring(linenr)..';'..tostring(col)]=ret or false
-    if not ret then ret=nil end
+    save[tostring(linenr)..';'..tostring(col)]=ret or false
+    if not ret then return nil end
     return ret
 end
 ---@param o core.o
@@ -191,13 +186,11 @@ function M.getsmartft(o,notree)
     local cache=o.save
     local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
     if notree then return vim.o.filetype end
-    if cache then
-        if not cache[M.getsmartft] then cache[M.getsmartft]={} end
-        cache=cache[M.getsmartft]
-        if cache.no_parser then return vim.o.filetype end
-        if cache[tostring(linenr)..';'..tostring(col)] then
-            return cache[tostring(linenr)..';'..tostring(col)] or vim.o.filetype
-        end
+    if not cache[M.getsmartft] then cache[M.getsmartft]={} end
+    cache=cache[M.getsmartft]
+    if cache.no_parser then return vim.o.filetype end
+    if cache[tostring(linenr)..';'..tostring(col)] then
+        return cache[tostring(linenr)..';'..tostring(col)] or vim.o.filetype
     end
     local stat,parser=pcall(vim.treesitter.get_parser,0)
     if not stat then

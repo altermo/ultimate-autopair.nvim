@@ -10,7 +10,7 @@ M.fns={
     in_string=function (opt,col,row)
         local new_o=utils._get_o_pos(opt.o,col,row)
         local tsnode=require'ultimate-autopair.extension.tsnode'
-        return tsnode._in_tsnode(new_o,{'string','raw_string'})
+        return tsnode._in_tsnode(new_o,{string=true,raw_string=true})
     end,
     in_check=function (opt)
         return opt.incheck
