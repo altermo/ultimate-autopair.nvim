@@ -16,17 +16,37 @@ M.fn={
 function M.check_wrapper(m)
     return function(o)
         if not m.fn.can_check(o) then return end
-        return utils.create_act({{'l',#m.pair}},o)
+        return utils.create_act({{'l',#m.pair}})
     end
 end
 ---@param m prof.def.m.pair
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapper(m)
-    return function (o)
-        if o.line:sub(o.col-#m.pair-#m.pair,o.col-1-#m.pair)==m.pair and m.pair==o.line:sub(o.col-#m.pair,o.col-1) then
-            if open_pair.open_pair_ambigous_before_nor_after(m,o,o.col) then
-                return utils.create_act({{'delete',#m.pair+#m.pair}},o)
-            end
+    return function (o,_,conf)
+        if m.conf.newline==false then return end
+        if o.line:sub(o.col-#m.pair-#m.pair,o.col-1-#m.pair)==m.pair and
+            m.pair==o.line:sub(o.col-#m.pair,o.col-1) and
+            open_pair.open_pair_ambigous_before_nor_after(m,o,o.col) then
+            return utils.create_act({{'delete',#m.pair+#m.pair}})
+        end
+        if o.incmd then return end
+        if not m.conf.newline then return end
+        if not conf.indent_ignore and 1~=o.col then return end
+        if conf.indent_ignore and o.line:sub(1,o.col-1):find('[^%s]') then return end
+        local line1=o.lines[o.row-1]
+        local line2=o.lines[o.row+1]
+        local line2_start=line2:find('[^%s]')
+        if not line1 or not line2 or not line2_start then return end
+        if open_pair.open_pair_ambigous_before_nor_after(m,o,o.col) then return end
+        if line1:sub(-#m.start_pair)==m.start_pair and
+            line2:sub(line2_start,line2_start+#m.end_pair)==m.end_pair then
+            return utils.create_act({
+                {'end'},
+                {'delete',0,line2_start},
+                {'k',1},
+                {'end'},
+                {'delete',0,o.col},
+            })
         end
     end
 end

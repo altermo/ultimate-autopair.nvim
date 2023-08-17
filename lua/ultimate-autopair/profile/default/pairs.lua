@@ -24,38 +24,55 @@ function M.check_wrapper(m)
             m.start_pair:sub(-1),
             m.end_pair,
             {'h',#m.end_pair},
-        },o)
+        })
     end
 end
 ---@param m prof.def.m.pair
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapper(m)
     return function (o,_,conf)
-        if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) then
-            if m.filter(utils._get_o_pos(o,o.col-1)) then
-                if not open_pair.open_start_pair_before(m,o,o.col) then
-                    return utils.create_act({{'delete',#m.start_pair,#m.end_pair}},o)
-                end
+        if m.conf.newline==false then return end
+        if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and
+            m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) and
+            m.filter(utils._get_o_pos(o,o.col-1)) and
+            not open_pair.open_start_pair_before(m,o,o.col) then
+            return utils.create_act({{'delete',#m.start_pair,#m.end_pair}})
+        end
+        if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and
+            conf.overjumps and
+            m.filter(utils._get_o_pos(o,o.col-1)) and
+            not open_pair.open_start_pair_before(m,o,o.col) then
+            local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
+            if col then
+                return utils.create_act({
+                    {'j',row-o.row},
+                    {'home'},
+                    {'move',col-1},
+                    {'delete',0,#m.end_pair},
+                    {'k',row-o.row},
+                    {'home'},
+                    {'move',o.col-1},
+                    {'delete',#m.start_pair},
+                })
             end
         end
-        if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and conf.overjumps then
-            if m.filter(utils._get_o_pos(o,o.col-1)) then
-                if not open_pair.open_start_pair_before(m,o,o.col) then
-                    local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
-                    if col then
-                        return utils.create_act({
-                            {'j',row-o.row},
-                            {'home'},
-                            {'move',col-1},
-                            {'delete',0,#m.end_pair},
-                            {'k',row-o.row},
-                            {'home'},
-                            {'move',o.col-1},
-                            {'delete',#m.start_pair},
-                        },o)
-                    end
-                end
-            end
+        if o.incmd then return end
+        if not m.conf.newline then return end
+        if not conf.indent_ignore and 1~=o.col then return end
+        if conf.indent_ignore and o.line:sub(1,o.col-1):find('[^%s]') then return end
+        local line1=o.lines[o.row-1]
+        local line2=o.lines[o.row+1]
+        local line2_start=line2:find('[^%s]')
+        if not line1 or not line2 or not line2_start then return end
+        if line1:sub(-#m.start_pair)==m.start_pair and
+            line2:sub(line2_start,line2_start+#m.end_pair)==m.end_pair then
+            return utils.create_act({
+                {'end'},
+                {'delete',0,line2_start},
+                {'k',1},
+                {'end'},
+                {'delete',0,o.col},
+            })
         end
     end
 end
@@ -70,9 +87,10 @@ function M.newline_wrapper(m)
                 {'l',col-o.col},
                 {'newline'},
                 {'k'},
+                {'home'},
                 {'l',o.col-1},
                 {'newline'},
-            },o)
+            })
         end
     end
 end

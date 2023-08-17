@@ -142,9 +142,9 @@ function M.fastwarp(o,m)
                         {'k',new_o.row-o.row+(r or 0)},
                         {'home'},
                         {'l',o.col-1},
-                    },o)
+                    })
                 end
-                return utils.create_act(ret,o)
+                return utils.create_act(ret)
             end
         end
     end
@@ -162,9 +162,9 @@ function M.fastwarp(o,m)
                 {'k',new_o.row-o.row+(r or 0)},
                 {'home'},
                 {'l',o.col-1},
-            },o)
+            })
         end
-        return utils.create_act(ret,o)
+        return utils.create_act(ret)
     end
 end
 ---@param m prof.def.m.map

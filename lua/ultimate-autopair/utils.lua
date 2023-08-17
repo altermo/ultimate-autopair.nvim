@@ -96,10 +96,8 @@ function M._delete(pre,pos)
     return M.key_bs:rep(pre or 1)..M.key_del:rep(pos or 0)
 end
 ---@param actions ({[1]:("home"|"end"|"delete"|"l"|"h"|"k"|"j"|"newline"),[number]:any}|string)[]
----@param o core.o
 ---@return string
-function M.create_act(actions,o)
-    _=o
+function M.create_act(actions)
     local ret=''
     for _,v in ipairs(actions) do
         local c=v[1]
@@ -118,7 +116,7 @@ function M.create_act(actions,o)
         elseif c=='h' then ret=ret..M._moveh(a1)
         elseif c=='l' then ret=ret..M._movel(a1)
         elseif c=='delete' then ret=ret..M._delete(a1,a2)
-        elseif c=='sub' then ret=ret..M.create_act(a1,o)
+        elseif c=='sub' then ret=ret..M.create_act(a1)
         end
     end
     return ret

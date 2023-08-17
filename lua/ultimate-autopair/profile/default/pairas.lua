@@ -28,7 +28,7 @@ function M.check_wrapper(m)
             m.start_pair:sub(-1),
             m.end_pair,
             {'h',#m.end_pair},
-        },o)
+        })
     end
 end
 ---@param m prof.def.m.pair
@@ -41,7 +41,7 @@ function M.newline_wrapper(m)
                 {'k'},
                 {'end'},
                 {'newline'},
-            },o)
+            })
         end
     end
 end
@@ -49,26 +49,27 @@ end
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapper(m)
     return function (o,_,conf)
-        if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.pair==o.line:sub(o.col,o.col+#m.pair-1) then
-            if not open_pair.open_pair_ambigous(m,o,o.col) then
-                return utils.create_act({{'delete',#m.pair,#m.pair}},o)
-            end
+        if m.conf.newline==false then return end
+        if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and
+            m.pair==o.line:sub(o.col,o.col+#m.pair-1) and
+            not open_pair.open_pair_ambigous(m,o,o.col) then
+            return utils.create_act({{'delete',#m.pair,#m.pair}})
         end
-        if conf.overjumps and m.conf.bs_overjumps and o.line:sub(o.col-#m.pair,o.col-1)==m.pair then
-            if open_pair.open_pair_ambigous_before_and_after(m,o,o.col) then
-                local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
-                if col then
-                    return utils.create_act({
-                        {'j',row-o.row},
-                        {'home'},
-                        {'move',col-1},
-                        {'delete',0,#m.end_pair},
-                        {'k',row-o.row},
-                        {'home'},
-                        {'move',o.col-1},
-                        {'delete',#m.start_pair},
-                    },o)
-                end
+        if conf.overjumps and m.conf.bs_overjumps and
+            o.line:sub(o.col-#m.pair,o.col-1)==m.pair and
+            open_pair.open_pair_ambigous_before_and_after(m,o,o.col) then
+            local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
+            if col then
+                return utils.create_act({
+                    {'j',row-o.row},
+                    {'home'},
+                    {'move',col-1},
+                    {'delete',0,#m.end_pair},
+                    {'k',row-o.row},
+                    {'home'},
+                    {'move',o.col-1},
+                    {'delete',#m.start_pair},
+                })
             end
         end
     end

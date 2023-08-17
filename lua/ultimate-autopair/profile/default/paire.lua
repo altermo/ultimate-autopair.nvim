@@ -21,17 +21,17 @@ M.fn={
 function M.check_wrapper(m)
     return function (o)
         if not m.fn.can_check(o) then return end
-        return utils.create_act({{'l',#m.pair}},o)
+        return utils.create_act({{'l',#m.pair}})
     end
 end
 ---@param m prof.def.m.pair
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapper(m)
     return function (o)
-        if o.line:sub(o.col-#m.start_pair-#m.end_pair,o.col-1-#m.end_pair)==m.start_pair and m.end_pair==o.line:sub(o.col-#m.end_pair,o.col-1) then
-            if not open_pair.open_end_pair_after(m,o,o.col) then
-                return utils.create_act({{'delete',#m.start_pair+#m.end_pair}},o)
-            end
+        if o.line:sub(o.col-#m.start_pair-#m.end_pair,o.col-1-#m.end_pair)==m.start_pair and
+            m.end_pair==o.line:sub(o.col-#m.end_pair,o.col-1) and
+            not open_pair.open_end_pair_after(m,o,o.col) then
+            return utils.create_act({{'delete',#m.start_pair+#m.end_pair}})
         end
     end
 end
@@ -39,6 +39,7 @@ end
 ---@return prof.def.map.cr.fn
 function M.newline_wrapper(m)
     return function (o)
+        if m.conf.newline==false then return end
         if m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
             --TODO
             --local _,row=m.fn.find_corresponding_pair(o,o.col)
@@ -48,7 +49,7 @@ function M.newline_wrapper(m)
                 {'k'},
                 {'l',o.col-1},
                 {'newline'},
-            },o)
+            })
         end
     end
 end

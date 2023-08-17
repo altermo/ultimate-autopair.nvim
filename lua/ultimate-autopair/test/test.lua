@@ -66,9 +66,9 @@ return {
         {'<!---->|','','|',{ft='html'}},
         {'<!--|-->','','<!-|-->'},
         {[["'"'|']],'',[["'"|]],{ts=true}},
-        {'{\n|\n}','','{|}',{skip=true}},
-        {'{\r\t|\r}','','{|}',{interactive=true}},
-        {'{\r\t|\r}','','{|}',{c={bs={indent_ignore=true}},skip=true}},
+        {'{\n|\n}','','{|}'},
+        {'{\n\t|\n}','','{|}',{interactive=true}},
+        {'{\n\t|\n}','','{|}',{c={bs={indent_ignore=true}}}},
         {'[ | ]','','[|]'},
         {'( |foo )','','(|foo)'},
         {'(  |foo  )','','( |foo )'},
@@ -77,7 +77,8 @@ return {
         {'( | )','','(| )',{c={bs={space=false}}}},
         {'"|foo"','','|foo',{c={config_internal_pairs={{'"','"',bs_overjumps=true}}}}},
         {'"|\n"','','|\n',{c={config_internal_pairs={{'"','"',bs_overjumps=true,multiline=true}}}}},
-        {'<>\n|\n<>','','<>|<>',{c={{'<>','<>',newline=true}},skip=true}},
+        {'<>\n|\n<>','','<>|<>',{c={{'<>','<>',newline=true}}}},
+        {'<>\n\t|\n<>','','<>|<>',{c={{'<>','<>',newline=true},bs={indent_ignore=true}}}},
         {'<< | >>','','<<|>>',{c={{'<<','>>',space=true}}}},
         {'<< |foo >>','','<<|foo>>',{c={{'<<','>>',space=true}}}},
         {'$ | $','','$|$',{c={{'$','$',space=true}}}},
@@ -257,14 +258,14 @@ return {
         {'/*(*/|)',')','/*(*/)|)',{ts=true,ft='c'}},
         --TODO: write more tests (like multiline empty line...)
     },
-    utf8={ --TODO: everything interactive (as test/run.lua can't handle utf8)
-        {"'á|',","'","'á'|,",{skip=true}}, --simple
-        {'(|)aøe,','','(|aøe),',{skip=true}}, --faswarp
-        {'(|aáa),','','|aáa,',{skip=true}}, --backspace
-        {'|"¿qué?",','(','(|"¿qué?"),',{skip=true}}, --ext.suround
-        {"ä|,","'","ä'|,",{skip=true}}, --ext.alpha
-        {'"ě""|",','','"ě"|,',{ts=true,skip=true}}, --backspace
-        {"'ø',|","'","'ø','|'",{ts=true,skip=true}}, --treesitter
+    utf8={
+        {"'á|',","'","'á'|,",{interactive=true}}, --simple
+        {'(|)aøe,','','(|aøe),',{interactive=true}}, --faswarp
+        {'(|aáa),','','|aáa,',{interactive=true}}, --backspace
+        {'|"¿qué?",','(','(|"¿qué?"),',{interactive=true}}, --ext.suround
+        {"ä|,","'","ä'|,",{interactive=true}}, --ext.alpha
+        {'"ě""|",','','"ě"|,',{ts=true,interactive=true}}, --backspace
+        {"'ø',|","'","'ø','|'",{ts=true,interactive=true}}, --treesitter
     },
     string={
         {'| ")"','(','(|) ")"',{ts=true}},

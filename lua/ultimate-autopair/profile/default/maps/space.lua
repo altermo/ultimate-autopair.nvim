@@ -36,7 +36,7 @@ function M.space(o,m)
         {'l',index-o.col+#prev_pair.start_pair-#prev_pair.end_pair},
         (' '):rep(total-ototal+1),
         {'h',index-o.col+#prev_pair.start_pair-#prev_pair.end_pair+(total-ototal+1)},
-    },o)
+    })
 end
 ---@param m prof.def.m.map
 ---@return core.check-fn
@@ -75,7 +75,7 @@ function M.backspace(o,_,conf)
                     {'l',index-o.col-(right-left)},
                     {'delete',0,right-left},
                     {'h',index-o.col-(right-left)},
-                },o)
+                })
             end
         end
         if o.line:sub(newcol,index-1):match(' *')
@@ -85,7 +85,7 @@ function M.backspace(o,_,conf)
             {'l',index-o.col-1},
             {'delete',0,1},
             {'h',index-o.col-1},
-        },o)
+        })
     end
     if conf.space=='balance' then
         local left=o.col-newcol
@@ -95,11 +95,11 @@ function M.backspace(o,_,conf)
                 {'h',left-right},
                 {'delete',0,left-right},
                 {'delete',0,right-left},
-            },o)
+            })
         end
     end
     if o.line:sub(newcol,o.col-1)>o.line:sub(o.col,index-1) then return end
-    return utils.create_act({{'h'},{'delete',0,2}},o)
+    return utils.create_act({{'h'},{'delete',0,2}})
 end
 ---@param conf prof.def.map.space.conf
 ---@param mconf prof.def.conf
