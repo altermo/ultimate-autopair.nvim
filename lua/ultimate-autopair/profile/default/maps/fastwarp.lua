@@ -125,7 +125,7 @@ function M.fastwarp(o,m)
         end
     end
     local pair=default.get_pairs_by_pos(new_o,new_o.col,'end',true,function (p)
-        return p.conf.fastwarp
+        return p.conf.fastwarp~=false
     end)[1]
     if not pair then return end
     local p=pair.pair

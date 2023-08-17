@@ -68,11 +68,11 @@
 + [x] fastwarp no move cursor `(|)foo,bar > (|foo),bar`
 + [x] fastwarp cursor no move
 + [x] make ambiguous pairs have the ability to use fastwarp
-+ [ ] one char fastwarp `(foo|),, > <A-L> > (foo,|),`
-+ [ ] hop style fastwarp
++ [x] fastwarp ambiguous pair multiline
++ [ ] <s>one char fastwarp `(foo|),, > <A-L> > (foo,|),`</s>
++ [ ] <s>hop style fastwarp</s>
 + [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
 + [ ] fastwarp treesitter nodes
-+ [ ] fastwarp ambiguous pair multiline
 ## extensions
 + [x] only filter inside or outside of string
 + [x] user defined rules
@@ -96,13 +96,13 @@
 + [x] filter ' in lisp not instring
 + [x] somehow changing default config internal pairs, like adding `fly=true` to `'` opt
 + [x] markdown code block spesific behavior (like lisp code block)
++ [x] whole file detection (requires implementation of tsnode blocks)
++ [x] make rules use `filter` and not just `check`
 + [ ] markdown code block filter
-+ [ ] user defined multiline as one (maybe using treesitter)
-+ [ ] whole file detection (requires implementation of tsnode blocks)
++ [ ] user defined multiline as one using treesitter
 + [ ] extension in extension where they can return instead of continue
 + [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
 + [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
-+ [x] make rules use `filter` and not just `check`
 # other
 + [x] `'a|b' > ' > 'a'|'b'`
 + [x] `[[|] > ] > [[]|] and not [[]|`

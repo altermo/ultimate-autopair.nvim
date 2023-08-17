@@ -118,9 +118,6 @@ end
 ---@return number?
 function M.get_pair_and_end_pair_pos_from_start(o,col,prev,filter,_)
     local spairs=M.get_pairs_by_pos(o,col,'start',not prev,filter)
-    table.sort(spairs,function (a,b)
-        return #a.pair>#b.pair
-    end)
     for _,i in ipairs(spairs) do
         local pcol,row=i.fn.find_corresponding_pair(o,col-(prev and #i.pair or 0))
         if pcol then return i,pcol,row end
@@ -145,6 +142,9 @@ function M.get_pairs_by_pos(o,col,type,next,filter,nofilter)
             table.insert(ret,i)
         end
     end
+    table.sort(ret,function (a,b)
+        return #a.pair>#b.pair
+    end)
     return ret
 end
 return M

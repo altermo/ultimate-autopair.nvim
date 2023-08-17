@@ -6,13 +6,28 @@
 For development version, check out [development](https://github.com/altermo/ultimate-autopair.nvim/tree/development)\
 Requires **neovim 0.9** (for older versions of neovim, check previous versions of plugin)\
 For many features, including string filtering, requires **treesitter**.
-## Added/removed features of version 0.6
-If your comming from a previous version with broken config, check out the [Q&A](./Q&A.md) first
-+ String extension got removed in favour of tsnode string detection.
-+ Rule extension got removed in favour of new extension cond
-+ New extension cond: create conditions
+## changelog of version 0.6
+<details open=true><summary><b>BREAKING CHANGES</b></summary>
+
+If your coming from a previous version with broken config, check out [Q&A](./Q&A.md) first
++ `string` extension is no longer enabled by default (uses treesitter-string filtering instead).
+    + If you want to use `string` extension, find answer in [Q&A](./Q&A.md)
++ `rule` extension got removed in favour of new extension `cond`
++ `sub` extension got removed until a better solution can be found
+</details><details><summary><b>New features</b></summary>
+
++ New extension `cond`: create conditions
++ You can now use multiline
+</details><details><summary><b>Improvements</b></summary>
+
++ Tests now run 1000% faster
++ The code got cleaned up
++ `tabout` was moved from experimental to default (requires manual enable)
+</details>
+
 ## Installation
-Packer:
+<details open=true><summary><b>Packer</b></summary>
+
 ```lua
 use{
     'altermo/ultimate-autopair.nvim',
@@ -24,6 +39,19 @@ use{
     end,
 }
 ```
+</details><details> <summary><b>Lazy</b></summary>
+
+```lua
+{
+    'altermo/ultimate-autopair.nvim',
+    event={'InsertEnter','CmdlineEnter'},
+    opts={
+        --Config goes here
+    },
+}
+```
+</details>
+
 ## Features
 + Smart open pair detecting:
   + TODO

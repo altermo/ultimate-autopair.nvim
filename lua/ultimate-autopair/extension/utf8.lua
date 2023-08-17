@@ -73,6 +73,7 @@ end
 ---@return fun(col:number,row:number):number
 function M.wrapp_coloffset(off,neg)
     return function (col,row)
+        if col==0 then return 0 end
         return (col-off[row][col])*(neg and -1 or 1)
     end
 end
