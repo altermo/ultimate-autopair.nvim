@@ -20,8 +20,9 @@ If your coming from a previous version with broken config, check out [Q&A](./Q&A
 + You can now use multiline
 </details><details><summary><b>Improvements</b></summary>
 
-+ Tests now run 1000% faster
 + The code got cleaned up
+    + Tests now run over 1000% faster
+    + Most things are type-hinted
 + `tabout` was moved from experimental to default (requires manual enable)
 </details>
 
