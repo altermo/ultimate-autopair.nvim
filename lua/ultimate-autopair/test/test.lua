@@ -128,7 +128,7 @@ return {
         {'(|),{},','','(|,{}),',{c={fastwarp={faster=true}},skip=true}}, --TODO:fix
         {'{|},foo(""),','','{|,foo("")}',{c={fastwarp={faster=true}},skip=true}}, --TODO:fix
     },
-    SKIP_rfaswarp={
+    rfaswarp={
         {'(foo|)','','(|)foo'},
         {'(|foo)','','(|)foo'},
         {'(|)','','(|)'},
@@ -137,6 +137,7 @@ return {
         {'("bar"|)','','(|)"bar"'},
         {'(foo{bar}baz|)','','(foo{bar}|)baz'},
         {'(\n|)','','(|)\n'},
+        {'(\n,|)','','(\n|),'},
         {'(|"",)','','(|""),'},
         {'"foo|"','','"|"foo'},
         {'"|foo"','','"|"foo'},
@@ -147,7 +148,8 @@ return {
         {'<<|<<>>>>','','<<|>><<>>',{c={{'<<','>>',fastwarp=true}}}},
         {'(<<|>>)','','(<<|>>)',{c={{'<<','>>',fastwarp=true}}}},
         {'(|"")','','(|)""'},
-        {'(|")")','','(|)")"',{c={fastwarp={filter_string=true}}}},
+        {'(|")")','','(|)")"',{ts=true,c={fastwarp={filter_string=true}}}},
+        {'(|{)}','','(|){}',{c={fastwarp={hopout=true}}}},
     },
     space={
         {'[|]',' ','[ | ]'},

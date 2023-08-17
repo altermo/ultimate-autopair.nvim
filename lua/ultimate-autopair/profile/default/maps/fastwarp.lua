@@ -28,7 +28,7 @@ function M.act.fastwarp_over_pair(o,ind,p)
         {'delete',0,#p},
         {'j',rindex-o.row},
         {'home'},
-        {'l',index-#p+#spair.end_pair-1},
+        {'l',index-#p+#spair.end_pair-(o.row==rindex and 1 or 0)},
         p,{'h',#p}
     },rindex-o.row
 end
@@ -99,9 +99,8 @@ end
 ---@param p string
 ---@return table?
 ---@return number?
-function M.fastwarp_line(o,p,m)
+function M.fastwarp_line(o,p)
     if o.col~=#o.line+1-#p then return end
-    if not m.iconf.multiline then return end
     if #o.lines==o.row then return end
     return {
         {'delete',0,#p},
@@ -149,8 +148,8 @@ function M.fastwarp(o,m)
         end
     end
     local ret,r=M.fastwarp_end(new_o,p)
-    if not ret and pair.multiline then
-        ret,r=M.fastwarp_line(new_o,p,m)
+    if not ret and pair.multiline and m.iconf.multiline then
+        ret,r=M.fastwarp_line(new_o,p)
     end
     if ret then
         if nocurmove then

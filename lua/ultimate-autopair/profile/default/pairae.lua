@@ -9,7 +9,14 @@ M.fn={
     end,
     can_check_pre=function (m,o)
         return o.line:sub(o.col,o.col-1+#m.pair)==m.pair
-    end
+    end,
+    find_corresponding_pair=function (m,o,col)
+        local opaa,_=open_pair.count_ambigious_pair(m,o,col+#m.pair,true)
+        if  opaa then return end
+        local opab,opabr=open_pair.count_ambigious_pair(m,o,col-1,false,1,true)
+        if not opab then return end
+        return opab,opabr
+    end,
 }
 ---@param m prof.def.m.pair
 ---@return core.check-fn

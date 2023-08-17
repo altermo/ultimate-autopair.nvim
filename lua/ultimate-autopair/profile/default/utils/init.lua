@@ -112,12 +112,25 @@ end
 ---@param col number
 ---@param prev boolean?
 ---@param filter? fun(pair:prof.def.m.pair):boolean?
----@param _ boolean? --all
 ---@return prof.def.m.pair?
 ---@return number?
 ---@return number?
-function M.get_pair_and_end_pair_pos_from_start(o,col,prev,filter,_)
+function M.get_pair_and_end_pair_pos_from_start(o,col,prev,filter)
     local spairs=M.get_pairs_by_pos(o,col,'start',not prev,filter)
+    for _,i in ipairs(spairs) do
+        local pcol,row=i.fn.find_corresponding_pair(o,col-(prev and #i.pair or 0))
+        if pcol then return i,pcol,row end
+    end
+end
+---@param o core.o
+---@param col number
+---@param prev boolean?
+---@param filter? fun(pair:prof.def.m.pair):boolean?
+---@return prof.def.m.pair?
+---@return number?
+---@return number?
+function M.get_pair_and_start_pair_pos_from_end(o,col,prev,filter)
+    local spairs=M.get_pairs_by_pos(o,col,'end',not prev,filter)
     for _,i in ipairs(spairs) do
         local pcol,row=i.fn.find_corresponding_pair(o,col-(prev and #i.pair or 0))
         if pcol then return i,pcol,row end

@@ -12,6 +12,9 @@ M.fn={
         if count1==0 or count1>count2 then return end
         return true
     end,
+    find_corresponding_pair=function (m,o,col)
+        return open_pair.count_start_pair(m,o,col-1,true,1,true)
+    end,
     can_check_pre=function (m,o)
         return o.line:sub(o.col,o.col-1+#m.pair)==m.pair
     end
