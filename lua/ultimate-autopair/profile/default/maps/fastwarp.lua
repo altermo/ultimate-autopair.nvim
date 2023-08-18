@@ -18,10 +18,11 @@ M.act={}
 ---@param o core.o
 ---@param ind number
 ---@param p string
+---@param m prof.def.m.map
 ---@return table?
 ---@return number?
-function M.act.fastwarp_over_pair(o,ind,p)
-    if o.col+#p~=ind then return end
+function M.act.fastwarp_over_pair(o,ind,p,m)
+    if o.col+#p~=ind and not m.iconf.faster then return end
     local spair,index,rindex=default.get_pair_and_end_pair_pos_from_start(o,ind)
     if not spair then return end
     return {

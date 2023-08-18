@@ -44,9 +44,8 @@ function M.newline_wrapper(m)
     return function (o)
         if m.conf.newline==false then return end
         if m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
-            --TODO
-            --local _,row=m.fn.find_corresponding_pair(o,o.col)
-            --if row~=o.row then return end
+            local _,row=m.fn.find_corresponding_pair(o,o.col)
+            if row~=o.row then return end
             return utils.create_act({
                 {'newline'},
                 {'k'},

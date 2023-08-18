@@ -43,11 +43,11 @@ return {
         {'({|\n)','\r','({\n|\n}\n)',{c={cr={autoclose=true}},skip=true}},
         {'{foo|','\r','{foo\n|\n}',{c={cr={autoclose=true}},skip=true}},
         {'{|foo','\r','{\n|foo\n}',{c={cr={autoclose=true}},skip=true}},
+        {'```|','\r','```\n|\n```',{c={cr={autoclose=true}},skip=true},{skip=true}},
         {'do|','\r','do\n\nend',{skip=true,ft='lua',c={cr={autoclose=true},{'do','end',imap=false}}}},
         {'{|}','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'}}}},
         {'{|','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'},autoclose=true}}},
         {'{|};','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'},autoclose=true}}},
-        {'```|','\r','```\n|\n```',{skip=true}},
     },
     backspace={
         {'[|]','','|'},
@@ -125,8 +125,8 @@ return {
         {'(|)foo','e','(|foo)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}},skip=true}}},
         {'(|)foo','E','(foo|)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}},skip=true}}},
         {'(|),','','(|,)',{c={fastwarp={faster=true}}}},
-        {'(|),{},','','(|,{}),',{c={fastwarp={faster=true}},skip=true}}, --TODO:fix
-        {'{|},foo(""),','','{|,foo("")}',{c={fastwarp={faster=true}},skip=true}}, --TODO:fix
+        {'(|),{},','','(|,{}),',{c={fastwarp={faster=true}}}},
+        {'{|},foo(""),','','{|,foo("")},',{c={fastwarp={faster=true}}}},
     },
     rfaswarp={
         {'(foo|)','','(|)foo'},
