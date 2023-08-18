@@ -35,7 +35,7 @@ function M.init(conf,mconf,ext)
     m.conf=conf.conf or {}
     m.map=mconf.map~=false and conf.map
     m.extensions=ext
-    m[default.type_def]={'newline'}
+    m[default.type_def]={'charins','newline'}
     m.p=conf.p or mconf.p or 10
     m.doc='autopairs newline key map'
 

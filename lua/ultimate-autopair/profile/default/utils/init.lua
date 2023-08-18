@@ -84,6 +84,15 @@ function M.extend_map_check_with_map_check(m)
         return check(o)
     end
 end
+---@param m prof.def.m.map
+function M.extend_map_check_in_oinit(m)
+    local check=m.check
+    m.check=function (o)
+        if o.inoinit then
+            return check(o)
+        end
+    end
+end
 ---@param module prof.def.module
 ---@param fns function[]
 ---@return prof.def.pair.fn[]

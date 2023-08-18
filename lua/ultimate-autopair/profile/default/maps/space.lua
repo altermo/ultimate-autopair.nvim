@@ -113,7 +113,7 @@ function M.init(conf,mconf,ext)
     m.map=mconf.map~=false and conf.map
     m.cmap=mconf.cmap~=false and conf.cmap
     m.extensions=ext
-    m[default.type_def]={'space','dobackspace'}
+    m[default.type_def]={'charins','space','dobackspace'}
     m.p=conf.p or mconf.p or 10
     m.doc='autopairs space key map'
 

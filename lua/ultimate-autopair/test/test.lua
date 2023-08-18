@@ -166,9 +166,9 @@ return {
         {'$|foo$',' ','$ |foo $',{c={{'$','$',space=true}}}},
         {'|','I="( \r','( | )',{interactive=true}},
     },
-    SKIP_space2={
-        {'[ |]','afoo','[ foo| ]',{interactive=true,c={space2={enable=true}}}},
-        {'[  |','afoo','[  foo|  ]',{interactive=true,c={space2={enable=true}}}},
+    space2={
+        {'[ |]','foo','[ foo| ]',{interactive=true,c={space2={enable=true}}}},
+        {'[  |','foo','[  foo|  ]',{interactive=true,c={space2={enable=true}}}},
         {'[ |oo]','f','[ f|oo ]',{interactive=true,c={space2={enable=true}}}},
         {'[ |oo ]','f','[ f|oo ]',{interactive=true,c={space2={enable=true}}}},
         {'[  |oo ]','f','[  f|oo  ]',{interactive=true,c={space2={enable=true}}}},
