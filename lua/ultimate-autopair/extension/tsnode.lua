@@ -6,19 +6,27 @@ M.savetype={}
 ---@param nodetypes string[]
 ---@return TSNode?
 function M._in_tsnode(o,nodetypes)
+    local ssave=o.save[M._in_tsnode] or {} o.save[M._in_tsnode]=ssave
+    local save=ssave[nodetypes] or {} ssave[nodetypes]=save
     local node=utils.gettsnode(o)
+    if node and save[node] then return unpack(save[node:id()]) end
     local function fn(n)
         local _,startcol,_=n:start()
         return startcol+1==o.col+o._coloffset(o.col,o.row)
     end
     local ql={}
+    local r={}
     for _,v in ipairs(nodetypes) do ql[v]=true end
     while node and ((not ql[node:type()]) or fn(node)) do
         node=node:parent()
+        --TODO fix: TSNode:id() doesn't differ between trees
+        if node and save[node:id()] then return unpack(save[node:id()]) end
+        if node then save[node:id()]=r end
     end
     if (not node) or fn(node) then
         return
     end
+    r[1]=node
     return node
 end
 function M._in_tree(o)
