@@ -42,8 +42,9 @@ function M.backspace_wrapper(m)
         if conf.indent_ignore and o.line:sub(1,o.col-1):find('[^%s]') then return end
         local line1=o.lines[o.row-1]
         local line2=o.lines[o.row+1]
+        if not line1 or not line2 then return end
         local line2_start=line2:find('[^%s]')
-        if not line1 or not line2 or not line2_start then return end
+        if not line2_start then return end
         if open_pair.open_pair_ambigous_before_nor_after(m,o,o.col) then return end
         if line1:sub(-#m.start_pair)==m.start_pair and
             line2:sub(line2_start,line2_start+#m.end_pair)==m.end_pair then
