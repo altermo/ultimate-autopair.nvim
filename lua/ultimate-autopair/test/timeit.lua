@@ -6,6 +6,7 @@ M.file1={
 }
 M.file2=vim.fn["repeat"]({'(',')'},rep)
 M.file3=vim.list_extend(vim.fn["repeat"]({'('},rep),vim.fn["repeat"]({')'},rep))
+M.file4={('"()";'):rep(rep)}
 function M.create_act_and_file(act,filecont,fn,path)
     local source=vim.fn.tempname()
     local file=vim.fn.tempname()
@@ -35,12 +36,13 @@ function M.timeit(filecont,act,path)
         end
     end,path)
     if err then
-        vim.lg(tostring(err))
+        M.log(tostring(err))
     else
-        vim.lg(tostring(vim.fn.reltimefloat(vim.fn.reltime(t))))
+        M.log(tostring(vim.fn.reltimefloat(vim.fn.reltime(t))))
     end
 end
 function M.start()
+    M.log=vim.lg or vim.notify
     local path=vim.fn.fnamemodify(vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1],':h:h')
     if not vim.fn.has('nvim-0.10.0') then
         error('Timeit requires neovim >= 0.10.0')
@@ -48,6 +50,7 @@ function M.start()
     M.timeit(M.file1,'Go(',path)
     M.timeit(M.file2,'Go(',path)
     M.timeit(M.file3,'Go(',path)
+    M.timeit(M.file4,'Go(',path)
 end
 M.start()
 return M

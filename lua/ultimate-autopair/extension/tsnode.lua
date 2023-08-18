@@ -11,7 +11,9 @@ function M._in_tsnode(o,nodetypes)
         local _,startcol,_=n:start()
         return startcol+1==o.col+o._coloffset(o.col,o.row)
     end
-    while node and (not vim.tbl_contains(nodetypes,node:type()) or fn(node)) do
+    local ql={}
+    for _,v in ipairs(nodetypes) do ql[v]=true end
+    while node and ((not ql[node:type()]) or fn(node)) do
         node=node:parent()
     end
     if (not node) or fn(node) then

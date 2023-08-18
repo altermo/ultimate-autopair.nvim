@@ -11,7 +11,7 @@
 ---@field _decoloffset fun(col:number,row:number):number --C
 ---@field incmd boolean --C
 ---@field save table --S*
----@field inoinit boolean? --c
+---@field inoinit boolean? --C
 ---@class core.module
 ---@field get_map? core.get_map-fn
 ---@field oinit? core.oinit-fn
