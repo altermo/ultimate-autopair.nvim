@@ -97,6 +97,9 @@ M.conf={
         --contains extension config
         multi=false,
         --use multiple configs (|ultimate-autopair-map-multi-config|)
+        do_nothing_if_fail=true,
+        --add a module so that if close fails
+        --then a `)` will not be inserted
     },
     extensions={-- *ultimate-autopair-extensions-default-config*
         cmdtype={skip={'/','?','@'},p=100},

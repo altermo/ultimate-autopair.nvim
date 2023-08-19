@@ -38,12 +38,12 @@ return {
         {'local x=[[|]]','\r','local x=[[\n|\n]]',{ft='lua'}},
         {'"""|"""','\r','"""\n|\n"""',{ft='python'}},
         {'``lua|````','\r','```lua\n|\n```',{ft='markdown',skip=true}},
-        {'{|','\r','{\n|\n}',{c={cr={autoclose=true}},skip=true}},
-        {'{[(|','\r','{[(\n|\n)]}',{c={cr={autoclose=true}},skip=true}},
-        {'({|\n)','\r','({\n|\n}\n)',{c={cr={autoclose=true}},skip=true}},
-        {'{foo|','\r','{foo\n|\n}',{c={cr={autoclose=true}},skip=true}},
-        {'{|foo','\r','{\n|foo\n}',{c={cr={autoclose=true}},skip=true}},
-        {'```|','\r','```\n|\n```',{c={cr={autoclose=true}},skip=true},{skip=true}},
+        {'{|','\r','{\n|\n}',{c={cr={autoclose=true}}}},
+        {'{[(|','\r','{[(\n|\n)]}',{c={cr={autoclose=true}}}},
+        {'({|\n)','\r','({\n|\n}\n)',{c={cr={autoclose=true}}}},
+        {'{foo|','\r','{foo\n|\n}',{c={cr={autoclose=true}}}},
+        {'{|foo','\r','{\n|foo\n}',{c={cr={autoclose=true}}}},
+        {'```|','\r','```\n|\n```',{c={cr={autoclose=true}},ft='markdown'}},
         {'do|','\r','do\n\nend',{skip=true,ft='lua',c={cr={autoclose=true},{'do','end',imap=false}}}},
         {'{|}','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'}}}},
         {'{|','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'},autoclose=true}}},
@@ -175,13 +175,14 @@ return {
         {'$ |$','foo','$ foo| $',{interactive=true,c={{'$','$',space=true},space2={enable=true}}}},
         {'<< |>>','foo','<< foo| >>',{interactive=true,c={{'<<','>>',space=true},space2={enable=true}}}},
     },
-    SKIP_close={
+    close={
         {'(|','','(|)'},
         {'({|','','({|})'},
+        {'({[|}','','({[|]}'},
         {'({()|','','({()|})'},
         {'({|)','','({|})'},
-        {'"|','','"|"'},
-        {'("|','','("|")'},
+        {'"|','','"|"',{ts=true}},
+        {'("|','','("|")',{ts=true}},
         {'("|")','','("|")'},
         {'<!--|','','<!--|-->',{ft='html'}},
         {'<!--|-->','','<!--|-->',{ft='html'}},
@@ -275,6 +276,7 @@ return {
         {"ä|,","'","ä'|,",{interactive=true}}, --ext.alpha
         {'"ě""|",','','"ě"|,',{ts=true,interactive=true}}, --backspace
         {"'ø',|","'","'ø','|'",{ts=true,interactive=true}}, --treesitter
+        {"{'ø',{}|}",'{',"{'ø',{}{|}}",{ts=true,interactive=true}} --TODO: fix
     },
     string={
         {'| ")"','(','(|) ")"',{ts=true}},
