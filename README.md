@@ -12,16 +12,15 @@ If your coming from a previous version with broken config, check out [Q&A](./Q&A
     + If you want to use `string` extension, find answer in [Q&A](./Q&A.md)
 + `rule` extension got removed in favour of new extension `cond`
 + `sub` extension got removed until a better solution can be found
-</details><details><summary><b>New features</b></summary>
+</details><details><summary><b>Major new features</b></summary>
 
 + New extension `cond`: create conditions
 + You can now use multiline
-</details><details><summary><b>Improvements</b></summary>
-
-+ The code got cleaned up
-    + Tests now run over 1000% faster
-    + Most things are type-hinted
 + `tabout` was moved from experimental to default (requires manual enable)
+</details><details><summary><b>Major code improvements</b></summary>
+
++ Tests now run over 1000% faster
++ Most things are type-hinted
 </details>
 
 ## Installation
