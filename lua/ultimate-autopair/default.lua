@@ -27,6 +27,8 @@ M.conf={
         --  ( |foo  ) > bs > ( |foo )
         indent_ignore=false,
         --(\n\t|\n) > bs > (|)
+        single_delete=false,
+        -- <!--|--> > bs > <!-|
         conf={},
         --contains extension config
         multi=false,

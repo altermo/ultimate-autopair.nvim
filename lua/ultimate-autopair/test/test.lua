@@ -87,6 +87,8 @@ return {
         {'( |foo  )','','( |foo )',{c={bs={space='balance'}}}},
         {'(  |foo )','','( |foo )',{c={bs={space='balance'}}}},
         {'f|','','|',{abrv={f='foo'}}},
+        {'<!--|-->','','<!-|',{c={bs={single_delete=true}},ft='html'}},
+        {'```|```','','``|',{c={bs={single_delete=true}},ft='markdown'}},
     },
     fastwarp={
         {'{|}[]','','{|[]}'},

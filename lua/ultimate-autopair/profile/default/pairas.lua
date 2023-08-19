@@ -53,7 +53,7 @@ function M.backspace_wrapper(m)
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and
             m.pair==o.line:sub(o.col,o.col+#m.pair-1) and
             not open_pair.open_pair_ambigous(m,o,o.col) then
-            return utils.create_act({{'delete',#m.pair,#m.pair}})
+            return utils.create_act({{'delete',conf.single_delete and 1 or #m.pair,#m.pair}})
         end
         if conf.overjumps and m.conf.bs_overjumps and
             o.line:sub(o.col-#m.pair,o.col-1)==m.pair and
@@ -64,11 +64,11 @@ function M.backspace_wrapper(m)
                     {'j',row-o.row},
                     {'home'},
                     {'move',col-1},
-                    {'delete',0,#m.end_pair},
+                    {'delete',0,#m.pair},
                     {'k',row-o.row},
                     {'home'},
                     {'move',o.col-1},
-                    {'delete',#m.start_pair},
+                    {'delete',conf.single_delete and 1 or #m.pair},
                 })
             end
         end

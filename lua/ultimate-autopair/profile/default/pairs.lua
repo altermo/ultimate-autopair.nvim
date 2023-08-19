@@ -36,7 +36,7 @@ function M.backspace_wrapper(m)
             m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) and
             m.filter(utils._get_o_pos(o,o.col-1)) and
             not open_pair.open_start_pair_before(m,o,o.col) then
-            return utils.create_act({{'delete',#m.start_pair,#m.end_pair}})
+            return utils.create_act({{'delete',conf.single_delete and 1 or #m.start_pair,#m.end_pair}})
         end
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and
             conf.overjumps and
@@ -52,7 +52,7 @@ function M.backspace_wrapper(m)
                     {'k',row-o.row},
                     {'home'},
                     {'move',o.col-1},
-                    {'delete',#m.start_pair},
+                    {'delete',conf.single_delete and 1 or #m.start_pair},
                 })
             end
         end

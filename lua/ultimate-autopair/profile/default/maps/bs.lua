@@ -2,6 +2,7 @@
 ---@field overjumps boolean?
 ---@field space boolean?
 ---@field indent_ignore boolean?
+---@field single_delete boolean?
 ---@class prof.def.map.bs.m.backspace:prof.def.module
 ---@field backspace prof.def.map.bs.fn
 ---@alias prof.def.map.bs.fn fun(o:core.o,m:prof.def.m.map,conf:prof.def.map.bs.conf):string?
