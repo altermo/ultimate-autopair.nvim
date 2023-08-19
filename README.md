@@ -3,7 +3,7 @@
 [Ultimate-autopair](https://github.com/altermo/ultimate-autopair.nvim) plugin aims to always work as you expect, while making it relatively easy to configure.\
 For development version, check out [development](https://github.com/altermo/ultimate-autopair.nvim/tree/development)\
 Requires **neovim 0.9** (for older versions of neovim, check previous versions of plugin)\
-For many features, including string filtering, requires **treesitter**.
+For many features, including multiline string filtering, requires **treesitter**.
 ## changelog of version 0.6
 <details open=true><summary><b>BREAKING CHANGES</b></summary>
 
