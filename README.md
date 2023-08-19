@@ -2,7 +2,7 @@
 # Ultimate-autopair.nvim 0.5.3
 Ultimate-autopair plugin aims to provide all the features that an auto-pairing plugin needs.\
 For development version, check out [development](https://github.com/altermo/ultimate-autopair.nvim/tree/development)\
-For the NOT READY next version, check out [pre-alpha-v0.6.0](https://github.com/altermo/ultimate-autopair.nvim/tree/v0.6.0-pre-alpha)\
+For the next version, check out [v0.6.0-alpha](https://github.com/altermo/ultimate-autopair.nvim/tree/v0.6.0-alpha)\
 Requires neovim 0.8 (recomended 0.9)
 ## Installation
 Packer:
