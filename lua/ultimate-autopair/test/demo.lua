@@ -67,7 +67,7 @@ function M.run_key(key)
         local v=it:next()
         if type(v)=='string' then
             vim.api.nvim_input(v)
-            vim.api.nvim_echo({{pressed},{' '..v}},false,{})
+            vim.api.nvim_echo({{pressed},{'<'..v..'|'}},false,{})
             pressed=pressed:sub(2)..v
             vim.defer_fn(function () async(time) end,time*1000)
         elseif type(v)=='number' then
@@ -99,7 +99,7 @@ function M.start()
     vim.keymap.set('i','<C-e>','<A-e>',{noremap=false,buffer=true})
     vim.keymap.set({'i','n','x'},'<C-c>',function() M.brea=true end,{buffer=true})
     vim.cmd.redraw()
-    vim.fn.input('Press enter to start demo (hold down <C-c> to stop)...')
+    vim.fn.input('Press enter to start (hold <C-c> to stop)...')
     pcall(M.run_keys)
 end
 M.start()

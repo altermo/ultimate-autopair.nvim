@@ -50,13 +50,15 @@ use{
 ```
 </details>
 
-## Features
-+ Smart open pair detecting:
-  + TODO
-+ multiline and multichar pair support:
-  + TODO
 ## Default configuration
 For the default configuration, refer to the documentation (`:help ultimate-autopair-config-default`).
+## Demo
+TODO: add better demo
+</details><details> <summary><b>demo</b></summary>
+
+![demo](https://github.com/altermo/test/assets/107814000/cc92b235-da19-4a10-bd57-89df8c6b380e)
+</details>
+
 ### Other plugins to supercharge auto-pairing
 These are some other plugins which are related to pairing which have features that ultimate-autopair does not have.
 + [endwise](https://github.com/RRethy/nvim-treesitter-endwise) wisely add `end` in lua, ruby, etc...
