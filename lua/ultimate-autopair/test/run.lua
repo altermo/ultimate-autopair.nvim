@@ -1,10 +1,13 @@
----@diagnostic disable-next-line: duplicate-set-field
-function vim.lg(...) --TODO: TEMP
-    local d=debug.getinfo(2)
-    return vim.fn.writefile(vim.fn.split(
-        ':'..d.short_src..':'..d.currentline..':\n'..
-        vim.inspect(#{...}==1 and ... or {...}),'\n'
-    ),'/tmp/nlog','a')
+---@diagnostic disable-next-line: undefined-field
+if _G.UA_IN_TEST then
+    ---@diagnostic disable-next-line: duplicate-set-field
+    function vim.lg(...)
+        local d=debug.getinfo(2)
+        return vim.fn.writefile(vim.fn.split(
+            ':'..d.short_src..':'..d.currentline..':\n'..
+            vim.inspect(#{...}==1 and ... or {...}),'\n'
+        ),'/tmp/nlog','a')
+    end
 end
 local M={}
 local list_of_tests=require'ultimate-autopair.test.test'

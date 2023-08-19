@@ -78,6 +78,7 @@ function M.start_test_runner_and_test(paths)
         '_G.UA_DEBUG_DONT=true',
         ---@diagnostic disable-next-line: undefined-field
         '_G.UA_DEV='..vim.inspect(_G.UA_DEV),
+        '_G.UA_IN_TEST=true',
         'require("ultimate-autopair.test.run").run("'..outfile..'")',
     },source)
     local job=vim.fn.jobstart({'nvim','--clean','-l',source})
