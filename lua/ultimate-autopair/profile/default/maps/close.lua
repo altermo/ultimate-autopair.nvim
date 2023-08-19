@@ -22,7 +22,9 @@ function M.get_open_start_pairs(o,col)
     local pair={}
     local i=1
     while i<col do
-        local pair_start=default.get_pairs_by_pos(o,i,'start',true)[1]
+        local pair_start=default.get_pairs_by_pos(o,i,'start',true,function (p)
+            return not default.get_type_opt(p,'ambiguous')
+        end)[1]
         if pair_start then
             local pcol=pair_start.fn.find_corresponding_pair(o,i)
             if not pcol then
