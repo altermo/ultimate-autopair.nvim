@@ -74,6 +74,7 @@ end
 function M.wrapp_coloffset(off,neg)
     return function (col,row)
         if col==0 then return 0 end
+        if not off[row] then return 0 end --TODO: here until fix
         return (col-off[row][col])*(neg and -1 or 1)
     end
 end

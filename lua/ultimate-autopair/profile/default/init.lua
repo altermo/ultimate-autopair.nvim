@@ -83,6 +83,7 @@ M.maps={
     {'rfastwarp','fastwarp'},
     'space',
     'space2',
+    'tabout',
 }
 ---@param conf prof.def.conf
 ---@param mem core.module[]

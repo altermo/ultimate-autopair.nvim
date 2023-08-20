@@ -190,6 +190,14 @@ return {
         {'<!--|-->','','<!--|-->',{ft='html'}},
         {'<!---->|','','<!---->|',{ft='html'}},
     },
+    tabout={
+        {'(|{})','','({}|)',{c={tabout={enable=true}}}},
+        {'(|"")','','(""|)',{c={tabout={enable=true}}}},
+        {'"|()"','','"()|"',{c={tabout={enable=true}}}},
+        {'(|)','','()|',{c={tabout={enable=true,hopout=true}}}},
+        {'"|"','','""|',{c={tabout={enable=true,hopout=true}}}},
+        {'(|)','','(|)',{c={tabout={enable=true}}}},
+    },
     ext_suround={
         {'|"foo"','(','(|"foo")'},
         {'|""','(','(|"")'},

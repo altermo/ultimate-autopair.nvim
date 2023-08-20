@@ -169,3 +169,4 @@
 + [ ] maybe add unbalanced detection into filter
 + [ ] maybe implement `{'(',')',id=1}` for use in cond and other
 + [ ] config scope pairs (not profile/global scope pairs)
++ [ ] reverse tabout

@@ -132,6 +132,7 @@ function M.run_test(testopt)
         ['']='<A-E>',
         ['']='<A-)>',
         ['']='<del>',
+        ['']='<A-tab>',
     }
     local unparsed_starting_line,key,unparsed_resulting_line,opt=unpack(testopt)
     opt=opt or {}
