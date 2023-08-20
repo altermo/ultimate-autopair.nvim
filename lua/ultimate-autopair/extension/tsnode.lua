@@ -9,7 +9,7 @@ function M._in_tsnode(o,nodetypes)
     local ssave=o.save[M._in_tsnode] or {} o.save[M._in_tsnode]=ssave
     local save=ssave[nodetypes] or {} ssave[nodetypes]=save
     local node=utils.gettsnode(o)
-    if node and save[node] then return unpack(save[node:id()]) end
+    if node and save[node:id()] then return unpack(save[node:id()]) end
     local function fn(n)
         local _,startcol,_=n:start()
         return startcol+1==o.col+o._coloffset(o.col,o.row)
@@ -23,10 +23,8 @@ function M._in_tsnode(o,nodetypes)
         --TODO fix: TSNode:id() doesn't differ between trees
         if node and save[node:id()] then return unpack(save[node:id()]) end
     end
-    if (not node) or fn(node) then
-        return
-    end
-    if node then save[node:id()]=r end
+    if not node then return end
+    save[node:id()]=r
     r[1]=node
     return node
 end
@@ -100,6 +98,7 @@ function M.filter(o,save,conf)
     end
     local node=M._in_tsnode(o,conf.seperate)
     if node then
+        ---@diagnostic disable-next-line: unused-local
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --TODO: hack
         return false
