@@ -191,7 +191,6 @@ end
 function M.run_action(action,lines,row,col,opt)
     local i=1
     local function insert(str)
-        --TODO:work with newline
         lines[row]=lines[row]:sub(1,col-1)..str..lines[row]:sub(col)
         col=col+#str
     end

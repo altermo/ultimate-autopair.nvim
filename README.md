@@ -52,7 +52,7 @@ use{
 ## Default configuration
 For the default configuration, refer to the documentation (`:help ultimate-autopair-config-default`).
 ## Demo
-TODO: add better demo
+<!--TODO: add better demo-->
 </details><details> <summary><b>demo</b></summary>
 
 ![demo](https://github.com/altermo/test/assets/107814000/cc92b235-da19-4a10-bd57-89df8c6b380e)

@@ -103,7 +103,7 @@ function M.test_newline()
     run(':set cindent\rI{a\r','{\n\t\n}',{cr={autoclose=true}})
     run(':set cindent\rI{fooa\r','{foo\n\t\n}',{cr={autoclose=true}})
     run(':set cindent\rI{foobi\r','{\n\tfoo\n}',{cr={autoclose=true}})
-    --run(':setf lua\rIdoA\r','do\n\nend',{cr={autoclose=true},{'do','end',imap=false,ft='lua'}}) --TODO
+    --run(':setf lua\rIdoA\r','do\n\nend',{cr={autoclose=true},{'do','end',imap=false,ft='lua'}})
     --run(':setf c\r:set cindent\rI{\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{}i\r','{\n\t\n};') --TBD
     --run(':setf c\r:set cindent\rI{};hi\r','{\n\t\n};') --TBD
@@ -236,7 +236,7 @@ function M.test_extensions()
     run([[I"'xI']],[[''"'"]])
     run([[I'""(a)]],[['""()']])
     run('I(")"','(")")')
-    --run(':setf lua\rI [[)0i(','() [[)]]') --TODO: activate treesitter
+    --run(':setf lua\rI [[)0i(','() [[)]]')
     run([[I '\')'0i(]],[[() '\')']])
     --cmdline
     run(':call setline(1,["foo\r','foo')
@@ -315,7 +315,6 @@ function M.test_options()
     run('I( )','( )',{space={map=false}})
     run(':a\r( )\r.\r','( )',{space={cmap=false}})
     run(':setf lua\rI + [ ]',' + [ ]',{space={check_box_ft={'lua'}}})
-    --TODO: write more tests
 end
 function M.test_new_filter()
     local b=':imap <C-b> <A-)>\r'
