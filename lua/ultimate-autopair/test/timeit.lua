@@ -10,6 +10,7 @@ M.file4={('"()";'):rep(rep)}
 function M.create_act_and_file(act,filecont,fn,path)
     local source=vim.fn.tempname()
     local file=vim.fn.tempname()
+    local out=vim.fn.tempname()
     vim.fn.writefile({
         'vim.opt.runtimepath:append("'..path..'")',
         '_G.UA_DEBUG_DONT=true',
@@ -17,7 +18,9 @@ function M.create_act_and_file(act,filecont,fn,path)
         'local acts=[==['..act..']==]',
         'vim.cmd.edit{"'..file..'"}',
         'vim.treesitter.start(0,"lua")',
+        'local t=vim.fn.reltime()',
         'vim.cmd.norm{acts}',
+        'vim.fn.writefile({tostring(vim.fn.reltimefloat(vim.fn.reltime(t)))},"'..out..'")',
         'vim.cmd.write{bang=true}',
         'vim.cmd.quit{bang=true}',
     },source)
@@ -25,28 +28,22 @@ function M.create_act_and_file(act,filecont,fn,path)
     local err,msg=pcall(fn,source)
     vim.fn.delete(source)
     vim.fn.delete(file)
+    local s,ret=pcall(vim.fn.readfile,out)
+    vim.fn.delete(out)
     if not err then error(msg) end
+    return s and ret[1] or nil
 end
 function M.timeit(filecont,act,path)
-    local ts1=vim.fn.reltime()
     local err
-    M.create_act_and_file('',filecont,function (source)
+    local t=M.create_act_and_file(act,filecont,function (source)
         if vim.system({'nvim','--clean','-l',source}):wait(10000).signal~=0 then
             err='timeout'
         end
     end,path)
-    local t1=vim.fn.reltimefloat(vim.fn.reltime(ts1))
-    local ts2=vim.fn.reltime()
-    M.create_act_and_file(act,filecont,function (source)
-        if vim.system({'nvim','--clean','-l',source}):wait(10000).signal~=0 then
-            err='timeout'
-        end
-    end,path)
-    local t2=vim.fn.reltimefloat(vim.fn.reltime(ts2))
     if err then
         M.log(tostring(err))
     else
-        M.log(tostring(t2-t1))
+        M.log(vim.inspect(t))
     end
 end
 function M.start()
