@@ -31,6 +31,3 @@ If you want to detect those use:\
 `{extensions={cond={cond=function(fn) return fn.get_tsnode_type()~='comment' and fn.get_tsnode_type()~='html_block' end}}}`
 ### Disable in macros
 Use `{extensions={cond={cond=function(fn) return not fn.in_macro() end}}}`
-### Enable non treesitter string detection
-Use `{multiline=false,{extensions={string={p=50}}}}`\
-NOTE: because of performance reasons, multiline must be disabled to use `string` extension.

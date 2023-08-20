@@ -8,8 +8,7 @@ For many features, including multiline string filtering, requires **treesitter**
 <details open=true><summary><b>BREAKING CHANGES</b></summary>
 
 If your coming from a previous version with broken config, check out [Q&A](./Q&A.md) first
-+ `string` extension is no longer enabled by default (uses treesitter-string filtering instead).
-    + If you want to use `string` extension, find answer in [Q&A](./Q&A.md)
++ `string` extension got removed in favour of `tsnode` string node detection
 + `rule` extension got removed in favour of new extension `cond`
 + `sub` extension got removed until a better solution can be found
 </details><details><summary><b>Major new features</b></summary>
