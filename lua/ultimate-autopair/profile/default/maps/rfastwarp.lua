@@ -77,7 +77,7 @@ function M.rfastwarp_start(o,p)
     return {
         {'delete',0,#p},
         {'home'},
-        p,{'h',#p}
+        ''..p,{'h',#p}
     }
 end
 ---@param o core.o

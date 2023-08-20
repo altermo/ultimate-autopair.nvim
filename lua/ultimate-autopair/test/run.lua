@@ -246,6 +246,7 @@ function M.run_action(action,lines,row,col,opt)
             lines[row]=lines[row]:sub(1,col-1)
             row=row+1
             col=1
+        elseif action:sub(i,i)=='' then
         else
             insert(action:sub(i,i))
         end

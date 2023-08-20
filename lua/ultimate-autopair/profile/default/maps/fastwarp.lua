@@ -107,7 +107,7 @@ function M.fastwarp_line(o,p)
         {'delete',0,#p},
         {'j',1},
         {'home'},
-        p,{'h',#p}
+        ''..p,{'h',#p}
     },1
 end
 ---@param o core.o
