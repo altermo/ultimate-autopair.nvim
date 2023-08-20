@@ -304,7 +304,7 @@ return {
         {"f'|","'","f''|",{ts=true,ft='lua'}},
         --TODO: test multiline string (python)
     },
-    SKIP_options={
+    SKIP_options={ --TODO
         ---pair
         {'|','(',{c={map=false}}},
         {'|','(',{c={pair_map=false}}},
@@ -316,7 +316,7 @@ return {
         {'(|)','a','|',{c={bs={map='a'}}}},
         {'(|)','b','|',{c={bs={map={'a','b'}}}}},
         {'|','I="("\r',')',{interactive=true,c={bs={cmap=false}}}},
-        {'(|foo)','','foo)',{c={bs={overjumps=false}}}},
+        {'(|foo)','','|foo)',{c={bs={overjumps=false}}}},
         {'( | )','','(| )',{c={bs={space=false}}}},
         ---cr
         {'(|)','\r','(\n|)',{c={cr={enable=false}}}},
