@@ -1,5 +1,5 @@
 local M={}
-local rep=200
+local rep=500
 M.file1={
     ('('):rep(rep),
     (')'):rep(rep),
