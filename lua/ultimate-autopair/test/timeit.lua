@@ -28,17 +28,25 @@ function M.create_act_and_file(act,filecont,fn,path)
     if not err then error(msg) end
 end
 function M.timeit(filecont,act,path)
-    local t=vim.fn.reltime()
+    local ts1=vim.fn.reltime()
     local err
+    M.create_act_and_file('',filecont,function (source)
+        if vim.system({'nvim','--clean','-l',source}):wait(10000).signal~=0 then
+            err='timeout'
+        end
+    end,path)
+    local t1=vim.fn.reltimefloat(vim.fn.reltime(ts1))
+    local ts2=vim.fn.reltime()
     M.create_act_and_file(act,filecont,function (source)
         if vim.system({'nvim','--clean','-l',source}):wait(10000).signal~=0 then
             err='timeout'
         end
     end,path)
+    local t2=vim.fn.reltimefloat(vim.fn.reltime(ts2))
     if err then
         M.log(tostring(err))
     else
-        M.log(tostring(vim.fn.reltimefloat(vim.fn.reltime(t))))
+        M.log(tostring(t2-t1))
     end
 end
 function M.start()
