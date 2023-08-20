@@ -19,7 +19,7 @@ function M.check(o,m)
         {'l',num},
         m.end_pair,
         {'h',num+#m.end_pair}
-    },o)
+    })
 end
 ---@param m prof.def.module
 ---@param _ prof.def.ext

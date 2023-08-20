@@ -30,7 +30,7 @@ function M.check(conf,o,m)
     end
     if not next_char_index then return end
     M.save={o.line,o.col,next_char_index-o.col+#m.pair,m.pair}
-    return utils.create_act({{'l',next_char_index-o.col+#m.pair}},o)
+    return utils.create_act({{'l',next_char_index-o.col+#m.pair}})
 end
 ---@param ext prof.def.ext
 ---@param mconf prof.def.conf
@@ -58,7 +58,7 @@ end
 function M.wrapp_undo(_)
     return function (o)
         if M.save[1]~=o.line or M.save[2]~=(o.col-M.save[3]) then return end
-        return utils.create_act({{'h',M.save[3]},M.save[4]},o)
+        return utils.create_act({{'h',M.save[3]},M.save[4]})
     end
 end
 ---@param m prof.def.module
