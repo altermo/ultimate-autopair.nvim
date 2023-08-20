@@ -18,7 +18,7 @@ function M.tabout(o,col,m)
             if pcol and pcol<col then
                 if i==col then
                     if m.iconf.hopout then
-                        return utils.create_act({{'l',1}})
+                        return utils.create_act({{'l',#end_pair.pair}})
                     end
                 else
                     return utils.create_act({

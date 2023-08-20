@@ -1,3 +1,4 @@
+local utils=require'ultimate-autopair.utils'
 local M={}
 ---@type prof.def.m_type
 M.type_def={}
@@ -62,10 +63,11 @@ function M.def_pair_sort(a,b)
     end
 end
 ---@param m prof.def.m.pair
-function M.extend_pair_check_with_map_check(m)
+---@param q prof.def.q
+function M.extend_pair_check_with_map_check(m,q)
     local check=m.check
     m.check=function (o)
-        if o.key~=m.key then return end
+        if o.key~=m.key or not ((o.incmd and q.cmap) or (not o.incmd and q.map)) then return end
         return check(o)
     end
 end
@@ -153,7 +155,6 @@ end
 ---@param nofilter boolean?
 ---@return prof.def.m.pair[]
 function M.get_pairs_by_pos(o,col,type,next,filter,nofilter)
-    local utils=require'ultimate-autopair.utils'
     type=type or 'pair'
     local ret={}
     for _,i in ipairs(M.filter_for_opt(type)) do

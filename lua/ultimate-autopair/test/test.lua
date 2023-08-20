@@ -197,6 +197,8 @@ return {
         {'(|)','','()|',{c={tabout={enable=true,hopout=true}}}},
         {'"|"','','""|',{c={tabout={enable=true,hopout=true}}}},
         {'(|)','','(|)',{c={tabout={enable=true}}}},
+        {'<!--|,-->','','<!--,|-->',{ft='html',c={tabout={enable=true}}}},
+        {'<!--,|-->','','<!--,-->|',{ft='html',c={tabout={enable=true,hopout=true}}}},
     },
     ext_suround={
         {'|"foo"','(','(|"foo")'},
@@ -304,10 +306,10 @@ return {
         {"f'|","'","f''|",{ts=true,ft='lua'}},
         --TODO: test multiline string (python)
     },
-    SKIP_options={ --TODO
+    options={ --TODO
         ---pair
-        {'|','(',{c={map=false}}},
-        {'|','(',{c={pair_map=false}}},
+        {'|','(','(|',{c={map=false}}},
+        {'|','(','(|',{c={pair_map=false}}},
         {'|','I="("\r','(',{interactive=true,c={cmap=true}}},
         {'|','I="("\r','(',{interactive=true,c={pair_cmap=true}}},
         ---bs
@@ -328,16 +330,17 @@ return {
         {'+ [|]',' ','+ [ |]',{ft='lua',c={space={check_box_ft={'lua'}}}}},
         --TODO: write more tests
     },
-    SKIP_filter={
+    filter={
         {'\\(|)','','\\|)'},
         {'\\(|','','\\(|'},
-        {'\\(|)','\r','\\(\n|)'},
+        {'\\(|)','\r','\\(\n|)',{skip=true}}, --TODO: fix
         {'{(|)\\}}','','{(|\\})}'},
+        {'(|\\)),','','(|\\),)'},
         {'{(|\\{)}','','{(|)\\{}'},
         {'\\(|)',' ','\\( |)'},
         {'\\( |)','f','\\( f)',{interactive=true,c={space2={enable=true}}}},
         {'|"\\"','(','(|)"\\"'},
-        {'("|")',')','(")|")',{c={{'"','"',fly=true,p=11},extensions={fly={nofilter=false}}}}},
+        {'("|")',')','(")|")',{ts=true,c={{'"','"',fly=true,p=11},extensions={fly={nofilter=false}}}}},
     },
     multiline={
         {'|\n)','(','(|\n)'},
