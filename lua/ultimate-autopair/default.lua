@@ -118,7 +118,7 @@ M.conf={
         --then a `\t` will not be inserted
     },
     extensions={-- *ultimate-autopair-extensions-default-config*
-        cmdtype={skip={'/','?','@'},p=100},
+        cmdtype={skip={'/','?','@','-'},p=100},
         filetype={p=90,nft={'TelescopePrompt'},tree=true},
         escape={filter=true,p=80},
         utf8={p=70},
