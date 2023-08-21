@@ -82,9 +82,9 @@ function M.start_test_runner_and_test(paths)
         'require("ultimate-autopair.test.run").run("'..outfile..'")',
     },source)
     local job=vim.fn.jobstart({'nvim','--clean','-l',source})
-    --TODO: maybe:
+    --Maybe:
     ---multiple instances (per category?)
-    ---use rpc/tcp server for out instead of file
+    ---use tcp server for out instead of file
     local jobstat=vim.fn.jobwait({job},10000)[1]
     if jobstat==-1 then
         M.fn.warning('timeout: tester process did not exit')

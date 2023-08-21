@@ -73,8 +73,11 @@ end
 ---@return fun(col:number,row:number):number
 function M.wrapp_coloffset(off,neg)
     return function (col,row)
+        --TODO:
+        ---what to do with incorrect values, like col=-1, row=0
+        ---if line doesn't contain utf8, skip calc
         if col==0 then return 0 end
-        if not off[row] then return 0 end --TODO: here until fix
+        if not off[row] --[[ or not off[row][col] ]] then return 0 end --HACK: here until fix
         return (col-off[row][col])*(neg and -1 or 1)
     end
 end

@@ -7,7 +7,7 @@
 ---@field multiline boolean?
 ---@field nocursormove boolean?
 ---@field do_nothing_if_fail boolean?
----@field filter_string boolean? --TODO: make better so that string filter is not requires
+---@field filter_string boolean?
 
 local default=require 'ultimate-autopair.profile.default.utils'
 local open_pair=require 'ultimate-autopair.profile.default.utils.open_pair'

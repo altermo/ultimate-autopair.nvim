@@ -124,8 +124,8 @@ return {
         {'```|```lua','','```|lua```',{ft='markdown'}},
         {'(|)a_e','','(|a_e)'},
         {'(|")")foo','','(|")"foo)',{c={fastwarp={filter_string=true}},ts=true}},
-        {'(|)foo','e','(|foo)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}},skip=true}}},
-        {'(|)foo','E','(foo|)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}},skip=true}}},
+        {'(|)foo','e','(|foo)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}}}},
+        {'(|)foo','E','(foo|)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}}}},
         {'(|),','','(|,)',{c={fastwarp={faster=true}}}},
         {'(|),{},','','(|,{}),',{c={fastwarp={faster=true}}}},
         {'{|},foo(""),','','{|,foo("")},',{c={fastwarp={faster=true}}}},
@@ -136,7 +136,7 @@ return {
         {'(|)','','(|)'},
         {'(foo,bar|)','','(foo|),bar'},
         {'({bar}|)','','(|){bar}'},
-        {'("bar"|)','','(|)"bar"',{ts=true,skip=true}}, --TODO: fix
+        {'("bar"|)','','(|)"bar"',{ts=true}},
         {'(foo{bar}baz|)','','(foo{bar}|)baz'},
         {'(\n|)','','(|)\n'},
         {'(\n,|)','','(\n|),'},
@@ -306,7 +306,7 @@ return {
         {"f'|","'","f''|",{ts=true,ft='lua'}},
         --TODO: test multiline string (python)
     },
-    options={ --TODO
+    options={
         ---pair
         {'|','(','(|',{c={map=false}}},
         {'|','(','(|',{c={pair_map=false}}},

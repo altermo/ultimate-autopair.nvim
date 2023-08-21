@@ -28,6 +28,7 @@ function M._in_tsnode(o,nodetypes)
     r[1]=node
     return node
 end
+---@tag unused-code
 function M._in_tree(o)
     --TODO: move to utils
     local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
@@ -46,6 +47,7 @@ function M._in_tree(o)
     local langs=M._langauges_for_range(parser,pos)
     return langs
 end
+---@tag unused-code
 ---@overload fun(self:LanguageTree,range:Range4):LanguageTree[]
 function M._langauge_for_range(self,range,_s)
     _s=_s or {}
@@ -73,7 +75,6 @@ end
 ---@param conf table
 ---@param save table
 function M.set_in_node_or_lang(o,conf,save)
-    --TODO: implement lang
     local node=M._in_tsnode(o,conf.seperate)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
@@ -98,9 +99,9 @@ function M.filter(o,save,conf)
     end
     local node=M._in_tsnode(o,conf.seperate)
     if node then
-        ---@diagnostic disable-next-line: unused-local
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
-        if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --TODO: hack
+        if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --HACK
+        if vim.tbl_contains({'string','raw_string'},node:type()) and srow==o.row and scol==o.col then return true end --HACK
         return false
     end
     return true
