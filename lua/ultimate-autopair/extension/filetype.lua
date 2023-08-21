@@ -9,7 +9,6 @@ function M.filter(m,ext,o)
     local conf=ext.conf
     local notree=not conf.tree
     local ft=utils.getsmartft(o,notree)
-    if o.incmd then ft='vim' end
     if conf.ft and not vim.tbl_contains(conf.ft,ft) then
     elseif conf.nft and vim.tbl_contains(conf.nft,ft) then
     elseif m.conf.ft and not vim.tbl_contains(m.conf.ft,ft) then

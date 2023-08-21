@@ -135,6 +135,7 @@ end
 ---@return TSNode?
 function M.gettsnode(o)
     --TODO: use vim.treesitter.get_string_parser for cmdline
+    if o.incmd then return end
     local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
     local save=o.save[M.gettsnode] or {} o.save[M.gettsnode]=save
     if save.no_parser then return end
@@ -174,6 +175,7 @@ end
 function M.getsmartft(o,notree)
     --TODO: fix for empty lines
     --TODO: use vim.treesitter.get_string_parser for cmdline
+    if o.incmd then return 'vim' end
     local cache=o.save
     local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
     if notree then return vim.o.filetype end
