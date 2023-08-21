@@ -155,7 +155,10 @@ end
 ---@return core.check-fn
 function M.wrapp_rfastwarp(m)
     return function (o)
-        return M.rfastwarp(o,m)
+        local ret=M.rfastwarp(o,m)
+        local tsnode=default.load_extension'tsnode'
+        o.save[tsnode.savetype]={_skip={}}
+        return ret
     end
 end
 ---@param conf prof.def.map.fastwarp.conf
@@ -177,22 +180,16 @@ function M.init(conf,mconf,ext)
 
     m.check=M.wrapp_rfastwarp(m)
     m.filter=default.def_filter_wrapper(m)
-    if not conf.filter_string then
-        for k,v in pairs(m.extensions) do
-            if v.name=='tsnode' then
-                local exte=vim.deepcopy(v)
-                exte.conf.seperate=vim.tbl_filter(function (value)
-                    return value~='string'
-                end,exte.conf.seperate or {})
-                m.extensions[k]=exte
-                break
-            end
-        end
-    end --TODO: refactor {r}fastwarp.lua so that the option can be removed
-
     default.init_extensions(m,m.extensions)
     m.get_map=default.def_map_get_map_wrapper(m)
-    default.extend_map_check_with_map_check(m)
+    default.extend_map_check_with_map_check(m,not conf.filter_string and function (o)
+        local tsnode=default.load_extension'tsnode'
+        o.save[tsnode.savetype]={_skip={
+            'string',
+            'raw_string',
+        }} --TODO: refactor {r}fastwarp.lua so that the option can be removed
+        return true
+    end or nil)
     if conf.do_nothing_if_fail then
         local n={}
         n.map=m.map

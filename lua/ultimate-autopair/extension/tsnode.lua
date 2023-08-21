@@ -16,7 +16,16 @@ function M._in_tsnode(o,nodetypes)
     end
     local ql={}
     local r={}
-    for _,v in ipairs(nodetypes) do ql[v]=true end
+    local nsave=M.get_save(o)
+    for _,v in ipairs(nodetypes) do
+        if nsave._skip then
+            if vim.tbl_contains(nsave._skip,v) then
+                goto continue
+            end
+        end
+        ql[v]=true
+        ::continue::
+    end
     while node and ((not ql[node:type()]) or fn(node)) do
         if node then save[node:id()]=r end
         node=node:parent()
@@ -65,9 +74,7 @@ end
 function M.get_save(o)
     local save=o.save[M.savetype]
     if not save then
-        save={
-            cache={},
-        }
+        save={}
         o.save[M.savetype]=save
     end
     return save

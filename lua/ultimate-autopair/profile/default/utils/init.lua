@@ -73,9 +73,11 @@ function M.extend_pair_check_with_map_check(m,q,filter)
     end
 end
 ---@param m prof.def.m.map
-function M.extend_map_check_with_map_check(m)
+---@param filter? fun(o:core.o):boolean
+function M.extend_map_check_with_map_check(m,filter)
     local check=m.check
     m.check=function (o)
+        if not (not filter or filter(o)) then return end
         local key=type(m.map)=='table' and m.map or {m.map}
         ---@cast key string[]
         local keyc=m.cmap and (type(m.cmap)=='table' and m.cmap or {m.cmap}) or key

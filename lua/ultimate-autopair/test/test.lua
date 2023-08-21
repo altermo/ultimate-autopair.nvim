@@ -109,6 +109,7 @@ return {
         {'(|)\n','','(\n|)',{c={fastwarp={nocursormove=false}}}},
         {'(|),""','','(|,)""',{ts=true}},
         {'"|"[],','','"|[]",',{ts=true}},
+        {'("|")','','("|")',{ts=true}},
         {'"|"foo','','"|foo"',{ts=true}},
         {'"|"foo,','','"|foo",',{ts=true}},
         {'"|foo",bar','','"|foo,bar"',{ts=true}},
