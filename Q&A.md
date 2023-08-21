@@ -31,4 +31,6 @@ If you want to detect those use:\
 `{extensions={cond={cond=function(fn) return fn.get_tsnode_type()~='comment' and fn.get_tsnode_type()~='html_block' end}}}`
 ### How to disable in macros
 Use `{extensions={cond={cond=function(fn) return not fn.in_macro() end}}}`
-<!--TODO: ### How to disable hop over end pair-->
+### How to disable hop over end pair
+For already exsisting pairs, use `{config_internal_pairs={{'(',')',disable_end=true}}}`
+For new pairs, use `{{'<','>',disable_end=true}}`
