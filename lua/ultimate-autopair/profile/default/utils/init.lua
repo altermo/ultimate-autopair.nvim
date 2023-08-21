@@ -64,10 +64,11 @@ function M.def_pair_sort(a,b)
 end
 ---@param m prof.def.m.pair
 ---@param q prof.def.q
-function M.extend_pair_check_with_map_check(m,q)
+---@param filter? fun(o:core.o):boolean
+function M.extend_pair_check_with_map_check(m,q,filter)
     local check=m.check
     m.check=function (o)
-        if o.key~=m.key or not ((o.incmd and q.cmap) or (not o.incmd and q.map)) then return end
+        if (o.key~=m.key or not ((o.incmd and q.cmap) or (not o.incmd and q.map))) or not (not filter or filter(o)) then return end
         return check(o)
     end
 end

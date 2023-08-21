@@ -119,7 +119,7 @@ function M.init(q)
     m.newline=M.newline_wrapper(m)
     m.backspace=M.backspace_wrapper(m)
     m.sort=default.def_pair_sort
-    default.extend_pair_check_with_map_check(m,q)
+    default.extend_pair_check_with_map_check(m,q,function () return not m.conf.disable_start end)
     return m
 end
 return M

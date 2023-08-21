@@ -14,6 +14,12 @@ return {
         {'|)',')',')|)'},
         {'(|))',')','()|)'},
         {'f|','(','foo(|)',{abbr={f='foo'}}},
+        {'(|)',')','()|)',{c={config_internal_pairs={{'(',')',disable_end=true}}}}},
+        {'|','(','(|)',{c={config_internal_pairs={{'(',')',disable_end=true}}}}},
+        {'|','(','(|',{c={config_internal_pairs={{'(',')',disable_start=true}}}}},
+        {'(|)',')','()|',{c={config_internal_pairs={{'(',')',disable_start=true}}}}},
+        {'|','"','"|',{c={config_internal_pairs={{'"','"',disable_start=true}}}}},
+        {'"|"','"','""|""',{c={config_internal_pairs={{'"','"',disable_end=true}}}}},
     },
     SKIP_interactive={
         {'|','a(..','(((|)))',{interactive=true}},
