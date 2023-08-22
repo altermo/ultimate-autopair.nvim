@@ -7,6 +7,7 @@ M.file1={
 M.file2=vim.fn["repeat"]({'(',')'},rep)
 M.file3=vim.list_extend(vim.fn["repeat"]({'('},rep),vim.fn["repeat"]({')'},rep))
 M.file4={('"()";'):rep(rep)}
+M.file5={(('a'):rep(80)..';'):rep(rep)}
 function M.create_act_and_file(act,filecont,fn,path)
     local source=vim.fn.tempname()
     local file=vim.fn.tempname()
@@ -56,6 +57,7 @@ function M.start()
     M.timeit(M.file2,'Go(',path)
     M.timeit(M.file3,'Go(',path)
     M.timeit(M.file4,'Go(',path)
+    M.timeit(M.file5,'Go(',path)
 end
 M.start()
 return M
