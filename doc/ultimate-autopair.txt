@@ -180,6 +180,9 @@ The default configuration contains a loot of options, here are those:
      --then an `e` will not be inserted
      filter_string=false,
      --whether to use builting filter string
+     faster=false,
+     --only enables jump over pair, goto end/next line
+     --{|}M.foo('bar') > {M.foo('bar')|}
      conf={},
      --contains extension config
      multi=false,
@@ -447,7 +450,8 @@ The default setup is: >lua
  local configs={ua.extend_default({})}
  ua.init(configs)
 <
-
+It is recommended to read sad through the *Q&A.md* for features.
+# *Not-default-enabled-maps*
 There are many features in UA which are useful but are not enabled by
 default, these include:> lua
 < *Space2*, which is like space, but insert space if character in match inserted >lua
@@ -457,9 +461,15 @@ default, these include:> lua
 < *Close*, which allows you to close open parenthesis >lua
  {close={enable=true}} --[(| > <A-)> > [(|)]
 <
-It is recommended to read sad through the *Q&A.md* for other wanted features.
-
-
+# *Recommended-configs*
+Here is my recommendation for a config for *fastwarp*: >lua
+ {fastwarp={
+    multi=true,
+    {},
+    {faster=true,map='<C-A-e>',cmap='<C-A-e>'},
+  }}
+<
+# *Pair-creation*
 To create a simple pair, you can just add it to the config: >lua
  {{'$','$'}}
 < To change the config of a default pair, you can use: >lua

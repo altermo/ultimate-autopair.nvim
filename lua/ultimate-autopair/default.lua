@@ -86,6 +86,9 @@ M.conf={
         --then an `e` will not be inserted
         filter_string=false,
         --whether to use builting filter string
+        faster=false,
+        --only enables jump over pair, goto end/next line
+        --{|}M.foo('bar') > {M.foo('bar')|}
         conf={},
         --contains extension config
         multi=false,
