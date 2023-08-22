@@ -14,7 +14,7 @@ M.fn={
         local opaa,_=open_pair.count_ambigious_pair(m,o,col+#m.pair,true)
         if  opaa then return end
         local opab,opabr=open_pair.count_ambigious_pair(m,o,col-1,false,1,true)
-        if not opab then return end
+        if not opab then return false end
         return opab,opabr
     end,
 }

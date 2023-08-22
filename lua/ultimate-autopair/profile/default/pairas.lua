@@ -12,7 +12,7 @@ M.fn={
         local opab,_=open_pair.count_ambigious_pair(m,o,col-1)
         if not opab then return end
         local opaa,opaar=open_pair.count_ambigious_pair(m,o,col,true,1,true)
-        if not opaa then return end
+        if not opaa then return false end
         return opaa,opaar
     end,
     can_check_pre=function(m,o)
