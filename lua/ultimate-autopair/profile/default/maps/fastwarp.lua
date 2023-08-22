@@ -59,7 +59,7 @@ function M.act.fastwarp_next_to_end_pair(o,ind,p,m)
     local pair=default.get_pairs_by_pos(o,ind,'end',true)[1]
     if not pair then return end
     if default.get_type_opt(pair,'ambiguous') then
-        if open_pair.open_pair_ambigous_before_nor_after(pair,o,ind) then return end
+        if open_pair.open_pair_ambiguous_before_nor_after(pair,o,ind) then return end
     end
     return {
         {'delete',0,#p},

@@ -47,7 +47,7 @@ function M.act.rfastwarp_next_to_start_pair(o,ind,p,m)
     local pair=default.get_pairs_by_pos(o,ind,'start',true)[1]
     if not pair then return end
     if default.get_type_opt(pair,'ambiguous') then
-        if not open_pair.open_pair_ambigous_before_nor_after(pair,o,ind) then return end
+        if not open_pair.open_pair_ambiguous_before_nor_after(pair,o,ind) then return end
     end
     return {
         {'delete',0,#p},

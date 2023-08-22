@@ -5,13 +5,13 @@ local M={}
 M.fn={
     can_check=function(m,o)
         if not m.fn.can_check_pre(o) then return end
-        return not open_pair.open_pair_ambigous(m,o)
+        return not open_pair.open_pair_ambiguous(m,o)
     end,
     find_corresponding_pair=function (m,o,col)
         col=col+#m.pair
-        local opab,_=open_pair.count_ambigious_pair(m,o,col-1)
+        local opab,_=open_pair.count_ambiguous_pair(m,o,col-1)
         if not opab then return end
-        local opaa,opaar=open_pair.count_ambigious_pair(m,o,col,true,1,true)
+        local opaa,opaar=open_pair.count_ambiguous_pair(m,o,col,true,1,true)
         if not opaa then return false end
         return opaa,opaar
     end,
@@ -52,12 +52,12 @@ function M.backspace_wrapper(m)
         if m.conf.newline==false then return end
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and
             m.pair==o.line:sub(o.col,o.col+#m.pair-1) and
-            not open_pair.open_pair_ambigous(m,o,o.col) then
+            not open_pair.open_pair_ambiguous(m,o,o.col) then
             return utils.create_act({{'delete',conf.single_delete and 1 or #m.pair,#m.pair}})
         end
         if conf.overjumps and m.conf.bs_overjumps and
             o.line:sub(o.col-#m.pair,o.col-1)==m.pair and
-            open_pair.open_pair_ambigous_before_and_after(m,o,o.col) then
+            open_pair.open_pair_ambiguous_before_and_after(m,o,o.col) then
             local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
             if col then
                 return utils.create_act({
@@ -87,7 +87,7 @@ function M.init(q)
     m[default.type_def]={'charins','pair','start','ambiguous','dobackspace','donewline'}
     m.mconf=q.mconf
     m.p=q.p
-    m.doc=('autopairs ambigous start pair: %s'):format(m.pair)
+    m.doc=('autopairs ambiguous start pair: %s'):format(m.pair)
     m.fn=default.init_fns(m,M.fn)
     m.multiline=q.multiline
 

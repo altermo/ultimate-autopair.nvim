@@ -97,7 +97,7 @@ end
 ---@param ret_pos boolean?
 ---@return number?
 ---@return number?
-function M.count_ambigious_pair(pair,o,col,gotoend,Icount,ret_pos)
+function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
     local spair=pair.pair
     local sfilter=function(row,col_) return utils._filter_pos(pair.start_m.filter,o,col_,row) end
     local efilter=function(row,col_)
@@ -158,25 +158,25 @@ end
 ---@param _ number?
 ---@return number?
 ---@return number?
-function M.open_pair_ambigous(pair,o,_)
-    return M.count_ambigious_pair(pair,o,nil,'both')
+function M.open_pair_ambiguous(pair,o,_)
+    return M.count_ambiguous_pair(pair,o,nil,'both')
 end
 ---@param pair prof.def.m.pair
 ---@param o core.o
 ---@param col number
 ---@return boolean?
-function M.open_pair_ambigous_before_and_after(pair,o,col)
-    local count=M.count_ambigious_pair(pair,o,col-1) and 1 or 0
-    local end_count=M.count_ambigious_pair(pair,o,col,true,count)
+function M.open_pair_ambiguous_before_and_after(pair,o,col)
+    local count=M.count_ambiguous_pair(pair,o,col-1) and 1 or 0
+    local end_count=M.count_ambiguous_pair(pair,o,col,true,count)
     return count==1 and not end_count
 end
 ---@param pair prof.def.m.pair
 ---@param o core.o
 ---@param col number
 ---@return boolean?
-function M.open_pair_ambigous_before_nor_after(pair,o,col)
-    local count=M.count_ambigious_pair(pair,o,col-1) and 1 or 0
-    local end_count=M.count_ambigious_pair(pair,o,col,true,count)
+function M.open_pair_ambiguous_before_nor_after(pair,o,col)
+    local count=M.count_ambiguous_pair(pair,o,col-1) and 1 or 0
+    local end_count=M.count_ambiguous_pair(pair,o,col,true,count)
     return not end_count and count~=1
 end
 return M

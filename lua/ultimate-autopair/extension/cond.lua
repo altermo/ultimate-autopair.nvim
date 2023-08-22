@@ -33,7 +33,7 @@ M.fns={
     is_end_pair=function (opt)
         return default.get_type_opt(opt.m,'end')
     end,
-    is_ambigous_pair=function (opt)
+    is_ambiguous_pair=function (opt)
         return default.get_type_opt(opt.m,'ambiguous')
     end,
     get_tsnode=function (opt,col,row)

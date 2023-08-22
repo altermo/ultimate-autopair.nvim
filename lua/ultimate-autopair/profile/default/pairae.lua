@@ -5,15 +5,15 @@ local M={}
 M.fn={
     can_check=function(m,o)
         if not m.fn.can_check_pre(o) then return end
-        return open_pair.open_pair_ambigous_before_and_after(m,o,o.col)
+        return open_pair.open_pair_ambiguous_before_and_after(m,o,o.col)
     end,
     can_check_pre=function (m,o)
         return o.line:sub(o.col,o.col-1+#m.pair)==m.pair
     end,
     find_corresponding_pair=function (m,o,col)
-        local opaa,_=open_pair.count_ambigious_pair(m,o,col+#m.pair,true)
+        local opaa,_=open_pair.count_ambiguous_pair(m,o,col+#m.pair,true)
         if  opaa then return end
-        local opab,opabr=open_pair.count_ambigious_pair(m,o,col-1,false,1,true)
+        local opab,opabr=open_pair.count_ambiguous_pair(m,o,col-1,false,1,true)
         if not opab then return false end
         return opab,opabr
     end,
@@ -33,7 +33,7 @@ function M.backspace_wrapper(m)
         if m.conf.newline==false then return end
         if o.line:sub(o.col-#m.pair-#m.pair,o.col-1-#m.pair)==m.pair and
             m.pair==o.line:sub(o.col-#m.pair,o.col-1) and
-            open_pair.open_pair_ambigous_before_nor_after(m,o,o.col) then
+            open_pair.open_pair_ambiguous_before_nor_after(m,o,o.col) then
             return utils.create_act({{'delete',#m.pair+#m.pair}})
         end
         if o.incmd then return end
@@ -45,7 +45,7 @@ function M.backspace_wrapper(m)
         if not line1 or not line2 then return end
         local line2_start=line2:find('[^%s]')
         if not line2_start then return end
-        if open_pair.open_pair_ambigous_before_nor_after(m,o,o.col) then return end
+        if open_pair.open_pair_ambiguous_before_nor_after(m,o,o.col) then return end
         if line1:sub(-#m.start_pair)==m.start_pair and
             line2:sub(line2_start,line2_start+#m.end_pair)==m.end_pair then
             return utils.create_act({
@@ -71,7 +71,7 @@ function M.init(q)
     m[default.type_def]={'charins','pair','end','ambiguous','dobackspace'}
     m.mconf=q.mconf
     m.p=q.p
-    m.doc=('autopairs ambigous end pair: %s'):format(m.pair)
+    m.doc=('autopairs ambiguous end pair: %s'):format(m.pair)
     m.fn=default.init_fns(m,M.fn)
     m.multiline=q.multiline
 
