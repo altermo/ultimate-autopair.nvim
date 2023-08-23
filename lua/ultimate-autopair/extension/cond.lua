@@ -1,14 +1,16 @@
 ---FI
 ---@class ext.cond.conf:prof.def.ext.conf
----@field cond? fun(fn:function[],o:core.o,m:prof.def.module)[]|fun(fn:function[],o:core.o,m:prof.def.module)
+---@field cond? ext.cond.fn|ext.cond.fn[]
 ---@field filter? boolean
 ---@class ext.cond.pconf
----@field cond? fun(fn:function[],o:core.o,m:prof.def.module)[]|fun(fn:function[],o:core.o,m:prof.def.module)
+---@field cond? ext.cond.fn|ext.cond.fn[]
+---@alias ext.cond.opt {o:core.o,m:prof.def.module,incheck:boolean?}
+---@alias ext.cond.fn fun(fn:function[],o:core.o,m:prof.def.module)
 
 local M={}
 local utils=require'ultimate-autopair.utils'
 local default=require'ultimate-autopair.profile.default.utils'
----@type fun(opt:table,...)[]
+---@type fun(opt:ext.cond.opt,...)[]
 M.fns={
     in_macro=function ()
         return vim.fn.reg_recording()~='' or vim.fn.reg_executing()~=''
@@ -62,21 +64,21 @@ M.fns={
         return utils.getcmdtype()
     end,
 }
----@param opt table
+---@param opt ext.cond.opt
 ---@return function[]
 function M.init_fns(opt)
     return vim.tbl_map(function(fn)
         return function (...) return fn(opt,...) end
     end,M.fns)
 end
----@param conds fun(fn:function[],o:core.o,m:prof.def.module)[]|fun(fn:function[],o:core.o,m:prof.def.module)?
+---@param conds? ext.cond.fn|ext.cond.fn[]
 ---@param m prof.def.module
 ---@param o core.o
 ---@param incheck boolean?
 ---@return boolean
 function M.cond(conds,o,m,incheck)
-    ---@cast conds table
     local fns=M.init_fns({o=o,m=m,incheck=incheck})
+    ---@cast conds ext.cond.fn[]
     for _,v in ipairs(type(conds)=='function' and {conds} or conds or {}) do
         if not v(fns,o,m) then
             return false

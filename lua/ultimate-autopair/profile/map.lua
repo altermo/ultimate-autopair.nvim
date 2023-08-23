@@ -2,6 +2,10 @@
 ---@field mode string[]
 ---@field lhs string
 ---@field rhs string
+---@class prof.map.opt:prof.mconf
+---@field [1] string|string[]
+---@field [2] string
+---@field [3] string
 
 local core=require'ultimate-autopair.core'
 local M={}
@@ -26,13 +30,13 @@ function M.check_wrapp(m)
         return m.rhs
     end
 end
----@param opts table
+---@param opts prof.map.opt
 ---@param mconf prof.mconf
 ---@return core.module
 function M.create_map(opts,mconf)
     local m={}
     m.p=opts.p or mconf.p or 10
-    m.mode=type(opts[1])=='string' and {opts[1]} or opts[1]
+    m.mode=type(opts[1])=='string' and {opts[1]} or opts[1] --[[@as string[] ]]
     for _,v in ipairs(m.mode) do
         if not vim.tbl_contains(core.modes,v) then
             error(('core.modes `%s` does not contain mode %s'):format(core.modes,v))

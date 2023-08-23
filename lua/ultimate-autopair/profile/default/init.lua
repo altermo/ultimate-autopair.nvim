@@ -20,7 +20,7 @@
 ---@class prof.def.ext
 ---@field conf prof.def.ext.conf
 ---@field name string
----@field m table
+---@field m {call:fun(m:prof.def.module,ext:prof.def.ext),[string]:function}
 ---@class prof.def.ext.conf
 ---@field p number
 ---@class prof.def.conf.map
@@ -35,9 +35,9 @@
 ---@field cmap? boolean
 ---@field pair_map? boolean
 ---@field pair_cmap? boolean
----@field extensions? table
----@field internal_pairs? table
----@field config_internal_pairs? table
+---@field extensions? table<string,prof.def.ext.conf>
+---@field internal_pairs? prof.def.conf.pair[]
+---@field config_internal_pairs? prof.def.conf.pair[]
 ---@field bs? prof.def.map.bs.conf
 ---@field cr? prof.def.map.cr.conf
 ---@field space? prof.def.map.space.conf
@@ -143,9 +143,9 @@ function M.create_q_value(conf,ext,pair)
         multiline=conf.multiline~=false and pair.multiline~=false and (pair.multiline or conf.multiline),
     }
 end
----@param somepairs table
----@param configs table
----@return table
+---@param somepairs prof.def.conf.pair[]
+---@param configs prof.def.conf.pair[]
+---@return prof.def.conf.pair[]
 function M.prepare_pairs(somepairs,configs)
     if not configs then return somepairs end
     local newpairs=vim.deepcopy(somepairs)
@@ -186,7 +186,7 @@ function M.init_maps(mem,conf,ext)
 end
 ---@param map_name string
 ---@param mem core.module[]
----@param confs table
+---@param confs prof.def.conf.map|prof.def.conf.map[]
 ---@param mconf prof.def.conf
 ---@param ext prof.def.ext[]
 function M.init_map(map_name,mem,confs,mconf,ext)
@@ -201,7 +201,7 @@ function M.init_map(map_name,mem,confs,mconf,ext)
         end
     end
 end
----@param extension_confs table
+---@param extension_confs table<string,prof.def.ext.conf>
 ---@return prof.def.ext[]
 function M.prepare_extensions(extension_confs)
     local tbl_of_ext_opt={}

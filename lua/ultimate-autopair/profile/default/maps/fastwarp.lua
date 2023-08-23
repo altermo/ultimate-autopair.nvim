@@ -13,13 +13,13 @@ local default=require 'ultimate-autopair.profile.default.utils'
 local open_pair=require 'ultimate-autopair.profile.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
 local M={}
----@type table<string,fun(o:core.o,ind:number,p:string,m:prof.def.m.map):table?,number?>
+---@type table<string,fun(o:core.o,ind:number,p:string,m:prof.def.m.map):core.act?,number?>
 M.act={}
 ---@param o core.o
 ---@param ind number
 ---@param p string
 ---@param m prof.def.m.map
----@return table?
+---@return core.act?
 ---@return number?
 function M.act.fastwarp_over_pair(o,ind,p,m)
     if o.col+#p~=ind and not m.iconf.faster then return end
@@ -37,7 +37,7 @@ end
 ---@param ind number
 ---@param p string
 ---@param m prof.def.m.map
----@return table?
+---@return core.act?
 function M.act.fastwarp_next_to_start_pair(o,ind,p,m)
     if m.iconf.faster then return end
     if o.col+#p==ind then return end
@@ -53,7 +53,7 @@ end
 ---@param ind number
 ---@param p string
 ---@param m prof.def.m.map
----@return table?
+---@return core.act?
 function M.act.fastwarp_next_to_end_pair(o,ind,p,m)
     if o.col+#p==ind and m.iconf.hopout then return end
     local pair=default.get_pairs_by_pos(o,ind,'end',true)[1]
@@ -71,7 +71,7 @@ end
 ---@param ind number
 ---@param p string
 ---@param m prof.def.m.map
----@return table?
+---@return core.act?
 function M.act.fastwarp_over_word(o,ind,p,m)
     if m.iconf.faster then return end
     local regex=vim.regex('^\\k') --[[@as vim.regex]]
@@ -87,7 +87,7 @@ function M.act.fastwarp_over_word(o,ind,p,m)
 end
 ---@param o core.o
 ---@param p string
----@return table?
+---@return core.act?
 function M.fastwarp_end(o,p)
     if o.col==#o.line+1-#p then return end
     return {
@@ -98,7 +98,7 @@ function M.fastwarp_end(o,p)
 end
 ---@param o core.o
 ---@param p string
----@return table?
+---@return core.act?
 ---@return number?
 function M.fastwarp_line(o,p)
     if o.col~=#o.line+1-#p then return end

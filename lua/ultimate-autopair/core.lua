@@ -25,6 +25,7 @@
 ---@alias core.filter-fn fun(o:core.o):boolean?
 ---@alias core.oinit-fn fun(delete:boolean?)
 ---@alias core.sort-fn fun(a:core.module,b:core.module):boolean?
+---@alias core.act ({[1]:("home"|"end"|"delete"|"l"|"h"|"k"|"j"|"newline"),[number]:any}|string)[]
 
 local debug=require'ultimate-autopair.debug'
 local utils=require'ultimate-autopair.utils'
@@ -37,7 +38,7 @@ M.modes={'i','c'}
 M.funcs={}
 M.I={}
 ---@param mode string
----@return table
+---@return table<string,table>
 function M.I.get_maps(mode)
     local maps=vim.api.nvim_get_keymap(mode)
     local ret={}
@@ -141,7 +142,7 @@ function M.sort_mem(mem)
     end)
 end
 ---@param mode string
----@return table
+---@return table<string,table>
 function M.get_mem_maps(mode)
     local mapped=vim.defaulttable()
     for _,v in ipairs(M.mem) do
@@ -159,7 +160,7 @@ function M.init_mem_oinits(deinit)
         if v.oinit then v.oinit(deinit) end
     end
 end
----@param mapped table
+---@param mapped table<string,table>
 ---@param mode string
 function M.init_mapped(mapped,mode)
     local mapps=M.I.get_maps(mode)

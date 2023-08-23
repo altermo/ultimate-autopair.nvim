@@ -1,6 +1,13 @@
 ---FI
 ---@class ext.tsnode.conf:prof.def.ext.conf
 ---@field seperate string[]
+---@class ext.tsnode.save
+---@field _skip? string[]
+---@field in_node? boolean
+---@field srow? number
+---@field erow? number
+---@field scol? number
+---@field ecol? number
 
 local utils=require'ultimate-autopair.utils'
 local M={}
@@ -73,7 +80,7 @@ function M._langauge_for_range(self,range,_s)
     return _s
 end
 ---@param o core.o
----@return table
+---@return ext.tsnode.save
 function M.get_save(o)
     local save=o.save[M.savetype]
     if not save then
@@ -84,7 +91,7 @@ function M.get_save(o)
 end
 ---@param o core.o
 ---@param conf ext.tsnode.conf
----@param save table
+---@param save ext.tsnode.save
 function M.set_in_node(o,conf,save)
     local node=M._in_tsnode(o,conf.seperate)
     if node then
@@ -97,7 +104,7 @@ function M.set_in_node(o,conf,save)
     end
 end
 ---@param o core.o
----@param save table
+---@param save ext.tsnode.save
 ---@param conf ext.tsnode.conf
 ---@return boolean?
 function M.filter(o,save,conf)

@@ -1,8 +1,8 @@
 ---I
 ---@class ext.cmdtype.conf:prof.def.ext.conf
----@field skip table
+---@field skip string[]
 ---@class ext.cmdtype.pconf
----@field skipcmdtype? table
+---@field skipcmdtype? string[]
 
 local M={}
 local utils=require'ultimate-autopair.utils'

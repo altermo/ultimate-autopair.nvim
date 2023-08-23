@@ -4,12 +4,12 @@ local default=require 'ultimate-autopair.profile.default.utils'
 local open_pair=require 'ultimate-autopair.profile.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
 local M={}
----@type table<string,fun(o:core.o,ind:number,p:string,m:prof.def.m.map):table?,number?>
+---@type table<string,fun(o:core.o,ind:number,p:string,m:prof.def.m.map):core.act?,number?>
 M.act={}
 ---@param o core.o
 ---@param ind number
 ---@param p string
----@return table?
+---@return core.act?
 ---@return number?
 function M.act.rfastwarp_under_pair(o,ind,p)
     if o.col-1~=ind then return end
@@ -26,7 +26,7 @@ end
 ---@param o core.o
 ---@param ind number
 ---@param p string
----@return table?
+---@return core.act?
 function M.act.rfastwarp_next_to_end_pair(o,ind,p)
     if o.col-1==ind then return end
     local pair=default.get_pairs_by_pos(o,ind,'end',true)[1]
@@ -41,7 +41,7 @@ end
 ---@param ind number
 ---@param p string
 ---@param m prof.def.m.map
----@return table?
+---@return core.act?
 function M.act.rfastwarp_next_to_start_pair(o,ind,p,m)
     if o.col-1==ind and m.iconf.hopout then return end
     local pair=default.get_pairs_by_pos(o,ind,'start',true)[1]
@@ -58,7 +58,7 @@ end
 ---@param o core.o
 ---@param ind number
 ---@param p string
----@return table?
+---@return core.act?
 function M.act.rfastwarp_under_word(o,ind,p)
     if o.col-1==ind then return end
     local regex=vim.regex('^\\k') --[[@as vim.regex]]
@@ -82,7 +82,7 @@ function M.rfastwarp_start(o,p)
 end
 ---@param o core.o
 ---@param p string
----@return table?
+---@return core.act?
 ---@return number?
 function M.rfastwarp_line(o,p)
     if o.col~=1 then return end

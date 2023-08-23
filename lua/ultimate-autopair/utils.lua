@@ -26,7 +26,7 @@ function M._getlines(start,end_)
     return vim.api.nvim_buf_get_lines(0,start,end_,true)
 end
 ---@return integer
----@return table
+---@return string[]
 function M.getlines()
     if M.incmd() then
         return 1,{M.getline()}
@@ -95,7 +95,7 @@ end
 function M._delete(pre,pos)
     return M.key_bs:rep(pre or 1)..M.key_del:rep(pos or 0)
 end
----@param actions ({[1]:("home"|"end"|"delete"|"l"|"h"|"k"|"j"|"newline"),[number]:any}|string)[]
+---@param actions core.act
 ---@return string
 function M.create_act(actions)
     local ret=''
