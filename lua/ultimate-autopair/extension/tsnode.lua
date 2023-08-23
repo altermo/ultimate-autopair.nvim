@@ -1,4 +1,7 @@
 ---FI
+---@class ext.tsnode.conf:prof.def.ext.conf
+---@field seperate string[]
+
 local utils=require'ultimate-autopair.utils'
 local M={}
 M.savetype={}
@@ -80,7 +83,7 @@ function M.get_save(o)
     return save
 end
 ---@param o core.o
----@param conf table
+---@param conf ext.tsnode.conf
 ---@param save table
 function M.set_in_node(o,conf,save)
     local node=M._in_tsnode(o,conf.seperate)
@@ -95,7 +98,7 @@ function M.set_in_node(o,conf,save)
 end
 ---@param o core.o
 ---@param save table
----@param conf table
+---@param conf ext.tsnode.conf
 ---@return boolean?
 function M.filter(o,save,conf)
     if save.in_node then
@@ -119,6 +122,7 @@ end
 function M.call(m,ext)
     local check=m.check
     local conf=ext.conf
+    ---@cast conf ext.tsnode.conf
     m.check=function (o)
         local save=M.get_save(o)
         M.set_in_node(o,conf,save)

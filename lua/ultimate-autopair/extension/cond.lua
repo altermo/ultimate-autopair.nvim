@@ -1,4 +1,10 @@
 ---FI
+---@class ext.cond.conf:prof.def.ext.conf
+---@field cond? fun(fn:function[],o:core.o,m:prof.def.module)[]|fun(fn:function[],o:core.o,m:prof.def.module)
+---@field filter? boolean
+---@class ext.cond.pconf
+---@field cond? fun(fn:function[],o:core.o,m:prof.def.module)[]|fun(fn:function[],o:core.o,m:prof.def.module)
+
 local M={}
 local utils=require'ultimate-autopair.utils'
 local default=require'ultimate-autopair.profile.default.utils'
@@ -82,8 +88,11 @@ end
 ---@param ext prof.def.ext
 function M.call(m,ext)
     local conf=ext.conf
+    ---@cast conf ext.cond.conf
     local check=m.check
-    local cond=m.conf.cond
+    ---@type ext.cond.pconf
+    local pconf=m.conf
+    local cond=pconf.cond
     m.check=function(o)
         if cond and not M.cond(cond,o,m,true) then
             return

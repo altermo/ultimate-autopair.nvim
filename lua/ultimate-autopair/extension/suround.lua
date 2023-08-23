@@ -1,4 +1,7 @@
 ---A
+---@class ext.suround.pconf:prof.def.conf.pair
+---@field dosuround? boolean
+
 local M={}
 local default=require'ultimate-autopair.profile.default.utils'
 local open_pair=require'ultimate-autopair.profile.default.utils.open_pair'
@@ -6,7 +9,9 @@ local utils=require'ultimate-autopair.utils'
 ---@param o core.o
 ---@param m prof.def.m.pair
 function M.check(o,m)
-    if not m.conf.dosuround then return end
+    local pconf=m.conf
+    ---@cast pconf ext.suround.pconf
+    if not pconf.dosuround then return end
     local pair,index,rindex=default.get_pair_and_end_pair_pos_from_start(o,o.col,nil,function (pair)
         return pair.conf.suround
     end)

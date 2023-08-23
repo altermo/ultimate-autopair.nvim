@@ -1,4 +1,7 @@
 ---C
+---@class ext.utf8.conf:prof.def.ext.conf
+---@field map? table<string|true,string>
+
 local M={}
 M.type={}
 M.map={
@@ -31,7 +34,7 @@ M.map={
     [true]='\x01',
 }
 ---@param char string
----@param conf table
+---@param conf ext.utf8.conf
 ---@return string
 function M.get_char(char,conf)
     for k,v in pairs(conf.map or M.map) do
@@ -44,7 +47,7 @@ function M.get_char(char,conf)
 end
 ---@param col number
 ---@param line string
----@param conf table
+---@param conf ext.utf8.conf
 ---@return string
 ---@return number
 ---@return table<number,number>
@@ -85,6 +88,7 @@ end
 ---@param ext prof.def.ext
 function M.call(m,ext)
     local conf=ext.conf
+    ---@cast conf ext.utf8.conf
     local check=m.check
     m.check=function (o)
         local col

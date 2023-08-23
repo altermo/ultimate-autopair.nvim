@@ -18,9 +18,11 @@
 ---@field cmap string|string[]
 ---@field iconf table
 ---@class prof.def.ext
----@field conf table
+---@field conf prof.def.ext.conf
 ---@field name string
 ---@field m table
+---@class prof.def.ext.conf
+---@field p number
 ---@class prof.def.conf.map
 ---@field enable boolean?
 ---@field conf table?

@@ -1,8 +1,18 @@
 ---A
+---@class ext.fly.conf:prof.def.ext.conf
+---@field nofilter? boolean
+---@field only_jump_end_pair? boolean
+---@field other_char? string[]
+---@field undomapconf? prof.def.conf.map
+---@field undomap? string
+---@field undocmap? string
+---@class ext.fly.pconf:prof.def.conf.pair
+---@field fly? boolean
+
 local default=require'ultimate-autopair.profile.default.utils'
 local utils=require'ultimate-autopair.utils'
 local M={}
----@param conf table
+---@param conf ext.fly.conf
 ---@param o core.o
 ---@param m prof.def.m.pair
 ---@return string?
@@ -37,10 +47,10 @@ end
 ---@return prof.def.m.map[]
 function M.init_module(ext,mconf)
     local m={}
-    m.iconf=ext.conf
-    m.conf=ext.conf.undomapconf or {}
-    m.map=mconf.map~=false and ext.conf.undomap
-    m.cmap=mconf.cmap~=false and ext.conf.undocmap
+    m.iconf=ext.conf --[[@as ext.fly.conf]]
+    m.conf=m.iconf.undomapconf or {}
+    m.map=mconf.map~=false and m.iconf.undomap
+    m.cmap=mconf.cmap~=false and m.iconf.undocmap
     m.extensions=ext
     m[default.type_def]={}
     m.p=m.conf.p or mconf.p or 10
@@ -66,7 +76,10 @@ end
 function M.call(m,ext)
     if not default.get_type_opt(m,{'end'}) then return end
     local conf=ext.conf
-    if not m.conf.fly then return end
+    ---@cast conf ext.fly.conf
+    ---@type ext.fly.pconf
+    local pconf=m.conf
+    if not pconf.fly then return end
     ---@cast m prof.def.m.pair
     local check=m.check
     m.check=function (o)

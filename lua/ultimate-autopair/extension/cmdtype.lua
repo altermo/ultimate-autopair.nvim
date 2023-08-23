@@ -1,14 +1,23 @@
 ---I
+---@class ext.cmdtype.conf:prof.def.ext.conf
+---@field skip table
+---@class ext.cmdtype.pconf
+---@field skipcmdtype? table
+
 local M={}
 local utils=require'ultimate-autopair.utils'
 ---@param m prof.def.module
 ---@param ext prof.def.ext
 ---@return boolean?
 function M.filter(m,ext)
+    local conf=ext.conf
+    ---@cast conf ext.cmdtype.conf
+    ---@type ext.cmdtype.pconf
+    local pconf=m.conf
     local cmdtype=utils.getcmdtype()
-    if vim.tbl_contains(ext.conf.skip,cmdtype) then
+    if vim.tbl_contains(conf.skip,cmdtype) then
         return
-    elseif m.conf.skipcmdtype and vim.tbl_contains(m.conf.skipcmdtype,cmdtype) then
+    elseif pconf.skipcmdtype and vim.tbl_contains(pconf.skipcmdtype,cmdtype) then
         return
     end
     return true
