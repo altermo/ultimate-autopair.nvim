@@ -7,7 +7,7 @@ local core=require'ultimate-autopair.core'
 local M={}
 ---@param m prof.map.module
 ---@return core.get_map-fn
-function M.gen_get_map(m)
+function M.get_map_wrapp(m)
     return function (mode)
         if vim.tbl_contains(m.mode,mode) then
             return {m.lhs}
@@ -16,7 +16,7 @@ function M.gen_get_map(m)
 end
 ---@param m prof.map.module
 ---@return core.check-fn
-function M.gen_check(m)
+function M.check_wrapp(m)
     return function (o)
         if o.key~=m.lhs then return end
         if not m.filter(o) then return end
@@ -45,8 +45,8 @@ function M.create_map(opts,mconf)
     m.rhs=opts[3]
     m.conf=opts
     m.filter=function () return true end
-    m.get_map=M.gen_get_map(m)
-    m.check=M.gen_check(m)
+    m.get_map=M.get_map_wrapp(m)
+    m.check=M.check_wrapp(m)
     return m
 end
 ---@param conf prof.mconf

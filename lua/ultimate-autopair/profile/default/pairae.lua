@@ -20,7 +20,7 @@ M.fn={
 }
 ---@param m prof.def.m.pair
 ---@return core.check-fn
-function M.check_wrapper(m)
+function M.check_wrapp(m)
     return function(o)
         if not m.fn.can_check(o) then return end
         return utils.create_act({{'l',#m.pair}})
@@ -28,7 +28,7 @@ function M.check_wrapper(m)
 end
 ---@param m prof.def.m.pair
 ---@return prof.def.map.bs.fn
-function M.backspace_wrapper(m)
+function M.backspace_wrapp(m)
     return function (o,_,conf)
         if m.conf.newline==false then return end
         if o.line:sub(o.col-#m.pair-#m.pair,o.col-1-#m.pair)==m.pair and
@@ -75,11 +75,11 @@ function M.init(q)
     m.fn=default.init_fns(m,M.fn)
     m.multiline=q.multiline
 
-    m.check=M.check_wrapper(m)
-    m.backspace=M.backspace_wrapper(m)
-    m.filter=default.def_filter_wrapper(m)
+    m.check=M.check_wrapp(m)
+    m.backspace=M.backspace_wrapp(m)
+    m.filter=default.def_filter_wrapp(m)
     default.init_extensions(m,m.extensions)
-    m.get_map=default.def_pair_get_map_wrapper(m,q)
+    m.get_map=default.def_pair_get_map_wrapp(m,q)
     m.sort=default.def_pair_sort
     default.extend_pair_check_with_map_check(m,q,function () return not m.conf.disable_end end)
     return m

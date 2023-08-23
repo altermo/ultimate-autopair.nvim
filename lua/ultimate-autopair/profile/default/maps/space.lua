@@ -118,10 +118,10 @@ function M.init(conf,mconf,ext)
     m.doc='autopairs space key map'
 
     m.check=M.wrapp_space(m)
-    m.filter=default.def_filter_wrapper(m)
+    m.filter=default.def_filter_wrapp(m)
     default.init_extensions(m,m.extensions)
     m.backspace=M.backspace
-    m.get_map=default.def_map_get_map_wrapper(m)
+    m.get_map=default.def_map_get_map_wrapp(m)
     default.extend_map_check_with_map_check(m)
     return m
 end

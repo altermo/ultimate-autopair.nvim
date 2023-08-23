@@ -5,9 +5,9 @@ local default=require 'ultimate-autopair.profile.default.utils'
 local utils=require'ultimate-autopair.utils'
 local core=require'ultimate-autopair.core'
 local M={}
----@param m prof.def.m.map
+---@param _ prof.def.m.map
 ---@param o core.o
-function M.space2(m,o)
+function M.space2(_,o)
     local total=0
     local pcol
     for i=o.col-1,1,-1 do
@@ -71,7 +71,7 @@ function M.init(conf,mconf,ext)
         if delete then vim.api.nvim_del_autocmd(m.au) return end
         m.au=vim.api.nvim_create_autocmd('InsertCharPre',{callback=M.wrapp_callback(m),desc=m.doc})
     end
-    m.filter=default.def_filter_wrapper(m)
+    m.filter=default.def_filter_wrapp(m)
     default.init_extensions(m,m.extensions)
     default.extend_map_check_in_oinit(m)
     return m

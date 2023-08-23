@@ -179,9 +179,9 @@ function M.init(conf,mconf,ext)
     m.doc='autopairs reverse fastwarp key map'
 
     m.check=M.wrapp_rfastwarp(m)
-    m.filter=default.def_filter_wrapper(m)
+    m.filter=default.def_filter_wrapp(m)
     default.init_extensions(m,m.extensions)
-    m.get_map=default.def_map_get_map_wrapper(m)
+    m.get_map=default.def_map_get_map_wrapp(m)
     default.extend_map_check_with_map_check(m,not conf.filter_string and function (o)
         local tsnode=default.load_extension'tsnode'
         o.save[tsnode.savetype]={_skip={
@@ -195,7 +195,7 @@ function M.init(conf,mconf,ext)
         n.map=m.map
         n.cmap=m.cmap
         n.p=-1
-        n.get_map=default.def_map_get_map_wrapper(n)
+        n.get_map=default.def_map_get_map_wrapp(n)
         n.filter=function () end
         n.check=function () return '' end
         default.extend_map_check_with_map_check(n)

@@ -82,7 +82,7 @@ end
 ---@param o core.o
 ---@param conf table
 ---@param save table
-function M.set_in_node_or_lang(o,conf,save)
+function M.set_in_node(o,conf,save)
     local node=M._in_tsnode(o,conf.seperate)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
@@ -121,7 +121,7 @@ function M.call(m,ext)
     local conf=ext.conf
     m.check=function (o)
         local save=M.get_save(o)
-        M.set_in_node_or_lang(o,conf,save)
+        M.set_in_node(o,conf,save)
         return check(o)
     end
     local filter=m.filter

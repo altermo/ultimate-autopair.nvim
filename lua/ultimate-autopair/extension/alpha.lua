@@ -7,7 +7,7 @@ M.alpha_re=[=[\v[[=a=][=b=][=c=][=d=][=e=][=f=][=g=][=h=][=i=][=j=][=k=][=l=][=m
 ---@param incheck boolean?
 ---@return number
 ---@return number
-function M.get_len(m,incheck)
+function M.get_module_offset(m,incheck)
     if m.pair then
         if incheck and default.get_type_opt(m,'start') then
             return #m.pair-1,0
@@ -22,7 +22,7 @@ end
 ---@param incheck boolean?
 ---@return boolean?
 function M.check(o,m,ext,incheck)
-    local lenb,lenf=M.get_len(m,incheck)
+    local lenb,lenf=M.get_module_offset(m,incheck)
     if m.conf.alpha~=false and ext.conf.alpha or m.conf.alpha then
         ---@cast m prof.def.m.pair
         if not o.incmd and (m.pair=='"' or m.pair=="'") and utils.getsmartft(o)=='python' and not ext.conf.no_python then

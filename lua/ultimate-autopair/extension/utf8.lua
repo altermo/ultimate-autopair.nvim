@@ -48,7 +48,7 @@ end
 ---@return string
 ---@return number
 ---@return table<number,number>
-function M.transform(col,line,conf)
+function M.utf8_string_and_offset(col,line,conf)
     local newline=''
     local newcol=0
     local ncol
@@ -90,7 +90,7 @@ function M.call(m,ext)
         local col
         local off={}
         for row,line in ipairs(o.lines) do
-            o.lines[row],col,off[row]=M.transform(o.col,line,conf)
+            o.lines[row],col,off[row]=M.utf8_string_and_offset(o.col,line,conf)
             if row==o.row then
                 o.col=col
             end

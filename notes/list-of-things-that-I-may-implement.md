@@ -171,3 +171,7 @@
 + [ ] config scope pairs (not profile/global scope pairs)
 + [ ] reverse tabout
 + [ ] filetype: recursive ts-ft: if in luadoc, wanted lua.
++ [ ] make ternary operations use `''` as nil
++ [ ] multiple core instances (with each having its own id?)
++ [ ] own au-group (each instance different au-group)
++ [ ] if map opt is set to dict, then enable, else disable

@@ -17,7 +17,7 @@ M.fn={
 }
 ---@param m prof.def.m.pair
 ---@return core.check-fn
-function M.check_wrapper(m)
+function M.check_wrapp(m)
     return function(o)
         if not m.fn.can_check(o) then return end
         return utils.create_act({
@@ -29,7 +29,7 @@ function M.check_wrapper(m)
 end
 ---@param m prof.def.m.pair
 ---@return prof.def.map.bs.fn
-function M.backspace_wrapper(m)
+function M.backspace_wrapp(m)
     return function (o,_,conf)
         if m.conf.newline==false then return end
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and
@@ -79,7 +79,7 @@ function M.backspace_wrapper(m)
 end
 ---@param m prof.def.m.pair
 ---@return prof.def.map.cr.fn
-function M.newline_wrapper(m)
+function M.newline_wrapp(m)
     return function (o)
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.conf.newline then
             local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
@@ -112,12 +112,12 @@ function M.init(q)
     m.fn=default.init_fns(m,M.fn)
     m.multiline=q.multiline
 
-    m.check=M.check_wrapper(m)
-    m.filter=default.def_filter_wrapper(m)
+    m.check=M.check_wrapp(m)
+    m.filter=default.def_filter_wrapp(m)
     default.init_extensions(m,m.extensions)
-    m.get_map=default.def_pair_get_map_wrapper(m,q)
-    m.newline=M.newline_wrapper(m)
-    m.backspace=M.backspace_wrapper(m)
+    m.get_map=default.def_pair_get_map_wrapp(m,q)
+    m.newline=M.newline_wrapp(m)
+    m.backspace=M.backspace_wrapp(m)
     m.sort=default.def_pair_sort
     default.extend_pair_check_with_map_check(m,q,function () return not m.conf.disable_start end)
     return m

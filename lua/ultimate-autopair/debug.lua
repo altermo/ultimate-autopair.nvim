@@ -12,7 +12,7 @@ function M.create_traceback_buf(traceback,win,mes)
     local buf=M.I.create_scratch_buf(win,'traceback')
     local places={}
     local function nw(text) return function () vim.notify(text) end end
-    local function file_open_wrapper(file,row)
+    local function file_open_wrapp(file,row)
         return function ()
             vim.cmd.vnew(file)
             if row then vim.cmd(tostring(row)) end
@@ -33,7 +33,7 @@ function M.create_traceback_buf(traceback,win,mes)
             enter=nw("Can't enter lua-c code")
         elseif v.what=='main' then
             line='file:'..file
-            enter=file_open_wrapper(file)
+            enter=file_open_wrapp(file)
         elseif vim.startswith(v.source,'@vim/') then
             line='vim:'..v.name..':'..file
             enter=function ()
@@ -41,7 +41,7 @@ function M.create_traceback_buf(traceback,win,mes)
             end
         else
             line='in:'..v.currentline..':'..file
-            enter=file_open_wrapper(file,v.currentline)
+            enter=file_open_wrapp(file,v.currentline)
         end
         table.insert(places,enter)
         vim.api.nvim_buf_set_lines(buf,-1,-1,false,{line})
@@ -70,7 +70,7 @@ function M.create_debug_bufs(opts,traceback,mes)
     vim.cmd.split()
     M.create_traceback_buf(traceback,vim.api.nvim_get_current_win(),mes)
 end
-function M.handeler_wrapper(opts)
+function M.handeler_wrapp(opts)
     return function (mes)
         if mes==nil then mes='nil' end
         local traceback=M.get_traceback_data(3)
@@ -94,7 +94,7 @@ end
 function M.run(fn,opts)
     ---@diagnostic disable-next-line: undefined-field
     if _G.UA_DEBUG_DONT then return fn(unpack(opts.args or {})) end
-    local s={xpcall(fn,M.handeler_wrapper(opts),unpack(opts.args or {}))}
+    local s={xpcall(fn,M.handeler_wrapp(opts),unpack(opts.args or {}))}
     if not s[1] then return end
     return unpack(s,2)
 end

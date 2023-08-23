@@ -24,13 +24,13 @@ function M.load_extension(extension_name)
 end
 ---@param _ prof.def.module
 ---@return core.filter-fn
-function M.def_filter_wrapper(_)
+function M.def_filter_wrapp(_)
     return function(_) return true end
 end
 ---@param m prof.def.m.pair
 ---@param q prof.def.q
 ---@return core.get_map-fn
-function M.def_pair_get_map_wrapper(m,q)
+function M.def_pair_get_map_wrapp(m,q)
     return function(mode)
         if (mode=='i' and q.map) or (mode=='c' and q.cmap) then
             return {m.key}
@@ -39,7 +39,7 @@ function M.def_pair_get_map_wrapper(m,q)
 end
 ---@param m prof.def.m.map
 ---@return core.get_map-fn
-function M.def_map_get_map_wrapper(m)
+function M.def_map_get_map_wrapp(m)
     return function(mode)
         if (mode=='i' and m.map) then
             return type(m.map)=='table' and m.map or {m.map} --[[@as string[] ]]
@@ -127,7 +127,7 @@ end
 ---@param prev boolean?
 ---@param filter? fun(pair:prof.def.m.pair):boolean?
 ---@return prof.def.m.pair?
----@return number?
+---@return true|number?
 ---@return number?
 function M.get_pair_and_end_pair_pos_from_start(o,col,prev,filter)
     local spairs=M.get_pairs_by_pos(o,col,'start',not prev,filter)
@@ -141,7 +141,7 @@ end
 ---@param prev boolean?
 ---@param filter? fun(pair:prof.def.m.pair):boolean?
 ---@return prof.def.m.pair?
----@return number?
+---@return true|number?
 ---@return number?
 function M.get_pair_and_start_pair_pos_from_end(o,col,prev,filter)
     local spairs=M.get_pairs_by_pos(o,col,'end',not prev,filter)

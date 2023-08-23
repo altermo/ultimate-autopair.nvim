@@ -91,17 +91,17 @@ function M.init(conf,mconf,ext)
     m.doc='autopairs close key map'
 
     m.check=M.wrapp_close(m)
-    m.filter=default.def_filter_wrapper(m)
+    m.filter=default.def_filter_wrapp(m)
     m.newline=M.wrapp_newline(m)
     default.init_extensions(m,m.extensions)
-    m.get_map=default.def_map_get_map_wrapper(m)
+    m.get_map=default.def_map_get_map_wrapp(m)
     default.extend_map_check_with_map_check(m)
     if conf.do_nothing_if_fail then
         local n={}
         n.map=m.map
         n.cmap=m.cmap
         n.p=-1
-        n.get_map=default.def_map_get_map_wrapper(n)
+        n.get_map=default.def_map_get_map_wrapp(n)
         n.filter=function () end
         n.check=function () return '' end
         default.extend_map_check_with_map_check(n)
