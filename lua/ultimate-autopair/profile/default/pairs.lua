@@ -34,13 +34,13 @@ function M.backspace_wrapp(m)
         if m.conf.newline==false then return end
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and
             m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) and
-            m.filter(utils._get_o_pos(o,o.col-1)) and
+            m.filter(utils._get_o_pos(o,o.col-#m.pair)) and
             not open_pair.open_start_pair_before(m,o,o.col) then
             return utils.create_act({{'delete',conf.single_delete and 1 or #m.start_pair,#m.end_pair}})
         end
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and
             conf.overjumps and
-            m.filter(utils._get_o_pos(o,o.col-1)) and
+            m.filter(utils._get_o_pos(o,o.col-#m.pair)) and
             not open_pair.open_start_pair_before(m,o,o.col) then
             local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
             if col then
@@ -84,6 +84,7 @@ function M.newline_wrapp(m)
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and m.conf.newline then
             local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
             if row~=o.row then return end
+            if not m.filter(utils._get_o_pos(o,o.col-#m.pair)) then return end
             return utils.create_act({
                 {'l',col-o.col},
                 {'newline'},
