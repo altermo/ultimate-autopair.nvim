@@ -34,3 +34,5 @@ Use `{extensions={cond={cond=function(fn) return not fn.in_macro() end}}}`
 ### How to disable hop over end pair
 For already exsisting pairs, use `{config_internal_pairs={{'(',')',disable_end=true}}}`
 For new pairs, use `{{'<','>',disable_end=true}}`
+### How to disable in replace mode
+To disable in replace mode, use `{extensions={cond={cond=function(fn) return fn.get_mode()~='R' end}}}`

@@ -170,3 +170,4 @@
 + [ ] maybe implement `{'(',')',id=1}` for use in cond and other
 + [ ] config scope pairs (not profile/global scope pairs)
 + [ ] reverse tabout
++ [ ] filetype: recursive ts-ft: if in luadoc, wanted lua.
