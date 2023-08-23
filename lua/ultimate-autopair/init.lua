@@ -37,6 +37,22 @@ function M._check_depreciated(conf)
             '`:h ultimate-autopair-ext-cond` or read the `Q&A.md`'
         )
         return true
+    elseif vim.tbl_get(conf,'extensions','tsnode','outside') then
+
+        rem(
+            'extension.tsnode.outside',
+            'extension.cond',
+            '`:h ultimate-autopair-ext-cond`'
+        )
+        return true
+    elseif vim.tbl_get(conf,'extensions','tsnode','inside') then
+
+        rem(
+            'extension.tsnode.inside',
+            'extension.cond',
+            '`:h ultimate-autopair-ext-cond`'
+        )
+        return true
     end
 end
 ---@param conf? prof.config
