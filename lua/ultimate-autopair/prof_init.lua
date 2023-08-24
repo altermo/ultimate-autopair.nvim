@@ -3,7 +3,6 @@
 ---@class prof.mconf:prof.config
 ---@field p? number
 
-local core=require'ultimate-autopair.core'
 local M={}
 ---@param profile string|function
 ---@return function
@@ -25,7 +24,6 @@ end
 ---@param confs prof.config[]
 ---@param mem core.module[]
 function M.init(confs,mem)
-    mem=mem or core.mem
     for _,conf in ipairs(confs) do
         M.init_conf(conf,mem)
     end

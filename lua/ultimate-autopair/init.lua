@@ -64,7 +64,7 @@ end
 ---@param configs? prof.config[]
 function M.init(configs)
     debug.run(core.clear,{})
-    debug.run(prof.init,{info=configs,args={configs}})
+    debug.run(prof.init,{info=configs,args={configs,core.mem}})
     debug.run(core.init,{info=configs})
 end
 function M.clear()
