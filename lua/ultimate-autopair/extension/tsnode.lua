@@ -1,6 +1,6 @@
 ---FI
 ---@class ext.tsnode.conf:prof.def.ext.conf
----@field seperate string[]
+---@field separate string[]
 ---@class ext.tsnode.save
 ---@field _skip? string[]
 ---@field in_node? boolean
@@ -93,7 +93,7 @@ end
 ---@param conf ext.tsnode.conf
 ---@param save ext.tsnode.save
 function M.set_in_node(o,conf,save)
-    local node=M._in_tsnode(o,conf.seperate)
+    local node=M._in_tsnode(o,conf.separate)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         save.scol=scol
@@ -115,7 +115,7 @@ function M.filter(o,save,conf)
         if o.row==save.erow and o.col>save.ecol then return end
         return true
     end
-    local node=M._in_tsnode(o,conf.seperate)
+    local node=M._in_tsnode(o,conf.separate)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --HACK

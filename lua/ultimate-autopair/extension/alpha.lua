@@ -1,12 +1,11 @@
 ---FI
 ---@class ext.alpha.pconf
----@field alpha? string
----@field alpha_char? string
----@field alpha_after? string
+---@field alpha? string[]|boolean
+---@field alpha_after? string[]|boolean
 ---@class ext.alpha.conf:prof.def.ext.conf
----@field alpha? string
+---@field alpha? string[]|boolean
 ---@field no_python? boolean
----@field after? string
+---@field after? string[]|boolean
 ---@field all? boolean
 ---@field filter? boolean
 

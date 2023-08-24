@@ -1,23 +1,19 @@
 ---FI
 ---@class ext.escape.conf:prof.def.ext.conf
----@field disable? boolean
+---@field filter? boolean
 ---@class ext.escape.pconf
 ---@field noescape? boolean
 
 local default=require'ultimate-autopair.profile.default.utils'
 local M={}
 ---@param m prof.def.module
----@param ext prof.def.ext
 ---@param o core.o
 ---@param incheck boolean?
 ---@return boolean?
-function M.filter(m,ext,o,incheck)
-    local conf=ext.conf
-    ---@cast conf ext.escape.conf
+function M.filter(m,o,incheck)
     ---@type ext.escape.pconf
     local pconf=m.conf
     if pconf.noescape then return end
-    if conf.disable then return end
     local col=o.col-1
     if incheck and default.get_type_opt(m,'start') then
         ---@cast m prof.def.m.pair
@@ -33,16 +29,19 @@ end
 ---@param m prof.def.module
 ---@param ext prof.def.ext
 function M.call(m,ext)
-    local filter=m.filter
-    m.filter=function(o)
-        if M.filter(m,ext,o) then
-            return filter(o)
-        end
-    end
+    local conf=ext.conf
+    ---@cast conf ext.escape.conf
     local check=m.check
     m.check=function(o)
-        if M.filter(m,ext,o,true) then
+        if M.filter(m,o,true) then
             return check(o)
+        end
+    end
+    if not conf.filter then return end
+    local filter=m.filter
+    m.filter=function(o)
+        if M.filter(m,o) then
+            return filter(o)
         end
     end
 end

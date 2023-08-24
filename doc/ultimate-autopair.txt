@@ -219,7 +219,7 @@ The default configuration contains a loot of options, here are those:
      filetype={p=90,nft={'TelescopePrompt'},tree=true},
      escape={filter=true,p=80},
      utf8={p=70},
-     tsnode={p=60,seperate={'comment','string','raw_string'},tree=true,notree={'markdown_inline'}},
+     tsnode={p=60,seperate={'comment','string','raw_string'},--[[tree=true,notree={'markdown_inline'}]]},
      cond={p=40,filter=true},
      alpha={p=30,filter=false,all=false},
      suround={p=20},
@@ -411,6 +411,103 @@ Example: >lua
      }
  }
 <
+==============================================================================
+EXTENSIONS                                      *ultimate-autopair-extensions*
+All extensions should be in the `extensions` directory.
+For default configuration see: |ultimate-autopair-extensions-default-config|
+Every extension has a `p` flag which denotes its priority.
+------------------------------------------------------------------------------
+ext-alpha                                        *ultimate-autopair-ext-alpha*
+This extension allows for disabling pairs before and after alpha
+Extension config:
+{alpha} `string[]|boolean`: Weather to check for alpha before
+  and if `string[]` then for which filetypes.
+{after} `string[]|boolean`: Weather to check for alpha after
+  and if `string[]` then for which filetypes.
+{filter} `boolean`: Weather to filter (|ultimate-autopair-filter|)
+{all} `boolean`: Weather to check for all in-characters, not just start pairs.
+{no_python}: Weather to disable f-string detection.
+Extension pair-config:
+{alpha} `string[]|boolean`: Weather to check for alpha before
+  and if `string[]` then for which filetypes.
+{alpha_after} `string[]|boolean`: Weather to check for alpha after
+  and if `string[]` then for which filetypes.
+------------------------------------------------------------------------------
+ext-cmdtype                                    *ultimate-autopair-ext-cmdtype*
+This extension allows for disabling in specific cmdline-types
+Extension config:
+{skip} `string[]`: Which cmdtypes to skip `:h getcmdtype()`
+Extension pair-config:
+{skipcmdtype} `string[]`: Which cmdtypes to skip `:h getcmdtype()`
+------------------------------------------------------------------------------
+ext-cond                                          *ultimate-autopair-ext-cond*
+This extension allows for creating conditions
+Extension config:
+{cond} `function|function[]`: List of functions to run
+{filter} `boolean`: Weather to filter (|ultimate-autopair-filter|)
+Extension pair-config:
+{cond} `function|function[]`: List of functions to run
+For the arguments of the function, pleas refer to source code
+`lua/ultimate-autopair/extension/cond.lua` for info (until doc is written).
+------------------------------------------------------------------------------
+ext-escape                                      *ultimate-autopair-ext-escape*
+This extension allows for checking for escaped pairs
+Extension config:
+{filter} `boolean`: Weather to filter (|ultimate-autopair-filter|)
+Extension pair-config:
+{noescape} `boolean`: Weather to disable escape
+------------------------------------------------------------------------------
+ext-filetype                                  *ultimate-autopair-ext-filetype*
+This extensions allows fire filetype checking (including injected langs).
+Extension config:
+{ft} `string[]`: Which filetypes to enable
+{nft} `string[]`: Which filetypes to disable
+{tree} `boolean`: Weather to use treesitter injected lang detection
+Extension pair-config:
+{ft} `string[]`: Which filetypes to enable
+{nft} `string[]`: Which filetypes to disable
+------------------------------------------------------------------------------
+ext-fly                                            *ultimate-autopair-ext-fly*
+This extensions allows for hopping list of end-pairs (+ other chars)
+Example (`*` is cursor) (default config): >
+ | before   | key | after    | config                   |
+ |----------+-----+----------+--------------------------|
+ | ({[*] }) | )   | ({[] })* |                          |
+ | *()      | )   | ()*      | only_jump_end_pair=false |
+<
+Extension config:
+{nofilter} `boolean`: Weather to disable filtering (for string quote)
+{only_jump_end_pair} `boolean`: Weather to only jump end pair
+{other_char} `string[]`: What other chars to jump
+{undomap} `string|string[]`: Create an undo map
+{undocmap} `string|string[]`: Create an undo map for cmdline
+{undomapconf} `table`: Undo map conf
+Extension pair-config:
+{fly} `boolean`: Weather a pair can fly/be flown over
+------------------------------------------------------------------------------
+ultimate-autopair-ext-suround                  *ultimate-autopair-ext-suround*
+This extension allows for to surround pairs
+Example (`*` is cursor): >
+ | before | key | after  |
+ |--------+-----+--------|
+ | *'a'   | (   | (*'a') |
+<
+Extension pair-config:
+{dosurround} `boolean`: Weather to do surround
+{surround} `boolean`: Weather to be allowed to be surrounded
+------------------------------------------------------------------------------
+ultimate-autopair-ext-tsnode                    *ultimate-autopair-ext-tsnode*
+This extension allows for to filers tsnodes (|ultimate-autopair-filter|)
+If in a specified tsnode, then filter outside the node
+and if outside of any specified tsnode, then filter inside tsnodes
+Extension config:
+{separate} `string[]`: List of node types to separate
+------------------------------------------------------------------------------
+ultimate-autopair-ext-utf8                        *ultimate-autopair-ext-utf8*
+This extension replaces UTF-8 chars with ASCII counterparts.
+Extension config:
+{map} `table<string|true,string>`: A regex map for defining which utf8 chars
+  go to which char, or `true` to denotes default value
 ==============================================================================
 OTHER                                                *ultimate-autopair-other*
 ------------------------------------------------------------------------------

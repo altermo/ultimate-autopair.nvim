@@ -1,6 +1,7 @@
 ---A
 ---@class ext.suround.pconf:prof.def.conf.pair
 ---@field dosuround? boolean
+---@field suround? boolean
 
 local M={}
 local default=require'ultimate-autopair.profile.default.utils'
