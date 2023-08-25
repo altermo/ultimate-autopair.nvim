@@ -130,7 +130,7 @@ return {
         {'(|)<><>','','(|<><>)',{c={{'<>','<>'}}}},
         {'```|```lua','','```|lua```',{ft='markdown'}},
         {'(|)a_e','','(|a_e)'},
-        {'(|")")foo','','(|")"foo)',{c={fastwarp={filter_string=true}},ts=true}},
+        {'(|")")foo','','(|")"foo)',{c={fastwarp={no_filter_nodes={}}},ts=true}},
         {'(|)foo','e','(|foo)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}}}},
         {'(|)foo','E','(foo|)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}}}},
         {'(|),','','(|,)',{c={fastwarp={faster=true}}}},

@@ -178,8 +178,8 @@ The default configuration contains a loot of options, here are those:
      do_nothing_if_fail=true,
      --add a module so that if fastwarp fails
      --then an `e` will not be inserted
-     filter_string=false,
-     --whether to use builting filter string
+     no_filter_nodes={'string','raw_string'},
+     --which nodes to skip for tsnode filtering
      faster=false,
      --only enables jump over pair, goto end/next line
      --{|}M.foo('bar') > {M.foo('bar')|}
@@ -219,7 +219,7 @@ The default configuration contains a loot of options, here are those:
      filetype={p=90,nft={'TelescopePrompt'},tree=true},
      escape={filter=true,p=80},
      utf8={p=70},
-     tsnode={p=60,seperate={'comment','string','raw_string'},--[[tree=true,notree={'markdown_inline'}]]},
+     tsnode={p=60,separate={'comment','string','raw_string'},--[[tree=true,notree={'markdown_inline'}]]},
      cond={p=40,filter=true},
      alpha={p=30,filter=false,all=false},
      suround={p=20},

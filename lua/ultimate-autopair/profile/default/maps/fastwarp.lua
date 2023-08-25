@@ -7,7 +7,7 @@
 ---@field multiline boolean?
 ---@field nocursormove boolean?
 ---@field do_nothing_if_fail boolean?
----@field filter_string boolean?
+---@field no_filter_nodes? string[]
 
 local default=require 'ultimate-autopair.profile.default.utils'
 local open_pair=require 'ultimate-autopair.profile.default.utils.open_pair'
@@ -198,12 +198,9 @@ function M.init(conf,mconf,ext)
     m.filter=default.def_filter_wrapp(m)
     default.init_extensions(m,m.extensions)
     m.get_map=default.def_map_get_map_wrapp(m)
-    default.extend_map_check_with_map_check(m,not conf.filter_string and function (o)
+    default.extend_map_check_with_map_check(m,conf.no_filter_nodes and function (o)
         local tsnode=default.load_extension'tsnode'
-        o.save[tsnode.savetype]={_skip={
-            'string',
-            'raw_string',
-        }} --TODO: refactor {r}fastwarp.lua so that the option can be removed
+        o.save[tsnode.savetype]={_skip=conf.no_filter_nodes} --TODO: refactor {r}fastwarp.lua so that the option can be removed
         return true
     end or nil)
     if conf.do_nothing_if_fail then

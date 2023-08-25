@@ -84,8 +84,8 @@ M.conf={
     do_nothing_if_fail=true,
     --add a module so that if fastwarp fails
     --then an `e` will not be inserted
-    filter_string=false,
-    --whether to use builting filter string
+    no_filter_nodes={'string','raw_string'},
+    --which nodes to skip for tsnode filtering
     faster=false,
     --only enables jump over pair, goto end/next line
     --{|}M.foo('bar') > {M.foo('bar')|}
