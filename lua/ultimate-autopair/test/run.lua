@@ -19,6 +19,7 @@ M.stat={
     err=2,
     faild=3,
     skip=4,
+    debug=5,
 }
 function M.generate_output_funcs(outfile)
     return {
@@ -71,7 +72,11 @@ function M.run(outfile)
     local categorys=vim.tbl_keys(list_of_tests)
     local has_not_ok={}
     for conf,tests in pairs(conf_tests) do
-        M.run_tests(conf,tests,has_not_ok)
+        local err,mes=pcall(M.run_tests,conf,tests,has_not_ok)
+        if not err then
+            M.fn.error('DEBUG test runner error: '..mes)
+            return
+        end
     end
     for _,category in pairs(categorys) do
         ---@diagnostic disable-next-line: undefined-field
@@ -103,7 +108,7 @@ function M.run_tests(conf,tests,has_not_ok)
         testopt._category=nil
         local err,stat,info=pcall(M.run_test,testopt)
         if not err then
-            info=stat
+            info=stat --[[@as string]]
             stat=M.stat.err
         end
         ---@diagnostic disable-next-line: undefined-field
@@ -119,6 +124,8 @@ function M.run_tests(conf,tests,has_not_ok)
         elseif stat==M.stat.skip then
             ---@diagnostic disable-next-line: undefined-field
             if _G.UA_DEV then M.fn.info(('INFO test(%s) %s skiped'):format(category,testrepr)) end
+        elseif stat==M.stat.debug then
+            if _G.UA_DEV then M.fn.info(('DEBUG test(%s) %s, info: %s'):format(category,testrepr,info or '')) end
         else
             M.fn.warning('DEBUG: something went wrong')
         end
@@ -136,8 +143,8 @@ function M.run_test(testopt)
     }
     local unparsed_starting_line,key,unparsed_resulting_line,opt=unpack(testopt)
     opt=opt or {}
-    if opt.interactive then return M.stat.skip end
     if opt.skip then return M.stat.skip end
+    if opt.interactive then return M.stat.skip end
     local lines,linenr,col,line=M.parse_unparsed_line(unparsed_starting_line)
     M.switch_ua_utils_fn(ua_utils,opt,lines,linenr,line,col)
     if #key~=1 then
@@ -160,7 +167,7 @@ function M.switch_ua_utils_fn(ua_utils_,opt,lines,linenr,line,col)
     ua_utils_.getlinenr=function () return linenr end
     ua_utils_.gettsnode=function (o)
         if not opt.ts then return end
-        local parser=vim.treesitter.get_string_parser(vim.fn.join(lines,'\n'),opt.tsft or opt.ft or 'lua')
+        local parser=vim.treesitter.get_string_parser(vim.fn.join(o.lines,'\n'),opt.tsft or opt.ft or 'lua')
         parser:parse()
         local linenr_,col_=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
         return parser:named_node_for_range({linenr_,col_,linenr_,col_},{})
