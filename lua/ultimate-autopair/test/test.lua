@@ -218,6 +218,7 @@ return {
         {'<|""','<','<<|"">>',{c={{'<<','>>',dosuround=true}}}},
         {'|""','<','<|""',{c={{'<<','>>',dosuround=true}}}},
         {'<|"">>','<','<<|"">>',{c={{'<<','>>',dosuround=true}}}},
+        {'|")"','(','(|")")',{ts=true}},
     },
     ext_cmdtype={
         {'|','I="("\r','()',{interactive=true,c={extensions={cmdtype={skip={}}}}}},
@@ -286,6 +287,9 @@ return {
     ext_tsnode={
         {'|--)','(','(|)--)',{ts=true}},
         {'/*(*/|)',')','/*(*/)|)',{ts=true,ft='c'}},
+        {'|\n```lua\n)\n```','(','(|)\n```lua\n)\n```',{ts=true,ft='markdown',skip=true}},
+        {'```lua\na|\n```\n)','(','\n```lua\na(|)\n```\n)',{ts=true,ft='markdown',skip=true}},
+        {'```python\nf|\n```',"'","\n```python\nf'|'\n```",{ts=true,ft='markdown',skip=true}},
         --TODO: write more tests (like multiline empty line...)
     },
     utf8={

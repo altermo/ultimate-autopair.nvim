@@ -149,12 +149,12 @@ function M.gettsnode(o)
     local getnode
     if vim.treesitter.get_node then
         getnode=function (linenr_,col_)
-            return vim.treesitter.get_node({bufnr=0,pos={linenr_,col_}})
+            return vim.treesitter.get_node({bufnr=0,pos={linenr_,col_},ignore_injections=false})
         end
     else
         getnode=function (linenr_,col_)
             ---@diagnostic disable-next-line: deprecated
-            return vim.treesitter.get_node_at_pos(0,linenr_,col_,{})
+            return vim.treesitter.get_node_at_pos(0,linenr_,col_,{ignore_injections=false})
         end
     end
     local ret=getnode(linenr,col)

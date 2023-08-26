@@ -8,6 +8,7 @@
 ---@field erow? number
 ---@field scol? number
 ---@field ecol? number
+---@field in_tree? boolean
 
 local utils=require'ultimate-autopair.utils'
 local M={}
@@ -37,7 +38,7 @@ function M._in_tsnode(o,nodetypes)
         ::continue::
     end
     while node and ((not ql[node:type()]) or fn(node)) do
-        if node then save[node:id()]=r end
+        if node and not fn(node) then save[node:id()]=r end
         node=node:parent()
         --TODO fix: TSNode:id() doesn't differ between trees
         --NEEDS: `TSNode:tree()` not crashing (https://github.com/neovim/neovim/issues/24783)
@@ -108,12 +109,12 @@ end
 ---@param conf ext.tsnode.conf
 ---@return boolean?
 function M.filter(o,save,conf)
-    if save.in_node then
+    if save.in_node or save.in_tree then
         if o.row<save.srow then return end
         if o.row>save.erow then return end
         if o.row==save.srow and o.col<save.scol then return end
         if o.row==save.erow and o.col>save.ecol then return end
-        return true
+        if save.in_node then return true end
     end
     local node=M._in_tsnode(o,conf.separate)
     if node then
