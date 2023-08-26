@@ -117,6 +117,7 @@ function M.delete_mem_map(mode)
     end
 end
 function M.clear()
+    vim.api.nvim_create_augroup('UltimateAutopair',{clear=true})
     M.init_mem_oinits(true)
     for _,mode in ipairs(M.modes) do
         M.delete_mem_map(mode)
@@ -171,6 +172,7 @@ function M.init_mapped(mapped,mode)
     end
 end
 function M.init()
+    vim.api.nvim_create_augroup('UltimateAutopair',{clear=false})
     M.sort_mem(M.mem)
     for _,mode in ipairs(M.modes) do
         local mapped=M.get_mem_maps(mode)

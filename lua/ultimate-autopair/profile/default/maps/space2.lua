@@ -51,7 +51,7 @@ function M.wrapp_callback(m)
         vim.api.nvim_feedkeys(m.check(o) or '','n',false)
     end
 end
----@param conf prof.def.map.bs.conf
+---@param conf prof.def.map.space2.conf
 ---@param mconf prof.def.conf
 ---@param ext prof.def.ext[]
 ---@return prof.def.m.map?
@@ -68,8 +68,8 @@ function M.init(conf,mconf,ext)
 
     m.check=M.space2_wrapp(m)
     m.oinit=function (delete)
-        if delete then vim.api.nvim_del_autocmd(m.au) return end
-        m.au=vim.api.nvim_create_autocmd('InsertCharPre',{callback=M.wrapp_callback(m),desc=m.doc})
+        if delete then return end
+        vim.api.nvim_create_autocmd('InsertCharPre',{callback=M.wrapp_callback(m),desc=m.doc,group='UltimateAutopair'})
     end
     m.filter=default.def_filter_wrapp(m)
     default.init_extensions(m,m.extensions)
