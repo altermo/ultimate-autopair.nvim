@@ -42,7 +42,7 @@ function M._in_tsnode(o,nodetypes)
         node=node:parent()
         --TODO fix: TSNode:id() doesn't differ between trees
         --NEEDS: `TSNode:tree()` not crashing (https://github.com/neovim/neovim/issues/24783)
-        if node and save[node:id()] then return unpack(save[node:id()]) end
+        if node and save[node:id()] then r[1]=save[node:id()][1] return unpack(save[node:id()]) end
     end
     if not node then return end
     save[node:id()]=r
