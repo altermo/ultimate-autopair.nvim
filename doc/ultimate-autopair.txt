@@ -547,51 +547,54 @@ The default setup is: >lua
  local configs={ua.extend_default({})}
  ua.init(configs)
 <
-It is recommended to read sad through the *Q&A.md* for features.
-# *Not-default-enabled-maps*
+It is recommended to read sad through the {Q&A.md} for features.
+# {Not-default-enabled-maps}
 There are many features in UA which are useful but are not enabled by
 default, these include:> lua
-< *Space2*, which is like space, but insert space if character in match inserted >lua
+< {Space2}, which is like space, but insert space if character in match inserted >lua
  {space2={enable=true}}  --[ |] > f > [ f| ]
-< *Tabout*, which allows you to tab out of parenthesis >lua
+< {Tabout}, which allows you to tab out of parenthesis >lua
  {tabout={enable=true}} --[foo| bar] > <A-tab> > [foo bar|]
-< *Close*, which allows you to close open parenthesis >lua
+< {Close}, which allows you to close open parenthesis >lua
  {close={enable=true}} --[(| > <A-)> > [(|)]
 <
-# *Recommended-configs*
-Here is my recommendation for a config for *fastwarp*: >lua
+# {Recommended-configs}
+Here is my recommendation for a config for {fastwarp}: >lua
  {fastwarp={
     multi=true,
     {},
     {faster=true,map='<C-A-e>',cmap='<C-A-e>'},
   }}
 <
-# *Pair-creation*
+# {Pair-creation}
 To create a simple pair, you can just add it to the config: >lua
  {{'$','$'}}
 < To change the config of a default pair, you can use: >lua
  {config_internal_pairs={{'(',')',suround=true}}}
 <
 Pairs may have a bunch of options, which include:
-(parenthesis show default and type if necessary)
 + cmap (true): whether to enable pair in cmdline
 + imap (true): whether to enable pair in insert
 + multiline (true): whether the pair works multiline
 + p (10): the priority of the pair
-*Map-specific*:
+{Map-specific}:
 + newline (false): enable expanding on `<CR>`
 + space (false): whether to work for space
-*Extension-specific*:
+{Extension-specific}:
 + dosuround (false): whether to surround `suround` tagged pairs
 + suround (false): tag pair as `suround`
 + fly (false): enable fly for the pair
-+ ft (nil,table[string]): in filetype
-+ nft (nil,table[string]): not in filetype
-
-TODO: continue about:
-+ how extensions work
-+ how profiles work (and how they push to mem (and what mem is))
-
++ ft (nil;table[string]): in filetype
++ nft (nil;table[string]): not in filetype
+# {Extensions}
+Extensions are things that extend default mappings. They are designed to work
+for all mappings (and not just pair) which come from the default profile. Each
+extension has a priority `p` which denoted in which order they should get
+loaded (higher `p`=loaded earlier).
+# {Profiles}
+Profiles are the ones that push modules to `mem`. `mem` is a table where all
+modules are stored. A module is typically a map, though in the case of
+`space2` it is an autocmd.
 
 
 vim:ft=help:
