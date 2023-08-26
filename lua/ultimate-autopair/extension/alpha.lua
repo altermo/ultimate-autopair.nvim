@@ -40,7 +40,9 @@ function M.check(o,m,ext,incheck)
     if pconf.alpha~=false and conf.alpha or pconf.alpha then
         ---@cast m prof.def.m.pair
         if not o.incmd and (m.pair=='"' or m.pair=="'") and utils.getsmartft(o)=='python' and not conf.no_python then
-            return
+            if vim.regex([[\v\c<((r[fb])|([fb]r)|[frub])$]]):match_str(o.line:sub(1,o.col-lenb-1)) then
+                return
+            end
         end
         local alpha=pconf.alpha or conf.alpha
         if type(alpha)~='table' or vim.tbl_contains(alpha,utils.getsmartft(o)) then
