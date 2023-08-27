@@ -32,6 +32,11 @@ M.fns={
         local ft=utils.getsmartft(new_o)
         return vim.filetype.get_option(ft,'lisp')
     end,
+    in_node=function (opt,nodes,col,row)
+        local new_o=utils._get_o_pos(opt.o,col,row)
+        local tsnode=require'ultimate-autopair.extension.tsnode'
+        return tsnode._in_tsnode(new_o,type(nodes)=='string' and {nodes} or nodes)
+    end,
     is_pair=function (opt)
         return default.get_type_opt(opt.m,'pair')
     end,
@@ -47,11 +52,6 @@ M.fns={
     get_tsnode=function (opt,col,row)
         local new_o=utils._get_o_pos(opt.o,col,row)
         return utils.gettsnode(new_o)
-    end,
-    get_tsnode_type=function (opt,col,row)
-        local new_o=utils._get_o_pos(opt.o,col,row)
-        local node=utils.gettsnode(new_o)
-        return not node or node:type()
     end,
     get_ft=function (opt,col,row,notree)
         local new_o=utils._get_o_pos(opt.o,col,row)

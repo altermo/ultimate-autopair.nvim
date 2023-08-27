@@ -267,10 +267,11 @@ return {
         {'|#)','(','(|)#)',{c={extensions={cond={cond=function (_,o)
             return o.line:sub(o.col-1,o.col-1)~='#' end,filter=true}}}}},
         {'"|"','(','"(|"',{ts=true,c={extensions={cond={cond=function(fns) return not fns.in_string() end}}}}},
-        --{'--|','(','--(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,outside={'comment'}}}}}}}, --TODO
-        --{'|','(','(|)',{ft='lua',ts=true,{c={extensions={tsnode={p=50,outside={'comment'}}}}}}},
-        --{'--|','(','--(|)',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
-        --{'|','(','(|',{ft='lua',ts=true,{c={extensions={tsnode={p=50,inside={'comment'}}}}}}},
+        {'--|a','(','--(|a',{ft='lua',ts=true,c={extensions={cond={cond=function (fns) return not fns.in_node('comment') end}}}}},
+        {'|','(','(|)',{ft='lua',ts=true,c={extensions={cond={cond=function (fns) return not fns.in_node('comment') end}}}}},
+        {'--|a','(','--(|)a',{ft='lua',ts=true,c={extensions={cond={cond=function (fns) return fns.in_node('comment') end}}}}},
+        {'|','(','(|',{ft='lua',ts=true,c={extensions={cond={cond=function (fns) return fns.in_node('comment') end}}}}},
+        {'""|a','(','""(|)a',{ft='lua',ts=true,c={extensions={cond={cond=function (fns) return fns.in_node('string') end}}},skip=true}},
     },
     ext_fly={
         {'[{( | )}]',']','[{(  )}]|'},
