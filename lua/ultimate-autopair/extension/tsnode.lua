@@ -26,59 +26,24 @@ function M._in_tsnode(o,nodetypes)
         return startcol+1==o.col+o._coloffset(o.col,o.row)
     end
     local ql={}
-    local r={}
+    local cache={}
     local nsave=M.get_save(o)
     for _,v in ipairs(nodetypes) do
-        if nsave._skip then
-            if vim.tbl_contains(nsave._skip,v) then
-                goto continue
-            end
+        if not nsave._skip or not vim.tbl_contains(nsave._skip,v) then
+            ql[v]=true
         end
-        ql[v]=true
-        ::continue::
     end
     while node and ((not ql[node:type()]) or fn(node)) do
-        if node and not fn(node) then save[node:id()]=r end
+        if node and not fn(node) then save[node:id()]=cache end
         node=node:parent()
         --TODO fix: TSNode:id() doesn't differ between trees
         --NEEDS: `TSNode:tree()` not crashing (https://github.com/neovim/neovim/issues/24783)
-        if node and save[node:id()] then r[1]=save[node:id()][1] return unpack(save[node:id()]) end
+        if node and save[node:id()] then cache[1]=save[node:id()][1] return unpack(save[node:id()]) end
     end
     if not node then return end
-    save[node:id()]=r
-    r[1]=node
+    save[node:id()]=cache
+    cache[1]=node
     return node
-end
----@tag unused-code
-function M._in_tree(o)
-    --TODO: move to utils
-    local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
-    if not o.save[M._in_tree] then o.save[M._in_tree]={} end
-    local cache=o.sav[M._in_tree]
-    if cache.no_parser then return end
-    if cache[tostring(linenr)..';'..tostring(col)] then
-        return cache[tostring(linenr)..';'..tostring(col)]
-    end
-    local stat,parser=pcall(vim.treesitter.get_parser)
-    if not stat then
-        (cache or {}).no_parser=true
-        return
-    end
-    local pos={linenr,col,linenr,col}
-    local langs=M._langauges_for_range(parser,pos)
-    return langs
-end
----@tag unused-code
----@overload fun(self:LanguageTree,range:Range4):LanguageTree[]
-function M._langauge_for_range(self,range,_s)
-    _s=_s or {}
-    table.insert(_s,1,self)
-    for _, child in pairs(self._children) do
-        if child:contains(range) then
-            return M._langauge_for_range(child,range,_s)
-        end
-    end
-    return _s
 end
 ---@param o core.o
 ---@return ext.tsnode.save
@@ -145,3 +110,34 @@ function M.call(m,ext)
     end
 end
 return M
+--[[
+function M._get_trees(o)
+    --TODO: move to utils
+    local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
+    if not o.save[M._get_trees] then o.save[M._get_trees]={} end
+    local cache=o.sav[M._get_trees]
+    if cache.no_parser then return end
+    if cache[tostring(linenr)..';'..tostring(col)] then
+        return cache[tostring(linenr)..';'..tostring(col)]
+    end
+    local stat,parser=pcall(vim.treesitter.get_parser)
+    if not stat then
+        (cache or {}).no_parser=true
+        return
+    end
+    local pos={linenr,col,linenr,col}
+    local langs=M._langauges_for_range(parser,pos)
+    return langs
+end
+---@overload fun(self:LanguageTree,range:Range4):LanguageTree[]
+function M._langauges_for_range(self,range,_s)
+    _s=_s or {}
+    table.insert(_s,1,self)
+    for _, child in pairs(self._children) do
+        if child:contains(range) then
+            return M._langauges_for_range(child,range,_s)
+        end
+    end
+    return _s
+end
+--]]
