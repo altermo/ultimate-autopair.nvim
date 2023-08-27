@@ -72,16 +72,11 @@ function M.utf8_string_and_offset(col,line,conf)
     return newline,ncol,offsets
 end
 ---@param off (table<number,number>)[]
----@param neg? boolean
 ---@return fun(col:number,row:number):number
-function M.wrapp_coloffset(off,neg)
+function M.wrapp_coloffset(off)
     return function (col,row)
-        --TODO:
-        ---what to do with incorrect values, like col=-1, row=0
-        ---if line doesn't contain utf8, skip calc
-        if col==0 then return 0 end
-        if not off[row] --[[ or not off[row][col] ]] then return 0 end --HACK: here until fix
-        return (col-off[row][col])*(neg and -1 or 1)
+        if not off[row] then return 0 end
+        return off[row][col]-col
     end
 end
 ---@param m prof.def.module
@@ -93,8 +88,14 @@ function M.call(m,ext)
     m.check=function (o)
         local col
         local off={}
+        local of
+        local lline
         for row,line in ipairs(o.lines) do
-            o.lines[row],col,off[row]=M.utf8_string_and_offset(o.col,line,conf)
+            lline,col,of=M.utf8_string_and_offset(o.col,line,conf)
+            if lline~=o.lines[row] then
+                o.lines[row]=lline
+                off[row]=of
+            end
             if row==o.row then
                 o.col=col
             end
@@ -102,14 +103,13 @@ function M.call(m,ext)
         o.line=o.lines[o.row]
         o._coloffset=M.wrapp_coloffset(off)
         local deoff={}
-        for row,of in pairs(off) do
+        for row,offf in pairs(off) do
             deoff[row]={}
-            for k,v in pairs(of) do
+            for k,v in pairs(offf) do
                 deoff[row][v]=k
             end
         end
-        o.s=deoff
-        o._decoloffset=M.wrapp_coloffset(deoff,true)
+        o._decoloffset=M.wrapp_coloffset(deoff)
         return check(o)
     end
 end

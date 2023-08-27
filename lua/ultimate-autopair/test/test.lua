@@ -300,7 +300,7 @@ return {
         {"ä|,","'","ä'|,",{interactive=true}}, --ext.alpha
         {'"ě""|",','','"ě"|,',{ts=true,interactive=true}}, --backspace
         {"'ø',|","'","'ø','|'",{ts=true,interactive=true}}, --treesitter
-        {"{'ø',{}|}",'{',"{'ø',{}{|}}",{ts=true,interactive=true}} --TODO: fix
+        {"{'ø',{}|}",'{',"{'ø',{}{|}}",{ts=true,interactive=true}}
     },
     string={
         {'| ")"','(','(|) ")"',{ts=true}},
