@@ -59,6 +59,7 @@ ultimate-autopair-space	ultimate-autopair.txt	/*ultimate-autopair-space*
 ultimate-autopair-space2	ultimate-autopair.txt	/*ultimate-autopair-space2*
 ultimate-autopair-test	ultimate-autopair.txt	/*ultimate-autopair-test*
 ultimate-autopair-toggle	ultimate-autopair.txt	/*ultimate-autopair-toggle*
+ultimate-autopair-use-with-npairs	ultimate-autopair.txt	/*ultimate-autopair-use-with-npairs*
 ultimate-autopair-writing-extensions	ultimate-autopair.txt	/*ultimate-autopair-writing-extensions*
 ultimate-autopair-writing-prilfe	ultimate-autopair.txt	/*ultimate-autopair-writing-prilfe*
 ultimate-autopair.nvim	ultimate-autopair.txt	/*ultimate-autopair.nvim*

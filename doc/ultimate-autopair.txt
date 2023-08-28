@@ -520,22 +520,35 @@ Extension config:
 ==============================================================================
 OTHER                                                *ultimate-autopair-other*
 ------------------------------------------------------------------------------
-ultimate-autopair-debug                              *ultimate-autopair-debug*
+debug                                                *ultimate-autopair-debug*
 Ultimate-autopair has a few scripts to run debug. The first one is `ua._list`
 which will allow you to select wanted pair and see information about sed pair.
 The second one is `debug` which automatically activates when a mapping throws
 an error.
 ------------------------------------------------------------------------------
-ultimate-autopair-test                                *ultimate-autopair-test*
+test                                                  *ultimate-autopair-test*
 The test file sits in the `test` directory. You can run the test by sourcing
 it with neovim or by running `:checkhealth ultimate-autopair`. Set values
 `_G.UA_DEV=true` for dev testing (and `_G.UA_DEV='ok'` to also report OKs).
 ------------------------------------------------------------------------------
-ultimate-autopair-notes                              *ultimate-autopair-notes*
+notes                                                *ultimate-autopair-notes*
 The root directory `notes` contains notes and scribbles about the plugin.
 ------------------------------------------------------------------------------
-ultimate-autopair-experimental                *ultimate-autopair-experimental*
+experimental                                  *ultimate-autopair-experimental*
 `experimental` directory contains experimental features.
+------------------------------------------------------------------------------
+use-with-npairs                            *ultimate-autopair-use-with-npairs*
+This is about how to use UA with https://github.com/windwp/nvim-autopairs
+Currently, there's not yet a profile for npairs, so you'll have to do with
+using one or the other with no fallback to other.
+So the only way to use them side by side is to disable specific features.
+Most disables are self explanatory, but disabling npairs pair insert is
+complicated: the only way is to set all `rules.key_map` to `nil`: >lua
+ for _,i in ipairs(npairs.config.rules) do
+   i.key_map=nil
+ end
+<
+Note that if you add rules after this, then they won't be disabled.
 ==============================================================================
 WRITING-EXTENSIONS                      *ultimate-autopair-writing-extensions*
 Todo: write documentation

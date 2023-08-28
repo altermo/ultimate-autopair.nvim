@@ -67,7 +67,7 @@ These are some other plugins which are related to pairing which have features th
 + [tabout](https://github.com/abecodes/tabout.nvim) tab out of tsnode objects
 + [surround](https://github.com/kylechui/nvim-surround) delete, change surrounding parentheses and much more...
 + [autotag](https://github.com/windwp/nvim-ts-autotag) auto add html tags
-+ <a href="https://github.com/windwp/nvim-autopairs">nvim-autopairs</a> integration: Use [npairs-integrate-upair](https://github.com/altermo/npairs-integrate-upair) with `require('npairs-int-upair').setup({map='u'})`
++ <a href="https://github.com/windwp/nvim-autopairs">nvim-autopairs</a> integration: read `:h ultimate-autopair-use-with-npairs`
 
 ### Donate
 If you want to donate then you need to find the correct link (hint: 50₁₀):
