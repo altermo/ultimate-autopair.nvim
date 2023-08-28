@@ -30,27 +30,46 @@ function M._check_depreciated(conf)
             vim.notify(('For more information: %s'):format(help),vim.log.levels.WARN)
         end
     end
-    if vim.tbl_get(conf,'extensions','rules') then
+    if vim.tbl_get(conf,'extensions','rules')~=nil then
         rem(
             'extension.rules',
             'extension.cond',
             '`:h ultimate-autopair-ext-cond` or read the `Q&A.md`'
         )
         return true
-    elseif vim.tbl_get(conf,'extensions','tsnode','outside') then
-
+    elseif vim.tbl_get(conf,'extensions','tsnode','outside')~=nil then
         rem(
             'extension.tsnode.outside',
             'extension.cond',
             '`:h ultimate-autopair-ext-cond`'
         )
         return true
-    elseif vim.tbl_get(conf,'extensions','tsnode','inside') then
-
+    elseif vim.tbl_get(conf,'extensions','tsnode','inside')~=nil then
         rem(
             'extension.tsnode.inside',
             'extension.cond',
             '`:h ultimate-autopair-ext-cond`'
+        )
+        return true
+    elseif vim.tbl_get(conf,'config_type')~=nil then
+        rem(
+            'config_type',
+            'profile',
+            '`:h ultimate-autopair-prof`'
+        )
+        return true
+    elseif vim.tbl_get(conf,'fastwarp','filter_string')~=nil then
+        rem(
+            'fastwarp.filter_string',
+            'fastwarp.no_filter_nodes',
+            '`:h ultimate-autopair-map-fastwarp-config`'
+        )
+        return true
+    elseif vim.tbl_get(conf,'extensions','cmdtype','types')~=nil then
+        rem(
+            'extensions.cmdtype.types',
+            'extensions.cmdtype.skip',
+            '`:h ultimate-autopair-ext-cmdtype`'
         )
         return true
     end
