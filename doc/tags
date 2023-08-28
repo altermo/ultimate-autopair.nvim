@@ -24,6 +24,7 @@ ultimate-autopair-extend-default	ultimate-autopair.txt	/*ultimate-autopair-exten
 ultimate-autopair-extensions	ultimate-autopair.txt	/*ultimate-autopair-extensions*
 ultimate-autopair-extensions-default-config	ultimate-autopair.txt	/*ultimate-autopair-extensions-default-config*
 ultimate-autopair-fastwarp	ultimate-autopair.txt	/*ultimate-autopair-fastwarp*
+ultimate-autopair-filter	ultimate-autopair.txt	/*ultimate-autopair-filter*
 ultimate-autopair-guide	ultimate-autopair.txt	/*ultimate-autopair-guide*
 ultimate-autopair-init	ultimate-autopair.txt	/*ultimate-autopair-init*
 ultimate-autopair-isenabled	ultimate-autopair.txt	/*ultimate-autopair-isenabled*
@@ -40,6 +41,7 @@ ultimate-autopair-map-space-config	ultimate-autopair.txt	/*ultimate-autopair-map
 ultimate-autopair-map-space2-config	ultimate-autopair.txt	/*ultimate-autopair-map-space2-config*
 ultimate-autopair-map-tabout	ultimate-autopair.txt	/*ultimate-autopair-map-tabout*
 ultimate-autopair-map-tabout-config	ultimate-autopair.txt	/*ultimate-autopair-map-tabout-config*
+ultimate-autopair-multiline	ultimate-autopair.txt	/*ultimate-autopair-multiline*
 ultimate-autopair-notes	ultimate-autopair.txt	/*ultimate-autopair-notes*
 ultimate-autopair-other	ultimate-autopair.txt	/*ultimate-autopair-other*
 ultimate-autopair-pairs-configure-default-pairs	ultimate-autopair.txt	/*ultimate-autopair-pairs-configure-default-pairs*

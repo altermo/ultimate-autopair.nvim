@@ -181,7 +181,8 @@ The default configuration contains a loot of options, here are those:
      no_filter_nodes={'string','raw_string'},
      --which nodes to skip for tsnode filtering
      faster=false,
-     --only enables jump over pair, goto end/next line
+     --only do jump over pair/goto end/goto next line
+     --useful for the situation of:
      --{|}M.foo('bar') > {M.foo('bar')|}
      conf={},
      --contains extension config
@@ -283,6 +284,14 @@ Example (`*` is cursor): >
  | ' * '  | '    | ' '*' ' |
  | ''*''  | '    | '''*''' |
 <
+------------------------------------------------------------------------------
+filter                                              *ultimate-autopair-filter*
+Filter is used for filtering pairs/other characters, it will run for every
+pair to check conditions, like if prev char is not `\\`.
+------------------------------------------------------------------------------
+multiline                                        *ultimate-autopair-multiline*
+Multiline works pretty simply, it gets the whole buffer (to a maximum of 1000
+lines) and that is used for the plugin.
 ==============================================================================
 MAP                                                    *ultimate-autopair-map*
 ------------------------------------------------------------------------------
@@ -595,6 +604,13 @@ loaded (higher `p`=loaded earlier).
 Profiles are the ones that push modules to `mem`. `mem` is a table where all
 modules are stored. A module is typically a map, though in the case of
 `space2` it is an autocmd.
-
+# {Workings}
+A quick summary of how the plugin works.
+When initializing: the config is past to its respective profile which
+generates a module, that is then put inside `mem` and then keymaps/other are
+generated from `mem`.
+When running: each module in `mem` is checked against the input key, and if
+yes, then check will run, and if it doesn't return anything, then it continues
+to the next module in `mem`.
 
 vim:ft=help:

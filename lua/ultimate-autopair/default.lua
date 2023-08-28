@@ -88,6 +88,7 @@ M.conf={
     --which nodes to skip for tsnode filtering
     faster=false,
     --only enables jump over pair, goto end/next line
+    --useful for the situation of:
     --{|}M.foo('bar') > {M.foo('bar')|}
     conf={},
     --contains extension config
