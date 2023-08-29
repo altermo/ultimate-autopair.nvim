@@ -1,3 +1,4 @@
+local ua=require'ultimate-autopair'
 local I={}
 local M={I=I}
 function I.opt(opt,conf)
@@ -50,7 +51,7 @@ M.demo.part_1={
     'i{{{{',
     vim.cmd.stopinsert,
 }
-function M.run_key(key)
+function M.run_key(key,end_f)
     local pressed=(' '):rep(38)
     local it=vim.iter(vim.iter(key):fold({},function(t,v)
         if type(v)=="string" then
@@ -69,20 +70,20 @@ function M.run_key(key)
             vim.api.nvim_input(v)
             vim.api.nvim_echo({{pressed},{'<'..v..'|'}},false,{})
             pressed=pressed:sub(2)..v
-            vim.defer_fn(function () async(time) end,time*1000)
+            vim.defer_fn(function () async(time) end,time*1000*(M._mul or 1))
         elseif type(v)=='number' then
             vim.schedule(function () async(v) end)
         elseif type(v)=='function' then
             v()
             vim.schedule(function () async(time) end)
+        elseif v==nil then
+            end_f()
         end
     end
     async(.1)
 end
-function M.run_keys()
-    for _,v in vim.spairs(M.demo) do
-        M.run_key(v)
-    end
+function M.run_keys(demo,end_f)
+    M.run_key(demo,end_f)
 end
 function M.start()
     M.brea=false
@@ -100,7 +101,9 @@ function M.start()
     vim.keymap.set({'i','n','x'},'<C-c>',function() M.brea=true end,{buffer=true})
     vim.cmd.redraw()
     vim.fn.input('Press enter to start (hold <C-c> to stop)...')
-    pcall(M.run_keys)
+    local old_conf=ua._configs
+    ua.setup()
+    pcall(M.run_keys,M.demo.part_1,function() ua.init(old_conf) end)
 end
 M.start()
 return M
