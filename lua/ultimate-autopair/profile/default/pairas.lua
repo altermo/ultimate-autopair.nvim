@@ -72,6 +72,26 @@ function M.backspace_wrapp(m)
                 })
             end
         end
+        if o.incmd then return end
+        if not m.conf.newline then return end
+        if not conf.indent_ignore and 1~=o.col then return end
+        if conf.indent_ignore and o.line:sub(1,o.col-1):find('[^%s]') then return end
+        local line1=o.lines[o.row-1]
+        local line2=o.lines[o.row+1]
+        if not line1 or not line2 then return end
+        local line2_start=line2:find('[^%s]')
+        if not line2_start then return end
+        if open_pair.open_pair_ambiguous_before_nor_after(m,o,o.col) then return end
+        if line1:sub(-#m.start_pair)==m.start_pair and
+            line2:sub(line2_start,line2_start+#m.end_pair-1)==m.end_pair then
+            return utils.create_act({
+                {'end'},
+                {'delete',0,line2_start},
+                {'k',1},
+                {'end'},
+                {'delete',0,o.col},
+            })
+        end
     end
 end
 ---@param q prof.def.q

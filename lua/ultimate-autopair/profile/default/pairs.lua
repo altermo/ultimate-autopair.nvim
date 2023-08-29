@@ -66,7 +66,7 @@ function M.backspace_wrapp(m)
         local line2_start=line2:find('[^%s]')
         if not line2_start then return end
         if line1:sub(-#m.start_pair)==m.start_pair and
-            line2:sub(line2_start,line2_start+#m.end_pair)==m.end_pair and
+            line2:sub(line2_start,line2_start+#m.end_pair-1)==m.end_pair and
             m.filter(utils._get_o_pos(o,#line1-#m.start_pair+1,o.row-1)) then
             return utils.create_act({
                 {'end'},
