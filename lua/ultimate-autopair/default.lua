@@ -126,7 +126,7 @@ M.conf={
     filetype={p=90,nft={'TelescopePrompt'},tree=true},
     escape={filter=true,p=80},
     utf8={p=70},
-    tsnode={p=60,separate={'comment','string','raw_string','function_definition','function_declaration'},--[[tree=true,notree={'markdown_inline'}]]},
+    tsnode={p=60,separate={'comment','string','raw_string'},--[[tree=true,notree={'markdown_inline'}]]},
     cond={p=40,filter=true},
     alpha={p=30,filter=false,all=false},
     suround={p=20},
