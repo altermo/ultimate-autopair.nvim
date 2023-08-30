@@ -64,7 +64,7 @@ function M.run_key(key,end_f)
         return t
     end))
     local function async(time)
-        if M.brea then return end
+        if M._break then end_f() return end
         local v=it:next()
         if type(v)=='string' then
             vim.api.nvim_input(v)
@@ -86,7 +86,7 @@ function M.run_keys(demo,end_f)
     M.run_key(demo,end_f)
 end
 function M.start()
-    M.brea=false
+    M._break=false
     if not vim.iter then
         vim.notify('This code requires `vim.iter` (neovim version 0.10.0)')
         return
@@ -95,15 +95,39 @@ function M.start()
     vim.api.nvim_set_option_value('bufhidden','wipe',{buf=buf})
     vim.cmd('tab split')
     vim.cmd.buffer(buf)
-    vim.o.showtabline=0
     vim.keymap.set('i','<C-h>','<bs>',{noremap=false,buffer=true})
     vim.keymap.set('i','<C-e>','<A-e>',{noremap=false,buffer=true})
-    vim.keymap.set({'i','n','x'},'<C-c>',function() M.brea=true end,{buffer=true})
+    vim.keymap.set({'i','n','x'},'<C-c>',function() M._break=true end,{buffer=true})
+    M.save()
+    vim.wo.number=false
+    vim.wo.relativenumber=false
+    vim.wo.cursorline=false
+    vim.wo.colorcolumn=''
+    vim.wo.signcolumn='no'
+    vim.o.laststatus=0
+    vim.o.showtabline=0
+    vim.o.cmdheight=1
+    vim.o.ruler=false
     vim.cmd.redraw()
     vim.fn.input('Press enter to start (hold <C-c> to stop)...')
-    local old_conf=ua._configs
     ua.setup()
-    pcall(M.run_keys,M.demo.part_1,function() ua.init(old_conf) end)
+    pcall(M.run_keys,M.demo.part_1,function() M.restore() end)
+end
+function M.save()
+    M._save={
+        conf=ua._configs,
+        laststatus=vim.o.laststatus,
+        showtabline=vim.o.showtabline,
+        cmdheight=vim.o.cmdheight,
+        ruler=vim.o.ruler
+    }
+end
+function M.restore()
+    ua.init(M._save.conf)
+    vim.o.laststatus=M._save.laststatus
+    vim.o.showtabline=M._save.showtabline
+    vim.o.cmdheight=M._save.cmdheight
+    vim.o.ruler=M._save.ruler
 end
 M.start()
 return M

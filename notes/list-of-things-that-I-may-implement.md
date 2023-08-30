@@ -175,3 +175,14 @@
 + [ ] multiple core instances (with each having its own id?)
 + [ ] own au-group (each instance different au-group)
 + [ ] if map opt is set to dict, then enable, else disable
++ [ ] multiline for some filetypes (multiline=function() return ... end)
++ [ ] filter early return or caching? (?it wont change between passes)
++ [ ] seperate interactive tests to their own healt.start
++ [ ] cache
+    + [ ] instead of caching node:id, cache also range (cause gettsnode is slow)...
++ [ ] make mapping doc like ext doc
++ [ ] test make multichar input work without interactive (interactive is expensive)
++ [ ] fastwarp multi pair `f(g(|))h` > `f(g(|h))
++ [ ] be able to fastwarp things like html tags, which are not autopaird
++ [ ] make every extension option to a maybe function
++ [ ] nvim-surround like features
