@@ -28,7 +28,6 @@ function I.lines(lines)
         end
     end
 end
-M._mul=0.01
 M.demo={}
 M.demo.part_1={
     I.opt('filetype','lua'),
