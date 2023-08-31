@@ -34,7 +34,7 @@ function M._in_tsnode(o,nodetypes)
         end
     end
     while node and ((not ql[node:type()]) or fn(node)) do
-        if node and not fn(node) then save[node:id()]=cache end
+        if node then save[node:id()]=cache end
         node=node:parent()
         --TODO fix: TSNode:id() doesn't differ between trees
         --NEEDS: `TSNode:tree()` not crashing (https://github.com/neovim/neovim/issues/24783)
