@@ -186,3 +186,4 @@
 + [ ] be able to fastwarp things like html tags, which are not autopaird
 + [x] make every extension option to a maybe function
 + [ ] nvim-surround like features
++ [ ] have the ability to disable langtree filter: if tree.root, go to parent langtree

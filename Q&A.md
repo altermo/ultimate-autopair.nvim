@@ -25,10 +25,7 @@ Use `{extensions={cond={cond=function(fn) return not fn.in_lisp() end}}}`
 ### How to toggle the plugin
 Use `require'ultimate-autopair'.toggle()`
 ### How to disable in comment
-Use `{extensions={cond={cond=function(fn) return not fn.in_node('comment') end}}}`\
-NOTE: in markdown, comments have the ts type `html_block`.\
-If you want to detect those use:\
-`{extensions={cond={cond=function(fn) return not fn.in_node({'comment','html_block'}) end}}}`
+Use `{extensions={cond={cond=function(fn) return not fn.in_node('comment') end}}}`
 ### How to disable in macros
 Use `{extensions={cond={cond=function(fn) return not fn.in_macro() end}}}`
 ### How to disable hop over end pair

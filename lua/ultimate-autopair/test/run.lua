@@ -165,13 +165,16 @@ function M.switch_ua_utils_fn(ua_utils_,opt,lines,linenr,line,col)
     ua_utils_.incmd=function () return opt.incmd end
     ua_utils_.getcol=function () return col end
     ua_utils_.getlinenr=function () return linenr end
-    ua_utils_.gettsnode=function (o)
-        if not opt.ts then return end
-        local parser=vim.treesitter.get_string_parser(vim.fn.join(o.lines,'\n'),opt.tsft or opt.ft or 'lua',{})
-        local linenr_,col_=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
+    if opt.ts then
+        local parser=vim.treesitter.get_string_parser(vim.fn.join(lines,'\n'),opt.tsft or opt.ft or 'lua',{})
         parser:parse()
-        local node=parser:named_node_for_range({linenr_,col_,linenr_,col_})
-        return node
+        ua_utils_.gettsnode=function (o)
+            local linenr_,col_=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
+            local node=parser:named_node_for_range({linenr_,col_,linenr_,col_})
+            return node
+        end
+    else
+        ua_utils_.gettsnode=function (_) return nil end
     end
     ua_utils_.getsmartft=function () return opt.ft or '' end
     ua_utils_.getcmdtype=function () return opt.incmd end

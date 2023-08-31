@@ -362,6 +362,7 @@ return {
         {'\\( |)','f','\\( f)',{interactive=true,c={space2={enable=true}}}},
         {'|"\\"','(','(|)"\\"'},
         {'("|")',')','(")|")',{ts=true,c={{'"','"',fly=true,p=11},extensions={fly={nofilter=false}}}}},
+        {'"(|)"',')','"()|"',{ts=true}},
     },
     multiline={
         {'|\n)','(','(|\n)'},

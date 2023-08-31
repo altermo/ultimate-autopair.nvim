@@ -3,7 +3,7 @@
 ---@field separate string[]|fun(...:prof.def.optfn):string[]
 ---@class ext.tsnode.save
 ---@field _skip? string[]
----@field in_node? boolean
+---@field in_node? TSNode
 ---@field srow? number
 ---@field erow? number
 ---@field scol? number
@@ -23,6 +23,7 @@ function M._in_tsnode(o,nodetypes,incheck)
     local save=ssave[nodetypes] or {} ssave[nodetypes]=save
     if incheck then save={} end
     local node=utils.gettsnode(o)
+    if not node then return end
     if node and save[node:id()] then return unpack(save[node:id()]) end
     local ql={}
     local cache={}
@@ -32,14 +33,15 @@ function M._in_tsnode(o,nodetypes,incheck)
             ql[v]=true
         end
     end
-    while node and (not ql[node:type()] or (incheck and ({node:start()})[2]==o.col-1)) do
-        if node then save[node:id()]=cache end
-        node=node:parent()
+    local root=node:tree():root()
+    --TODO fix: if incheck don't for one char after node
+    --PROBLEM: there are exceptions: comment #|
+    while node~=root and (not ql[node:type()] or (incheck and ({node:start()})[2]==o.col-1)) do
+        save[node:id()]=cache
+        node=node:parent() --[[@as TSNode]]
         --TODO fix: TSNode:id() doesn't differ between trees
-        --NEEDS: `TSNode:tree()` not crashing (https://github.com/neovim/neovim/issues/24783)
         if node and save[node:id()] then cache[1]=save[node:id()][1] return unpack(save[node:id()]) end
     end
-    if not node then return end
     save[node:id()]=cache
     cache[1]=node
     return node
@@ -66,7 +68,7 @@ function M.set_in_node(o,conf,save,m)
         save.srow=srow
         save.ecol=ecol
         save.erow=erow
-        save.in_node=true
+        save.in_node=node
     end
 end
 ---@param o core.o
@@ -75,15 +77,14 @@ end
 ---@param m prof.def.module
 ---@return boolean?
 function M.filter(o,save,conf,m)
-    if save.in_node or save.in_tree then
+    if save.in_node then
         if o.row<save.srow then return end
         if o.row>save.erow then return end
         if o.row==save.srow and o.col<save.scol then return end
         if o.row==save.erow and o.col>save.ecol then return end
-        if save.in_node then return true end
     end
     local node=M._in_tsnode(o,default.orof(conf.separate,o,m))
-    if node then
+    if node and node~=save.in_node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --HACK
         if vim.tbl_contains({'string','raw_string'},node:type()) and srow==o.row and scol==o.col then return true end --HACK
