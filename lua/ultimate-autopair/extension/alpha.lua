@@ -1,13 +1,13 @@
 ---FI
 ---@class ext.alpha.pconf
----@field alpha? string[]|boolean
----@field alpha_after? string[]|boolean
+---@field alpha? string[]|boolean|fun(...:prof.def.optfn):string[]|boolean?
+---@field alpha_after? string[]|boolean|fun(...:prof.def.optfn):string[]|boolean?
 ---@class ext.alpha.conf:prof.def.ext.conf
----@field alpha? string[]|boolean
----@field no_python? boolean
----@field after? string[]|boolean
----@field all? boolean
----@field filter? boolean
+---@field alpha? string[]|boolean|fun(...:prof.def.optfn):string[]|boolean?
+---@field no_python? boolean|fun(...:prof.def.optfn):boolean?
+---@field after? string[]|boolean|fun(...:prof.def.optfn):string[]|boolean?
+---@field all? boolean|fun(...:prof.def.optfn):boolean?
+---@field filter? boolean|fun(...:prof.def.optfn):boolean?
 
 local M={}
 local utils=require'ultimate-autopair.utils'
@@ -37,22 +37,27 @@ function M.check(o,m,ext,incheck)
     local pconf=m.conf
     local conf=ext.conf
     ---@cast conf ext.alpha.conf
-    if pconf.alpha~=false and conf.alpha or pconf.alpha then
+    local pcalpha=default.orof(pconf.alpha,o,m,incheck)
+    local calpha=default.orof(conf.alpha,o,m,incheck)
+    local cno_python=default.orof(conf.no_python,o,m,incheck)
+    if pcalpha~=false and calpha or pcalpha then
         ---@cast m prof.def.m.pair
-        if not o.incmd and (m.pair=='"' or m.pair=="'") and utils.getsmartft(o)=='python' and not conf.no_python then
+        if not o.incmd and (m.pair=='"' or m.pair=="'") and utils.getsmartft(o)=='python' and not cno_python then
             if vim.regex([[\v\c<((r[fb])|([fb]r)|[frub])$]]):match_str(o.line:sub(1,o.col-lenb-1)) then
                 return
             end
         end
-        local alpha=pconf.alpha or conf.alpha
+        local alpha=pcalpha or calpha
         if type(alpha)~='table' or vim.tbl_contains(alpha,utils.getsmartft(o)) then
             if vim.regex(M.alpha_re..'$'):match_str(o.line:sub(1,o.col-lenb-1)) then
                 return true
             end
         end
     end
-    if pconf.alpha_after~=false and conf.after or pconf.alpha_after then
-        local alpha=pconf.alpha_after or conf.after
+    local pcalpha_after=default.orof(pconf.alpha_after,o,m,incheck)
+    local cafter=default.orof(conf.after,o,m,incheck)
+    if pcalpha_after~=false and cafter or pcalpha_after then
+        local alpha=pcalpha_after or cafter
         if type(alpha)~='table' or vim.tbl_contains(alpha,utils.getsmartft(o)) then
             if vim.regex(M.alpha_re):match_str(o.line:sub(o.col+lenf)) then
                 return true
@@ -71,9 +76,12 @@ function M.call(m,ext)
         if M.check(o,m,ext,true) then return end
         return check(o)
     end
-    if not conf.filter then return end
+    if type(conf.filter)~='function' and not conf.filter then return end
     local filter=m.filter
     m.filter=function(o)
+        if type(conf.filter)=='function' and not conf.filter(o,m,false) then
+            return filter(o)
+        end
         if M.check(o,m,ext) then return end
         return filter(o)
     end

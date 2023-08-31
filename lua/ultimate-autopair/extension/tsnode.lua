@@ -1,6 +1,6 @@
 ---FI
 ---@class ext.tsnode.conf:prof.def.ext.conf
----@field separate string[]
+---@field separate string[]|fun(...:prof.def.optfn):string[]
 ---@class ext.tsnode.save
 ---@field _skip? string[]
 ---@field in_node? boolean
@@ -11,6 +11,7 @@
 ---@field in_tree? boolean
 
 local utils=require'ultimate-autopair.utils'
+local default=require'ultimate-autopair.profile.default.utils'
 local M={}
 M.savetype={}
 ---@param o core.o
@@ -58,8 +59,9 @@ end
 ---@param o core.o
 ---@param conf ext.tsnode.conf
 ---@param save ext.tsnode.save
-function M.set_in_node(o,conf,save)
-    local node=M._in_tsnode(o,conf.separate)
+---@param m prof.def.module
+function M.set_in_node(o,conf,save,m)
+    local node=M._in_tsnode(o,default.orof(conf.separate,o,m,true))
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         save.scol=scol
@@ -72,8 +74,9 @@ end
 ---@param o core.o
 ---@param save ext.tsnode.save
 ---@param conf ext.tsnode.conf
+---@param m prof.def.module
 ---@return boolean?
-function M.filter(o,save,conf)
+function M.filter(o,save,conf,m)
     if save.in_node or save.in_tree then
         if o.row<save.srow then return end
         if o.row>save.erow then return end
@@ -81,7 +84,7 @@ function M.filter(o,save,conf)
         if o.row==save.erow and o.col>save.ecol then return end
         if save.in_node then return true end
     end
-    local node=M._in_tsnode(o,conf.separate)
+    local node=M._in_tsnode(o,default.orof(conf.separate,o,m))
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --HACK
@@ -98,13 +101,13 @@ function M.call(m,ext)
     ---@cast conf ext.tsnode.conf
     m.check=function (o)
         local save=M.get_save(o)
-        M.set_in_node(o,conf,save)
+        M.set_in_node(o,conf,save,m)
         return check(o)
     end
     local filter=m.filter
     m.filter=function(o)
         local save=M.get_save(o)
-        if M.filter(o,save,conf) then
+        if M.filter(o,save,conf,m) then
             return filter(o)
         end
     end

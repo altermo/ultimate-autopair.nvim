@@ -1,7 +1,8 @@
 ---C
 ---@class ext.utf8.conf:prof.def.ext.conf
----@field map? table<string|true,string>
+---@field map? table<string|true,string>|fun(...:prof.def.optfn):table<string|true,string>
 
+local default=require'ultimate-autopair.profile.default.utils'
 local M={}
 M.type={}
 M.map={
@@ -35,9 +36,11 @@ M.map={
 }
 ---@param char string
 ---@param conf ext.utf8.conf
+---@param o core.o
+---@param m prof.def.module
 ---@return string
-function M.get_char(char,conf)
-    for k,v in pairs(conf.map or M.map) do
+function M.get_char(char,conf,o,m)
+    for k,v in pairs(default.orof(conf.map,o,m,true) or M.map) do
         if type(k)=='string' then
             local regex=vim.regex(k) --[[@as vim.regex]]
             if regex:match_str(char) then return v end
@@ -48,17 +51,19 @@ end
 ---@param col number
 ---@param line string
 ---@param conf ext.utf8.conf
+---@param o core.o
+---@param m prof.def.module
 ---@return string
 ---@return number
 ---@return table<number,number>
-function M.utf8_string_and_offset(col,line,conf)
+function M.utf8_string_and_offset(col,line,conf,o,m)
     local newline=''
     local newcol=0
     local ncol
     for i=1,#line do
         if vim.str_utf_end(line,i)>0 and
             vim.str_utf_start(line,i)==0 then
-            newline=newline..M.get_char(line:sub(i),conf)
+            newline=newline..M.get_char(line:sub(i),conf,o,m)
             newcol=newcol+1
         elseif vim.str_utf_start(line,i)==0 then
             newline=newline..line:sub(i,i)
@@ -91,7 +96,7 @@ function M.call(m,ext)
         local of
         local lline
         for row,line in ipairs(o.lines) do
-            lline,col,of=M.utf8_string_and_offset(o.col,line,conf)
+            lline,col,of=M.utf8_string_and_offset(o.col,line,conf,o,m)
             if lline~=o.lines[row] then
                 o.lines[row]=lline
                 off[row]=of

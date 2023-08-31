@@ -72,6 +72,7 @@
 ---@field can_check fun(o:core.o):boolean?
 ---@field can_check_pre fun(o:core.o):boolean?
 ---@field find_corresponding_pair fun(o:core.o,col:number):number|false?,number?
+---@alias prof.def.optfn {o:core.o,m:prof.def.module,incheck:boolean?}
 
 local default=require'ultimate-autopair.profile.default.utils'
 local pair_s=require'ultimate-autopair.profile.default.pairs'

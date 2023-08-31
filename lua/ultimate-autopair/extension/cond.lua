@@ -1,7 +1,7 @@
 ---FI
 ---@class ext.cond.conf:prof.def.ext.conf
 ---@field cond? ext.cond.fn|ext.cond.fn[]
----@field filter? boolean
+---@field filter? boolean|fun(...:prof.def.optfn):boolean?
 ---@class ext.cond.pconf
 ---@field cond? ext.cond.fn|ext.cond.fn[]
 ---@alias ext.cond.opt {o:core.o,m:prof.def.module,incheck:boolean?}
@@ -104,9 +104,12 @@ function M.call(m,ext)
         end
         return check(o)
     end
-    if not conf.filter then return end
+    if type(conf.filter)~='function' and not conf.filter then return end
     local filter=m.filter
     m.filter=function(o)
+        if type(conf.filter)=='function' and not conf.filter(o,m,false) then
+            return filter(o)
+        end
         if cond and not M.cond(cond,o,m) then
             return
         end

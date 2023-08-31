@@ -1,7 +1,7 @@
 ---A
 ---@class ext.suround.pconf:prof.def.conf.pair
----@field dosuround? boolean
----@field suround? boolean
+---@field dosuround? boolean|fun(...:prof.def.optfn):boolean?
+---@field suround? boolean|fun(...:prof.def.optfn):boolean?
 
 local M={}
 local default=require'ultimate-autopair.profile.default.utils'
@@ -12,9 +12,9 @@ local utils=require'ultimate-autopair.utils'
 function M.check(o,m)
     local pconf=m.conf
     ---@cast pconf ext.suround.pconf
-    if not pconf.dosuround then return end
+    if not default.orof(pconf.dosuround,o,m,true) then return end
     local pair,index,rindex=default.get_pair_and_end_pair_pos_from_start(o,o.col,nil,function (pair)
-        return pair.conf.suround
+        return default.orof(pair.conf.suround,o,m,true)
     end)
     if not pair or rindex~=o.row then return end
     if not m.fn.can_check_pre(o) then return end

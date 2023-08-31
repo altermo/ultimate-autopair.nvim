@@ -173,4 +173,12 @@ function M.get_pairs_by_pos(o,col,type,next,filter,nofilter)
     end)
     return ret
 end
+---@generic T,H
+---@param opt T|fun(...:prof.def.optfn):T
+---@param ... prof.def.optfn
+---@return any
+function M.orof(opt,...)
+    if type(opt)=='function' then return opt(...) end
+    return opt
+end
 return M

@@ -50,6 +50,7 @@ return {
         {'{foo|','\r','{foo\n|\n}',{c={cr={autoclose=true}}}},
         {'{|foo','\r','{\n|foo\n}',{c={cr={autoclose=true}}}},
         {'```|','\r','```\n|\n```',{c={cr={autoclose=true}},ft='markdown'}},
+        {'{(|}','\r','{(\n|\n)}',{c={cr={autoclose=true}},skip=true}},
         {'do|','\r','do\n\nend',{skip=true,ft='lua',c={cr={autoclose=true},{'do','end',imap=false}}}},
         {'{|}','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'}}}},
         {'{|','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'},autoclose=true}}},

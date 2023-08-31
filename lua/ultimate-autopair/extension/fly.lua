@@ -1,13 +1,13 @@
 ---A
 ---@class ext.fly.conf:prof.def.ext.conf
----@field nofilter? boolean
----@field only_jump_end_pair? boolean
----@field other_char? string[]
+---@field nofilter? boolean|fun(...:prof.def.optfn):boolean?
+---@field only_jump_end_pair? boolean|fun(...:prof.def.optfn):boolean?
+---@field other_char? string[]|fun(...:prof.def.optfn):string[]?
 ---@field undomapconf? prof.def.conf.map
 ---@field undomap? string
 ---@field undocmap? string
 ---@class ext.fly.pconf:prof.def.conf.pair
----@field fly? boolean
+---@field fly? boolean|fun(...:prof.def.optfn):boolean?
 
 local default=require'ultimate-autopair.profile.default.utils'
 local utils=require'ultimate-autopair.utils'
@@ -20,19 +20,22 @@ function M.check(conf,o,m)
     if m.fn.can_check_pre(o) then return end
     local next_char_index
     local i=o.col
+    local cnofilter=default.orof(conf.nofilter,o,m,true)
+    local cother_char=default.orof(conf.other_char,o,m,true)
+    local conly_jump_end_pair=default.orof(conf.only_jump_end_pair,o,m,true)
     while i<=#o.line do
         local pair=default.get_pairs_by_pos(o,i,'end',true,function (p)
-            return p.conf.fly
-        end,conf.nofilter)[1]
+            return default.orof(p.conf.fly,o,m,true)
+        end,cnofilter)[1]
         if pair and pair.pair==m.pair then
             next_char_index=i
             break
-        elseif pair and pair.conf.fly then
-        elseif vim.tbl_contains(conf.other_char,o.line:sub(i,i)) then
-        elseif not conf.only_jump_end_pair
+        elseif pair and default.orof(pair.conf.fly,o,m,true) then
+        elseif vim.tbl_contains(cother_char or {},o.line:sub(i,i)) then
+        elseif not conly_jump_end_pair
             and #default.get_pairs_by_pos(o,i,'start',true,function (p)
-                return p.conf.fly
-            end,conf.nofilter)>0 then
+                return default.orof(p.conf.fly,o,m,true)
+            end,cnofilter)>0 then
         else
             return
         end
@@ -79,10 +82,13 @@ function M.call(m,ext)
     ---@cast conf ext.fly.conf
     ---@type ext.fly.pconf
     local pconf=m.conf
-    if not pconf.fly then return end
+    if type(pconf.fly)~='function' and not pconf.fly then return end
     ---@cast m prof.def.m.pair
     local check=m.check
     m.check=function (o)
+        if type(pconf.fly)=='function' and not pconf.fly(o,m,false) then
+            return check(o)
+        end
         local ret=M.check(conf,o,m)
         if ret then return ret end
         return check(o)
