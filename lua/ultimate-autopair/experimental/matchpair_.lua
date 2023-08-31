@@ -1,6 +1,13 @@
 local default=require 'ultimate-autopair.profile.default.utils'
 local core=require'ultimate-autopair.core'
 local M={}
+---Instruction: if you want TO USE THIS
+--use
+---require'ultimate-autopair'.init({your_pair_config,{
+---  profile='raw',
+---  require'ultimate-autopair.experimental.matchpair_'.init(),
+---}})
+
 --TODO:
 --- maybe create matchpair map which replaces builtin map %
 ---@param m core.module
@@ -18,7 +25,8 @@ function M.wrapp_highlight_callback(m)
             if #i.start_pair==1 and #i.end_pair==1 and
                 i.start_pair~=i.end_pair and
                 o.line:sub(o.col,o.col)==i.pair and
-                i.filter(o) then
+                i.filter(o) and
+                true then
                 pair=i
                 break
             end
