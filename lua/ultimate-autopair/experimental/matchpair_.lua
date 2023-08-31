@@ -5,7 +5,7 @@ local M={}
 --- maybe create matchpair map which replaces builtin map %
 ---@param m core.module
 ---@return function
-function M.wrapp_callback(m)
+function M.wrapp_highlight_callback(m)
     ---@cast m table
     return function ()
         vim.api.nvim_buf_clear_namespace(0,m.ns,0,-1)
@@ -39,7 +39,7 @@ function M.init()
     m.oinit=function (delete)
         vim.api.nvim_buf_clear_namespace(0,m.ns,0,-1)
         if delete then return end
-        vim.api.nvim_create_autocmd('CursorMoved',{callback=M.wrapp_callback(m),desc=m.doc,group='UltimateAutopair'})
+        vim.api.nvim_create_autocmd('CursorMoved',{callback=M.wrapp_highlight_callback(m),desc=m.doc,group='UltimateAutopair'})
     end
     return m
 end

@@ -17,12 +17,13 @@ function M.I.tbl_find(tbl,pair_end)
 end
 ---@param o core.o
 ---@param col number
+---@param multiline? boolean
 ---@return prof.def.m.map[]
-function M.get_open_start_pairs(o,col)
+function M.get_open_start_pairs(o,col,multiline)
     local pair={}
     local i=1
     while i<col do
-        local pair_start=default.get_pairs_by_pos(o,i,'start',true)[1]
+        local pair_start=default.get_pairs_by_pos(o,i,'start',true,multiline and function (p) return p.multiline end or nil)[1]
         if pair_start then
             local pcol=pair_start.fn.find_corresponding_pair(o,i)
             if pcol==false then
@@ -59,7 +60,7 @@ end
 function M.wrapp_newline(_)
     return function(o,_,conf)
         if not conf.autoclose then return end
-        local pair=M.get_open_start_pairs(o,o.col)
+        local pair=M.get_open_start_pairs(o,o.col,true)
         local epairs=vim.fn.join(vim.tbl_map(function(x) return x.end_pair end,pair),'')
         if epairs=='' then return end
         return utils.create_act({

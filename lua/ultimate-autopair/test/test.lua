@@ -383,6 +383,7 @@ return {
         {'\n"|"','"','\n""|'},
         {"\n'|'","'","\n''|",{ts=true,ft='lua'}},
         {'(\n\n|\n)','(','(\n\n(|)\n)'},
+        {"'|",'\r',"'\n|",{c={cr={autoclose=true}}}}
     },
     DEV_run_multiline={
         {'\n|','a','\na|'},
