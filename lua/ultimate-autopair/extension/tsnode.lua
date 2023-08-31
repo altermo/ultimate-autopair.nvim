@@ -16,16 +16,14 @@ local M={}
 M.savetype={}
 ---@param o core.o
 ---@param nodetypes string[]
+---@param incheck? boolean
 ---@return TSNode?
-function M._in_tsnode(o,nodetypes)
+function M._in_tsnode(o,nodetypes,incheck)
     local ssave=o.save[M._in_tsnode] or {} o.save[M._in_tsnode]=ssave
     local save=ssave[nodetypes] or {} ssave[nodetypes]=save
+    if incheck then save={} end
     local node=utils.gettsnode(o)
     if node and save[node:id()] then return unpack(save[node:id()]) end
-    local function fn(n)
-        local _,startcol,_=n:start()
-        return startcol+1==o.col+o._coloffset(o.col,o.row)
-    end
     local ql={}
     local cache={}
     local nsave=M.get_save(o)
@@ -34,7 +32,7 @@ function M._in_tsnode(o,nodetypes)
             ql[v]=true
         end
     end
-    while node and ((not ql[node:type()]) or fn(node)) do
+    while node and (not ql[node:type()] or (incheck and ({node:start()})[2]==o.col-1)) do
         if node then save[node:id()]=cache end
         node=node:parent()
         --TODO fix: TSNode:id() doesn't differ between trees
@@ -61,7 +59,7 @@ end
 ---@param save ext.tsnode.save
 ---@param m prof.def.module
 function M.set_in_node(o,conf,save,m)
-    local node=M._in_tsnode(o,default.orof(conf.separate,o,m,true))
+    local node=M._in_tsnode(o,default.orof(conf.separate,o,m,true),true)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         save.scol=scol
