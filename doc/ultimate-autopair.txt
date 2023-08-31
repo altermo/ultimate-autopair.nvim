@@ -425,6 +425,7 @@ EXTENSIONS                                      *ultimate-autopair-extensions*
 All extensions should be in the `extensions` directory.
 For default configuration see: |ultimate-autopair-extensions-default-config|
 Every extension has a `p` flag which denotes its priority.
+Note that almost every option may also be a function.
 ------------------------------------------------------------------------------
 ext-alpha                                        *ultimate-autopair-ext-alpha*
 This extension allows for disabling pairs before and after alpha

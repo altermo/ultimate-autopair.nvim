@@ -184,5 +184,5 @@
 + [ ] test make multichar input work without interactive (interactive is expensive)
 + [ ] fastwarp multi pair `f(g(|))h` > `f(g(|h))
 + [ ] be able to fastwarp things like html tags, which are not autopaird
-+ [ ] make every extension option to a maybe function
++ [x] make every extension option to a maybe function
 + [ ] nvim-surround like features

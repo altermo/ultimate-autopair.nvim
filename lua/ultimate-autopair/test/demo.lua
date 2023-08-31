@@ -28,30 +28,58 @@ function I.lines(lines)
         end
     end
 end
+M._mul=0.01
 M.demo={}
 M.demo.part_1={
     I.opt('filetype','lua'),
-    .5,
     I.lines{
-        ' --normal',
-        '{{{{}} --prioritize close instead of skip',
-        '--[[',
+        '---comments describe features',
+        ' --normal + space (+ extension.fly)',
         ' --multiline support',
         '}}',
-        '--]]'
+        '{{{{}} --prioritize close instead of skip',
+        '"foo" --extenison.suround(surround) + backspace.overjump',
+        'function bar() end --fastwarp + reverse-fastwarp',
+        '--works in cmdline',
+        ' ")" --string filter using treesitter',
+        '{{{ --close + newline',
+        '',
+        '---Next features requires MANUAL enable',
+        '',
+        '{(foobar)baz} --tabout',
+        '[  ]--space2',
     },
-    'i("{  }")',
-    .1,
-    'j0lll',
-    .5,
-    'i}}}}',
-    .1,
-    'jj0',
-    .5,
-    'i{{{{',
+    .5,'ji("{  }")',
+    .1,'j',
+    .5,'I{{{{',
+    .1,'jj0lll',
+    .5,'i}}}}',
+    .1,'j',
+    .5,'I((',
+    .1,'j',
+    .5,'I{',
+    .1,':"',
+    .5,'({\r',
+    .1,'jj0',
+    .5,'i(',
+    .1,'j0ll',
+    .5,'a\r',
+    .1,'jjj',
+    .5,'VV',
+    .1,'jj0lllll',
+    .5,'i',
+    .1,'j0ll',
+    .5,'afoo',
     vim.cmd.stopinsert,
 }
 function M.run_key(key,end_f)
+    local map={
+        ['']='<bs>',
+        ['']='<A-e>',
+        ['']='<A-E>',
+        ['']='<A-)>',
+        ['']='<A-tab>',
+    }
     local pressed=(' '):rep(38)
     local it=vim.iter(vim.iter(key):fold({},function(t,v)
         if type(v)=="string" then
@@ -67,7 +95,7 @@ function M.run_key(key,end_f)
         if M._break then end_f() return end
         local v=it:next()
         if type(v)=='string' then
-            vim.api.nvim_input(v)
+            vim.api.nvim_input(map[v] or v)
             vim.api.nvim_echo({{pressed},{'<'..v..'|'}},false,{})
             pressed=pressed:sub(2)..v
             vim.defer_fn(function () async(time) end,time*1000*(M._mul or 1))
@@ -95,9 +123,7 @@ function M.start()
     vim.api.nvim_set_option_value('bufhidden','wipe',{buf=buf})
     vim.cmd('tab split')
     vim.cmd.buffer(buf)
-    vim.keymap.set('i','<C-h>','<bs>',{noremap=false,buffer=true})
-    vim.keymap.set('i','<C-e>','<A-e>',{noremap=false,buffer=true})
-    vim.keymap.set({'i','n','x'},'<C-c>',function() M._break=true end,{buffer=true})
+    vim.keymap.set({'i','n','x'},'<C-c>',function() M._break=true end,{buffer=buf})
     M.save()
     vim.wo.number=false
     vim.wo.relativenumber=false
@@ -110,7 +136,10 @@ function M.start()
     vim.o.ruler=false
     vim.cmd.redraw()
     vim.fn.input('Press enter to start (hold <C-c> to stop)...')
-    ua.setup()
+    ua.setup{
+        tabout={enable=true},
+        space2={enable=true},
+    }
     pcall(M.run_keys,M.demo.part_1,function() M.restore() end)
 end
 function M.save()
