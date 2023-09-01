@@ -35,7 +35,10 @@ function M._in_tsnode(o,nodetypes,incheck)
     end
     local root=node:tree():root()
     --TODO fix: if incheck don't for one char after node
-    --PROBLEM: there are exceptions: comment #|
+    ---PROBLEM: there are exceptions: comment #|
+    ---SULUTION: make option to add exceptions
+    --TODO fix: node:start row is not checked agains o.row, only column
+    --TODO fix: it uses o.col, not o._coloffset(o.col) (also o._offset(o.row))
     while node~=root and (not ql[node:type()] or (incheck and ({node:start()})[2]==o.col-1)) do
         save[node:id()]=cache
         node=node:parent() --[[@as TSNode]]
