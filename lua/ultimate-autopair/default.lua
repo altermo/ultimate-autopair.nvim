@@ -137,7 +137,7 @@ M.conf={
     {'{','}',fly=true,dosuround=true,newline=true,space=true},
     {'"','"',suround=true,multiline=false,alpha={'txt'}},
     {"'","'",suround=true,cond=function(fn) return not fn.in_lisp() or fn.in_string() end,alpha=true,nft={'tex','latex'},multiline=false},
-    {'`','`',nft={'tex','latex'},multiline=false},
+    {'`','`',cond=function(fn) return not fn.in_lisp() or fn.in_string() end,nft={'tex','latex'},multiline=false},
     {'``',"''",ft={'tex','latex'}},
     {'```','```',newline=true,ft={'markdown'}},
     {'<!--','-->',ft={'markdown','html'}},
