@@ -87,11 +87,11 @@ function M.filter(o,save,conf,m)
         if o.row==save.erow and o.col>save.ecol then return end
     end
     local node=M._in_tsnode(o,default.orof(conf.separate,o,m))
-    if node and node~=save.in_node and node~=node:tree():root() then
+    if node and node~=(save.in_node or node:tree():root()) then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --HACK
         if vim.tbl_contains({'string','raw_string'},node:type()) and srow==o.row and scol==o.col then return true end --HACK
-        return false
+        return
     end
     return true
 end
