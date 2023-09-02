@@ -180,7 +180,7 @@ The default configuration contains a loot of options, here are those:
      no_filter_nodes={'string','raw_string'},
      --which nodes to skip for tsnode filtering
      faster=false,
-     --only do jump over pair/goto end/goto next line
+     --only enables jump over pair, goto end/next line
      --useful for the situation of:
      --{|}M.foo('bar') > {M.foo('bar')|}
      conf={},
@@ -230,9 +230,9 @@ The default configuration contains a loot of options, here are those:
      {'(',')',fly=true,dosuround=true,newline=true,space=true},
      {'{','}',fly=true,dosuround=true,newline=true,space=true},
      {'"','"',suround=true,multiline=false,alpha={'txt'}},
-     {"'","'",suround=true,cond=function(fn) return not fn.in_lisp() or fn.in_string() end,alpha=true,nft={'tex'},multiline=false},
-     {'`','`',nft={'tex'},multiline=false},
-     {'``',"''",ft={'tex'}},
+     {"'","'",suround=true,cond=function(fn) return not fn.in_lisp() or fn.in_string() end,alpha=true,nft={'tex','latex'},multiline=false},
+     {'`','`',nft={'tex','latex'},multiline=false},
+     {'``',"''",ft={'tex','latex'}},
      {'```','```',newline=true,ft={'markdown'}},
      {'<!--','-->',ft={'markdown','html'}},
      {'"""','"""',newline=true,ft={'python'}},
