@@ -2,8 +2,7 @@
 Ones own choice is ALWAYS prefixed with `your_`.
 
 ## General questions
-### What to do if somethings really does not working
-I have maybe accidentally done something weird with `git`, which causes it to not update, so before posting an issue, try this:
+### How to update to latest release
 1. Remove ultimate-autopair.nvim from plugin manager install list
 2. Clean plugins (so that ultimate-autopair.nvim is completely removed)
 3. Add ultimate-autopair.nvim back to plugin manager install list

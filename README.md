@@ -5,7 +5,7 @@
 For development version, check out [development](https://github.com/altermo/ultimate-autopair.nvim/tree/development)\
 Requires **neovim 0.9** (for older versions of neovim, check previous versions of plugin)\
 For many features, including string filtering, requires **treesitter**.\
-:exclamation: If your coming  from `v0.5.3` and want to update: remove the plugin totally and reinstall:
+:exclamation: If your coming  from `v0.5.3` and want to update: remove the plugin totally and reinstall.
 
 For new users, check out starter documentation (`:help ultimate-autopair`)
 ## changelog of version 0.6.0
