@@ -58,7 +58,7 @@ For the default configuration, refer to the documentation (`:help ultimate-autop
 <!--TODO: add better demo-->
 </details><details> <summary><b>demo</b></summary>
 
-![demo](https://github.com/altermo/test/assets/107814000/cc92b235-da19-4a10-bd57-89df8c6b380e)
+![demo](https://github.com/altermo/ultimate-autopair.nvim/assets/107814000/ba4de3f5-26fd-4a86-80fa-415ddaf82823)
 </details>
 
 ### Other plugins to supercharge auto-pairing

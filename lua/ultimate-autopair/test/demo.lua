@@ -32,7 +32,6 @@ M.demo={}
 M.demo.part_1={
     I.opt('filetype','lua'),
     I.lines{
-        '---comments describe features',
         ' --normal + space (+ extension.fly)',
         ' --multiline support',
         '}}',
@@ -48,7 +47,7 @@ M.demo.part_1={
         '{(foobar)baz} --tabout',
         '[  ]--space2',
     },
-    .5,'ji("{  }")',
+    .5,'i("{  }")',
     .1,'j',
     .5,'I{{{{',
     .1,'jj0llll',
