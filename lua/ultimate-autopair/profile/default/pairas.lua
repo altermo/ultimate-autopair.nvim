@@ -49,7 +49,6 @@ end
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapp(m)
     return function (o,_,conf)
-        if m.conf.newline==false then return end
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and
             m.pair==o.line:sub(o.col,o.col+#m.pair-1) and
             not open_pair.open_pair_ambiguous(m,o,o.col) then
@@ -72,6 +71,7 @@ function M.backspace_wrapp(m)
                 })
             end
         end
+        if m.conf.newline==false then return end
         if o.incmd then return end
         if not m.conf.newline then return end
         if not conf.indent_ignore and 1~=o.col then return end

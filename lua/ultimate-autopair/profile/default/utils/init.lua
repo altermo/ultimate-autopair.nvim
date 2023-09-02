@@ -169,7 +169,7 @@ function M.get_pairs_by_pos(o,col,type,next,filter,nofilter)
         end
     end
     table.sort(ret,function (a,b)
-        return #a.pair>#b.pair
+        return a.p==b.p and #a.pair>#b.pair or a.p>b.p
     end)
     return ret
 end

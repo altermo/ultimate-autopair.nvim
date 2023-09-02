@@ -25,7 +25,7 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     for rrow,line in ipairs(lines)do
         rrow=(pair.multiline and gotostart==true and row+1 or #o.lines+1)-rrow
         local i=(gotostart==true and rrow==row and col) or #line
-        assert(o.lines[rrow]==line)
+        assert(o.lines[pair.multiline and rrow or row]==line)
         while ((not gotostart) and rrow==row and i>col-1) or ((gotostart or rrow~=row) and i>0) do
             local lline=line:sub((not gotostart) and rrow==row and col or 1,i):reverse()
             if M.I.match(start_pair,lline) and sfilter(rrow,i-#start_pair+1) then
@@ -68,7 +68,7 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
     for rrow,line in ipairs(lines) do
         rrow=(pair.multiline and gotoend==true and row-1 or 0)+(rrow+(pair.multiline and 0 or row-1))
         local i=(gotoend==true and rrow==row and col) or 1
-        assert(o.lines[rrow]==line)
+        assert(o.lines[pair.multiline and rrow or row]==line)
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
             if M.I.match(start_pair,lline) and sfilter(rrow,i) then
@@ -113,7 +113,7 @@ function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
     end
     for rrow,line in ipairs(lines) do
         rrow=(pair.multiline and gotoend==true and row-1 or 0)+(rrow+(pair.multiline and 0 or row-1))
-        assert(o.lines[rrow]==line)
+        assert(o.lines[pair.multiline and rrow or row]==line)
         local i=(gotoend==true and rrow==row and col) or 1
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)

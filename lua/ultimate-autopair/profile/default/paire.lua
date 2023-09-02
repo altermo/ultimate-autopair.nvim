@@ -43,7 +43,6 @@ end
 ---@return prof.def.map.cr.fn
 function M.newline_wrapp(m)
     return function (o)
-        if m.conf.newline==false then return end
         if m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
             local _,row=m.fn.find_corresponding_pair(o,o.col)
             if row~=o.row then return end
