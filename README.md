@@ -33,6 +33,7 @@ If your coming from a previous version with broken config, check out [Q&A](./Q&A
 use{
     'altermo/ultimate-autopair.nvim',
     event={'InsertEnter','CmdlineEnter'},
+    branch='v0.6',
     config=function ()
         require('ultimate-autopair').setup({
                 --Config goes here
@@ -46,6 +47,7 @@ use{
 {
     'altermo/ultimate-autopair.nvim',
     event={'InsertEnter','CmdlineEnter'},
+    branch='v0.6',
     opts={
         --Config goes here
     },
