@@ -187,3 +187,5 @@
 + [x] make every extension option to a maybe function
 + [ ] nvim-surround like features
 + [ ] have the ability to disable langtree filter: if tree.root, go to parent langtree
++ [ ] somehow make collitions not happen
++ [ ] option to disable open pair detecting backspace/newline/insert
