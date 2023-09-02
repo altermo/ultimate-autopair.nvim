@@ -37,7 +37,7 @@ M.fns={
         local new_o=utils._get_o_pos(opt.o,col,row)
         local tsnode=require'ultimate-autopair.extension.tsnode'
         local node=tsnode._in_tsnode(new_o,type(nodes)=='string' and {nodes} or nodes,opt.incheck)
-        return node and node~=node:tree():root()
+        return node and node~=node:tree():root() and node or nil
     end,
     is_pair=function (opt)
         return default.get_type_opt(opt.m,'pair')
@@ -50,10 +50,6 @@ M.fns={
     end,
     is_ambiguous_pair=function (opt)
         return default.get_type_opt(opt.m,'ambiguous')
-    end,
-    get_tsnode=function (opt,col,row)
-        local new_o=utils._get_o_pos(opt.o,col,row)
-        return utils.gettsnode(new_o)
     end,
     get_ft=function (opt,col,row,notree)
         local new_o=utils._get_o_pos(opt.o,col,row)

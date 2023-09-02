@@ -56,7 +56,6 @@ use{
 ## Default configuration
 For the default configuration, refer to the documentation (`:help ultimate-autopair-config-default`).
 ## Demo
-<!--TODO: add better demo-->
 </details><details> <summary><b>demo</b></summary>
 
 ![demo](https://github.com/altermo/ultimate-autopair.nvim/assets/107814000/a30ba4fd-0a3b-49af-bcd8-67413c9a86d1)
