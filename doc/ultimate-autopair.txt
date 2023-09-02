@@ -248,7 +248,7 @@ The default configuration contains a loot of options, here are those:
 ==============================================================================
 workings                                           *ultimate-autopair-workings
 ------------------------------------------------------------------------------
-start-pair-insertion              *ultimate-autopair-add-start-pair-insertion*
+start-pair-insertion         *ultimate-autopair-workings-start-pair-insertion*
 When inserting start pair, then if there is not already a corresponding end
 pair in the line, then insert an end pair.
 Example (`*` is cursor): >
@@ -259,7 +259,7 @@ Example (`*` is cursor): >
  | (*))   | (    | ((*)) |
 <
 ------------------------------------------------------------------------------
-end-pair-insertion                      *ultimate-autopair-end-pair-insertion*
+end-pair-insertion             *ultimate-autopair-workings-end-pair-insertion*
 When inserting end pair and next is end pair, then if there is a corresponding
 start pair in the line, then hop over the end pair.
 Example (`*` is cursor): >
@@ -270,7 +270,7 @@ Example (`*` is cursor): >
  | (*))   | )    | ()*)  |
 <
 ------------------------------------------------------------------------------
-ambiguous-pair-insertion          *ultimate-autopair-ambiguous-pair-insertion*
+ambiguous-pair-insertion *ultimate-autopair-workings-ambiguous-pair-insertion*
 When inserting ambiguous pair, if the next is ambiguous pair which has a
 corresponding pair then hop over, otherwise if there's not already a
 corresponding pair on the line then insert the ambiguous pair double
@@ -294,7 +294,7 @@ lines) and that is used for the plugin.
 ==============================================================================
 MAP                                                    *ultimate-autopair-map*
 ------------------------------------------------------------------------------
-map-backspace                                *ultimate-autopair-map-backspace*
+backspace                                    *ultimate-autopair-map-backspace*
 Behaves like you would expect an autopair backspace to behave.
 For configuration options see: |ultimate-autopair-map-backspace-config|
 Example (`*` is cursor): >
@@ -312,7 +312,7 @@ Example (`*` is cursor): >
  | {\n\t*\n} | {*}      |indent_ignore=true  |
 <
 ------------------------------------------------------------------------------
-map-newline                                    *ultimate-autopair-map-newline*
+newline                                        *ultimate-autopair-map-newline*
 Behaves like you would expect an autopair newline to behave.
 For configuration options see: |ultimate-autopair-map-newline-config|
 Example (`*` is cursor and `\t` is tab): >
@@ -335,7 +335,7 @@ Example (`*` is cursor and `\t` is tab): >
  |        | }      |           |
 <
 ------------------------------------------------------------------------------
-space                                                *ultimate-autopair-space*
+space                                            *ultimate-autopair-map-space*
 Behaves like you would expect an autopair space to behave.
 For configuration options see: |ultimate-autopair-map-space-config|
 Example (`*` is cursor): >
@@ -347,7 +347,7 @@ Example (`*` is cursor): >
  | + [*]  | + [ *]   | check_box_ft={'text'} |
 <
 ------------------------------------------------------------------------------
-space2                                              *ultimate-autopair-space2*
+space2                                          *ultimate-autopair-map-space2*
 Auto balances spaces when input char matches `match`.
 For configuration options see: |ultimate-autopair-map-space2-config|
 Example (`*` is cursor): >
@@ -359,7 +359,7 @@ Example (`*` is cursor): >
  | ( *oo) | f   | ( f*oo ) |
 <
 ------------------------------------------------------------------------------
-fastwarp                                          *ultimate-autopair-fastwarp*
+fastwarp                                      *ultimate-autopair-map-fastwarp*
 The fastwarp mapping fast warp (not wraps) the next end pair.
 For configuration options see: |ultimate-autopair-map-fastwarp-config|
 Example (`*` is cursor): >
@@ -378,11 +378,11 @@ Example (`*` is cursor): >
  | (foo*),bar | (foo,bar*) | (fallback to cursormove)
 <
 ------------------------------------------------------------------------------
-rfastwarp                                        *ultimate-autopair-rfastwarp*
+rfastwarp                                    *ultimate-autopair-map-rfastwarp*
 The rfastwarp mapping is designed to do the opposite of fastwarp.
 For configuration options see: |ultimate-autopair-map-fastwarp-config|
 ------------------------------------------------------------------------------
-close                                                *ultimate-autopair-close*
+close                                            *ultimate-autopair-map-close*
 The close mapping closes opened pairs.
 For configuration options see: |ultimate-autopair-map-close-config|
 Example (`*` is cursor): >
@@ -394,7 +394,7 @@ Example (`*` is cursor): >
  | "*     | "*"   |
 <
 ------------------------------------------------------------------------------
-map-tabout                                      *ultimate-autopair-map-tabout*
+tabout                                          *ultimate-autopair-map-tabout*
 The tabout mapping allows you to jump to end (or out) of pairs.
 For configuration options see: |ultimate-autopair-map-tabout-config|
 Example (`*` is cursor): >
