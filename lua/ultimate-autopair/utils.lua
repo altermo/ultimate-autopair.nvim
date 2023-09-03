@@ -225,6 +225,7 @@ function M._get_o_pos(o,col,row)
         _decoloffset=o._decoloffset,
         incmd=o.incmd,
         save=o.save,
+        mode=o.mode,
     }
 end
 return M

@@ -68,7 +68,7 @@ end
 function M.extend_pair_check_with_map_check(m,q,filter)
     local check=m.check
     m.check=function (o)
-        if (o.key~=m.key or not ((o.incmd and q.cmap) or (not o.incmd and q.map))) or not (not filter or filter(o)) then return end
+        if (o.key~=m.key or not ((o.mode=='c' and q.cmap) or (o.mode=='i' and q.map))) or not (not filter or filter(o)) then return end
         return check(o)
     end
 end
@@ -82,8 +82,8 @@ function M.extend_map_check_with_map_check(m,filter)
         ---@cast key string[]
         local keyc=m.cmap and (type(m.cmap)=='table' and m.cmap or {m.cmap}) or key
         ---@cast keyc string[]
-        if not ((o.incmd and vim.tbl_contains(keyc,o.key))
-            or (not o.incmd and vim.tbl_contains(key,o.key))) then
+        if not ((o.mode=='c' and vim.tbl_contains(keyc,o.key))
+            or (o.mode=='i' and vim.tbl_contains(key,o.key))) then
             return
         end
         return check(o)
@@ -127,7 +127,7 @@ end
 ---@param prev boolean?
 ---@param filter? fun(pair:prof.def.m.pair):boolean?
 ---@return prof.def.m.pair?
----@return true|number?
+---@return number?
 ---@return number?
 function M.get_pair_and_end_pair_pos_from_start(o,col,prev,filter)
     local spairs=M.get_pairs_by_pos(o,col,'start',not prev,filter)
@@ -141,7 +141,7 @@ end
 ---@param prev boolean?
 ---@param filter? fun(pair:prof.def.m.pair):boolean?
 ---@return prof.def.m.pair?
----@return true|number?
+---@return number?
 ---@return number?
 function M.get_pair_and_start_pair_pos_from_end(o,col,prev,filter)
     local spairs=M.get_pairs_by_pos(o,col,'end',not prev,filter)

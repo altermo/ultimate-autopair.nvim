@@ -10,6 +10,7 @@
 ---@field _coloffset fun(col:number,row:number):number --C
 ---@field _decoloffset fun(col:number,row:number):number --C
 ---@field incmd boolean --C
+---@field mode string
 ---@field save table --S*
 ---@field inoinit boolean? --C
 ---@class core.module
@@ -77,6 +78,7 @@ function M.get_o_value(key)
         _decoloffset=function (_) return 0 end,
         incmd=incmd,
         save={},
+        mode=utils.getmode(),
     }
 end
 ---@param key string
