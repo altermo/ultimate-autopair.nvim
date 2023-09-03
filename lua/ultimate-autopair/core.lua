@@ -92,10 +92,16 @@ function M.run(key)
         if v.check then
             ---@type string?
             local ret=debug.run(v.check,{info=v,args={vim.deepcopy(o)}})
-            if ret then return M.I.activate_iabbrev(ret) end
+            if ret then
+                if o.mode=='c' or o.mode=='i' then return M.I.activate_iabbrev(ret) end
+                return ret
+            end
         end
     end
-    return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
+    if o.mode=='c' or o.mode=='i' then
+        return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
+    end
+    return key
 end
 ---@param key string
 ---@return function
