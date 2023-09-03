@@ -7,6 +7,8 @@ ultimate-autopair-default-config	ultimate-autopair.txt	/*ultimate-autopair-defau
 ultimate-autopair-disable	ultimate-autopair.txt	/*ultimate-autopair-disable*
 ultimate-autopair-enable	ultimate-autopair.txt	/*ultimate-autopair-enable*
 ultimate-autopair-experimental	ultimate-autopair.txt	/*ultimate-autopair-experimental*
+ultimate-autopair-experimental-matchpair	ultimate-autopair.txt	/*ultimate-autopair-experimental-matchpair*
+ultimate-autopair-experimental-terminal	ultimate-autopair.txt	/*ultimate-autopair-experimental-terminal*
 ultimate-autopair-ext-alpha	ultimate-autopair.txt	/*ultimate-autopair-ext-alpha*
 ultimate-autopair-ext-cmdtype	ultimate-autopair.txt	/*ultimate-autopair-ext-cmdtype*
 ultimate-autopair-ext-cond	ultimate-autopair.txt	/*ultimate-autopair-ext-cond*

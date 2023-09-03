@@ -7,8 +7,8 @@ local M={}
 ---require'ultimate-autopair.core'.modes={'i','c','n'}
 ---require'ultimate-autopair'.init({your_pair_config,{
 ---  profile='raw',
----  require'ultimate-autopair.experimental.matchpair_'.init(),
----  require'ultimate-autopair.experimental.matchpair_'.init_map(),
+---  require'ultimate-autopair.experimental.matchpair'.init(),
+---  require'ultimate-autopair.experimental.matchpair'.init_map(),
 ---}})
 ---@param m core.module
 ---@return function
