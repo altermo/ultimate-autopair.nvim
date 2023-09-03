@@ -128,52 +128,54 @@
 + [x] multicharacter pair not in string/other node
 + [x] auto escape extend in string?`'\|a' > ' > '\'|\'a'`
 + [x] full utf8 suport
++ [x] make use of treesitter stack of nodes at pos to filter instead of one node at pos
++ [x] abecodes/tabout.nvim like map
++ [x] disable in comment (https://github.com/altermo/ultimate-autopair.nvim/issues/32)
++ [x] create an extension (or add a cmd to cond) which checks if in_pair/not_in_pair
++ [x] make tsnode extension recursively find if in node (option)
++ [x] `default.matching_pair_start/end` get a pair of pairs `(|foo)` > `{(=1,)=5}`
++ [x] multiple same file maps (like `bs`) in one config with different options
++ [x] multicharacter pair with word delimiter `aAND ~= AND`
++ [x] fastwarp to broad: make an option to not make it so (maybe: functions calls with dots and calls `M.fn(a)`)
++ [x] newline autoclose only pairs (`if| > CR > if\n|\nend`)
++ [x] all mappings p set depending on mconf.p if not set
++ [x] make core support multiple modes `M.modes={'c','i',...}`
++ [x] make test not use neovim exec and instead direct function call
++ [x] refactor most of the code and add type annotasions
++ [x] did `rules` just kinda become useless with `filter`?
++ [x] move things like open_pair.start_pair_can_check to maybe m.fn or other...
++ [x] own au-group (each instance different au-group)
++ [x] make every extension option to a maybe function
++ [ ] add reverse tabout
 + [ ] terminal mode integration
 + [ ] <s>implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)</s>
-+ [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
-+ [ ] test non pair parts (core,other config types...)
-+ [ ] make everything work with multichar pair (fastwarp,space...)
-+ [ ] abecodes/tabout.nvim like map (and reverse version)
-+ [ ] make use of treesitter stack of nodes at pos to filter instead of one node at pos
++ [ ] <s>implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)</s>
++ [ ] test non pair parts (core,other profile types...)
++ [ ] ¿is_implemented? make everything work with multichar pair (fastwarp,space...)
 + [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|` (requires multiline open_pair detection)
-+ [ ] multicharacter pair with word delimiter `aAND ~= AND`
 + [ ] other keywords `if ... end`?
 + [ ] integration with (windwp/nvim-ts-autotag) to suport html tags
 + [ ] regex/wildcard multicharacter pair suport
 + [ ] with random text inbetween `if TEXT ... end`?
 + [ ] possibility of html tag suport
 + [ ] triple pair
-+ [ ] newline autoclose only pairs (`if| > CR > if\n|\nend`)
-+ [ ] all mappings p set depending on mconf.p if not set
 + [ ] core option to have buffer/InsertCharPre way of keybindings
 + [ ] auto set previous mapping as fallback
-+ [ ] fastwarp to broad: make an option to not make it so (maybe: only hop over treesitter nodes/functions calls with dots and calls `M.fn(a)`)
-+ [ ] object which contains a list of the pairs, like `(foo'')` > `{'(',"'","'",)}` pluss extra info (position,count,...)
-+ [ ] caching values from open_pair functions
-+ [x] disable in comment (https://github.com/altermo/ultimate-autopair.nvim/issues/32)
-+ [ ] create an extension (or add a cmd to rule) which checks if in_pair/not_in_pair
-+ [ ] make tsnode extension recursively find if in node (option)
-+ [ ] `default.matching_pair_start/end` get a pair of pairs `(|foo)` > `{(=1,)=5}`
-+ [x] multiple same file maps (like `bs`) in one config with different options
++ [ ] fastwarp hop over treesitter nodes
++ [ ] <s>object which contains a list of the pairs, like `(foo'')` > `{'(',"'","'",)}` pluss extra info (position,count,...)</s>
++ [ ] <s>caching values from open_pair functions</s>
 + [ ] make so that extensions can be not sourced (disabled) for spesific maps (like disableing ext-string for fastwarp)
-+ [ ] make core support multiple modes `M.modes={'c','i',...}`
-+ [ ] make test not use neovim exec and instead direct function call
-+ [ ] refactor most of the code and add type annotasions (and rename o to else in filter)
-+ [ ] did `rules` just kinda become useless with `filter`?
 + [ ] core option
-+ [ ] smartly cache in_pair so that it only needs to max loop the hole line once
++ [ ] <s>smartly cache in_pair so that it only needs to max loop the hole line once</s>
 + [ ] create object of things for better in checking (`{obj={string={tsnode('string')},comment={tsnode('comment'),regex('\\s*/\\*.*\\*/')}}}`)
-+ [ ] move things like open_pair.start_pair_can_check to maybe m.fn or other...
 + [ ] utf8 pairs
-+ [ ] maybe add unbalanced detection into filter
++ [ ] <s>maybe add unbalanced detection into filter</s>
 + [ ] maybe implement `{'(',')',id=1}` for use in cond and other
-+ [ ] config scope pairs (not profile/global scope pairs)
-+ [ ] reverse tabout
++ [ ] config scope pairs (aka pairs which only are detected by other function in same config) (not profile/global scope pairs)
 + [ ] filetype: recursive ts-ft: if in luadoc, wanted lua.
 + [ ] make ternary operations use `''` as nil
 + [ ] multiple core instances (with each having its own id?)
-+ [ ] own au-group (each instance different au-group)
-+ [ ] if map opt is set to dict, then enable, else disable
++ [ ] if map_opt is set to dict, then enable, else disable
 + [ ] multiline for some filetypes (multiline=function() return ... end)
 + [ ] filter early return or caching? (?it wont change between passes)
 + [ ] seperate interactive tests to their own healt.start
@@ -183,7 +185,6 @@
 + [ ] test make multichar input work without interactive (interactive is expensive)
 + [ ] fastwarp multi pair `f(g(|))h` > `f(g(|h))
 + [ ] be able to fastwarp things like html tags, which are not autopaird
-+ [x] make every extension option to a maybe function
 + [ ] nvim-surround like features
 + [ ] have the ability to disable langtree filter: if tree.root, go to parent langtree
 + [ ] somehow make collitions not happen

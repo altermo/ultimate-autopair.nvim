@@ -63,7 +63,7 @@ function M.init(conf,mconf,ext)
     m.conf=conf.conf or {}
     m.extensions=ext
     m[default.type_def]={'space2','charins'}
-    m.p=conf.p or 10
+    m.p=conf.p or mconf.p or 10
     m.doc='autopairs autocmd for space2'
 
     m.check=M.space2_wrapp(m)
