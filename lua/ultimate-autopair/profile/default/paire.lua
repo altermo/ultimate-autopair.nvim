@@ -34,7 +34,8 @@ function M.backspace_wrapp(m)
         if o.line:sub(o.col-#m.start_pair-#m.end_pair,o.col-1-#m.end_pair)==m.start_pair and
             m.end_pair==o.line:sub(o.col-#m.end_pair,o.col-1) and
             not open_pair.open_end_pair_after(m,o,o.col) and
-            m.filter(utils._get_o_pos(o,o.col-#m.start_pair-#m.end_pair)) then
+            m.filter(utils._get_o_pos(o,o.col-#m.end_pair)) and
+            m.filter(utils._get_o_pos(o,o.col-#m.end_pair-#m.start_pair)) then
             return utils.create_act({{'delete',#m.start_pair+#m.end_pair}})
         end
     end
@@ -43,7 +44,8 @@ end
 ---@return prof.def.map.cr.fn
 function M.newline_wrapp(m)
     return function (o)
-        if m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline then
+        if m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline and
+            m.filter(utils._get_o_pos(o,o.col)) then
             local _,row=m.fn.find_corresponding_pair(o,o.col)
             if row~=o.row then return end
             return utils.create_act({

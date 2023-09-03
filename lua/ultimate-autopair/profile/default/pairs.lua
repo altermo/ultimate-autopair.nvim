@@ -34,6 +34,7 @@ function M.backspace_wrapp(m)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and
             m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) and
             m.filter(utils._get_o_pos(o,o.col-#m.pair)) and
+            m.filter(utils._get_o_pos(o,o.col)) and
             not open_pair.open_start_pair_before(m,o,o.col) then
             return utils.create_act({{'delete',conf.single_delete and 1 or #m.start_pair,#m.end_pair}})
         end
@@ -68,7 +69,8 @@ function M.backspace_wrapp(m)
         local line2_start=line2:find('[^%s]')
         if not line2_start then return end
         if line2:sub(line2_start,line2_start+#m.end_pair-1)==m.end_pair and
-            m.filter(utils._get_o_pos(o,#line1-#m.start_pair+1,o.row-1)) then
+            m.filter(utils._get_o_pos(o,#line1-#m.start_pair+1,o.row-1)) and
+            m.filter(utils._get_o_pos(o,1,o.row+1)) then
             return utils.create_act({
                 {'end'},
                 {'delete',0,line2_start},

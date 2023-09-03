@@ -35,7 +35,9 @@ end
 ---@return prof.def.map.cr.fn
 function M.newline_wrapp(m)
     return function (o)
-        if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and o.line:sub(o.col,o.col+#m.pair-1)==m.pair and m.conf.newline then
+        if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and o.line:sub(o.col,o.col+#m.pair-1)==m.pair and m.conf.newline and
+            m.filter(utils._get_o_pos(o,o.col-#m.pair)) and
+            m.filter(utils._get_o_pos(o,o.col)) then
             return utils.create_act({
                 {'newline'},
                 {'k'},
@@ -51,12 +53,15 @@ function M.backspace_wrapp(m)
     return function (o,_,conf)
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and
             m.pair==o.line:sub(o.col,o.col+#m.pair-1) and
-            not open_pair.open_pair_ambiguous(m,o,o.col) then
+            not open_pair.open_pair_ambiguous(m,o,o.col) and
+            m.filter(utils._get_o_pos(o,o.col-#m.pair)) and
+            m.filter(utils._get_o_pos(o,o.col)) then
             return utils.create_act({{'delete',conf.single_delete and 1 or #m.pair,#m.pair}})
         end
         if conf.overjumps and m.conf.bs_overjumps and
             o.line:sub(o.col-#m.pair,o.col-1)==m.pair and
-            open_pair.open_pair_ambiguous_before_and_after(m,o,o.col) then
+            open_pair.open_pair_ambiguous_before_and_after(m,o,o.col) and
+            m.filter(utils._get_o_pos(o,o.col-#m.pair-#m.pair)) then
             local col,row=m.fn.find_corresponding_pair(o,o.col-#m.start_pair)
             if col then
                 return utils.create_act({
@@ -84,7 +89,9 @@ function M.backspace_wrapp(m)
         local line2_start=line2:find('[^%s]')
         if not line2_start then return end
         if open_pair.open_pair_ambiguous_before_nor_after(m,o,o.col) then return end
-        if line2:sub(line2_start,line2_start+#m.end_pair-1)==m.end_pair then
+        if line2:sub(line2_start,line2_start+#m.end_pair-1)==m.end_pair and
+            m.filter(utils._get_o_pos(o,#line1-#m.start_pair+1,o.row-1)) and
+            m.filter(utils._get_o_pos(o,1,o.row+1)) then
             return utils.create_act({
                 {'end'},
                 {'delete',0,line2_start},
