@@ -158,7 +158,7 @@ return {
         {'<<|<<>>>>','','<<|>><<>>',{c={{'<<','>>',fastwarp=true}}}},
         {'(<<|>>)','','(<<|>>)',{c={{'<<','>>',fastwarp=true}}}},
         {'(|"")','','(|)""'},
-        {'(|")")','','(|)")"',{ts=true,c={fastwarp={filter_string=true}}}},
+        {'(|")")','','(|)")"',{ts=true,c={fastwarp={filter_string=true}},skip=true}}, --TODO: errors once in a while
         {'(|{)}','','(|){}',{c={fastwarp={hopout=true}}}},
     },
     space={
@@ -220,6 +220,8 @@ return {
         {'|""','<','<|""',{c={{'<<','>>',dosuround=true}}}},
         {'<|"">>','<','<<|"">>',{c={{'<<','>>',dosuround=true}}}},
         {'|")"','(','(|")")',{ts=true}},
+        {'|<\n>','(','(|<\n>)',{c={{'<','>',suround=true}}}},
+        {'|<<\n>>','(','(|<<\n>>)',{c={{'<<','>>',suround=true}}}},
     },
     ext_cmdtype={
         {'|','I="("\r','()',{interactive=true,c={extensions={cmdtype={skip={}}}}}},

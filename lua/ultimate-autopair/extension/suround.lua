@@ -16,15 +16,16 @@ function M.check(o,m)
     local pair,index,rindex=default.get_pair_and_end_pair_pos_from_start(o,o.col,nil,function (pair)
         return default.orof(pair.conf.suround,o,m,true)
     end)
-    if not pair or rindex~=o.row then return end
+    if not pair or (not pair.multiline and rindex~=o.row) then return end
     if not m.fn.can_check_pre(o) then return end
     if open_pair.open_end_pair_after(m,o,o.col-#m.pair+1) then return end
-    local num=index-o.col+#pair.end_pair
     return utils.create_act({
         m.pair:sub(-1),
-        {'l',num},
+        {'j',rindex-o.row},{'home'},
+        {'l',index+#pair.end_pair},
         m.end_pair,
-        {'h',num+#m.end_pair}
+        {'k',rindex-o.row},{'home'},
+        {'l',o.col}
     })
 end
 ---@param m prof.def.module

@@ -599,6 +599,8 @@ Pairs may have a bunch of options, which include:
 + imap (true): whether to enable pair in insert
 + multiline (true): whether the pair works multiline
 + p (10): the priority of the pair
++ disable_start (false): whether to disable start pair insertion
++ disable_end (end): whether to disable end pair overhop
 {Map-specific}:
 + newline (false): enable expanding on `<CR>`
 + space (false): whether to work for space

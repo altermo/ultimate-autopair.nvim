@@ -24,7 +24,7 @@
 + [x] make map use filtering pair extensions
 + [x] auto add pairs `({| > CR > ({\n|\n})`
 + [ ] splitjoin plugin integration
-+ [ ] auto add ; att the end of } in c when newline
++ [ ] auto add ; att the end of } in c when newline and in node...
 ## BS
 + [x] suport
 + [x] remove the pair `[|] > BS > |`
@@ -69,9 +69,8 @@
 + [x] fastwarp cursor no move
 + [x] make ambiguous pairs have the ability to use fastwarp
 + [x] fastwarp ambiguous pair multiline
-+ [ ] <s>one char fastwarp `(foo|),, > <A-L> > (foo,|),`</s>
-+ [ ] <s>hop style fastwarp</s>
-+ [ ] fastwarp for starting pair/ambiguous pair `|(foo,bar)` > `foo,|(bar)`
++ [ ] hop style fastwarp
++ [ ] fastwarp for starting pair/ambiguous start pair `|(foo,bar)` > `foo,|(bar)`
 + [ ] fastwarp treesitter nodes
 ## extensions
 + [x] only filter inside or outside of string
@@ -98,11 +97,11 @@
 + [x] markdown code block spesific behavior (like lisp code block)
 + [x] whole file detection (requires implementation of tsnode blocks)
 + [x] make rules use `filter` and not just `check`
-+ [ ] markdown code block filter
-+ [ ] user defined multiline as one using treesitter
++ [x] markdown code block filter
++ [x] user defined multiline as one using treesitter
++ [x] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
 + [ ] extension in extension where they can return instead of continue
 + [ ] auto goto end if only space and remove `[text|  ] > ] > [text]|`
-+ [ ] add the parens att end when logical multiline `|{\n} > ( > (|{\n})`
 # other
 + [x] `'a|b' > ' > 'a'|'b'`
 + [x] `[[|] > ] > [[]|] and not [[]|`
@@ -126,15 +125,16 @@
 + [x] make `default.start_pair` and `default.end_pair` use `pair.rule()`
 + [x] make wrappers for pair.fn functions (to avoid `pair.fn.is_start(pair.pair,pair.pair,...)`)
 + [x] make keymap desc stack instead of only setting one
++ [x] multicharacter pair not in string/other node
++ [x] auto escape extend in string?`'\|a' > ' > '\'|\'a'`
++ [x] full utf8 suport
 + [ ] terminal mode integration
-+ [ ] implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)
++ [ ] <s>implement windwp/nvim-autopairs like rules with configuration macros (and add refrence to windwp/nvim-autopairs)</s>
 + [ ] implement most things defined in windwp/nvim-autopairs/wiki (and add refrence to windwp/nvim-autopairs)
 + [ ] test non pair parts (core,other config types...)
 + [ ] make everything work with multichar pair (fastwarp,space...)
 + [ ] abecodes/tabout.nvim like map (and reverse version)
 + [ ] make use of treesitter stack of nodes at pos to filter instead of one node at pos
-+ [x] multicharacter pair not in string/other node
-+ [x] auto escape extend in string?`'\|a' > ' > '\'|\'a'`
 + [ ] auto goto end if only newline and remove `[\n\t|\n] > ] > [\n]|` (requires multiline open_pair detection)
 + [ ] multicharacter pair with word delimiter `aAND ~= AND`
 + [ ] other keywords `if ... end`?
@@ -144,7 +144,6 @@
 + [ ] possibility of html tag suport
 + [ ] triple pair
 + [ ] newline autoclose only pairs (`if| > CR > if\n|\nend`)
-+ [x] full utf8 suport
 + [ ] all mappings p set depending on mconf.p if not set
 + [ ] core option to have buffer/InsertCharPre way of keybindings
 + [ ] auto set previous mapping as fallback
