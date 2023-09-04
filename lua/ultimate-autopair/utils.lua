@@ -99,6 +99,7 @@ end
 ---@return string
 function M.create_act(actions)
     local ret=''
+    local has_newlined=false --- https://github.com/altermo/ultimate-autopair.nvim/issues/42
     for _,v in ipairs(actions) do
         local c=v[1]
         local a1,a2
@@ -108,7 +109,9 @@ function M.create_act(actions)
             else c='l' end
         end
         if type(v)=='string' then ret=ret..v
-        elseif c=='newline' then ret=ret..'\r'
+        elseif c=='newline' then
+            ret=ret..(has_newlined and '\n' or '\r')
+            has_newlined=true
         elseif c=='home' then ret=ret..M.key_home
         elseif c=='end' then ret=ret..M.key_end
         elseif c=='j' then ret=ret..M.key_down:rep(a1 or 1)
