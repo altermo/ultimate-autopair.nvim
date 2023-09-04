@@ -555,8 +555,7 @@ Adds the pair `()` as a tmap to the terminal with specific process names.
 If you want to use it: >lua
  require'ultimate-autopair.core'.modes={'i','c','t'}
  require'ultimate-autopair'.init({your_pair_config,{
-   profile='raw',
-   unpack(require'ultimate-autopair.experimental.terminal'.init()),
+   profile=require'ultimate-autopair.experimental.terminal'.init
  }})
 <
 ------------------------------------------------------------------------------

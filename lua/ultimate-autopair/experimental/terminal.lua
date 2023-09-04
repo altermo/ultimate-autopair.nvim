@@ -3,8 +3,7 @@ local M={}
 --use
 ---require'ultimate-autopair.core'.modes={'i','c','t'}
 ---require'ultimate-autopair'.init({your_pair_config,{
----  profile='raw',
----  unpack(require'ultimate-autopair.experimental.terminal'.init()),
+---  profile=require'ultimate-autopair.experimental.terminal'.init
 ---}})
 local open_pair=require'ultimate-autopair.profile.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
@@ -76,11 +75,10 @@ function M.init_end_pair(start_pair,end_pair)
     end
     return m
 end
----@return core.module[]
-function M.init()
-    return {
-        M.init_start_pair('(',')'),
-        M.init_end_pair('(',')')
-    }
+---@param _ prof.cond.conf
+---@param mem core.module[]
+function M.init(_,mem)
+    table.insert(mem,M.init_start_pair('(',')'))
+    table.insert(mem,M.init_end_pair('(',')'))
 end
 return M
