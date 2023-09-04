@@ -39,7 +39,7 @@ M.conf={
     map='<cr>', --string or table
     autoclose=false,
     --(| > cr > (\n|\n)
-    conf={},
+    conf={cond={function(fn) return not fn.in_lisp() end}},
     --contains extension config
     multi=false,
     --use multiple configs (|ultimate-autopair-map-multi-config|)
