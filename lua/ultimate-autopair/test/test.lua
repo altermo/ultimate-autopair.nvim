@@ -39,6 +39,7 @@ return {
     },
     newline={
         {'{|}','\r','{\n|\n}'},
+        {'{|}','\r','{\n|}',{ft='fennel'},},
         {'{foo|}','\r','{foo\n|\n}'},
         {'{|foo}','\r','{\n|foo\n}',},
         {'local x=[[|]]','\r','local x=[[\n|\n]]',{ft='lua'}},
