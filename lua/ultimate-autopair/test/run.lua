@@ -133,13 +133,13 @@ function M.run_tests(conf,tests,has_not_ok)
 end
 function M.run_test(testopt)
     local map={
-        ['']='<bs>',
-        ['\r']='<cr>',
-        ['']='<A-e>',
-        ['']='<A-E>',
-        ['']='<A-)>',
-        ['']='<del>',
-        ['']='<A-tab>',
+        ['']=ua_utils.keycode'<bs>',
+        ['\r']=ua_utils.keycode'<cr>',
+        ['']=ua_utils.keycode'<A-e>',
+        ['']=ua_utils.keycode'<A-E>',
+        ['']=ua_utils.keycode'<A-)>',
+        ['']=ua_utils.keycode'<del>',
+        ['']=ua_utils.keycode'<A-tab>',
     }
     local unparsed_starting_line,key,unparsed_resulting_line,opt=unpack(testopt)
     opt=opt or {}

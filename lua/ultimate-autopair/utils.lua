@@ -1,15 +1,6 @@
 --Internal Utils
 local M={}
 M.maxlines=500
-M.key_bs=vim.api.nvim_replace_termcodes('<bs>',true,true,true)
-M.key_del=vim.api.nvim_replace_termcodes('<del>',true,true,true)
-M.key_left=vim.api.nvim_replace_termcodes('<left>',true,true,true)
-M.key_right=vim.api.nvim_replace_termcodes('<right>',true,true,true)
-M.key_end=vim.api.nvim_replace_termcodes('<end>',true,true,true)
-M.key_home=vim.api.nvim_replace_termcodes('<home>',true,true,true)
-M.key_up=vim.api.nvim_replace_termcodes('<up>',true,true,true)
-M.key_down=vim.api.nvim_replace_termcodes('<down>',true,true,true)
-M.key_noundo=vim.api.nvim_replace_termcodes('<C-g>U',true,true,true)
 ---@param linenr? number
 ---@return string
 function M.getline(linenr)
@@ -231,4 +222,19 @@ function M._get_o_pos(o,col,row)
         mode=o.mode,
     }
 end
+---@generic T:string|string?
+---@param str T
+---@return T
+function M.keycode(str)
+  return str and vim.api.nvim_replace_termcodes(str,true,true,true)
+end
+M.key_bs=M.keycode'<bs>'
+M.key_del=M.keycode'<del>'
+M.key_left=M.keycode'<left>'
+M.key_right=M.keycode'<right>'
+M.key_end=M.keycode'<end>'
+M.key_home=M.keycode'<home>'
+M.key_up=M.keycode'<up>'
+M.key_down=M.keycode'<down>'
+M.key_noundo=M.keycode'<C-g>U'
 return M

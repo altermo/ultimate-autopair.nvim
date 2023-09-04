@@ -85,7 +85,7 @@ end
 ---@return string
 function M.run(key)
     if M.disable then
-        return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
+        return M.I.activate_iabbrev(key)
     end
     local o=M.get_o_value(key)
     for _,v in ipairs(M.mem) do
@@ -99,7 +99,7 @@ function M.run(key)
         end
     end
     if o.mode=='c' or o.mode=='i' then
-        return M.I.activate_iabbrev(vim.api.nvim_replace_termcodes(key,true,true,true))
+        return M.I.activate_iabbrev(key)
     end
     return key
 end
@@ -175,8 +175,9 @@ function M.init_mapped(mapped,mode)
     local mapps=M.I.get_maps(mode)
     M.map[mode]={}
     for key,opts in pairs(mapped) do
-        M.map[mode][key]=mapps[key] or false
-        vim.keymap.set(mode,key,M.get_run(key),{noremap=true,expr=true,desc=vim.fn.join(opts.desc,'\n\t\t '),replace_keycodes=false})
+        local mapkey=utils.keycode(key)
+        M.map[mode][mapkey]=mapps[mapkey] or false
+        vim.keymap.set(mode,key,M.get_run(mapkey),{noremap=true,expr=true,desc=vim.fn.join(opts.desc,'\n\t\t '),replace_keycodes=false})
     end
 end
 function M.init()

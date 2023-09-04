@@ -40,12 +40,13 @@ end
 ---@param m prof.def.m.map
 ---@return core.get_map-fn
 function M.def_map_get_map_wrapp(m)
+    local map=type(m.map)=='table' and m.map or {m.map}
+    ---@cast map string[]
+    local cmap=type(m.cmap)=='table' and m.cmap or {m.cmap}
+    ---@cast cmap string[]
     return function(mode)
-        if (mode=='i' and m.map) then
-            return type(m.map)=='table' and m.map or {m.map} --[[@as string[] ]]
-        elseif (mode=='c' and m.cmap) then
-            return type(m.cmap)=='table' and m.cmap or {m.cmap} --[[@as string[] ]]
-        end
+        if (mode=='i' and m.map) then return map
+        elseif (mode=='c' and m.cmap) then return cmap end
     end
 end
 ---@type core.sort-fn
@@ -75,12 +76,18 @@ end
 ---@param m prof.def.m.map
 ---@param filter? fun(o:core.o):boolean
 function M.extend_map_check_with_map_check(m,filter)
+    ---@diagnostic disable-next-line: param-type-mismatch
+    local map=vim.tbl_map(utils.keycode,type(m.map)=='table' and m.map or {m.map})
+    ---@cast map string[]
+    ---@diagnostic disable-next-line: param-type-mismatch
+    local cmap=vim.tbl_map(utils.keycode,type(m.cmap)=='table' and m.cmap or {m.cmap})
+    ---@cast cmap string[]
     local check=m.check
     m.check=function (o)
         if not (not filter or filter(o)) then return end
-        local key=type(m.map)=='table' and m.map or {m.map}
+        local key=map
         ---@cast key string[]
-        local keyc=m.cmap and (type(m.cmap)=='table' and m.cmap or {m.cmap}) or key
+        local keyc=#cmap>0 and cmap or key
         ---@cast keyc string[]
         if not ((o.mode=='c' and vim.tbl_contains(keyc,o.key))
             or (o.mode=='i' and vim.tbl_contains(key,o.key))) then
