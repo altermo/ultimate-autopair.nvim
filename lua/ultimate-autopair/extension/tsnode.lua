@@ -19,6 +19,11 @@ M.savetype={}
 ---@param incheck? boolean
 ---@return TSNode?
 function M._in_tsnode(o,nodetypes,incheck)
+    --TODO fix: if incheck don't for one char after node
+    ---PROBLEM: there are exceptions: comment #|
+    ---SULUTION: make option to add exceptions
+    --TODO fix: node:start row is not checked agains o.row, only column
+    --TODO fix: it uses o.col, not o._coloffset(o.col) (also o._offset(o.row))
     local ssave=o.save[M._in_tsnode] or {} o.save[M._in_tsnode]=ssave
     local save=ssave[nodetypes] or {} ssave[nodetypes]=save
     if incheck then save={} end
@@ -33,13 +38,10 @@ function M._in_tsnode(o,nodetypes,incheck)
             ql[v]=true
         end
     end
-    local root=node:tree():root()
-    --TODO fix: if incheck don't for one char after node
-    ---PROBLEM: there are exceptions: comment #|
-    ---SULUTION: make option to add exceptions
-    --TODO fix: node:start row is not checked agains o.row, only column
-    --TODO fix: it uses o.col, not o._coloffset(o.col) (also o._offset(o.row))
-    while node~=root and (not ql[node:type()] or (incheck and ({node:start()})[2]==o.col-1)) do
+    ---https://github.com/altermo/ultimate-autopair.nvim/issues/44
+    --local root=node:tree():root()
+    while node:parent() and (not ql[node:type()] or (incheck and ({node:start()})[2]==o.col-1)) do
+    --while node~root and (not ql[node:type()] or (incheck and ({node:start()})[2]==o.col-1)) do
         save[node:id()]=cache
         node=node:parent() --[[@as TSNode]]
         --TODO fix: TSNode:id() doesn't differ between trees
@@ -87,7 +89,23 @@ function M.filter(o,save,conf,m)
         if o.row==save.erow and o.col>save.ecol then return end
     end
     local node=M._in_tsnode(o,default.orof(conf.separate,o,m))
-    if node and node~=(save.in_node or node:tree():root()) then
+    local root
+    if node and not save.in_node then
+        local s=save[M.filter] or {} save[M.filter]=s
+        if s[node:id()] then
+            root=s[node:id()]
+        else
+            local copy_node=node
+            while copy_node:parent() do
+                copy_node=copy_node:parent() --[[@as TSNode]]
+            end
+            root=copy_node
+            s[node:id()]=root
+        end
+    end
+    ---https://github.com/altermo/ultimate-autopair.nvim/issues/44
+    --if node and node~=(save.in_node or node:tree():root()) then
+    if node and node~=(save.in_node or root) then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --HACK
         if vim.tbl_contains({'string','raw_string'},node:type()) and srow==o.row and scol==o.col then return true end --HACK
