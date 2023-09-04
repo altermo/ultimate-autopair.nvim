@@ -570,9 +570,13 @@ If you want to use it: >lua
 ==============================================================================
 WRITING-EXTENSIONS                      *ultimate-autopair-writing-extensions*
 Todo: write documentation
+For the time being, you can look at already written extensions.
 ==============================================================================
 WRITING-PROFILE                             *ultimate-autopair-writing-prilfe*
 Todo: write documentation
+For the time being, you can look at already written profiles. I would recomend
+looking at the profiles inside `experimental/` as they are not connected to
+the main profile much and are not realy simple like the other builtin profiles.
 ==============================================================================
 GUIDE                                                *ultimate-autopair-guide*
 ------------------------------------------------------------------------------

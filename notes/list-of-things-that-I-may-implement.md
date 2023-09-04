@@ -191,3 +191,4 @@
 + [ ] option to disable open pair detecting backspace/newline/insert
 + [ ] be able to create non pair mappings which work with the pair api
 + [ ] use spesific addons; like work for nvim-treesitter-endwise/add quote after list
++ [ ] use unpack in config to easely add new pairs, like endwise pairs
