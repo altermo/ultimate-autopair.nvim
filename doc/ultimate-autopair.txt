@@ -564,9 +564,7 @@ Highlights matching one char pairs and replaces map `%` with own.
 If you want to use it: >lua
  require'ultimate-autopair.core'.modes={'i','c','n'}
  require'ultimate-autopair'.init({your_pair_config,{
-   profile='raw',
-   require'ultimate-autopair.experimental.matchpair'.init(),
-   require'ultimate-autopair.experimental.matchpair'.init_map(),
+  profile=require'ultimate-autopair.experimental.matchpair'.init,
  }})
 <
 ==============================================================================

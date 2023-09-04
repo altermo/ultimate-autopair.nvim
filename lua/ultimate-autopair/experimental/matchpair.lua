@@ -6,9 +6,7 @@ local M={}
 --use
 ---require'ultimate-autopair.core'.modes={'i','c','n'}
 ---require'ultimate-autopair'.init({your_pair_config,{
----  profile='raw',
----  require'ultimate-autopair.experimental.matchpair'.init(),
----  require'ultimate-autopair.experimental.matchpair'.init_map(),
+---  profile=require'ultimate-autopair.experimental.matchpair'.init,
 ---}})
 ---@param m core.module
 ---@return function
@@ -40,7 +38,7 @@ function M.find_corresponding_pair_under_curosr(o)
     return row,col
 end
 ---@return core.module
-function M.init()
+function M.init_highlight()
     local m={}
     m.doc='ultimate-autopair matchpair higlight'
     m.p=10
@@ -66,5 +64,11 @@ function M.init_map()
     end
     m.get_map=function (mode) if mode=='n' then return {'%'} end end
     return m
+end
+---@param conf prof.cond.conf|table
+---@param mem core.module[]
+function M.init(conf,mem)
+    if not conf.nohigh then table.insert(mem,M.init_highlight()) end
+    if not conf.nomap then table.insert(mem,M.init_map()) end
 end
 return M
