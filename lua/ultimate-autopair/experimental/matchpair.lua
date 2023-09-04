@@ -55,7 +55,7 @@ end
 ---@return core.module
 function M.init_map()
     local m={}
-    m.doc='ultimate-autopair matchpair map'
+    m.doc='autopair matchpair map'
     m.p=10
     m.check=function (o)
         if o.mode=='n' and o.key=='%' then

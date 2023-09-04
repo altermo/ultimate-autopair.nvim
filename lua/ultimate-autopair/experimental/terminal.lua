@@ -41,7 +41,8 @@ function M.init_start_pair(start_pair,end_pair)
         start_m={filter=function () return true end},
         start_pair=start_pair,
         end_pair=end_pair,
-        p=10
+        p=10,
+        doc=('autopairs terminal start pair: %s,%s'):format(start_pair,end_pair),
     }
     m.get_map=function (mode) if mode=='t' then return {start_pair} end end
     m.check=function (o)
@@ -62,7 +63,8 @@ function M.init_end_pair(start_pair,end_pair)
         start_m={filter=function () return true end},
         start_pair=start_pair,
         end_pair=end_pair,
-        p=10
+        p=10,
+        doc=('autopairs terminal end pair: %s,%s'):format(start_pair,end_pair),
     }
     m.get_map=function (mode) if mode=='t' then return {end_pair} end end
     m.check=function (o)

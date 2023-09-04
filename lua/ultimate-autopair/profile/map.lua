@@ -50,6 +50,7 @@ function M.create_map(opts,mconf)
     m.filter=function () return true end
     m.get_map=M.get_map_wrapp(m)
     m.check=M.check_wrapp(m)
+    m.doc=('map %s to %s'):format(vim.inspect(m.lhs),vim.inspect(m.rhs))
     return m
 end
 ---@param conf prof.mconf
