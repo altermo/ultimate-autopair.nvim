@@ -6,7 +6,6 @@ For development version, check out [development](https://github.com/altermo/ulti
 Requires **neovim 0.9** (for older versions of neovim, check previous versions of plugin)\
 For many features, including string filtering, requires **treesitter**.\
 :exclamation: If your coming  from `v0.5.3` and want to update: remove the plugin totally and reinstall.\
-:exclamation: If your neovim **crashes** then it might have to do with [#24783](https://github.com/neovim/neovim/issues/24783); use commit [667d230](https://github.com/altermo/ultimate-autopair.nvim/commit/667d2304e8eb9ddbfa7f962528cfce0a5edcc163) until you update neovim
 
 
 For new users, check out starter documentation (`:help ultimate-autopair`)
