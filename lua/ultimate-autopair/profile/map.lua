@@ -8,6 +8,7 @@
 ---@field [3] string
 
 local core=require'ultimate-autopair.core'
+local utils=require'ultimate-autopair.utils'
 local M={}
 ---@param m prof.map.module
 ---@return core.get_map-fn
@@ -21,8 +22,9 @@ end
 ---@param m prof.map.module
 ---@return core.check-fn
 function M.check_wrapp(m)
+    local lhs=utils.keycode(m.lhs)
     return function (o)
-        if o.key~=m.lhs then return end
+        if o.key~=lhs then return end
         if not m.filter(o) then return end
         if type(m.rhs)=='function' then
             return m.rhs(o,m)
@@ -43,9 +45,6 @@ function M.create_map(opts,mconf)
         end
     end
     m.lhs=opts[2]
-    if #m.lhs~=1 then
-        error(('lhs in `%s` must be of length 1'):format(opts))
-    end
     m.rhs=opts[3]
     m.conf=opts
     m.filter=function () return true end
