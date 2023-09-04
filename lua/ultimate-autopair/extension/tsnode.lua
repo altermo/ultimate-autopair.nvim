@@ -93,14 +93,16 @@ function M.filter(o,save,conf,m)
     if node and not save.in_node then
         local s=save[M.filter] or {} save[M.filter]=s
         if s[node:id()] then
-            root=s[node:id()]
+            root=unpack(s[node:id()])
         else
-            local copy_node=node
-            while copy_node:parent() do
-                copy_node=copy_node:parent() --[[@as TSNode]]
+            root=node
+            local sa={}
+            s[node:id()]=sa
+            while root:parent() do
+                root=root:parent() --[[@as TSNode]]
+                s[root:id()]=sa
             end
-            root=copy_node
-            s[node:id()]=root
+            sa[1]=root
         end
     end
     ---https://github.com/altermo/ultimate-autopair.nvim/issues/44
