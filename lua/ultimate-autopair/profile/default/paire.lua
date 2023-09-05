@@ -31,8 +31,8 @@ end
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapp(m)
     return function (o)
+        if m.conf.backspace==false then return end
         if o.line:sub(o.col-#m.start_pair-#m.end_pair,o.col-1-#m.end_pair)==m.start_pair and
-            m.conf.backspace~=false and
             m.end_pair==o.line:sub(o.col-#m.end_pair,o.col-1) and
             not open_pair.open_end_pair_after(m,o,o.col) and
             m.filter(utils._get_o_pos(o,o.col-#m.end_pair)) and
