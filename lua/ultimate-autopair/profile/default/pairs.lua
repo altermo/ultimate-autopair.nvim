@@ -32,6 +32,7 @@ end
 function M.backspace_wrapp(m)
     return function (o,_,conf)
         if o.line:sub(o.col-#m.start_pair,o.col-1)==m.start_pair and
+            m.conf.backspace~=false and
             m.end_pair==o.line:sub(o.col,o.col+#m.end_pair-1) and
             m.filter(utils._get_o_pos(o,o.col-#m.pair)) and
             m.filter(utils._get_o_pos(o,o.col)) and

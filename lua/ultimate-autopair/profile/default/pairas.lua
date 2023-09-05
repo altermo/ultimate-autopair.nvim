@@ -52,6 +52,7 @@ end
 function M.backspace_wrapp(m)
     return function (o,_,conf)
         if o.line:sub(o.col-#m.pair,o.col-1)==m.pair and
+            m.conf.backspace~=false and
             m.pair==o.line:sub(o.col,o.col+#m.pair-1) and
             not open_pair.open_pair_ambiguous(m,o,o.col) and
             m.filter(utils._get_o_pos(o,o.col-#m.pair)) and
