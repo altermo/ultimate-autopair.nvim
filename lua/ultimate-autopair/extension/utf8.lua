@@ -53,10 +53,14 @@ end
 ---@param conf ext.utf8.conf
 ---@param o core.o
 ---@param m prof.def.module
----@return string
----@return number
----@return table<number,number>
+---@return string?
+---@return number?
+---@return table<number,number>?
 function M.utf8_string_and_offset(col,line,conf,o,m)
+    if #line==0 then return end
+    local offsets=vim.str_utf_pos(line) --[[@as table]]
+    offsets[#offsets+1]=#line+1
+    if offsets[#offsets]==#offsets then return end
     local newline=''
     local newcol=0
     local ncol
@@ -72,8 +76,6 @@ function M.utf8_string_and_offset(col,line,conf,o,m)
         if i==col then ncol=newcol end
     end
     if col==#line+1 then ncol=newcol+1 end
-    local offsets=vim.str_utf_pos(line) --[[@as table]]
-    offsets[#offsets+1]=#line+1
     return newline,ncol,offsets
 end
 ---@param off (table<number,number>)[]
@@ -98,12 +100,10 @@ function M.call(m,ext)
         local lline
         for row,line in ipairs(o.lines) do
             lline,col,of=M.utf8_string_and_offset(o.col,line,conf,o,m)
-            if lline~=o.lines[row] then
+            if lline and col and of then
                 o.lines[row]=lline
                 off[row]=of
-            end
-            if row==o.row then
-                o.col=col
+                if row==o.row then o.col=col end
             end
         end
         o.line=o.lines[o.row]
