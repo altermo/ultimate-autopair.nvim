@@ -52,6 +52,7 @@ function M.newline_wrapp(m)
             return utils.create_act({
                 {'newline'},
                 {'k'},
+                {'home'},
                 {'l',o.col-1},
                 {'newline'},
             })
