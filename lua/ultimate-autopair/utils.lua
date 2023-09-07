@@ -186,7 +186,12 @@ function M.getsmartft(o,notree)
     end
     local pos={linenr,col,linenr,col}
     local ret=parser:language_for_range(pos):lang()
-    if ret=='markdown_inline' then ret='markdown' end
+    local tslang2lang={
+        markdown_inline='markdown',
+        commonlisp='lisp',
+        latex='tex'
+    }
+    if tslang2lang[ret] then ret=tslang2lang[ret] end
     (cache or {})[tostring(linenr)..';'..tostring(col)]=ret
     return ret
 end
