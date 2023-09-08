@@ -54,7 +54,6 @@ function M.def_pair_sort(a,b)
     if not (M.get_type_opt(a,'pair') and M.get_type_opt(b,'pair')) then return end
     ---@cast a prof.def.m.pair
     ---@cast b prof.def.m.pair
-    if #a.pair~=#b.pair then return #a.pair>#b.pair end
     if M.get_type_opt(a,'start')
         and M.get_type_opt(b,'end') then
         return false
@@ -62,6 +61,7 @@ function M.def_pair_sort(a,b)
         and M.get_type_opt(b,'start') then
         return true
     end
+    if #a.pair~=#b.pair then return #a.pair>#b.pair end
 end
 ---@param m prof.def.m.pair
 ---@param q prof.def.q
@@ -82,15 +82,12 @@ function M.extend_map_check_with_map_check(m,filter)
     ---@diagnostic disable-next-line: param-type-mismatch
     local cmap=vim.tbl_map(utils.keycode,type(m.cmap)=='table' and m.cmap or {m.cmap})
     ---@cast cmap string[]
+    local keyc=#cmap>0 and cmap or map
     local check=m.check
     m.check=function (o)
         if not (not filter or filter(o)) then return end
-        local key=map
-        ---@cast key string[]
-        local keyc=#cmap>0 and cmap or key
-        ---@cast keyc string[]
         if not ((o.mode=='c' and vim.tbl_contains(keyc,o.key))
-            or (o.mode=='i' and vim.tbl_contains(key,o.key))) then
+            or (o.mode=='i' and vim.tbl_contains(map,o.key))) then
             return
         end
         return check(o)
