@@ -57,7 +57,7 @@ use{
 </details>
 
 ## Default configuration
-For the default configuration, refer to the documentation (`:help ultimate-autopair-config-default`).
+For the default configuration, refer to the documentation (`:help ultimate-autopair-default-config`).
 ## Demo
 </details><details> <summary><b>demo</b></summary>
 
