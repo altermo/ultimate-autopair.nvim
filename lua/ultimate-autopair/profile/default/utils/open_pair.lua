@@ -127,7 +127,8 @@ function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
                 end
                 i=i+#spair
             else
-                i=i+1
+                local i1=line:find(spair,i+1,true)
+                i=i1 and i1 or #line+1
             end
         end
     end

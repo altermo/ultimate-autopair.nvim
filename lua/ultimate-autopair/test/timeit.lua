@@ -8,14 +8,16 @@ M.file2=vim.fn["repeat"]({'(',')'},rep)
 M.file3=vim.list_extend(vim.fn["repeat"]({'('},rep),vim.fn["repeat"]({')'},rep))
 M.file4={('"()";'):rep(rep)}
 M.file5={(('a'):rep(80)..';'):rep(rep)}
-function M.create_act_and_file(act,filecont,fn,path)
+M.file6={('"'..('a'):rep(80)..'";'):rep(rep)}
+M.file7={('('..('a'):rep(80)..');'):rep(rep)}
+function M.create_act_and_file(act,filecont,fn,path,conf)
     local source=vim.fn.tempname()
     local file=vim.fn.tempname()
     local out=vim.fn.tempname()
     vim.fn.writefile({
         'vim.opt.runtimepath:append("'..path..'")',
         '_G.UA_DEBUG_DONT=true',
-        'require("ultimate-autopair").setup()',
+        'require("ultimate-autopair").setup('..vim.inspect(conf or {},{newline=''})..')',
         'local acts=[==['..act..']==]',
         'vim.cmd.edit{"'..file..'"}',
         'vim.treesitter.start(0,"lua")',
@@ -34,13 +36,13 @@ function M.create_act_and_file(act,filecont,fn,path)
     if not err then error(msg) end
     return s and ret[1] or nil
 end
-function M.timeit(filecont,act,path)
+function M.timeit(filecont,act,path,conf)
     local err
     local t=M.create_act_and_file(act,filecont,function (source)
         if vim.system({'nvim','--clean','-l',source}):wait(10000).signal~=0 then
             err='timeout'
         end
-    end,path)
+    end,path,conf)
     if err then
         M.log(tostring(err))
     else
@@ -58,6 +60,9 @@ function M.start()
     M.timeit(M.file3,'Go(',path)
     M.timeit(M.file4,'Go(',path)
     M.timeit(M.file5,'Go(',path)
+    --M.timeit(M.file7,'Go(',path)
+    M.timeit(M.file5,'Go"',path,{config_internal_pairs={{'"','"',multiline=true}}})
+    M.timeit(M.file6,'Go"',path,{config_internal_pairs={{'"','"',multiline=true}}})
 end
 M.start()
 return M
