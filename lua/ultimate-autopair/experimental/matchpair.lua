@@ -15,11 +15,13 @@ function M.wrapp_highlight_callback(m)
     return function ()
         vim.api.nvim_buf_clear_namespace(0,m.ns,0,-1)
         if core.disable then return end
-        local o=core.get_o_value('')
-        local row,col=M.find_corresponding_pair_under_curosr(o)
-        if not row then return end
-        vim.highlight.range(0,m.ns,'Visual',{o.row-1,o.col-1},{o.row-1,o.col})
-        vim.highlight.range(0,m.ns,'Visual',{row-1,col-1},{row-1,col})
+        vim.schedule(function ()
+            local o=core.get_o_value('')
+            local row,col=M.find_corresponding_pair_under_curosr(o)
+            if not row then return end
+            vim.highlight.range(0,m.ns,'Visual',{o.row-1,o.col-1},{o.row-1,o.col})
+            vim.highlight.range(0,m.ns,'Visual',{row-1,col-1},{row-1,col})
+        end)
     end
 end
 ---@param o core.o
