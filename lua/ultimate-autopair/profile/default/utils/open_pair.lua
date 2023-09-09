@@ -69,6 +69,17 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
         rrow=(pair.multiline and gotoend==true and row-1 or 0)+(rrow+(pair.multiline and 0 or row-1))
         local i=(gotoend==true and rrow==row and col) or 1
         assert(o.lines[pair.multiline and rrow or row]==line)
+        local next_start_pair=line:find(start_pair,i,true)
+        local next_end_pair=line:find(end_pair,i,true)
+        if next_start_pair and ((not next_end_pair) or next_start_pair<=next_end_pair) then
+            i=next_start_pair
+            next_start_pair=line:find(start_pair,i+1,true)
+        elseif next_end_pair and ((not next_end_pair) or next_end_pair<=next_end_pair) then
+            i=next_end_pair
+            next_end_pair=line:find(end_pair,i+1,true)
+        else
+            i=#line+1
+        end
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
             if M.I.match(start_pair,lline) and sfilter(rrow,i) then
@@ -78,7 +89,15 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
                 count=count-1
                 i=i+#end_pair
             else
-                i=i+1
+                if next_start_pair and ((not next_end_pair) or next_start_pair<=next_end_pair) then
+                    i=next_start_pair
+                    next_start_pair=line:find(start_pair,i+1,true)
+                elseif next_end_pair and ((not next_end_pair) or next_end_pair<=next_end_pair) then
+                    i=next_end_pair
+                    next_end_pair=line:find(end_pair,i+1,true)
+                else
+                    i=#line+1
+                end
             end
             if ret_pos and count==0 then
                 return i-#end_pair,rrow
