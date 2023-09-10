@@ -21,24 +21,26 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     local row=o.row
     if pair.multiline then
         lines=vim.fn.reverse(vim.list_slice(o.lines,(not gotostart) and o.row or nil,gotostart==true and o.row or nil))
+        if not gotostart then lines[#lines]=lines[#lines]:sub(col,-1) end
+        if gotostart then lines[#lines]=lines[#lines]:sub(1,col) end
     end
     for rrow,line in ipairs(lines)do
         rrow=(pair.multiline and gotostart==true and row+1 or #o.lines+1)-rrow
-        local i=(gotostart==true and rrow==row and col) or #line
-        assert(o.lines[pair.multiline and rrow or row]==line)
-        while ((not gotostart) and rrow==row and i>col-1) or ((gotostart or rrow~=row) and i>0) do
-            local lline=line:sub((not gotostart) and rrow==row and col or 1,i):reverse()
-            if M.I.match(start_pair,lline) and sfilter(rrow,i-#start_pair+1) then
+        local i=0
+        local rline=line:reverse()
+        while #line>i do
+            local lline=rline:sub(i+1,-1)
+            if M.I.match(start_pair,lline) and sfilter(rrow,#line-i-#start_pair+1) then
                 count=count-1
-                i=i-#start_pair
-            elseif M.I.match(end_pair,lline) and efilter(rrow,i-#end_pair+1) then
+                i=i+#start_pair
+            elseif M.I.match(end_pair,lline) and efilter(rrow,#line-i-#end_pair+1) then
                 count=count+1
-                i=i-#end_pair
+                i=i+#end_pair
             else
-                i=i-1
+                i=i+1
             end
             if ret_pos and count<=0 then
-                return i+#start_pair,rrow
+                return #line-i+#start_pair+((not gotostart) and rrow==row and col or 0),rrow
             elseif count<0 then
                 count=0
             end
