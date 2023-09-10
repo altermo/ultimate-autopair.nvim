@@ -7,9 +7,9 @@ M.file1={
 M.file2=vim.fn["repeat"]({'(',')'},rep)
 M.file3=vim.list_extend(vim.fn["repeat"]({'('},rep),vim.fn["repeat"]({')'},rep))
 M.file4={('"()";'):rep(rep)}
-M.file5={(('a'):rep(80)..';'):rep(rep)}
-M.file6={('"'..('a'):rep(80)..'";'):rep(rep)}
-M.file7={('('..('a'):rep(80)..');'):rep(rep)}
+M.file5=vim.fn["repeat"]({('a'):rep(80)..';'},rep)
+M.file6=vim.fn["repeat"]({'"'..('a'):rep(80)..'";'},rep)
+M.file7=vim.fn["repeat"]({'('..('a'):rep(80)..');'},rep)
 function M.create_act_and_file(act,filecont,fn,path,conf)
     local source=vim.fn.tempname()
     local file=vim.fn.tempname()
