@@ -21,26 +21,44 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     local row=o.row
     if pair.multiline then
         lines=vim.fn.reverse(vim.list_slice(o.lines,(not gotostart) and o.row or nil,gotostart==true and o.row or nil))
-        if not gotostart then lines[#lines]=lines[#lines]:sub(col,-1) end
-        if gotostart then lines[#lines]=lines[#lines]:sub(1,col) end
     end
+    if not gotostart then lines[#lines]=lines[#lines]:sub(col,-1) end
+    if gotostart then lines[#lines]=lines[#lines]:sub(1,col) end
     for rrow,line in ipairs(lines)do
         rrow=(pair.multiline and gotostart==true and row+1 or #o.lines+1)-rrow
-        local i=0
+        if not rrow==row then assert(o.lines[pair.multiline and rrow or row]==line) end
+        local i=1
         local rline=line:reverse()
-        while #line>i do
-            local lline=rline:sub(i+1,-1)
-            if M.I.match(start_pair,lline) and sfilter(rrow,#line-i-#start_pair+1) then
-                count=count-1
+        local next_start_pair=rline:find(start_pair,i,true)
+        local next_end_pair=rline:find(end_pair,i,true)
+        if next_start_pair and ((not next_end_pair) or next_start_pair<=next_end_pair) then
+            i=next_start_pair
+        elseif next_end_pair and ((not next_end_pair) or next_end_pair<=next_end_pair) then
+            i=next_end_pair
+        else
+            i=#line+1
+        end
+        while #line>i-1 do
+            local lline=rline:sub(i)
+            if M.I.match(start_pair,lline) then
+                if sfilter(rrow,#line-i-#start_pair+2) then count=count-1 end
                 i=i+#start_pair
-            elseif M.I.match(end_pair,lline) and efilter(rrow,#line-i-#end_pair+1) then
-                count=count+1
+                next_start_pair=rline:find(start_pair,i,true)
+            elseif M.I.match(end_pair,lline) then
+                if efilter(rrow,#line-i-#end_pair+2) then count=count+1 end
                 i=i+#end_pair
+                next_end_pair=rline:find(end_pair,i,true)
             else
-                i=i+1
+                if next_start_pair and ((not next_end_pair) or next_start_pair<=next_end_pair) then
+                    i=next_start_pair
+                elseif next_end_pair and ((not next_end_pair) or next_end_pair<=next_end_pair) then
+                    i=next_end_pair
+                else
+                    i=#line+1
+                end
             end
             if ret_pos and count<=0 then
-                return #line-i+#start_pair+((not gotostart) and rrow==row and col or 0),rrow
+                return #line-i+1+#start_pair+((not gotostart) and rrow==row and col or 0),rrow
             elseif count<0 then
                 count=0
             end
@@ -75,10 +93,10 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
         local next_end_pair=line:find(end_pair,i,true)
         if next_start_pair and ((not next_end_pair) or next_start_pair<=next_end_pair) then
             i=next_start_pair
-            next_start_pair=line:find(start_pair,i+1,true)
+            next_start_pair=line:find(start_pair,i+1,true) --TODO: unnecessary
         elseif next_end_pair and ((not next_end_pair) or next_end_pair<=next_end_pair) then
             i=next_end_pair
-            next_end_pair=line:find(end_pair,i+1,true)
+            next_end_pair=line:find(end_pair,i+1,true) --TODO: unnecessary
         else
             i=#line+1
         end
