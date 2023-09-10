@@ -41,11 +41,11 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
         while #line>i-1 do
             local lline=rline:sub(i)
             if M.I.match(start_pair,lline) then
-                if sfilter(rrow,#line-i-#start_pair+2) then count=count-1 end
+                if sfilter(rrow,#o.lines[rrow]-i) then count=count-1 end
                 i=i+#start_pair
                 next_start_pair=rline:find(start_pair,i,true)
             elseif M.I.match(end_pair,lline) then
-                if efilter(rrow,#line-i-#end_pair+2) then count=count+1 end
+                if efilter(rrow,#o.lines[rrow]-i) then count=count+1 end
                 i=i+#end_pair
                 next_end_pair=rline:find(end_pair,i,true)
             else
