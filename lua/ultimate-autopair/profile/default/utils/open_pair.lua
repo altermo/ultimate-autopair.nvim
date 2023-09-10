@@ -82,21 +82,19 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
         end
         while ((not gotoend) and rrow==row and i<col+1) or ((gotoend or rrow~=row) and i<=#line) do
             local lline=line:sub(i,(not gotoend) and rrow==row and col or nil)
-            if M.I.match(start_pair,lline) and sfilter(rrow,i) then
-                count=count+1
+            if M.I.match(start_pair,lline) then
+                if sfilter(rrow,i) then count=count+1 end
                 i=i+#start_pair
-                next_start_pair=line:find(start_pair,i+1,true) --TODO: HACK
-            elseif M.I.match(end_pair,lline) and efilter(rrow,i) then
-                count=count-1
+                next_start_pair=line:find(start_pair,i+1,true)
+            elseif M.I.match(end_pair,lline) then
+                if efilter(rrow,i) then count=count-1 end
                 i=i+#end_pair
-                next_end_pair=line:find(end_pair,i+1,true) --TODO: HACK
+                next_end_pair=line:find(end_pair,i+1,true)
             else
                 if next_start_pair and ((not next_end_pair) or next_start_pair<=next_end_pair) then
                     i=next_start_pair
-                    next_start_pair=line:find(start_pair,i+1,true)
                 elseif next_end_pair and ((not next_end_pair) or next_end_pair<=next_end_pair) then
                     i=next_end_pair
-                    next_end_pair=line:find(end_pair,i+1,true)
                 else
                     i=#line+1
                 end
