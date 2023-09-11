@@ -177,8 +177,8 @@ function M.init_mapped(mapped,mode)
     M.map[mode]={}
     for key,opts in pairs(mapped) do
         local mapkey=utils.keycode(key)
-        M.map[mode][mapkey]=mapps[mapkey] or false
         if not vim.tbl_contains(M.dont_map,mapkey) then
+            M.map[mode][mapkey]=mapps[mapkey] or false
             vim.keymap.set(mode,key,M.get_run(mapkey),{noremap=true,expr=true,desc=vim.fn.join(opts.desc,'\n\t\t '),replace_keycodes=false})
         end
     end
