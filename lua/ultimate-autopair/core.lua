@@ -118,9 +118,9 @@ end
 function M.delete_mem_map(mode)
     local mapps=M.I.get_maps(mode)
     for key,old_map in pairs(M.map[mode] or {}) do
-        if mapps[key] and M.funcs[key] and
-            mapps[key].callback==M.funcs[key] then
-            vim.keymap.del(mode,key,{})
+        if mapps[vim.fn.keytrans(key)] and M.funcs[key] and
+            mapps[vim.fn.keytrans(key)].callback==M.funcs[key] then
+            vim.keymap.del(mode,vim.fn.keytrans(key),{})
             if old_map then vim.fn.mapset(mode,false,old_map) end
         end
     end
@@ -177,8 +177,8 @@ function M.init_mapped(mapped,mode)
     M.map[mode]={}
     for key,opts in pairs(mapped) do
         local mapkey=utils.keycode(key)
+        M.map[mode][mapkey]=mapps[mapkey] or false
         if not vim.tbl_contains(M.dont_map,mapkey) then
-            M.map[mode][mapkey]=mapps[mapkey] or false
             vim.keymap.set(mode,key,M.get_run(mapkey),{noremap=true,expr=true,desc=vim.fn.join(opts.desc,'\n\t\t '),replace_keycodes=false})
         end
     end
