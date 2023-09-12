@@ -8,7 +8,7 @@ local default=require'ultimate-autopair.profile.default.utils'
 local open_pair=require'ultimate-autopair.profile.default.utils.open_pair'
 local utils=require'ultimate-autopair.utils'
 ---@param o core.o
----@param m prof.def.m.pair
+---@param m prof.def.m.end_pair
 function M.check(o,m)
     local pconf=m.conf
     ---@cast pconf ext.suround.pconf
@@ -32,7 +32,7 @@ end
 ---@param _ prof.def.ext
 function M.call(m,_)
     if not default.get_type_opt(m,{'start'}) then return end
-    ---@cast m prof.def.m.pair
+    ---@cast m prof.def.m.end_pair
     local check=m.check
     m.check=function (o)
         local ret=M.check(o,m)

@@ -1,7 +1,11 @@
+---@class prof.def.m.pairae:prof.def.m.ambiguou_end_pair
+---@field fn prof.def.m.pairae.fn
+
 local default=require'ultimate-autopair.profile.default.utils'
 local utils=require'ultimate-autopair.utils'
 local open_pair=require'ultimate-autopair.profile.default.utils.open_pair'
 local M={}
+---@class prof.def.m.pairae.fn
 M.fn={
     can_check=function(m,o)
         if not m.fn.can_check_pre(o) then return end
@@ -18,7 +22,7 @@ M.fn={
         return opab,opabr
     end,
 }
----@param m prof.def.m.pair
+---@param m prof.def.m.pairae
 ---@return core.check-fn
 function M.check_wrapp(m)
     return function(o)
@@ -26,7 +30,7 @@ function M.check_wrapp(m)
         return utils.create_act({{'l',#m.pair}})
     end
 end
----@param m prof.def.m.pair
+---@param m prof.def.m.pairae
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapp(m)
     return function (o)
@@ -41,7 +45,7 @@ function M.backspace_wrapp(m)
     end
 end
 ---@param q prof.def.q
----@return prof.def.m.pair
+---@return prof.def.m.pairae
 function M.init(q)
     local m={}
     m.start_pair=q.start_pair

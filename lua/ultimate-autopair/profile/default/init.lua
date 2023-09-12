@@ -11,8 +11,13 @@
 ---@field conf prof.def.conf.pair
 ---@field mconf prof.def.conf
 ---@field multiline boolean
----@field start_m? prof.def.m.pair
----@field end_m? prof.def.m.pair
+---@field start_m? prof.def.m.start_pair?
+---@field end_m? prof.def.m.end_pair?
+---@class prof.def.m.start_pair:prof.def.m.pair
+---@class prof.def.m.end_pair:prof.def.m.pair
+---@class prof.def.m.ambiguou_start_pair:prof.def.m.start_pair
+---@class prof.def.m.ambiguou_end_pair:prof.def.m.end_pair
+---@alias prof.def.m.ambiguou_pair prof.def.m.ambiguou_end_pair|prof.def.m.ambiguou_start_pair
 ---@class prof.def.m.map:prof.def.module
 ---@field map string|string[]
 ---@field cmap string|string[]

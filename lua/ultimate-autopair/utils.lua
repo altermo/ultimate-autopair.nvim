@@ -48,6 +48,7 @@ end
 ---@param complex boolean?
 ---@return string
 function M.getmode(complex)
+---@diagnostic disable-next-line: redundant-parameter
     return vim.fn.mode(complex) --[[@as string]]
 end
 ---@return number

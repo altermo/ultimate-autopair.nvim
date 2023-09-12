@@ -1,7 +1,11 @@
+---@class prof.def.m.paire:prof.def.m.end_pair
+---@field fn prof.def.m.paire.fn
+
 local default=require'ultimate-autopair.profile.default.utils'
 local utils=require'ultimate-autopair.utils'
 local open_pair=require'ultimate-autopair.profile.default.utils.open_pair'
 local M={}
+---@class prof.def.m.paire.fn
 M.fn={
     can_check=function (m,o)
         if not m.fn.can_check_pre(o) then return end
@@ -19,7 +23,7 @@ M.fn={
         return o.line:sub(o.col,o.col-1+#m.pair)==m.pair
     end
 }
----@param m prof.def.m.pair
+---@param m prof.def.m.paire
 ---@return core.check-fn
 function M.check_wrapp(m)
     return function (o)
@@ -27,7 +31,7 @@ function M.check_wrapp(m)
         return utils.create_act({{'l',#m.pair}})
     end
 end
----@param m prof.def.m.pair
+---@param m prof.def.m.paire
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapp(m)
     return function (o)
@@ -41,7 +45,7 @@ function M.backspace_wrapp(m)
         end
     end
 end
----@param m prof.def.m.pair
+---@param m prof.def.m.paire
 ---@return prof.def.map.cr.fn
 function M.newline_wrapp(m)
     return function (o)
@@ -60,7 +64,7 @@ function M.newline_wrapp(m)
     end
 end
 ---@param q prof.def.q
----@return prof.def.m.pair
+---@return prof.def.m.end_pair
 function M.init(q)
     local m={}
     m.start_pair=q.start_pair

@@ -3,7 +3,7 @@ local M={}
 M.I={match=function (str,line)
     return str==line:sub(1,#str)
 end}
----@param pair prof.def.m.pair
+---@param pair prof.def.m.start_pair
 ---@param o core.o
 ---@param col number
 ---@param gotostart "both"|boolean?
@@ -67,7 +67,7 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     end
     return (not ret_pos) and count
 end
----@param pair prof.def.m.pair
+---@param pair prof.def.m.end_pair
 ---@param o core.o
 ---@param col number
 ---@param gotoend "both"|boolean?
@@ -130,7 +130,7 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
     end
     return (not ret_pos) and count
 end
----@param pair prof.def.m.pair
+---@param pair prof.def.m.ambiguou_pair
 ---@param o core.o
 ---@param col number?
 ---@param gotoend "both"|boolean?
@@ -180,7 +180,7 @@ function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
     return index,rowindex
 end
 
----@param pair prof.def.m.pair
+---@param pair prof.def.m.end_pair
 ---@param o core.o
 ---@param col number
 ---@return number|false
@@ -189,7 +189,7 @@ function M.open_end_pair_after(pair,o,col)
     local count=M.count_end_pair(pair,o,col-1)
     return M.count_end_pair(pair,o,col,true,count+1,true)
 end
----@param pair prof.def.m.pair
+---@param pair prof.def.m.start_pair
 ---@param o core.o
 ---@param col number
 ---@return number|false
@@ -198,7 +198,7 @@ function M.open_start_pair_before(pair,o,col)
     local count=M.count_start_pair(pair,o,col)
     return M.count_start_pair(pair,o,col-1,true,count+1,true)
 end
----@param pair prof.def.m.pair
+---@param pair prof.def.m.ambiguou_pair
 ---@param o core.o
 ---@param _ number?
 ---@return number?
@@ -206,7 +206,7 @@ end
 function M.open_pair_ambiguous(pair,o,_)
     return M.count_ambiguous_pair(pair,o,nil,'both')
 end
----@param pair prof.def.m.pair
+---@param pair prof.def.m.ambiguou_pair
 ---@param o core.o
 ---@param col number
 ---@return boolean?
@@ -215,7 +215,7 @@ function M.open_pair_ambiguous_before_and_after(pair,o,col)
     local end_count=M.count_ambiguous_pair(pair,o,col,true,count)
     return count==1 and not end_count
 end
----@param pair prof.def.m.pair
+---@param pair prof.def.m.ambiguou_pair
 ---@param o core.o
 ---@param col number
 ---@return boolean?
