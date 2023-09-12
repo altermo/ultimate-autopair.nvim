@@ -40,18 +40,13 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
         end
         while #line>i-1 do
             local lline=rline:sub(i)
-            local k
-            if (not gotostart) and rrow==row then
-                k=#o.lines[rrow]-i
-            else
-                k=#line-i+1
-            end
+            local k=(not gotostart) and rrow==row and #o.lines[rrow]-i+1 or #line-i+1
             if M.I.match(start_pair,lline) then
-                if sfilter(rrow,k) then count=count-1 end
+                if sfilter(rrow,k-#start_pair+1) then count=count-1 end
                 i=i+#start_pair
                 next_start_pair=rline:find(start_pair,i,true)
             elseif M.I.match(end_pair,lline) then
-                if efilter(rrow,k) then count=count+1 end
+                if efilter(rrow,k-#end_pair+1) then count=count+1 end
                 i=i+#end_pair
                 next_end_pair=rline:find(end_pair,i,true)
             else
@@ -64,7 +59,7 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
                 end
             end
             if ret_pos and count<=0 then
-                return #line-i+1+#start_pair+((not gotostart) and rrow==row and col or 0),rrow
+                return k,rrow
             elseif count<0 then
                 count=0
             end
