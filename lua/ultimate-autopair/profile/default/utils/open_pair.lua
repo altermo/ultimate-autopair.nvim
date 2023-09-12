@@ -40,7 +40,7 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
         end
         while #line>i-1 do
             local lline=rline:sub(i)
-            local k=i-(rrow==row and #o.lines[rrow]-#rline or 0)
+            local k=i-(rrow==row and #o.lines[rrow]-#rline or 1)
             if M.I.match(start_pair,lline) then
                 if sfilter(rrow,#rline-k) then count=count-1 end
                 i=i+#start_pair
