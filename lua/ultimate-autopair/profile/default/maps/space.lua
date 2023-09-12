@@ -23,9 +23,10 @@ function M.space(o,m)
         return pair.conf.space
     end)[1]
     if not prev_pair then return end
-    if not o.incmd
-        and (conf.check_box_ft==true or vim.tbl_contains(conf.check_box_ft or {},utils.getsmartft(o)))
+    if (conf.check_box_ft==true or vim.tbl_contains(conf.check_box_ft or {},utils.getsmartft(o)))
         and vim.regex([=[\v^\s*([+*-]|(\d+\.))\s\[\]$]=]):match_str(o.line:sub(1,o.col)) then return end
+    if (conf._check_box_ft2==true or vim.tbl_contains(conf._check_box_ft2 or {},utils.getsmartft(o)))
+        and vim.regex([=[\v^\s*([+*-]|(\d+\.))\s\(\)$]=]):match_str(o.line:sub(1,o.col)) then return end
     local index,rindex=prev_pair.fn.find_corresponding_pair(o,pcol-#prev_pair.start_pair)
     if not index then return end
     if rindex~=o.row then return end

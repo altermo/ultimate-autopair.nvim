@@ -48,7 +48,8 @@ M.conf={
     enable=true,
     map=' ', --string or table
     cmap=' ', --string or table
-    check_box_ft={'markdown','vimwiki'},
+    check_box_ft={'markdown','vimwiki','org'},
+    _check_box_ft2={'norg'}, --may be removed
     --+ [|] > space > + [ ]
     conf={},
     --contains extension config
