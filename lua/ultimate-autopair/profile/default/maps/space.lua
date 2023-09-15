@@ -9,16 +9,9 @@ local M={}
 ---@return string?
 function M.space(o,m)
     local conf=m.iconf
-    local pcol
-    local total=0
-    for i=o.col-1,1,-1 do
-        if o.line:sub(i,i)~=' ' then
-            pcol=i+1
-            break
-        end
-        total=total+1
-    end
+    local pcol=#o.line-o.line:reverse():find('[^ ]',#o.line-o.col+2)+2
     if not pcol then return end
+    local total=o.col-pcol
     local prev_pair=default.get_pairs_by_pos(o,pcol,'start',false,function(pair)
         return pair.conf.space
     end)[1]
@@ -50,13 +43,7 @@ end
 function M.backspace(o,_,conf)
     if not conf.space then return end
     if o.line:sub(o.col-1,o.col-1)~=' ' then return end
-    local newcol
-    for i=o.col-2,1,-1 do
-        if o.line:sub(i,i)~=' ' then
-            newcol=i+1
-            break
-        end
-    end
+    local newcol=#o.line-o.line:reverse():find('[^ ]',#o.line-o.col+2)+2
     if not newcol then return end
     local prev_pair=default.get_pairs_by_pos(o,newcol,'start',false,function(pair)
         return pair.conf.space

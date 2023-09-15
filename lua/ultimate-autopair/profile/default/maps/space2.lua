@@ -8,16 +8,9 @@ local M={}
 ---@param _ prof.def.m.map
 ---@param o core.o
 function M.space2(_,o)
-    local total=0
-    local pcol
-    for i=o.col-1,1,-1 do
-        if o.line:sub(i,i)~=' ' then
-            pcol=i+1
-            break
-        end
-        total=total+1
-    end
+    local pcol=#o.line-o.line:reverse():find('[^ ]',#o.line-o.col+2)+2
     if not pcol then return end
+    local total=o.col-pcol
     local prev_pair=default.get_pairs_by_pos(o,pcol,'start',false,function(pair)
         return pair.conf.space
     end)[1]
