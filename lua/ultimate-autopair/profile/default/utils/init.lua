@@ -69,7 +69,7 @@ end
 function M.extend_pair_check_with_map_check(m,q,filter)
     local check=m.check
     m.check=function (o)
-        if (o.key~=m.key or not ((o.mode=='c' and q.cmap) or (o.mode=='i' and q.map))) or not (not filter or filter(o)) then return end
+        if ((o.key~=m.key and o.key~='') or not ((o.mode=='c' and q.cmap) or (o.mode=='i' and q.map))) or not (not filter or filter(o)) then return end
         return check(o)
     end
 end
@@ -86,8 +86,8 @@ function M.extend_map_check_with_map_check(m,filter)
     local check=m.check
     m.check=function (o)
         if not (not filter or filter(o)) then return end
-        if not ((o.mode=='c' and vim.tbl_contains(keyc,o.key))
-            or (o.mode=='i' and vim.tbl_contains(map,o.key))) then
+        if not ((o.mode=='c' and (vim.tbl_contains(keyc,o.key) or o.key==''))
+            or (o.mode=='i' and (vim.tbl_contains(map,o.key) or o.key==''))) then
             return
         end
         return check(o)
