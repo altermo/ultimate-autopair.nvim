@@ -104,14 +104,19 @@ function M.run(key)
     return key
 end
 ---@param key string
----@return function
+---@return string
 function M.get_run(key)
     if not M.funcs[key] then
         M.funcs[key]=function ()
             return M.run(key)
         end
     end
-    return M.funcs[key]
+    return 'v:lua.'..M.global_name..'.run_run("'..vim.fn.escape(key,[[\\"]])..'")'
+end
+---@param key string
+---@return string
+function M.run_run(key)
+    return M.funcs[key]()
 end
 ---@param mode string
 function M.delete_mem_map(mode)
@@ -189,4 +194,6 @@ function M.init()
     end
     M.init_mem_oinits()
 end
+M.global_name='_'..vim.fn.rand()..'_ULTIMATE_AUTOPAIR_CORE'
+_G[M.global_name]=M
 return M
