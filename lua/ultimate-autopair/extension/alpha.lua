@@ -65,6 +65,18 @@ function M.check(o,m,ext,incheck)
         end
     end
 end
+---@param o core.o
+---@param m prof.def.module
+---@param ext prof.def.ext
+---@param incheck boolean?
+---@return boolean?
+function M.check_change_iskeyword(o,m,ext,incheck)
+    local savekeyword=vim.o.iskeyword
+    vim.o.iskeyword=vim.filetype.get_option(utils.getsmartft(o),'iskeyword')
+    local ret=M.check(o,m,ext,incheck)
+    vim.o.iskeyword=savekeyword
+    return ret
+end
 ---@param m prof.def.module
 ---@param ext prof.def.ext
 function M.call(m,ext)
@@ -73,7 +85,7 @@ function M.call(m,ext)
     if not default.get_type_opt(m,conf.all and 'charins' or 'start') then return end
     local check=m.check
     m.check=function(o)
-        if M.check(o,m,ext,true) then return end
+        if M.check_change_iskeyword(o,m,ext,true) then return end
         return check(o)
     end
     if type(conf.filter)~='function' and not conf.filter then return end
@@ -82,7 +94,7 @@ function M.call(m,ext)
         if type(conf.filter)=='function' and not conf.filter(o,m,false) then
             return filter(o)
         end
-        if M.check(o,m,ext) then return end
+        if M.check_change_iskeyword(o,m,ext) then return end
         return filter(o)
     end
 end
