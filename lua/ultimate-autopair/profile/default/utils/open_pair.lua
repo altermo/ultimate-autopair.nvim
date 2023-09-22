@@ -157,22 +157,20 @@ function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
     for rrow,line in ipairs(lines) do
         rrow=(pair.multiline and gotoend==true and row-1 or 0)+(rrow+(pair.multiline and 0 or row-1))
         if not rrow==row then assert(o.lines[pair.multiline and rrow or row]==line) end
-        local i=1
-        while i<=#line do
-            local lline=line:sub(i)
+        local i=0
+        while true do
+            ---@diagnostic disable-next-line: cast-local-type
+            i=line:find(spair,i+1,true)
+            if not i then break end
             local k=i+(gotoend==true and rrow==row and col-1 or 0)
-            if M.I.match(spair,lline) and
-                ((count%2==1 and efilter(rrow,k)) or
+            if ((count%2==1 and efilter(rrow,k)) or
                 (count%2==0 and sfilter(rrow,k))) then
                 count=count+1
                 if not gotoend or not index then
                     index=k
                     rowindex=rrow
                 end
-                i=i+#spair
-            else
-                local i1=line:find(spair,i+1,true)
-                i=i1 and i1 or #line+1
+                i=i+#spair-1
             end
         end
     end
