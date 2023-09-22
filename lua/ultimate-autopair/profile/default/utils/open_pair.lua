@@ -28,36 +28,22 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
         rrow=(pair.multiline and gotostart==true and row+1 or #o.lines+1)-rrow
         if not rrow==row then assert(o.lines[pair.multiline and rrow or row]==line) end
         local i=1
+        local k
         local rline=line:reverse()
         local next_start_pair=rline:find(start_pair,i,true)
         local next_end_pair=rline:find(end_pair,i,true)
-        if next_start_pair and ((not next_end_pair) or next_start_pair<=next_end_pair) then
-            i=next_start_pair
-        elseif next_end_pair and ((not next_end_pair) or next_end_pair<=next_end_pair) then
-            i=next_end_pair
-        else
-            i=#line+1
-        end
-        while #line>i-1 do
-            local lline=rline:sub(i)
-            local k=(not gotostart) and rrow==row and #o.lines[rrow]-i+1 or #line-i+1
-            if M.I.match(start_pair,lline) then
+        while true do
+            if next_start_pair and ((not next_end_pair) or next_start_pair<next_end_pair) then
+                i=next_start_pair+#start_pair
+                k=((not gotostart) and rrow==row and #o.lines[rrow] or #line)-next_start_pair+1
                 if sfilter(rrow,k-#start_pair+1) then count=count-1 end
-                i=i+#start_pair
                 next_start_pair=rline:find(start_pair,i,true)
-            elseif M.I.match(end_pair,lline) then
+            elseif next_end_pair then
+                i=next_end_pair+#end_pair
+                k=((not gotostart) and rrow==row and #o.lines[rrow] or #line)-next_end_pair+1
                 if efilter(rrow,k-#end_pair+1) then count=count+1 end
-                i=i+#end_pair
                 next_end_pair=rline:find(end_pair,i,true)
-            else
-                if next_start_pair and ((not next_end_pair) or next_start_pair<=next_end_pair) then
-                    i=next_start_pair
-                elseif next_end_pair and ((not next_end_pair) or next_end_pair<=next_end_pair) then
-                    i=next_end_pair
-                else
-                    i=#line+1
-                end
-            end
+            else break end
             if ret_pos and count<=0 then
                 return k,rrow
             elseif count<0 then
