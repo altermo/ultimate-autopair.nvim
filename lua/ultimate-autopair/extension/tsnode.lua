@@ -2,7 +2,7 @@
 ---@class ext.tsnode.conf:prof.def.ext.conf
 ---@field separate string[]|fun(...:prof.def.optfn):string[]
 ---@class ext.tsnode.save
----@field _skip? string[]
+---@field _skip? string[]|false
 ---@field in_node? TSNode
 ---@field srow? number
 ---@field erow? number
@@ -129,7 +129,7 @@ function M.call(m,ext)
     local filter=m.filter
     m.filter=function(o)
         local save=M.get_save(o)
-        if M.filter(o,save,conf,m) then
+        if save._skip==false or M.filter(o,save,conf,m) then
             return filter(o)
         end
     end

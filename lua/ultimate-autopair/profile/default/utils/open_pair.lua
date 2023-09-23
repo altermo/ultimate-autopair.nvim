@@ -1,5 +1,6 @@
 local utils=require'ultimate-autopair.utils'
 local M={}
+---TODO: DEAD CODE
 M.I={match=function (str,line)
     return str==line:sub(1,#str)
 end}

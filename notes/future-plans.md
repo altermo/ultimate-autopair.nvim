@@ -10,6 +10,9 @@ Make use of treesitter everywhere, such as:
 Make using extensions better, such as:
 + Pair specific extensions
 + extensions with their own config. (like disable ext.alpha in filetype lua)
++ make it easier to hook extensions to non config maps:
+    + like tsnode with matchpair higlight
+        + also requires general api for working for both normal and insert mode
 
 # Maybe in the future versions
 
