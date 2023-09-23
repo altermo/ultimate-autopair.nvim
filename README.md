@@ -4,29 +4,9 @@
 
 For development version, check out [development](https://github.com/altermo/ultimate-autopair.nvim/tree/development)\
 Requires **neovim 0.9** (for older versions of neovim, check previous versions of plugin)\
-For many features, including string filtering, requires **treesitter**.\
-:exclamation: If your coming  from `v0.5.3` and want to update: remove the plugin totally and reinstall.\
-
+For many features, including string filtering, requires **treesitter**.
 
 For new users, check out starter documentation (`:help ultimate-autopair`)
-## changelog of version 0.6.0
-<details open=true><summary><b>BREAKING CHANGES</b></summary>
-
-If your coming from a previous version with broken config, check out [Q&A](./Q&A.md) first
-+ `string` extension got removed in favour of `tsnode` string node detection
-+ `rule` extension got removed in favour of new extension `cond`
-+ `sub` extension got removed until a better solution can be found
-</details><details><summary><b>Major new features</b></summary>
-
-+ New extension `cond`: create conditions
-+ You can now use multiline
-+ `tabout` was moved from experimental to default (requires manual enable)
-</details><details><summary><b>Major code improvements</b></summary>
-
-+ Tests now run over 1000% faster
-+ Most things are type-hinted
-</details>
-
 ## Installation
 <details open=true><summary><b>Packer</b></summary>
 
