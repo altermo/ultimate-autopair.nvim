@@ -1,5 +1,5 @@
 **:exclamation: Ultimate-autopair is currently in the _alpha_ stage of development. Some aspects may change or break, and documentation might occasionally be inaccurate.**
-# Ultimate-autopair.nvim 0.6.0
+# Ultimate-autopair.nvim 0.6.1
 [Ultimate-autopair](https://github.com/altermo/ultimate-autopair.nvim) plugin aims to always work as you expect, while making it relatively easy to configure. It has many features which other auto-pairing plugins lack: like multiline support, string/escape filtering and more. It is fully tested and has good docs.
 
 For development version, check out [development](https://github.com/altermo/ultimate-autopair.nvim/tree/development)\
