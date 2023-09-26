@@ -1,4 +1,5 @@
 ---@class prof.map.module:core.module
+---@field filter core.filter-fn
 ---@field mode string[]
 ---@field lhs string
 ---@field rhs string
