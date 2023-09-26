@@ -111,11 +111,12 @@ function M.init_fns(module,fns)
     end,fns)
 end
 ---@param conf string[]|string
+---@param o? core.o
 ---@return prof.def.module[]
-function M.filter_for_opt(conf)
+function M.filter_for_opt(conf,o)
     if type(conf)=='string' then conf={conf} end
     local core=require'ultimate-autopair.core'
-    return vim.tbl_filter(function (v) return M.get_type_opt(v,conf) end,core.mem)
+    return vim.tbl_filter(function (v) return M.get_type_opt(v,conf) end,(o and o.__core_mem and o.__core_mem()) or core.mem)
 end
 ---@param m prof.def.module
 ---@param extensions prof.def.ext[]
@@ -164,7 +165,7 @@ end
 function M.get_pairs_by_pos(o,col,type,next,filter,nofilter)
     type=type or 'pair'
     local ret={}
-    for _,i in ipairs(M.filter_for_opt(type)) do
+    for _,i in ipairs(M.filter_for_opt(type,o)) do
         ---@cast i prof.def.m.pair
         if ((not next and i.pair==o.line:sub(col-#i.pair,col-1)) or
             (next and i.pair==o.line:sub(col,col+#i.pair-1))) and

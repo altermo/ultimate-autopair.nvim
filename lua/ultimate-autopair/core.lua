@@ -13,6 +13,7 @@
 ---@field mode string
 ---@field save table --S*
 ---@field inoinit boolean? --C
+---@field __core_mem? fun():core.module[]
 ---@class core.module
 ---@field get_map? core.get_map-fn
 ---@field oinit? core.oinit-fn
@@ -88,6 +89,7 @@ function M.run(key)
         return M.I.activate_iabbrev(key)
     end
     local o=M.get_o_value(key)
+    o.__core_mem=function () return M.mem end
     for _,v in ipairs(M.mem) do
         if v.check then
             ---@type string?
