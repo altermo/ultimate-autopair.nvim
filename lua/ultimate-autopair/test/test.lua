@@ -20,6 +20,8 @@ return {
         {'(|)',')','()|',{c={config_internal_pairs={{'(',')',disable_start=true}}}}},
         {'|','"','"|',{c={config_internal_pairs={{'"','"',disable_start=true}}}}},
         {'"|"','"','""|""',{c={config_internal_pairs={{'"','"',disable_end=true}}}}},
+        {'|','*','*|*',{c={{'*','*'},{'**','**'}}}},
+        {'*|*','*','**|**',{c={{'*','*'},{'**','**'}}}},
     },
     SKIP_interactive={
         {'|','a(..','(((|)))',{interactive=true}},
