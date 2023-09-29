@@ -54,6 +54,7 @@ function M.def_pair_sort(a,b)
     if not (M.get_type_opt(a,'pair') and M.get_type_opt(b,'pair')) then return end
     ---@cast a prof.def.m.pair
     ---@cast b prof.def.m.pair
+    if #a.pair~=#b.pair then return #a.pair>#b.pair end
     if M.get_type_opt(a,'start')
         and M.get_type_opt(b,'end') then
         return false
@@ -61,7 +62,6 @@ function M.def_pair_sort(a,b)
         and M.get_type_opt(b,'start') then
         return true
     end
-    if #a.pair~=#b.pair then return #a.pair>#b.pair end
 end
 ---@param m prof.def.m.pair
 ---@param q prof.def.q
