@@ -13,6 +13,7 @@ end}
 ---@return false|number
 ---@return number?
 function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
+    --TODO(fix): if gotostart=='both' and cursor in pair then dont count pair
     local start_pair=pair.start_pair:reverse()
     local end_pair=pair.end_pair:reverse()
     local count=Icount or 0
@@ -63,6 +64,7 @@ end
 ---@return false|number
 ---@return number?
 function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
+    --TODO(fix): if gotostart=='both' and cursor in pair then dont count pair
     local start_pair=pair.start_pair
     local end_pair=pair.end_pair
     local count=Icount or 0
@@ -136,7 +138,8 @@ function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
             if not pos then break end
             local k=pos+(gotoend==true and rrow==row and col-1 or 0)
             if ((count%2==1 and efilter(rrow,k)) or
-                (count%2==0 and sfilter(rrow,k))) then
+                (count%2==0 and sfilter(rrow,k))) and
+                (k>=o.col or k<=o.col-#spair or row~=rrow) then
                 count=count+1
                 if not gotoend or not index then
                     index=k
