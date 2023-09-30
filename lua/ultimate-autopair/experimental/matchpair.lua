@@ -18,8 +18,8 @@ function M.wrapp_highlight_callback(m)
             local o=core.get_o_value('')
             local row,col=M.find_corresponding_pair_under_curosr(o)
             if not row then return end
-            vim.highlight.range(0,m.ns,'Visual',{o.row-1,o.col-1},{o.row-1,o.col})
-            vim.highlight.range(0,m.ns,'Visual',{row-1,col-1},{row-1,col})
+            vim.highlight.range(0,m.ns,'MatchParen',{o.row-1,o.col-1},{o.row-1,o.col})
+            vim.highlight.range(0,m.ns,'MatchParen',{row-1,col-1},{row-1,col})
         end)
     end
 end
