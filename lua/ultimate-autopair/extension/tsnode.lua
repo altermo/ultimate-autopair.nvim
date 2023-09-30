@@ -9,8 +9,8 @@
 ---@field scol? number
 ---@field ecol? number
 ---@field in_tree? boolean
----@field prev_node_ecol? number
----@field prev_node_erow? number
+----@field prev_node_ecol? number
+----@field prev_node_erow? number
 
 local utils=require'ultimate-autopair.utils'
 local default=require'ultimate-autopair.profile.default.utils'
@@ -91,9 +91,10 @@ function M.filter(o,save,conf,m)
         if o.row==save.srow and o.col<save.scol then return end
         if o.row==save.erow and o.col>save.ecol then return end
     end
-    if save.prev_node_ecol and ((o.col<save.prev_node_ecol and o.row==save.prev_node_erow) or o.row<save.prev_node_erow) then
-        return
-    end
+    --TODO: fix
+    --if save.prev_node_ecol and ((o.col<save.prev_node_ecol and o.row==save.prev_node_erow) or o.row<save.prev_node_erow) then
+        --return
+    --end
     local node=M._in_tsnode(o,default.orof(conf.separate,o,m))
     local root
     if node and not save.in_node then
@@ -117,8 +118,8 @@ function M.filter(o,save,conf,m)
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --HACK
         if vim.tbl_contains({'string','raw_string'},node:type()) and srow==o.row and scol==o.col then return true end --HACK
-        save.prev_node_ecol=ecol
-        save.prev_node_erow=erow
+        --save.prev_node_ecol=ecol
+        --save.prev_node_erow=erow
         return
     end
     return true
