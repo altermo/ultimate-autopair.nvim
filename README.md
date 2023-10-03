@@ -1,4 +1,4 @@
-**:exclamation: Ultimate-autopair is currently in the _alpha_ stage of development. Some aspects may change or break, and documentation might occasionally be inaccurate.**
+**:exclamation: Ultimate-autopair is currently in the _beta_ stage of development. [version system](https://github.com/altermo/ultimate-autopair.nvim/blob/v0.6/CONTRIBUTING.md#version).**
 # Ultimate-autopair.nvim 0.6.1
 [Ultimate-autopair](https://github.com/altermo/ultimate-autopair.nvim) plugin aims to always work as you expect, while making it relatively easy to configure. It has many features which other auto-pairing plugins lack: like multiline support, string/escape filtering and more. It is fully tested and has good docs.
 
@@ -14,7 +14,7 @@ For new users, check out starter documentation (`:help ultimate-autopair`)
 use{
     'altermo/ultimate-autopair.nvim',
     event={'InsertEnter','CmdlineEnter'},
-    branch='v0.6',
+    branch='v0.6', --recomended as each new version will have breaking changes
     config=function ()
         require('ultimate-autopair').setup({
                 --Config goes here
@@ -28,7 +28,7 @@ use{
 {
     'altermo/ultimate-autopair.nvim',
     event={'InsertEnter','CmdlineEnter'},
-    branch='v0.6',
+    branch='v0.6', --recomended as each new version will have breaking changes
     opts={
         --Config goes here
     },
