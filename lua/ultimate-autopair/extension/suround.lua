@@ -20,12 +20,12 @@ function M.check(o,m)
     if not m.fn.can_check_pre(o) then return end
     if open_pair.open_end_pair_after(m,o,o.col-#m.pair+1) then return end
     return utils.create_act({
-        m.pair:sub(-1),
         {'j',rindex-o.row},{'home'},
-        {'l',index+#pair.end_pair},
+        {'l',index+#pair.end_pair-1},
         m.end_pair,
         {'k',rindex-o.row},{'home'},
-        {'l',o.col}
+        {'l',o.col-1},
+        m.pair:sub(-1),
     })
 end
 ---@param m prof.def.module
