@@ -93,7 +93,7 @@ function M.run(key)
     for _,v in ipairs(M.mem) do
         if v.check then
             ---@type string?
-            local ret=debug.run(v.check,{info=v,args={vim.deepcopy(o)}})
+            local ret=debug.run(v.check,{info=v,args={setmetatable({save={}},{__index=o})}})
             if ret then
                 if o.mode=='c' or o.mode=='i' then return M.I.activate_iabbrev(ret) end
                 return ret
