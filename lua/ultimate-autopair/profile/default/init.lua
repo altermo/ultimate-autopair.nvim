@@ -199,9 +199,8 @@ function M.init_map(map_name,mem,confs,mconf,ext)
     if confs and not confs.multi then confs={confs} end
     for _,conf in ipairs(confs or {}) do
         local map=require('ultimate-autopair.profile.default.maps.'..map_name)
-        conf=vim.tbl_extend('keep',conf,confs)
         if map.init then
-            for _,module in pairs({map.init(conf,mconf,ext)}) do
+            for _,module in pairs({map.init(setmetatable(conf,{__index=confs}),mconf,ext)}) do
                 table.insert(mem,module)
             end
         end
