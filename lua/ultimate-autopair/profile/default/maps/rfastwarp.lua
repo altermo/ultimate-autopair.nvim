@@ -123,7 +123,7 @@ function M.rfastwarp(o,m)
                         {'home'},
                         {'l',new_o.col-1},
                         {'sub',ret},
-                        {'k',new_o.row-o.row+(r or 0)},
+                        {'k',new_o.row-o.row-(r or 0)},
                         {'home'},
                         {'l',o.col-1},
                     })
