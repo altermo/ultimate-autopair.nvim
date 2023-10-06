@@ -75,7 +75,7 @@ function M.check_change_iskeyword(o,m,ext,incheck)
     local conf=ext.conf
     ---@cast conf ext.alpha.conf
     local savekeyword=vim.o.iskeyword
-    if conf.no_ft_iskeyword then
+    if default.orof(conf.no_ft_iskeyword,o,m,incheck) then
         vim.o.iskeyword=vim.api.nvim_get_option_value('iskeyword',{buf=vim.api.nvim_get_current_buf()})
     else
         vim.o.iskeyword=vim.filetype.get_option(utils.getsmartft(o),'iskeyword')
