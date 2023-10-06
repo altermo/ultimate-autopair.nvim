@@ -8,6 +8,7 @@
 ---@field after? string[]|boolean|fun(...:prof.def.optfn):string[]|boolean?
 ---@field all? boolean|fun(...:prof.def.optfn):boolean?
 ---@field filter? boolean|fun(...:prof.def.optfn):boolean?
+---@field no_ft_iskeyword? boolean|fun(...:prof.def.optfn):boolean?
 
 local M={}
 local utils=require'ultimate-autopair.utils'
@@ -71,8 +72,14 @@ end
 ---@param incheck boolean?
 ---@return boolean?
 function M.check_change_iskeyword(o,m,ext,incheck)
+    local conf=ext.conf
+    ---@cast conf ext.alpha.conf
     local savekeyword=vim.o.iskeyword
-    vim.o.iskeyword=vim.filetype.get_option(utils.getsmartft(o),'iskeyword')
+    if conf.no_ft_iskeyword then
+        vim.o.iskeyword=vim.api.nvim_get_option_value('iskeyword',{buf=vim.api.nvim_get_current_buf()})
+    else
+        vim.o.iskeyword=vim.filetype.get_option(utils.getsmartft(o),'iskeyword')
+    end
     local ret=M.check(o,m,ext,incheck)
     vim.o.iskeyword=savekeyword
     return ret
