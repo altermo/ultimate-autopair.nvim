@@ -24,8 +24,6 @@ function M._in_tsnode(o,nodetypes,incheck)
     --TODO fix: if incheck don't for one char after node
     ---PROBLEM: there are exceptions: comment #|
     ---SULUTION: make option to add exceptions
-    --TODO fix: node:start row is not checked agains o.row, only column
-    --TODO fix: it uses o.col, not o._coloffset(o.col) (also o._offset(o.row))
     local ssave=o.save[M._in_tsnode] or {} o.save[M._in_tsnode]=ssave
     local save=ssave[nodetypes] or {} ssave[nodetypes]=save
     if incheck then save={} end
@@ -42,7 +40,9 @@ function M._in_tsnode(o,nodetypes,incheck)
     end
     ---https://github.com/altermo/ultimate-autopair.nvim/issues/44
     --local root=node:tree():root()
-    while node:parent() and (not ql[node:type()] or (incheck and ({node:start()})[2]==o.col-1)) do
+    while node:parent() and (not ql[node:type()] or (
+        incheck and ({node:start()})[2]==o.col+o._coloffset(o.col,o.row)-1
+        and ({node:start()})[1]==o.row+o._offset(o.row)-1)) do
     --while node~root and (not ql[node:type()] or (incheck and ({node:start()})[2]==o.col-1)) do
         save[node:id()]=cache
         node=node:parent() --[[@as TSNode]]
