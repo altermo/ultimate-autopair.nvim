@@ -40,12 +40,15 @@ M.map={
 ---@param m prof.def.module
 ---@return string
 function M.get_char(char,conf,o,m)
+    local save=o.save[M.get_char] or {} o.save[M.get_char]=save
+    if save[char] then return save[char] end
     for k,v in pairs(default.orof(conf.map,o,m,true) or M.map) do
         if type(k)=='string' then
             local regex=vim.regex(k) --[[@as vim.regex]]
-            if regex:match_str(char) then return v end
+            if regex:match_str(char) then save[char]=v return v end
         end
     end
+    save[char]=M.map[true]
     return M.map[true]
 end
 ---@param col number
@@ -65,12 +68,11 @@ function M.utf8_string_and_offset(col,line,conf,o,m)
     local newcol=0
     local ncol
     for i=1,#line do
-        if vim.str_utf_end(line,i)>0 and
-            vim.str_utf_start(line,i)==0 then
-            newline=newline..M.get_char(line:sub(i),conf,o,m)
-            newcol=newcol+1
-        elseif vim.str_utf_start(line,i)==0 then
+        if offsets[newcol+1]==i and offsets[newcol+2]==i+1 then
             newline=newline..line:sub(i,i)
+            newcol=newcol+1
+        elseif offsets[newcol+1]==i then
+            newline=newline..M.get_char(line:sub(i),conf,o,m)
             newcol=newcol+1
         end
         if i==col then ncol=newcol end
