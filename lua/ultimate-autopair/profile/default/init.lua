@@ -10,7 +10,7 @@
 ---@field key string
 ---@field conf prof.def.conf.pair
 ---@field mconf prof.def.conf
----@field multiline boolean
+---@field multiline boolean|fun(...:prof.def.optfn):string[]|boolean?
 ---@field start_m? prof.def.m.start_pair?
 ---@field end_m? prof.def.m.end_pair?
 ---@class prof.def.m.start_pair:prof.def.m.pair
@@ -51,14 +51,14 @@
 ---@field close? prof.def.map.close.conf
 ---@field tabout? prof.def.map.tabout.conf
 ---@field [number]? prof.def.conf.pair
----@field multiline? boolean
+---@field multiline? boolean|fun(...:prof.def.optfn):string[]|boolean
 ---@class prof.def.conf.pair
 ---@field [1] string
 ---@field [2] string
 ---@field p? number
 ---@field cmap? boolean
 ---@field imap? boolean
----@field multiline? boolean
+---@field multiline? boolean|fun(...:prof.def.optfn):string[]|boolean
 ---@field disable_start? boolean
 ---@field disable_end? boolean
 ---@field [string] any
@@ -71,7 +71,7 @@
 ---@field cmap boolean
 ---@field map boolean
 ---@field mconf prof.def.conf
----@field multiline boolean
+---@field multiline boolean|fun(...:prof.def.optfn):string[]|boolean
 ---@class prof.def.m_type
 ---@class prof.def.pair.fn
 ---@field can_check fun(o:core.o):boolean?

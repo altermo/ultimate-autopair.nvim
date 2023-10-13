@@ -64,7 +64,7 @@ function M.backspace_wrapp(m)
         end
         if m.conf.newline==false then return end
         if o.incmd then return end
-        if not m.multiline then return end
+        if not default.orof(m.multiline,o,m,true) then return end
         if not conf.indent_ignore and 1~=o.col then return end
         local line1=o.lines[o.row-1]
         if not line1 then return end

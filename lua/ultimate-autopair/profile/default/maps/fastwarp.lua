@@ -4,7 +4,7 @@
 ---@field hopout boolean?
 ---@field rmap false?|string|string[]
 ---@field rcmap false?|string|string[]
----@field multiline boolean?
+---@field multiline boolean|fun(...:prof.def.optfn):string[]|boolean?
 ---@field nocursormove boolean?
 ---@field do_nothing_if_fail boolean?
 ---@field no_filter_nodes? string[]
@@ -59,6 +59,7 @@ function M.act.fastwarp_next_to_end_pair(o,ind,p,m)
     local pair=default.get_pairs_by_pos(o,ind,'end',true)[1]
     if not pair then return end
     if default.get_type_opt(pair,'ambiguous') then
+        ---@cast pair prof.def.m.ambiguou_pair
         if open_pair.open_pair_ambiguous_before_nor_after(pair,o,ind) then return end
     end
     return {
@@ -149,7 +150,7 @@ function M.fastwarp(o,m)
         end
     end
     local ret,r=M.fastwarp_end(new_o,p)
-    if not ret and pair.multiline and m.iconf.multiline then
+    if not ret and default.orof(pair.multiline,o,pair,false) and default.orof(m.iconf.multiline,o,m,true) then
         ret,r=M.fastwarp_line(new_o,p)
     end
     if ret then

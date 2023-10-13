@@ -1,4 +1,5 @@
 local utils=require'ultimate-autopair.utils'
+local default=require'ultimate-autopair.profile.default.utils'
 local M={}
 ---TODO: DEAD CODE
 M.I={match=function (str,line)
@@ -21,14 +22,15 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     local efilter=function(row,col_) return utils._filter_pos(pair.end_m.filter,o,col_,row) end
     local lines={o.line}
     local row=o.row
-    if pair.multiline then
+    local multiline=default.orof(pair.multiline,o,pair,nil)
+    if multiline then
         lines=vim.fn.reverse(vim.list_slice(o.lines,(not gotostart) and o.row or nil,gotostart==true and o.row or nil))
     end
     if not gotostart then lines[#lines]=lines[#lines]:sub(col) end
     if gotostart==true then lines[1]=lines[1]:sub(1,col) end
     for rrow,line in ipairs(lines)do
-        rrow=(pair.multiline and gotostart==true and row+1 or #o.lines+1)-rrow
-        if not rrow==row then assert(o.lines[pair.multiline and rrow or row]==line) end
+        rrow=(multiline and gotostart==true and row+1 or #o.lines+1)-rrow
+        if not rrow==row then assert(o.lines[multiline and rrow or row]==line) end
         local i=1
         local k
         local rline=line:reverse()
@@ -72,14 +74,15 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
     local efilter=function(row,col_) return utils._filter_pos(pair.end_m.filter,o,col_,row) end
     local lines={o.line}
     local row=o.row
-    if pair.multiline then
+    local multiline=default.orof(pair.multiline,o,pair,nil)
+    if multiline then
         lines=vim.list_slice(o.lines,gotoend==true and o.row or nil,(not gotoend) and o.row or nil)
     end
     if not gotoend then lines[#lines]=lines[#lines]:sub(1,col) end
     if gotoend==true then lines[1]=lines[1]:sub(col--[[@as number]]) end
     for rrow,line in ipairs(lines) do
-        rrow=(pair.multiline and gotoend==true and row-1 or 0)+(rrow+(pair.multiline and 0 or row-1))
-        if rrow~=row then assert(o.lines[pair.multiline and rrow or row]==line) end
+        rrow=(multiline and gotoend==true and row-1 or 0)+(rrow+(multiline and 0 or row-1))
+        if rrow~=row then assert(o.lines[multiline and rrow or row]==line) end
         local i=1 --(gotoend==true and rrow==row and col) or 1
         local k
         local next_start_pair=line:find(start_pair,i,true)
@@ -124,14 +127,15 @@ function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
     local rowindex
     local lines={o.line}
     local row=o.row
-    if pair.multiline then
+    local multiline=default.orof(pair.multiline,o,pair,nil)
+    if multiline then
         lines=vim.list_slice(o.lines,gotoend==true and o.row or nil,(not gotoend) and o.row or nil)
     end
     if not gotoend then lines[#lines]=lines[#lines]:sub(1,col) end
     if gotoend==true then lines[1]=lines[1]:sub(col--[[@as number]]) end
     for rrow,line in ipairs(lines) do
-        rrow=(pair.multiline and gotoend==true and row-1 or 0)+(rrow+(pair.multiline and 0 or row-1))
-        if not rrow==row then assert(o.lines[pair.multiline and rrow or row]==line) end
+        rrow=(multiline and gotoend==true and row-1 or 0)+(rrow+(multiline and 0 or row-1))
+        if not rrow==row then assert(o.lines[multiline and rrow or row]==line) end
         local i=1
         while true do
             local pos=line:find(spair,i,true)

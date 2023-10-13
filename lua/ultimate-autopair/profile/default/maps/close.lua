@@ -24,7 +24,7 @@ function M.get_open_start_pairs(o,col,multiline)
     local pair={}
     local i=1
     while i<col do
-        local pair_start=default.get_pairs_by_pos(o,i,'start',true,multiline and function (p) return p.multiline end or nil)[1]
+        local pair_start=default.get_pairs_by_pos(o,i,'start',true,multiline and function (p) return default.orof(p.multiline,o,p,false) end or nil)[1]
         if pair_start then
             local pcol=pair_start.fn.find_corresponding_pair(o,i)
             if pcol==false then

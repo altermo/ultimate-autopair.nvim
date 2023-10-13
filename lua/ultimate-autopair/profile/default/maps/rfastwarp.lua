@@ -133,7 +133,7 @@ function M.rfastwarp(o,m)
         end
     end
     local ret,r=M.rfastwarp_start(new_o,p)
-    if not ret and pair.multiline and m.iconf.multiline then
+    if not ret and default.orof(pair.multiline,o,pair,false) and default.orof(m.iconf.multiline,o,m,true) then
         ret,r=M.rfastwarp_line(new_o,p)
     end
     if ret then
