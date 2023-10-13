@@ -41,14 +41,14 @@ M.map={
 ---@return string
 function M.get_char(char,conf,o,m)
     local save=o.save[M.get_char] or {} o.save[M.get_char]=save
-    if save[char] then return save[char] end
+    if save[char:sub(1,vim.str_utf_end(char,1))] then return save[char:sub(1,vim.str_utf_end(char,1))] end
     for k,v in pairs(default.orof(conf.map,o,m,true) or M.map) do
         if type(k)=='string' then
             local regex=vim.regex(k) --[[@as vim.regex]]
-            if regex:match_str(char) then save[char]=v return v end
+            if regex:match_str(char) then save[char:sub(1,vim.str_utf_end(char,1))]=v return v end
         end
     end
-    save[char]=M.map[true]
+    save[char:sub(1,vim.str_utf_end(char,1))]=M.map[true]
     return M.map[true]
 end
 ---@param col number
