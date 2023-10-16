@@ -124,8 +124,8 @@ end
 function M.delete_mem_map(mode)
     local mapps=M.I.get_maps(mode)
     for key,old_map in pairs(M.map[mode] or {}) do
-        if mapps[vim.fn.keytrans(key)] and M.funcs[key] and
-            mapps[vim.fn.keytrans(key)].callback==M.funcs[key] then
+        if vim.tbl_get(mapps,key,'rhs') and
+            mapps[key].rhs:sub(1,#M.global_name+#('v:lua.'))=='v:lua.'..M.global_name then
             vim.keymap.del(mode,vim.fn.keytrans(key),{})
             if old_map then vim.fn.mapset(mode,false,old_map) end
         end
