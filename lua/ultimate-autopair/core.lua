@@ -45,7 +45,7 @@ function M.I.get_maps(mode)
     local maps=vim.api.nvim_get_keymap(mode)
     local ret={}
     for _,keyinfo in ipairs(maps) do
-        ret[keyinfo.lhs]=keyinfo
+        ret[vim.fn.keytrans(keyinfo.lhsraw)]=keyinfo
     end
     return ret
 end
@@ -126,7 +126,7 @@ function M.delete_mem_map(mode)
     for key,old_map in pairs(M.map[mode] or {}) do
         if vim.tbl_get(mapps,key,'rhs') and
             mapps[key].rhs:sub(1,#M.global_name+#('v:lua.'))=='v:lua.'..M.global_name then
-            vim.keymap.del(mode,vim.fn.keytrans(key),{})
+            vim.keymap.del(mode,key,{})
             if old_map then vim.fn.mapset(mode,false,old_map) end
         end
     end
@@ -183,7 +183,7 @@ function M.init_mapped(mapped,mode)
     M.map[mode]={}
     for key,opts in pairs(mapped) do
         local mapkey=utils.keycode(key)
-        M.map[mode][mapkey]=mapps[mapkey] or false
+        M.map[mode][vim.fn.keytrans(mapkey)]=mapps[mapkey] or false
         if key~='' then
             vim.keymap.set(mode,key,M.get_run(mapkey),{noremap=true,expr=true,desc=vim.fn.join(opts.desc,'\n\t\t '),replace_keycodes=false})
         end
