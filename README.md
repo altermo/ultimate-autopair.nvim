@@ -46,7 +46,7 @@ For the default configuration, refer to the documentation (`:help ultimate-autop
 
 ### Other plugins to supercharge auto-pairing
 These are some other plugins which are related to pairing which have features that ultimate-autopair does not have.
-+ [endwise](https://github.com/RRethy/nvim-treesitter-endwise) wisely add `end` in lua, ruby, etc...
++ [endwise](https://github.com/RRethy/nvim-treesitter-endwise) wisely add `end` in lua, ruby, etc... ([#42](https://github.com/altermo/ultimate-autopair.nvim/issues/42#issuecomment-1705270248))
 + [tabout](https://github.com/abecodes/tabout.nvim) tab out of tsnode objects
 + [surround](https://github.com/kylechui/nvim-surround) delete, change surrounding parentheses and much more...
 + [autotag](https://github.com/windwp/nvim-ts-autotag) auto add html tags
