@@ -84,7 +84,7 @@ M.conf={
     do_nothing_if_fail=true,
     --add a module so that if fastwarp fails
     --then an `e` will not be inserted
-    no_filter_nodes={'string','raw_string'},
+    no_filter_nodes={'string','raw_string','string_literals','character_literal'},
     --which nodes to skip for tsnode filtering
     faster=false,
     --only enables jump over pair, goto end/next line
@@ -126,7 +126,8 @@ M.conf={
     filetype={p=90,nft={'TelescopePrompt'},tree=true},
     escape={filter=true,p=80},
     utf8={p=70},
-    tsnode={p=60,separate={'comment','string','raw_string'}},
+    tsnode={p=60,separate={'comment','string','raw_string',
+      'string_literals','character_literal','line_comment','block_comment','nesting_block_comment'}}, -- #62
     cond={p=40,filter=true},
     alpha={p=30,filter=false,all=false},
     suround={p=20},
