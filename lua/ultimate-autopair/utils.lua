@@ -131,16 +131,15 @@ end
 function M.gettsnode(o)
     --TODO: use vim.treesitter.get_string_parser for cmdline
     if o.incmd then return end
-    local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
     local save=o.save[M.gettsnode] or {} o.save[M.gettsnode]=save
     if save.no_parser then return end
+    local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
     if save[tostring(linenr)..';'..tostring(col)]~=nil then
         return save[tostring(linenr)..';'..tostring(col)] or nil
     end
-    if not pcall(vim.treesitter.get_parser,0) then
-        (save or {}).no_parser=true
-        return
-    end
+    local s,parser=pcall(vim.treesitter.get_parser)
+    if not s then save.no_parser=true return end
+    parser:parse{linenr,linenr}
     local getnode
     if vim.treesitter.get_node then
         getnode=function (linenr_,col_)
@@ -171,20 +170,18 @@ function M.getsmartft(o,notree)
     --TODO: fix for empty lines
     --TODO: use vim.treesitter.get_string_parser for cmdline
     if o.incmd then return 'vim' end
-    local cache=o.save
-    local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
     if notree then return vim.o.filetype end
+    local cache=o.save
     if not cache[M.getsmartft] then cache[M.getsmartft]={} end
     cache=cache[M.getsmartft]
     if cache.no_parser then return vim.o.filetype end
+    local linenr,col=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
     if cache[tostring(linenr)..';'..tostring(col)] then
         return cache[tostring(linenr)..';'..tostring(col)] or vim.o.filetype
     end
-    local stat,parser=pcall(vim.treesitter.get_parser,0)
-    if not stat then
-        (cache or {}).no_parser=true
-        return vim.o.filetype
-    end
+    local s,parser=pcall(vim.treesitter.get_parser)
+    if not s then cache.no_parser=true return vim.o.filetype end
+    parser:parse{linenr,linenr}
     local pos={linenr,col,linenr,col}
     local ret=parser:language_for_range(pos):lang()
     local tslang2lang={
