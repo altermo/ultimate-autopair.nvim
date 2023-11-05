@@ -27,9 +27,9 @@ end
 ---@return number?
 ---@return number?
 function M.find_corresponding_pair_under_curosr(o)
-    local tsnode=default.load_extension'tsnode'
+    --local tsnode=default.load_extension'tsnode'
     -- TODO: refactor so that this becomes unnecessary
-    o.save[tsnode.savetype]={_skip=false}
+    --o.save[tsnode.savetype]={_skip=false}
     local pair,col,row=default.get_pair_and_end_pair_pos_from_start(o,o.col,nil,function (p)
         return #p.start_pair==1 and #p.end_pair==1
     end)

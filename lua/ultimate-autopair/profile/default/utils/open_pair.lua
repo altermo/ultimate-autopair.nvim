@@ -30,7 +30,7 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     if gotostart==true then lines[1]=lines[1]:sub(1,col) end
     for rrow,line in ipairs(lines)do
         rrow=(multiline and gotostart==true and row+1 or #o.lines+1)-rrow
-        if not rrow==row then assert(o.lines[multiline and rrow or row]==line) end
+        if rrow~=row then assert(o.lines[rrow]==line) end
         local i=1
         local k
         local rline=line:reverse()
@@ -82,8 +82,8 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
     if gotoend==true then lines[1]=lines[1]:sub(col--[[@as number]]) end
     for rrow,line in ipairs(lines) do
         rrow=(multiline and gotoend==true and row-1 or 0)+(rrow+(multiline and 0 or row-1))
-        if rrow~=row then assert(o.lines[multiline and rrow or row]==line) end
-        local i=1 --(gotoend==true and rrow==row and col) or 1
+        if rrow~=row then assert(o.lines[rrow]==line) end
+        local i=1
         local k
         local next_start_pair=line:find(start_pair,i,true)
         local next_end_pair=line:find(end_pair,i,true)
@@ -119,9 +119,7 @@ end
 function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
     local spair=pair.pair
     local sfilter=function(row,col_) return utils._filter_pos(pair.start_m.filter,o,col_,row) end
-    local efilter=function(row,col_)
-        return utils._filter_pos(pair.end_m.filter,o,col_,row)
-    end
+    local efilter=function(row,col_) return utils._filter_pos(pair.end_m.filter,o,col_,row) end
     local count=Icount or 0
     local index
     local rowindex
@@ -135,7 +133,7 @@ function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
     if gotoend==true then lines[1]=lines[1]:sub(col--[[@as number]]) end
     for rrow,line in ipairs(lines) do
         rrow=(multiline and gotoend==true and row-1 or 0)+(rrow+(multiline and 0 or row-1))
-        if not rrow==row then assert(o.lines[multiline and rrow or row]==line) end
+        if rrow~=row then assert(o.lines[rrow]==line) end
         local i=1
         while true do
             local pos=line:find(spair,i,true)

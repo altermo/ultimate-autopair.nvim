@@ -84,7 +84,6 @@ end
 ---@param m prof.def.module
 ---@return boolean?
 function M.filter(o,save,conf,m)
-    --TODO: isn't save.in_node always set?
     if save.in_node then
         if o.row<save.srow then return end
         if o.row>save.erow then return end
@@ -98,6 +97,7 @@ function M.filter(o,save,conf,m)
     local node=M._in_tsnode(o,default.orof(conf.separate,o,m))
     local root
     if node and not save.in_node then
+        --TODO: isn't save.in_node always set if treesitter is available?
         local s=save[M.filter] or {} save[M.filter]=s
         if s[node:id()] then
             root=unpack(s[node:id()])

@@ -6,3 +6,4 @@
         + { '(|")")', "\1", '(|)")"', {c = {fastwarp = {filter_string = true}},ts = true} } failed, actuall result: '(|"))"'
         + { '(|")")', "\1", '(|)")"', {c = {fastwarp = {filter_string = true}},ts = true} } failed, actuall result: '(€ü\bE|")")'
         + { '(|")")', "\1", '(|)")"', {c = {fastwarp = {filter_string = true}},ts = true} } failed, actuall result: '(|")")'
++ [ ] markdown \`\`\` is incorrect on multiline \`\`|\n\`\`\` > \` > \`\`\`|\`\n\`\`\`
