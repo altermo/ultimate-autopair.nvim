@@ -126,8 +126,17 @@ M.conf={
     filetype={p=90,nft={'TelescopePrompt'},tree=true},
     escape={filter=true,p=80},
     utf8={p=70},
-    tsnode={p=60,separate={'comment','string','raw_string',
-      'string_literals','character_literal','line_comment','block_comment','nesting_block_comment'}}, -- #62
+    tsnode={p=60,separate={'comment','string','char','character',
+      'raw_string', --fish/bash/sh
+      'char_literal','string_literal', --c/cpp
+      'string_value', --css
+      'str_lit','char_lit', --clojure/commonlisp
+      'interpreted_string_literal','raw_string_literal','rune_literal', --go
+      'quoted_attribute_value', --html
+      'template_string', --javascript
+      'LINESTRING','STRINGLITERALSINGLE','CHAR_LITERAL', --zig
+      'string_literals','character_literal','line_comment','block_comment','nesting_block_comment' --d #62
+    }},
     cond={p=40,filter=true},
     alpha={p=30,filter=false,all=false},
     suround={p=20},
