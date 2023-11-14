@@ -29,7 +29,7 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     if not gotostart then lines[#lines]=lines[#lines]:sub(col) end
     if gotostart==true then lines[1]=lines[1]:sub(1,col) end
     for rrow,line in ipairs(lines)do
-        rrow=(multiline and gotostart==true and row+1 or #o.lines+1)-rrow
+        rrow=(multiline and (gotostart==true and row+1 or #o.lines+1) or row+1)-rrow
         if rrow~=row then assert(o.lines[rrow]==line) end
         local i=1
         local k
