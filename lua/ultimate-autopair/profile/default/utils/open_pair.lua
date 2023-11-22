@@ -31,22 +31,19 @@ function M.count_start_pair(pair,o,col,gotostart,Icount,ret_pos)
     for rrow,line in ipairs(lines)do
         rrow=(multiline and (gotostart==true and row+1 or #o.lines+1) or row+1)-rrow
         if rrow~=row then assert(o.lines[rrow]==line) end
-        local i=1
         local k
         local rline=line:reverse()
-        local next_start_pair=rline:find(start_pair,i,true)
-        local next_end_pair=rline:find(end_pair,i,true)
+        local next_start_pair=rline:find(start_pair,1,true)
+        local next_end_pair=rline:find(end_pair,1,true)
         while true do
             if next_start_pair and ((not next_end_pair) or next_start_pair<next_end_pair) then
-                i=next_start_pair+#start_pair
                 k=((not gotostart) and rrow==row and #o.lines[rrow] or #line)-next_start_pair+1
                 if sfilter(rrow,k-#start_pair+1) then count=count-1 end
-                next_start_pair=rline:find(start_pair,i,true)
+                next_start_pair=rline:find(start_pair,next_start_pair+#start_pair,true)
             elseif next_end_pair then
-                i=next_end_pair+#end_pair
                 k=((not gotostart) and rrow==row and #o.lines[rrow] or #line)-next_end_pair+1
                 if efilter(rrow,k-#end_pair+1) then count=count+1 end
-                next_end_pair=rline:find(end_pair,i,true)
+                next_end_pair=rline:find(end_pair,next_end_pair+#end_pair,true)
             else break end
             if ret_pos and count<=0 then
                 return k,rrow
@@ -83,21 +80,18 @@ function M.count_end_pair(pair,o,col,gotoend,Icount,ret_pos)
     for rrow,line in ipairs(lines) do
         rrow=(multiline and gotoend==true and row-1 or 0)+(rrow+(multiline and 0 or row-1))
         if rrow~=row then assert(o.lines[rrow]==line) end
-        local i=1
         local k
-        local next_start_pair=line:find(start_pair,i,true)
-        local next_end_pair=line:find(end_pair,i,true)
+        local next_start_pair=line:find(start_pair,1,true)
+        local next_end_pair=line:find(end_pair,1,true)
         while true do
             if next_start_pair and ((not next_end_pair) or next_start_pair<next_end_pair) then
                 k=next_start_pair+(gotoend==true and rrow==row and col-1 or 0)
-                i=next_start_pair+#start_pair
                 if sfilter(rrow,k) then count=count+1 end
-                next_start_pair=line:find(start_pair,i,true)
+                next_start_pair=line:find(start_pair,next_start_pair+#start_pair,true)
             elseif next_end_pair then
                 k=next_end_pair+(gotoend==true and rrow==row and col-1 or 0)
-                i=next_end_pair+#end_pair
                 if efilter(rrow,k) then count=count-1 end
-                next_end_pair=line:find(end_pair,i,true)
+                next_end_pair=line:find(end_pair,next_end_pair+#end_pair,true)
             else break end
             if ret_pos and count==0 then
                 return k,rrow
@@ -134,10 +128,8 @@ function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
     for rrow,line in ipairs(lines) do
         rrow=(multiline and gotoend==true and row-1 or 0)+(rrow+(multiline and 0 or row-1))
         if rrow~=row then assert(o.lines[rrow]==line) end
-        local i=1
-        while true do
-            local pos=line:find(spair,i,true)
-            if not pos then break end
+        local pos=line:find(spair,1,true)
+        while pos do
             local k=pos+(gotoend==true and rrow==row and col-1 or 0)
             if ((count%2==1 and efilter(rrow,k)) or
                 (count%2==0 and sfilter(rrow,k))) and
@@ -148,7 +140,7 @@ function M.count_ambiguous_pair(pair,o,col,gotoend,Icount,ret_pos)
                     rowindex=rrow
                 end
             end
-            i=pos+#spair
+            pos=line:find(spair,pos+#spair,true)
         end
     end
     if not ret_pos and count%2==0 then return end
