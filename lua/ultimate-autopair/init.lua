@@ -21,63 +21,8 @@ function M.list()
         end)
 end
 ---@param conf? prof.config
-function M._check_depreciated(conf)
-    if not conf then return end
-    local function rem(thing,alter,help)
-        local msg=('ultimate-autopair: `%s` has ben removed, pleas use `%s` instead'):format(thing,alter)
-        vim.notify(msg,vim.log.levels.WARN)
-        if help then
-            vim.notify(('For more information: %s'):format(help),vim.log.levels.WARN)
-        end
-    end
-    if vim.tbl_get(conf,'extensions','rules')~=nil then
-        rem(
-            'extension.rules',
-            'extension.cond',
-            '`:h ultimate-autopair-ext-cond` or read the `Q&A.md`'
-        )
-        return true
-    elseif vim.tbl_get(conf,'extensions','tsnode','outside')~=nil then
-        rem(
-            'extension.tsnode.outside',
-            'extension.cond',
-            '`:h ultimate-autopair-ext-cond`'
-        )
-        return true
-    elseif vim.tbl_get(conf,'extensions','tsnode','inside')~=nil then
-        rem(
-            'extension.tsnode.inside',
-            'extension.cond',
-            '`:h ultimate-autopair-ext-cond`'
-        )
-        return true
-    elseif vim.tbl_get(conf,'config_type')~=nil then
-        rem(
-            'config_type',
-            'profile',
-            '`:h ultimate-autopair-prof`'
-        )
-        return true
-    elseif vim.tbl_get(conf,'fastwarp','filter_string')~=nil then
-        rem(
-            'fastwarp.filter_string',
-            'fastwarp.no_filter_nodes',
-            '`:h ultimate-autopair-map-fastwarp-config`'
-        )
-        return true
-    elseif vim.tbl_get(conf,'extensions','cmdtype','types')~=nil then
-        rem(
-            'extensions.cmdtype.types',
-            'extensions.cmdtype.skip',
-            '`:h ultimate-autopair-ext-cmdtype`'
-        )
-        return true
-    end
-end
----@param conf? prof.config
 function M.setup(conf)
     if not M.skipversioncheck and vim.fn.has('nvim-0.9.0')~=1 then error('Requires at least version nvim-0.9.0') end
-    if M._check_depreciated(conf) then return end
     M.init({M.extend_default(conf or {})})
 end
 ---@param configs? prof.config[]
