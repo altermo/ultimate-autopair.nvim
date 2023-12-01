@@ -1,38 +1,126 @@
 *ultimate-autopair.nvim* The ultimate-autopair plugin
 ==============================================================================
-SETUP                                                *ultimate-autopair-SETUP*
+TUTORIAL                                             *ultimate-autopair-TUTOR*
 ------------------------------------------------------------------------------
-setup-system                                *ultimate-autopair-setup-system*
-Here are the list of functions which gets return by `require'ultimate-autopair'`.
- *ultimate-autopair-setup*
-`ua.setup(conf?)` checks version and runs `ua.init({ua.extend_default(conf)})`.
- *ultimate-autopair-init*
-`ua.init(confs)` (clears and) initializes the plugin with configs from `confs`.
-  {NOTE}: it doesn't check for version.
- *ultimate-autopair-clear*
-`ua.clear()` clears the mappings and autocmds.
- *ultimate-autopair-list*
-`ua.list()` list the values from mem (mem contains: pairs,mappings,autocmds)
- *ultimate-autopair-toggle*
-`ua.toggle()` toggle the maps/autocmds, does not delete.
- *ultimate-autopair-disable*
-`ua.disable()` disables the maps/autocmds, does not delete.
- *ultimate-autopair-enable*
-`ua.enable()` enables the maps/autocmds.
- *ultimate-autopair-isenabled*
-`ua.isenabled()` returns a boolean value of whether UA is enabled.
- *ultimate-autopair-extend-default*
-`ua.extend_default(conf)` extends `conf` with the default config.
+example-configuration                       *ultimate-autopair-example-config*
+{NOTE} This is only a surfice level look at the configuration.
+To configure internal pairs, use `{config_internal_pairs={'(',')',fly=false}}`
+To create a pair, use `{{'(,',')'}}`.
+To create a pair for a filetype, use `{{'(,',')',ft={ft1,ft2}}}`.
+To create a pair for a not filetype, use `{{'(,',')',nft={ft1,ft2}}}`.
+To disable a mapping, use `{space={enable=false}}`
+To disable a mapping in a filetype, use `{bs={conf={nft={ft}}}}`
 ------------------------------------------------------------------------------
-config                                              *ultimate-autopair-config*
-{NOTE}: if looking for the default config: |ultimate-autopair-default-config|
-UA has a unique and complicated configuration system: it supports multiple
-configuration at the same time, with each configuration having its own
-profile. |ultimate-autopair-prof|
-A config may be a table which must have a key called `profile` containing the
-profile, or be a function (which internally has the profile `_function`).
+quick-start                                                *ultimate-autopair*
+This is a quick guide of the plugin, it is intended for people who just want
+to use it with only a few changes.
+(Note: `UA` is an abbreviation for ultimate-autopair)
+The default setup is: >lua
+ require'ultimate-autopair'.setup{}
+< Though you can also do this: (if you later want to use multiple configs) >lua
+ local ua=require'ultimate-autopair'
+ local configs={ua.extend_default({})}
+ ua.init(configs)
+<
+It is recommended to read through the {Q&A.md} for features.
+# {Not-default-enabled-maps}
+There are many features in UA which are useful but are not enabled by
+default, these include:> lua
+< {Space2}, which is like space, but insert space if character in match inserted >lua
+ {space2={enable=true}}  --[ |] > f > [ f| ]
+< {Tabout}, which allows you to tab out of parenthesis >lua
+ {tabout={enable=true}} --[foo| bar] > <A-tab> > [foo bar|]
+< {Close}, which allows you to close open parenthesis >lua
+ {close={enable=true}} --[(| > <A-)> > [(|)]
+<
+# {Recommended-configs}
+Here is my recommendation for a config for {fastwarp}: >lua
+ {fastwarp={
+    multi=true,
+    {},
+    {faster=true,map='<C-A-e>',cmap='<C-A-e>'},
+  }}
+<
+# {Pair-creation}
+To create a simple pair, you can just add it to the config: >lua
+ {{'$','$'}}
+< To change the config of a default pair, you can use: >lua
+ {config_internal_pairs={{'(',')',suround=true}}}
+<
+Pairs may have a bunch of options, which include:
++ cmap (true): whether to enable pair in cmdline
++ imap (true): whether to enable pair in insert
++ multiline (true): whether the pair works multiline
++ p (10): the priority of the pair
++ disable_start (false): whether to disable start pair insertion
++ disable_end (end): whether to disable end pair overhop
+{Map-specific}:
++ newline (false): enable expanding on `<CR>`
++ space (false): whether to work for space
+{Extension-specific}:
++ dosuround (false): whether to surround `suround` tagged pairs
++ suround (false): tag pair as `suround`
++ fly (false): enable fly for the pair
++ ft (nil;table[string]): in filetype
++ nft (nil;table[string]): not in filetype
+# {Extensions}
+Extensions are things that extend default mappings. They are designed to work
+for all mappings (and not just pair) which come from the default profile. Each
+extension has a priority `p` which denoted in which order they should get
+loaded (higher `p`=loaded earlier).
+# {Profiles}
+Profiles are the ones that push modules to `mem`. `mem` is a table where all
+modules are stored. A module is typically a map, though in the case of
+`space2` it is an autocmd.
+# {Workings}
+A quick summary of how the plugin works.
+When initializing: the config is past to its respective profile which
+generates a module, that is then put inside `mem` and then keymaps/other are
+generated from `mem`.
+When running: each module in `mem` is checked against the input key, and if
+yes, then check will run, and if it doesn't return anything, then it continues
+to the next module in `mem`.
+==============================================================================
+INIT                                                  *ultimate-autopair-init*
+The things that are return from `require'ultimate-autopair'`
+------------------------------------------------------------------------------
+setup                                           *ultimate-autopair-init-setup*
+Arguments: `conf:table`
+Checks version and runs `ua.init({ua.extend_default(conf)})`
+------------------------------------------------------------------------------
+init                                             *ultimate-autopair-init-init*
+Arguments: `confs:table[]`
+Deletes currently defined mappings and autocmds and initializes the plugin
+with configs from `confs`.
+------------------------------------------------------------------------------
+clear                                           *ultimate-autopair-init-clear*
+Deletes currently defined mappings and autocmds.
+------------------------------------------------------------------------------
+list                                             *ultimate-autopair-init-list*
+Lists the modules using `vim.ui.select`, selecting one opens it's content.
+------------------------------------------------------------------------------
+toggle                                         *ultimate-autopair-init-toggle*
+Toggles the maps/autocmds to do nothing, doesn't delete.
+------------------------------------------------------------------------------
+enable                                         *ultimate-autopair-init-enable*
+Enables the maps/autocmds to do something.
+------------------------------------------------------------------------------
+disable                                       *ultimate-autopair-init-disable*
+Disables the maps/autocmds to do nothing, doesn't delete.
+------------------------------------------------------------------------------
+isenabled                                   *ultimate-autopair-init-isenabled*
+Returns: `boolean`
+Whether ultimate-autopair is enabled or not.
+------------------------------------------------------------------------------
+extend_default                         *ultimate-autopair-init-extend_default*
+Arguments: `conf:table?`
+Returns: `conf:table`
+Extends the default config with the given `conf` using `vim.tbl_deep_extend`.
 ==============================================================================
 PROFILE                                               *ultimate-autopair-prof*
+A profile is something that takes a config and turns it into modules.
+You can specify which config should use which profile by setting the `profile`
+key. It can be function or string.
 The built-in profiles are:
     default: The default pair profile |ultimate-autopair-prof-default|
     cond: Add condition to any profile |ultimate-autopair-prof-cond|
@@ -41,6 +129,7 @@ The built-in profiles are:
     multi: Init a list of configs |ultimate-autopair-prof-multi|
 ------------------------------------------------------------------------------
 prof-cond                                        *ultimate-autopair-prof-cond*
+Arguments: `{[number]:ua.config,rule:function,check:function}`
 The cond profile takes a list of configs and the keys `check` and or
 `filter`. If `check` is nil, `filter` is used as `check`. Inserts `check`
 and `filter` into the table of configs returning modules.
@@ -54,6 +143,7 @@ Example: >lua
  })
 ------------------------------------------------------------------------------
 prof-map                                          *ultimate-autopair-prof-map*
+Arguments: `{[number]:ua.prof.map.map}`
 The map profile takes a list of `{mode,lhs,rhs}` and creates mappings out of
 them. {NOTE}: `mode` must be in `ua.core.modes` (`i` or `c`).
 Example: >lua
@@ -64,6 +154,7 @@ Example: >lua
  })
 ------------------------------------------------------------------------------
 prof-raw                                          *ultimate-autopair-prof-raw*
+Arguments: `{[number]:ua.module}`
 The raw profile  takes a list of `modules` and directly inserts them into
 the system.
 Example: >lua
@@ -76,9 +167,9 @@ Example: >lua
      p=10,
    },
  })
-<
 ------------------------------------------------------------------------------
 prof-multi                                       *ultimate-autopair-prof-multi*
+Arguments: `{[number]:ua.config}`
 The multi profile takes a list of configs and inits them.
 Example: >lua
  table.insert(ua.configs,{
@@ -86,13 +177,13 @@ Example: >lua
      config_1,
      config_2,
  })
-<
 ------------------------------------------------------------------------------
 prof-default                                  *ultimate-autopair-prof-default*
 The default profile is the default pair profile.
 Options can be found at: |ultimate-autopair-default-config|
 ==============================================================================
 DEFAULT CONFIG                              *ultimate-autopair-default-config*
+{NOTE} About how to configure the plugin, see |ultimate-autopair-tutor-config|
 The default configuration contains a loot of options, here are those:
 >lua
  M.conf={
@@ -589,77 +680,5 @@ Todo: write documentation
 For the time being, you can look at already written profiles. I would recomend
 looking at the profiles inside `experimental/` as they are not connected to
 the main profile much and are not realy simple like the other builtin profiles.
-==============================================================================
-GUIDE                                                *ultimate-autopair-guide*
-------------------------------------------------------------------------------
-start-here                                                 *ultimate-autopair*
-This is a quick guide of the plugin, it is intended for people who just want
-to use it with only a few changes.
-(Note: `UA` is an abbreviation for ultimate-autopair)
-The default setup is: >lua
- require'ultimate-autopair'.setup{}
-< Though you can also do this: (if you later want to use multiple configs) >lua
- local ua=require'ultimate-autopair'
- local configs={ua.extend_default({})}
- ua.init(configs)
-<
-It is recommended to read sad through the {Q&A.md} for features.
-# {Not-default-enabled-maps}
-There are many features in UA which are useful but are not enabled by
-default, these include:> lua
-< {Space2}, which is like space, but insert space if character in match inserted >lua
- {space2={enable=true}}  --[ |] > f > [ f| ]
-< {Tabout}, which allows you to tab out of parenthesis >lua
- {tabout={enable=true}} --[foo| bar] > <A-tab> > [foo bar|]
-< {Close}, which allows you to close open parenthesis >lua
- {close={enable=true}} --[(| > <A-)> > [(|)]
-<
-# {Recommended-configs}
-Here is my recommendation for a config for {fastwarp}: >lua
- {fastwarp={
-    multi=true,
-    {},
-    {faster=true,map='<C-A-e>',cmap='<C-A-e>'},
-  }}
-<
-# {Pair-creation}
-To create a simple pair, you can just add it to the config: >lua
- {{'$','$'}}
-< To change the config of a default pair, you can use: >lua
- {config_internal_pairs={{'(',')',suround=true}}}
-<
-Pairs may have a bunch of options, which include:
-+ cmap (true): whether to enable pair in cmdline
-+ imap (true): whether to enable pair in insert
-+ multiline (true): whether the pair works multiline
-+ p (10): the priority of the pair
-+ disable_start (false): whether to disable start pair insertion
-+ disable_end (end): whether to disable end pair overhop
-{Map-specific}:
-+ newline (false): enable expanding on `<CR>`
-+ space (false): whether to work for space
-{Extension-specific}:
-+ dosuround (false): whether to surround `suround` tagged pairs
-+ suround (false): tag pair as `suround`
-+ fly (false): enable fly for the pair
-+ ft (nil;table[string]): in filetype
-+ nft (nil;table[string]): not in filetype
-# {Extensions}
-Extensions are things that extend default mappings. They are designed to work
-for all mappings (and not just pair) which come from the default profile. Each
-extension has a priority `p` which denoted in which order they should get
-loaded (higher `p`=loaded earlier).
-# {Profiles}
-Profiles are the ones that push modules to `mem`. `mem` is a table where all
-modules are stored. A module is typically a map, though in the case of
-`space2` it is an autocmd.
-# {Workings}
-A quick summary of how the plugin works.
-When initializing: the config is past to its respective profile which
-generates a module, that is then put inside `mem` and then keymaps/other are
-generated from `mem`.
-When running: each module in `mem` is checked against the input key, and if
-yes, then check will run, and if it doesn't return anything, then it continues
-to the next module in `mem`.
 
 vim:ft=help:
