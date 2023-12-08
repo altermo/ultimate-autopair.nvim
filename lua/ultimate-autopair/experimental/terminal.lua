@@ -17,11 +17,6 @@ M.white_list_processes={
     'vim',
 }
 ---@return boolean?
-function M.check_terminal()
-    if vim.fn.mode()~='t' then return end
-    return M.in_not_allowed_process()
-end
----@return boolean?
 function M.in_not_allowed_process()
     local function f(pid)
         if not vim.tbl_contains(M.white_list_processes,vim.api.nvim_get_proc(pid).name) then return true end

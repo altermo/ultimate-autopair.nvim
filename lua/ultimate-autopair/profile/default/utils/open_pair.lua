@@ -1,10 +1,6 @@
 local utils=require'ultimate-autopair.utils'
 local default=require'ultimate-autopair.profile.default.utils'
 local M={}
----TODO: DEAD CODE
-M.I={match=function (str,line)
-    return str==line:sub(1,#str)
-end}
 ---@param pair prof.def.m.start_pair
 ---@param o core.o
 ---@param col number

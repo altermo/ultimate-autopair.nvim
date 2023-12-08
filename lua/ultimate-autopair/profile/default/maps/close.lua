@@ -5,17 +5,6 @@ local default=require 'ultimate-autopair.profile.default.utils'
 local utils=require 'ultimate-autopair.utils'
 local M={}
 M.I={}
----@param tbl prof.def.m.pair[]
----@param pair_end prof.def.m.pair
----@return number?
----TODO: DEAD CODE
-function M.I.tbl_find(tbl,pair_end)
-    for k,v in ipairs(tbl) do
-        if v==pair_end.start_m then
-            return k
-        end
-    end
-end
 ---@param o core.o
 ---@param col number
 ---@param multiline? boolean
