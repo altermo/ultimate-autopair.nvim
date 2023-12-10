@@ -27,7 +27,7 @@ function M.check(conf,o,m)
         local pair=default.get_pairs_by_pos(o,i,'end',true,function (p)
             return default.orof(p.conf.fly,o,m,true)
         end,cnofilter)[1]
-        if pair and pair.pair==m.pair and pair.fn.find_corresponding_pair(o,i) then
+        if pair and pair.pair==m.pair and (cnofilter or pair.fn.find_corresponding_pair(o,i)) then
             next_char_index=i
             break
         elseif pair and default.orof(pair.conf.fly,o,m,true) then
