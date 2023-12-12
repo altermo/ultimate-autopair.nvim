@@ -28,9 +28,9 @@ function M.space(o,m)
     if ototal>total then return end
     return utils.create_act({
         ' ',
-        {'l',index-o.col+#prev_pair.start_pair-#prev_pair.end_pair},
+        {'l',index-o.col},
         (' '):rep(total-ototal+1),
-        {'h',index-o.col+#prev_pair.start_pair-#prev_pair.end_pair+(total-ototal+1)},
+        {'h',index-o.col+(total-ototal+1)},
     })
 end
 ---@param m prof.def.m.map

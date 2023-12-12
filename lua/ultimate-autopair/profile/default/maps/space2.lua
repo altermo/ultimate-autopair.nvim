@@ -22,9 +22,9 @@ function M.space2(_,o)
     local ototal=#o.line:sub(o.col,index-1):reverse():match(' *')
     if ototal>total then return end
     return utils.create_act({
-        {'l',index-o.col+#prev_pair.start_pair-#prev_pair.end_pair},
+        {'l',index-o.col},
         (' '):rep(total-ototal),
-        {'h',index-o.col+#prev_pair.start_pair-#prev_pair.end_pair+(total-ototal)},
+        {'h',index-o.col+(total-ototal)},
     })
 end
 ---@param m prof.def.m.map

@@ -179,6 +179,7 @@ return {
         {'$|$',' ','$ | $',{c={{'$','$',space=true}}}},
         {'$|foo$',' ','$ |foo $',{c={{'$','$',space=true}}}},
         {'|','I="( \r','( | )',{interactive=true}},
+        {'<!--|-->',' ','<!-- | -->',{c={{'<!--','-->',space=true}}}},
     },
     space2={
         {'[ |]','foo','[ foo| ]',{interactive=true,c={space2={enable=true}}}},
@@ -188,6 +189,7 @@ return {
         {'[  |oo ]','f','[  f|oo  ]',{interactive=true,c={space2={enable=true}}}},
         {'$ |$','foo','$ foo| $',{interactive=true,c={{'$','$',space=true},space2={enable=true}}}},
         {'<< |>>','foo','<< foo| >>',{interactive=true,c={{'<<','>>',space=true},space2={enable=true}}}},
+        {'<!-- |-->','f','<!-- f| -->',{interactive=true,c={{'<!--','-->',space2=true}}}},
     },
     close={
         {'(|','','(|)'},
