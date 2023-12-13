@@ -151,7 +151,7 @@ M.conf={
     {'`','`',cond=function(fn) return not fn.in_lisp() or fn.in_string() end,nft={'tex'},multiline=false},
     {'``',"''",ft={'tex'}},
     {'```','```',newline=true,ft={'markdown'}},
-    {'<!--','-->',ft={'markdown','html'}},
+    {'<!--','-->',ft={'markdown','html'},space=true},
     {'"""','"""',newline=true,ft={'python'}},
     {"'''","'''",newline=true,ft={'python'}},
   },
