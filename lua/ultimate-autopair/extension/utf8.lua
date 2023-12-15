@@ -85,7 +85,8 @@ end
 function M.wrapp_coloffset(off)
     return function (col,row)
         if not off[row] then return 0 end
-        while not off[row][col] and col>=0 do col=col-1 end --hack
+        while not off[row][col] and col>0 do col=col-1 end
+        if col==0 then return 0 end
         return off[row][col]-col
     end
 end
