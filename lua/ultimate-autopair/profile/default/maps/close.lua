@@ -56,6 +56,7 @@ function M.wrapp_newline(_)
         return utils.create_act({
             {'end'},
             {'newline'},
+            utils.interop.get_endwise(),
             epairs,
             {'k',1},
             {'home'},

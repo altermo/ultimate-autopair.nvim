@@ -45,6 +45,7 @@ function M.newline_wrapp(m)
             m.filter(utils._get_o_pos(o,o.col)) then
             return utils.create_act({
                 {'newline'},
+                utils.interop.get_endwise(),
                 {'k'},
                 {'end'},
                 {'newline'},

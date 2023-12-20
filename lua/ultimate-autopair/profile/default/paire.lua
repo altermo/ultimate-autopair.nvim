@@ -55,6 +55,7 @@ function M.newline_wrapp(m)
             if row~=o.row then return end
             return utils.create_act({
                 {'newline'},
+                utils.interop.get_endwise(),
                 {'k'},
                 {'home'},
                 {'l',o.col-1},

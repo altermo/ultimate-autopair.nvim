@@ -98,6 +98,7 @@ function M.newline_wrapp(m)
             return utils.create_act({
                 {'l',col-o.col},
                 {'newline'},
+                utils.interop.get_endwise(),
                 {'k'},
                 {'home'},
                 {'l',o.col-1},

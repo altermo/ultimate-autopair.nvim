@@ -48,7 +48,7 @@ end
 ---@param complex boolean?
 ---@return string
 function M.getmode(complex)
----@diagnostic disable-next-line: redundant-parameter
+    ---@diagnostic disable-next-line: redundant-parameter
     return vim.fn.mode(complex) --[[@as string]]
 end
 ---@return number
@@ -91,7 +91,6 @@ end
 ---@return string
 function M.create_act(actions)
     local ret=''
-    local has_newlined=false --- https://github.com/altermo/ultimate-autopair.nvim/issues/42
     for _,v in ipairs(actions) do
         local c=v[1]
         local a1,a2
@@ -101,9 +100,7 @@ function M.create_act(actions)
             else c='l' end
         end
         if type(v)=='string' then ret=ret..v
-        elseif c=='newline' then
-            ret=ret..(has_newlined and '\n' or '\r')
-            has_newlined=true
+        elseif c=='newline' then ret=ret..'\n'
         elseif c=='home' then ret=ret..M.key_home
         elseif c=='end' then ret=ret..M.key_end
         elseif c=='j' then ret=ret..M.key_down:rep(a1 or 1)
@@ -229,7 +226,7 @@ end
 ---@param str T
 ---@return T
 function M.keycode(str)
-  return str and vim.api.nvim_replace_termcodes(str,true,true,true)
+    return str and vim.api.nvim_replace_termcodes(str,true,true,true)
 end
 M.key_bs=M.keycode'<bs>'
 M.key_del=M.keycode'<del>'
@@ -240,4 +237,43 @@ M.key_home=M.keycode'<home>'
 M.key_up=M.keycode'<up>'
 M.key_down=M.keycode'<down>'
 M.key_noundo=M.keycode'<C-g>U'
+
+M.interop={}
+---@return string
+function M.interop.get_endwise()
+    if not M.interop.endwise then
+        if not M.interop.try_load_endwise() then return '' end
+    end
+    local _,_,end_text=M.interop.endwise()
+    return end_text or ''
+end
+function M.interop.try_load_endwise()
+    if M.interop.endwise then return true end
+    if not pcall(require,'nvim-treesitter-endwise') then return end
+    local _,fns=debug.getupvalue(vim.on_key,1)
+    local endwise,tracking
+    for _,fn in pairs(fns) do
+        if vim.endswith(debug.getinfo(fn).source,'/endwise.lua') then
+            local name
+            name,tracking=debug.getupvalue(fn,1)
+            if name~='tracking' then tracking=nil  end
+            name,endwise=debug.getupvalue(fn,2)
+            if name~='endwise' then endwise=nil end
+        end
+    end
+    if not endwise or not tracking then return end
+    local name,add_end_node=debug.getupvalue(endwise,7)
+    if name~='add_end_node' then return end
+    M.interop.endwise=function ()
+        local buf=vim.api.nvim_get_current_buf()
+        if not tracking[buf] then return end
+        local ret
+        debug.setupvalue(endwise,7,function (...) ret=vim.F.pack_len(...) end)
+        local s,mes=pcall(endwise,buf)
+        debug.setupvalue(endwise,7,add_end_node)
+        if not s then error(mes) end
+        return vim.F.unpack_len(ret)
+    end
+    return true
+end
 return M

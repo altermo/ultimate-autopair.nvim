@@ -253,7 +253,7 @@ function M.run_action(action,lines,row,col,opt)
         elseif action:sub(i,i+4)==(opt.incmd and '\x80kr' or '\aU\x80kr') then
             col=col+1
             i=i+4
-        elseif action:sub(i,i)=='\r' then
+        elseif action:sub(i,i)=='\r' or action:sub(i,i)=='\n' then
             table.insert(lines,row+1,lines[row]:sub(col))
             lines[row]=lines[row]:sub(1,col-1)
             row=row+1
