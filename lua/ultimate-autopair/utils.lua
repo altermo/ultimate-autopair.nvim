@@ -272,7 +272,8 @@ function M.interop.try_load_endwise()
         local s,mes=pcall(endwise,buf)
         debug.setupvalue(endwise,7,add_end_node)
         if not s then error(mes) end
-        return ret and vim.F.unpack_len(ret) or nil
+        if not ret then return end
+        return vim.F.unpack_len(ret)
     end
     return true
 end
