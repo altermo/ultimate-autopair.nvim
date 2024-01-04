@@ -180,14 +180,24 @@ function M.getsmartft(o,notree)
     if not s then cache.no_parser=true return vim.o.filetype end
     parser:parse{linenr,linenr}
     local pos={linenr,col,linenr,col}
-    local ret=parser:language_for_range(pos):lang()
-    local tslang2lang={
+    local tslang2lang=setmetatable({
         markdown_inline='markdown',
-        commonlisp='lisp',
-        latex='tex'
-    }
-    if tslang2lang[ret] then ret=tslang2lang[ret] end
-    (cache or {})[tostring(linenr)..';'..tostring(col)]=ret
+        bash='sh',
+        javascript='javascript',
+        markdown='markdown',
+        html='html',
+        xml='xml',
+        scala='scala',
+        latex='tex',
+        ini='ini',
+        glimmer='handlebars',
+        verilog='verilog',
+        tsx='typescriptreact',
+    },{__index=function (_,index)
+            return vim.treesitter.language.get_filetypes(index)[1]
+        end})
+    local ret=tslang2lang[parser:language_for_range(pos):lang()]
+    if cache then cache[tostring(linenr)..';'..tostring(col)]=ret end
     return ret
 end
 ---@return string
