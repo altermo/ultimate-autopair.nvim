@@ -17,7 +17,10 @@ local M={}
 ---@param m prof.def.m.pair
 ---@return string?
 function M.check(conf,o,m)
-    if m.fn.can_check_pre(o) then return end
+    if m.fn.can_check_pre(o) then
+        M.save={o.line,o.col,#m.pair,m.pair}
+        return
+    end
     local next_char_index
     local i=o.col
     local cnofilter=default.orof(conf.nofilter,o,m,true)
