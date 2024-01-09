@@ -53,8 +53,10 @@ function M.newline_wrapp(m)
             m.filter(utils._get_o_pos(o,o.col)) then
             local _,row=m.fn.find_corresponding_pair(o,o.col)
             if row~=o.row then return end
+            local format_delete=#(vim.o.formatoptions:find'r' and vim.o.comments:match('s%w*:'..vim.pesc(m.start_pair)..',m%w*:(.-,)e%w*:'..vim.pesc(m.end_pair)) or '')
             return utils.create_act({
                 {'newline'},
+                {'delete',format_delete},
                 utils.interop.get_endwise(),
                 {'k'},
                 {'home'},
