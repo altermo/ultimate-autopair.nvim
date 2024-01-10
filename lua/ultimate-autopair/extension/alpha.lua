@@ -60,7 +60,7 @@ function M.check(o,m,ext,incheck)
     if pcalpha_after~=false and cafter or pcalpha_after then
         local alpha=pcalpha_after or cafter
         if type(alpha)~='table' or vim.tbl_contains(alpha,utils.getsmartft(o)) then
-            if vim.regex(M.alpha_re):match_str(o.line:sub(o.col+lenf)) then
+            if vim.regex('^'..M.alpha_re):match_str(o.line:sub(o.col+lenf)) then
                 return true
             end
         end
