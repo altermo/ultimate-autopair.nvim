@@ -136,7 +136,10 @@ function M.gettsnode(o)
     end
     local s,parser=pcall(vim.treesitter.get_parser)
     if not s then save.no_parser=true return end
-    parser:parse{linenr,linenr}
+    if not save.has_parsed then
+        parser:parse()
+        save.has_parsed=true
+    end
     local getnode
     if vim.treesitter.get_node then
         getnode=function (linenr_,col_)
@@ -178,7 +181,10 @@ function M.getsmartft(o,notree)
     end
     local s,parser=pcall(vim.treesitter.get_parser)
     if not s then cache.no_parser=true return vim.o.filetype end
-    parser:parse{linenr,linenr}
+    if not cache.has_parsed then
+        parser:parse()
+        cache.has_parsed=true
+    end
     local pos={linenr,col,linenr,col}
     local tslang2lang=setmetatable({
         markdown_inline='markdown',
