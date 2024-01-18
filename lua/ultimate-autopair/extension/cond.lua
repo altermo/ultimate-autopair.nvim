@@ -18,7 +18,7 @@ M.fns={
     in_string=function (opt,col,row)
         local new_o=utils._get_o_pos(opt.o,col,row)
         local tsnode=require'ultimate-autopair.extension.tsnode'
-        local node=tsnode._in_tsnode(new_o,{'string','raw_string'},opt.incheck)
+        local node=tsnode._in_tsnode(new_o,{'string','raw_string'},opt.incheck,opt.m)
         return node and node:parent()
     end,
     in_check=function (opt)
@@ -36,7 +36,7 @@ M.fns={
     in_node=function (opt,nodes,col,row)
         local new_o=utils._get_o_pos(opt.o,col,row)
         local tsnode=require'ultimate-autopair.extension.tsnode'
-        local node=tsnode._in_tsnode(new_o,type(nodes)=='string' and {nodes} or nodes,opt.incheck)
+        local node=tsnode._in_tsnode(new_o,type(nodes)=='string' and {nodes} or nodes,opt.incheck,opt.m)
         return node and node:parent() and node or nil
     end,
     is_pair=function (opt)

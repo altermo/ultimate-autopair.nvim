@@ -19,15 +19,25 @@ M.savetype={}
 ---@param o core.o
 ---@param nodetypes string[]
 ---@param incheck? boolean
+---@param _m? prof.def.module|prof.def.m.pair
 ---@return TSNode?
-function M._in_tsnode(o,nodetypes,incheck)
+function M._in_tsnode(o,nodetypes,incheck,_m)
     --TODO fix: if incheck don't for one char after node
     ---PROBLEM: there are exceptions: comment #|
     ---SULUTION: make option to add exceptions
     local ssave=o.save[M._in_tsnode] or {} o.save[M._in_tsnode]=ssave
     local save=ssave[nodetypes] or {} ssave[nodetypes]=save
     if incheck then save={} end
-    local node=utils.gettsnode(o)
+    local node
+    if _m and _m.pair then
+        if incheck and default.get_type_opt(_m,'start') then
+            node=utils.gettsnode(o,0,#_m.pair-1)
+        else
+            node=utils.gettsnode(o,#_m.pair)
+        end
+    else
+        node=utils.gettsnode(o)
+    end
     if not node then return end
     if node and save[node:id()] then return unpack(save[node:id()]) end
     local ql={}
@@ -66,7 +76,7 @@ end
 ---@param save ext.tsnode.save
 ---@param m prof.def.module
 function M.set_in_node(o,conf,save,m)
-    local node=M._in_tsnode(o,default.orof(conf.separate,o,m,true),true)
+    local node=M._in_tsnode(o,default.orof(conf.separate,o,m,true),true,m)
     if node then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         save.scol=scol
@@ -88,7 +98,7 @@ function M.filter(o,save,conf,m)
         if o.row==save.srow and o.col<save.scol then return end
         if o.row==save.erow and o.col>save.ecol then return end
     end
-    local node=M._in_tsnode(o,default.orof(conf.separate,o,m))
+    local node=M._in_tsnode(o,default.orof(conf.separate,o,m),false,m)
     if node and node~=(save.in_node or node:tree():root()) then
         local srow,scol,erow,ecol=utils.gettsnodepos(node,o)
         if vim.tbl_contains({'string','raw_string'},node:type()) and erow==o.row and ecol==o.col then return true end --HACK

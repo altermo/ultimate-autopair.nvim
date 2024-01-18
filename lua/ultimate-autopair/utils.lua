@@ -124,8 +124,10 @@ function M.gettsnodepos(node,o)
     return srow+1+o._deoffset(srow+1),scol+1+o._decoloffset(scol+1,srow+1),erow+1+o._deoffset(erow+1),ecol+o._decoloffset(ecol,erow+1)
 end
 ---@param o core.o
+---@param extend? number
+---@param extendpre? number
 ---@return TSNode?
-function M.gettsnode(o)
+function M.gettsnode(o,extend,extendpre)
     --TODO: use vim.treesitter.get_string_parser for cmdline
     if o.incmd then return end
     local save=o.save[M.gettsnode] or {} o.save[M.gettsnode]=save
@@ -141,7 +143,11 @@ function M.gettsnode(o)
         save.has_parsed=true
     end
     local getnode
-    if vim.treesitter.get_node then
+    if extend then
+        getnode=function (linenr_,col_)
+            return parser:named_node_for_range({linenr_,col_-(extendpre or 0),linenr_,col_+extend},{ignore_injections=false})
+        end
+    elseif vim.treesitter.get_node then
         getnode=function (linenr_,col_)
             return vim.treesitter.get_node({bufnr=0,pos={linenr_,col_},ignore_injections=false})
         end
