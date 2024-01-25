@@ -168,7 +168,7 @@ function M.switch_ua_utils_fn(ua_utils_,opt,lines,linenr,line,col)
     if opt.ts then
         local s,parser=pcall(vim.treesitter.get_string_parser,vim.fn.join(lines,'\n'),opt.tsft or opt.ft or 'lua',{})
         if not s then return true end
-        parser:parse()
+        parser:parse(true)
         ua_utils_.gettsnode=function (o)
             local linenr_,col_=o.row+o._offset(o.row)-1,o.col+o._coloffset(o.col,o.row)-1
             local node=parser:named_node_for_range({linenr_,col_,linenr_,col_})

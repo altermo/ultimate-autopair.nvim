@@ -139,7 +139,7 @@ function M.gettsnode(o,extend,extendpre)
     local s,parser=pcall(vim.treesitter.get_parser)
     if not s then save.no_parser=true return end
     if not save.has_parsed then
-        parser:parse()
+        parser:parse(true)
         save.has_parsed=true
     end
     local getnode
@@ -188,7 +188,7 @@ function M.getsmartft(o,notree)
     local s,parser=pcall(vim.treesitter.get_parser)
     if not s then cache.no_parser=true return vim.o.filetype end
     if not cache.has_parsed then
-        parser:parse()
+        parser:parse(true)
         cache.has_parsed=true
     end
     local pos={linenr,col,linenr,col}
