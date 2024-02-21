@@ -244,6 +244,15 @@ function M._get_o_pos(o,col,row)
         mode=o.mode,
     }
 end
+---@param filetype string
+---@param option string
+function M.ft_get_option(filetype,option)
+    local err,ret=pcall(vim.filetype.get_option,filetype,option)
+    if not err then
+        return vim.api.nvim_get_option_value('iskeyword',{buf=vim.api.nvim_get_current_buf()})
+    end
+    return ret
+end
 ---@generic T:string|string?
 ---@param str T
 ---@return T

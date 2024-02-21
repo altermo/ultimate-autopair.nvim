@@ -31,7 +31,7 @@ M.fns={
         if notree then return vim.o.lisp end
         local new_o=utils._get_o_pos(opt.o,col,row)
         local ft=utils.getsmartft(new_o)
-        return vim.filetype.get_option(ft,'lisp')
+        return utils.ft_get_option(ft,'lisp')
     end,
     in_node=function (opt,nodes,col,row)
         local new_o=utils._get_o_pos(opt.o,col,row)
