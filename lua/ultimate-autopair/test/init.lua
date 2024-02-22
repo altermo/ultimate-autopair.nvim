@@ -71,6 +71,9 @@ function M.start()
     M.start_test_runner_and_test(paths)
 end
 function M.start_test_runner_and_test(paths)
+    if (vim.fn.systemlist({vim.v.progpath,'--version'})[1]~=vim.api.nvim_exec2('version',{output=true}).output:gsub('^\n(.-)\n.*','%1')) then
+        M.fn.warning(("The version number in `:version` didn't match `:!%s --version`"):format(vim.v.progpath))
+    end
     local source=vim.fn.tempname()
     local outfile=vim.fn.tempname()
     vim.fn.writefile({
@@ -81,7 +84,7 @@ function M.start_test_runner_and_test(paths)
         '_G.UA_IN_TEST=true',
         'require("ultimate-autopair.test.run").run("'..outfile..'")',
     },source)
-    local job=vim.fn.jobstart({'nvim','--clean','-l',source})
+    local job=vim.fn.jobstart({vim.v.progpath,'--clean','-l',source})
     --Maybe:
     ---multiple instances (per category?)
     ---use tcp server for out instead of file
