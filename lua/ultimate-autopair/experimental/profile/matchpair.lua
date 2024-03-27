@@ -1,0 +1,1 @@
+--if vim.v.count is set then goto precentige in file, see `:h N%`

@@ -1,32 +1,22 @@
----@class prof.cond.conf:prof.config
----@field filter? core.filter-fn
----@field check? core.filter-fn
-
-local prof=require'ultimate-autopair.prof_init'
+local utils=require'ultimate-autopair.utils'
+local profile=require'ultimate-autopair.profile'
 local M={}
----@param conf prof.cond.conf
----@param mem core.module[]
-function M.init(conf,mem)
-    local lmem={}
-    local filter_=conf.filter or function () return true end
-    local check_=conf.check or conf.check~=false and filter_ or function () return true end
-    prof.init(conf,lmem)
-    for _,v in ipairs(lmem) do
-        if v.filter then
-            local filter=v.filter
-            v.filter=function (o)
-                if not filter_(o) then return end
-                return filter(o)
+---@param conf table
+---@param objects ua.instance
+function M.init(conf,objects)
+    local filter=conf.filter
+    ---@type ua.instance
+    local lobjects={}
+    profile.init(conf,lobjects)
+    for _,v in ipairs(lobjects) do
+        local run=assert(v.run)
+        v.run=function (o)
+            if not utils.run_filters(filter,o) then
+                return
             end
+            return run(o)
         end
-        if v.check then
-            local check=v.check
-            v.check=function (o)
-                if not check_(o) then return end
-                return check(o)
-            end
-        end
-        table.insert(mem,v)
+        table.insert(objects,v)
     end
 end
 return M

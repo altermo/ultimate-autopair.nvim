@@ -1,123 +1,80 @@
-local M={}
-M.fn={
-    ok=function (msg)
-        vim.notify('Ok:'..msg,vim.log.levels.INFO)
-    end,
-    info=function (msg)
-        vim.notify('Info:'..msg,vim.log.levels.INFO)
-    end,
-    error=function (msg)
-        vim.notify('Err:'..msg,vim.log.levels.ERROR)
-    end,
-    warning=function (msg)
-        vim.notify('Warn:'..msg,vim.log.levels.WARN)
-    end,
-}
-function M.get_paths()
-    local path=vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1]
-    return{
-        path=path,
-        root=vim.fn.fnamemodify(path,':h:h'),
-    }
-end
-function M.check_not_alowed_files_and_strings(paths)
-    local function handle_stdout(_,data,_)
-        for _,v in ipairs(data) do
-            if v~='' then
-                M.fn.warning('Found something not allowed: '..v:sub(v:sub(2):find(' ') or 1))
-            end
-        end
-    end
-    if not (vim.fn.executable('grep') and vim.fn.executable('find')) then
-        M.fn.warning('Some of the required executables are missing for dev testing')
-        M.fn.info('INFO Pleas make sure that find and grep are installed')
+local utils=require'ultimate-autopair.test.utils'
+local  M={}
+function M.check_not_allowed_string(path)
+    if vim.fn.executable('grep')==0 then
+        utils.warning('Some of the required executables are missing for dev testing')
+        utils.info('INFO Please make sure that `grep` is installed')
         return
     end
-    local string_check_print=vim.fn.jobstart({
-        'grep','-r','--exclude-dir=test','print',paths.path,
-    },{on_stdout=handle_stdout})
-    local string_check_log=vim.fn.jobstart({
-        'grep','-r','--exclude-dir=test','vim.lg',paths.path,
-    },{on_stdout=handle_stdout})
-    local file_check=vim.fn.jobstart({
-        'find',paths.path,'-type','f','!','-name','*.lua','!','-name','*.md'
-    },{on_stdout=handle_stdout})
-    if vim.tbl_contains(vim.fn.jobwait({file_check,string_check_log,string_check_print},5000),-1) then
-        vim.fn.jobstop(file_check)
-        vim.fn.jobstop(string_check_log)
-        vim.fn.jobstop(string_check_print)
-        M.fn.warning('timeout: could not run all string/file checks,') return
-    end
-end
-function M.check_other(_)
-    if vim.fn.has('nvim-0.9.0')==0 then
-        M.fn.warning('You have an older version of neovim than recommended')
-    end
-    ---@diagnostic disable-next-line: undefined-field
-    if _G.UA_DEBUG_DONT then
-        M.fn.info('UA_DEBUG_DONT is set: no debugging will happen')
-    end
-    if not pcall(require,'nvim-treesitter') then
-        M.fn.warning('nvim-treesitter not installed: most of treesitter spesific behavior will not work')
-    end
-end
-function M.start()
-    local paths=M.get_paths()
-    ---@diagnostic disable-next-line: undefined-field
-    if _G.UA_DEV then
-        M.check_not_alowed_files_and_strings(paths)
-    end
-    M.check_other(paths)
-    M.start_test_runner_and_test(paths)
-end
-function M.start_test_runner_and_test(paths)
-    if (vim.fn.systemlist({vim.v.progpath,'--version'})[1]~=vim.api.nvim_exec2('version',{output=true}).output:gsub('^\n(.-)\n.*','%1')) then
-        M.fn.warning(("The version number in `:version` didn't match `:!%s --version`"):format(vim.v.progpath))
-    end
-    local source=vim.fn.tempname()
-    local outfile=vim.fn.tempname()
-    vim.fn.writefile({
-        'vim.opt.runtimepath:append("'..paths.root..'")',
-        '_G.UA_DEBUG_DONT=true',
-        ---@diagnostic disable-next-line: undefined-field
-        '_G.UA_DEV='..vim.inspect(_G.UA_DEV),
-        '_G.UA_IN_TEST=true',
-        'require("ultimate-autopair.test.run").run("'..outfile..'")',
-    },source)
-    local job=vim.fn.jobstart({vim.v.progpath,'--clean','-l',source})
-    --Maybe:
-    ---multiple instances (per category?)
-    ---use tcp server for out instead of file
-    local jobstat=vim.fn.jobwait({job},10000)[1]
-    if jobstat==-1 then
-        M.fn.warning('timeout: tester process did not exit')
-    elseif jobstat~=0 then
-        M.fn.warning('job exited with code '..jobstat)
-    end
-    vim.fn.jobstop(job)
-    M.parse_out(vim.fn.readfile(outfile))
-    vim.fn.delete(source)
-    vim.fn.delete(outfile)
-end
-function M.parse_out(out)
-    if #out==0 then
-        M.fn.info('No output was generated from test runner')
-    end
-    for _,v in ipairs(out) do
-        local code,msg=unpack(vim.split(v,'´'))
-        if code=='OK' then
-            M.fn.ok(msg)
-        elseif code=='ERR' then
-            M.fn.error(msg)
-        elseif code=='INFO' then
-            M.fn.info(msg)
-        elseif code=='WARN' then
-            M.fn.warning(msg)
+    local blacklist={'vim.lg','print','vim.dev'}
+    local search=table.concat(blacklist,'\\|')
+    local job=vim.fn.jobstart({'grep','-r','--exclude-dir=test',search,path},{on_stdout=function (_,data,_)
+        for _,v in ipairs(data) do
+            if v=='' then return end
+            utils.warning('Found something not allowed: '..v:sub(v:sub(2):find(' ') or 1))
+        end
+    end})
+    debug.setmetatable(job,{name='grep',expected=1})
+    local jobs={job}
+    for k,exitcode in ipairs(vim.fn.jobwait(jobs,5000)) do
+        local mt=getmetatable(jobs[k])
+        if exitcode==-1 then
+            utils.warning(('timeout `%s`'):format(mt.name))
+        elseif exitcode~=(mt.expected or 0) then
+            utils.warning(('job `%s` exited with code %s'):format(mt.name,exitcode))
         end
     end
 end
----@diagnostic disable-next-line: undefined-field
-if _G.UA_TEST_NOW then
-    M.start()
+function M.check_unique_lang_to_ft()
+    local tree_langs=vim.tbl_map(function (x)
+        return vim.fn.fnamemodify(x,':t:r')
+    end,vim.api.nvim_get_runtime_file('parser/*',true))
+    local done=vim.deepcopy(require'ultimate-autopair.utils'.tslang2lang)
+    local single=require'ultimate-autopair.utils'._tslang2lang_single
+    for _,tree_lang in ipairs(tree_langs) do
+        if done[tree_lang]=='' then goto continue end
+        vim.treesitter.language.add(tree_lang)
+        local filetypes=vim.treesitter.language.get_filetypes(tree_lang)
+        local ft=done[tree_lang]
+        if done[tree_lang] then
+            if not vim.tbl_contains(filetypes,ft) and not single[tree_lang] then
+                utils.warning(('filetype `%s` in `utils.tslang2lang["%s"]` may be incorrect'):format(ft,tree_lang))
+            end
+        elseif #filetypes>1 then
+            utils.warning('Found multiple languages for '..tree_lang..': '..vim.inspect(filetypes))
+        end
+        done[tree_lang]=''
+        ::continue::
+    end
+end
+function M.check_default_config()
+    local confspec=require'ultimate-autopair.profile.pair.confspec'
+    local s,err=pcall(confspec.validate,require'ultimate-autopair.default'.conf,'main')
+    if not s then utils.error(err) end
+    s,err=pcall(confspec.validate,confspec.generate_random('main'),'main')
+    if not s then utils.error(err) end
+end
+function M.start()
+    local lua_path=vim.api.nvim_get_runtime_file('lua/ultimate-autopair',false)[1]
+    local plugin_path=vim.fn.fnamemodify(lua_path,':h:h')
+    if _G.UA_DEV then
+        M.check_not_allowed_string(lua_path)
+        M.check_unique_lang_to_ft()
+        M.check_default_config()
+    end
+    if vim.fn.has('nvim-0.9.0')==0 then
+        utils.warning('You have an older version of neovim than recommended')
+    end
+    if not pcall(require,'nvim-treesitter') then
+        utils.warning('nvim-treesitter not installed: is required for treesitter specific behavior')
+        utils.info('NOTE: nvim-treesitter is not required if parsers are installed through another way')
+    end
+    if not pcall(require,'nvim-treesitter-endwise') then
+        utils.info('nvim-treesitter-endwise not installed: endwise integration will not work')
+    end
+    if not pcall(require,'nvim-ts-autotag') then
+        utils.info('nvim-ts-autotag not installed: autotag integration will not work')
+    end
+    require'ultimate-autopair.test.run'.run(plugin_path)
 end
 return M

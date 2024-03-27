@@ -1,0 +1,18 @@
+*ultimate-autopair-advanced.txt*
+==============================================================================
+ADVANCED                                          *ultimate-autopair-advanced*
+------------------------------------------------------------------------------
+TERMS                                                *ultimate-autopair-terms*
+A list of terms that I use in the documentation.
+• `pair`
+• `ambiguous pair` A pair where the start and end pair are the same.
+• `start pair` The left pair (Example `(`) (also includes ambiguous pairs)
+• `end pair` The right pair (Example `)`) (also includes ambiguous pairs)
+• `filter`
+• `extension`
+• `profile`
+• `hook`
+• `instance` A list of objects (plus other info)
+• `object`
+
+vim:tw=78:ft=help:

@@ -1,43 +1,36 @@
-local prof=require'ultimate-autopair.prof_init'
-local debug=require'ultimate-autopair.debug'
+local M={_id=0}
+---@type table<ua.id,ua.instance>
+local instances={}
+---@return table<ua.id,ua.instance>
+M['~get_instances']=function() return instances end
 local default=require'ultimate-autopair.default'
-local core=require'ultimate-autopair.core'
-local M={}
-function M.toggle() core.disable=not core.disable end
-function M.enable() core.disable=false end
-function M.disable() core.disable=true end
-function M.isenabled() return not core.disable end
-function M.list()
-    vim.ui.select(core.mem,{format_item=function (item)
-        return (item.pair or (item.map and vim.inspect(item.map)) or ';;;;')
-            ..' '..(item.doc or '')
-    end},function (_,idx)
-            vim.cmd.vnew()
-            local buf=vim.api.nvim_create_buf(false,true)
-            vim.api.nvim_set_option_value('bufhidden','wipe',{buf=buf})
-            local win=vim.api.nvim_get_current_win()
-            vim.api.nvim_win_set_buf(win,buf)
-            vim.api.nvim_buf_set_lines(buf,0,-1,false,vim.split(vim.inspect(core.mem[idx]),'\n'))
-        end)
+local prof=require'ultimate-autopair.profile'
+local hook=require'ultimate-autopair.hook'
+---@param conf ua.prof.conf?
+---@param id ua.id?
+function M.setup(conf,id)
+    if vim.fn.has('nvim-0.9.0')~=1 then error('Requires at least version nvim-0.9.0') end
+    M.init({M.extend_default(conf)},id)
 end
----@param conf? prof.config
-function M.setup(conf)
-    if not M.skipversioncheck and vim.fn.has('nvim-0.9.0')~=1 then error('Requires at least version nvim-0.9.0') end
-    M.init({M.extend_default(conf or {})})
+---@param configs ua.prof.conf[]
+---@param id ua.id?
+function M.init(configs,id)
+    id=id or M._id
+    M.deinit(id)
+    instances[id]=prof.init(configs)
+    hook.register(instances[id])
 end
----@param configs? prof.config[]
-function M.init(configs)
-    M._configs=configs
-    debug.run(core.clear,{})
-    debug.run(prof.init,{info=configs,args={configs or {},core.mem}})
-    debug.run(core.init,{info=configs})
+---@param id ua.id?
+function M.deinit(id)
+    id=id or M._id
+    if instances[id] then hook.unregister(instances[id]) end
 end
-function M.clear()
-    debug.run(core.clear,{})
-end
----@param conf prof.config
----@return prof.config
+---@param conf ua.prof.conf?
+---@return ua.prof.conf
 function M.extend_default(conf)
-    return vim.tbl_deep_extend('force',default.conf,conf or {})
+    if conf and conf.profile and conf.profile~='default' then
+        return conf
+    end
+    return require'ultimate-autopair.profile.pair.confsys'.merge_configs(default.conf,conf)
 end
 return M

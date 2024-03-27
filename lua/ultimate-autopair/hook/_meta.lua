@@ -1,0 +1,11 @@
+---@class ua.hook
+---@field input string
+---@field type string
+---@field mode string
+---@alias ua.hook.hash string
+---@alias ua.hook.conf string
+---@alias ua.hook.subconf {dot:boolean?,true_dot:boolean?,abbr:boolean?}
+---@class ua.hook.info
+---@field [number] ua.object
+---@field dirty boolean?
+---@field conf ua.hook.conf?
