@@ -11,10 +11,10 @@ function M.init(conf,objects)
     local somepairs={}
     M.init_pairs(somepairs,conf)
     M.pair_sort_len(somepairs)
-    M.init_maps(objects,conf)
     for _,v in ipairs(somepairs) do
         table.insert(objects,v)
     end
+    M.init_maps(objects,conf)
 end
 ---@param somepairs ua.prof.pair.pair[]
 function M.pair_sort_len(somepairs)
