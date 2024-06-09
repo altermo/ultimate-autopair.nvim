@@ -368,7 +368,7 @@ return {
         {'<>|<>foo,,','<A-e>','<>|foo<>,,',{c={{'<>','<>',fastwarp=true}}}},
         {'(|)<><>','<A-e>','(|<><>)',{c={{'<>','<>'}}}},
         {'```|```lua','<A-e>','```|lua```',{ft='markdown'}},
-        --{'(|)a_e','','(|a_e)'},
+        {'(|)a_e','<A-e>','(|a_e)'},
         --{'(|")")foo','','(|")"foo)',{c={fastwarp={no_filter_nodes={}}},ts=true}},
         --{'(|)foo','e','(|foo)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}}}},
         --{'(|)foo','E','(foo|)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}}}},

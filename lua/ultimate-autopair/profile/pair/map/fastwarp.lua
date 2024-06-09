@@ -11,8 +11,8 @@ local M={}
 ---@type (fun(o:ua.info,ind:number,p:string,first:boolean):ua.actions|nil)[]
 M.act={
     function (o,ind,p)
-        if not o.line:sub(ind,ind):match('%w') then return end
-        while o.line:sub(ind,ind):match('%w') do
+        if not o.line:sub(ind,ind):match('[%w_]') then return end
+        while o.line:sub(ind,ind):match('[%w_]') do
             ind=ind+1
         end
         return {
