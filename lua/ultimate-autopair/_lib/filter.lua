@@ -5,6 +5,16 @@ M.global.string={'string'} --[[TODO: add other string node types]]
 M.global.comment={'comment'} --[[TODO: add other comment node types]]
 
 ---@param o ua.filter
+---@return string
+function M.get_filetype(o)
+    return utils.get_filetype(o)
+end
+---@param _ ua.filter
+---@return boolean
+function M.in_macro(_)
+    return vim.fn.reg_recording()~='' or vim.fn.reg_executing()~=''
+end
+---@param o ua.filter
 ---@return boolean
 function M.in_lisp(o)
     local ft=utils.get_filetype(o)
