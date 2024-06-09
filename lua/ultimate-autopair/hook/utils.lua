@@ -52,6 +52,7 @@ function M.create_o_wrapper()
         ---@type ua.source
         source={
             source=cmdline,
+            --TODO: maybe don't use buffer local options, and instead use the global ones
             o=setmetatable({filetype=filetype,buftype='prompt',cmdtype=cmdtype},{__index=vim.bo[buf]}),
             mode='c',
             get_parser=function ()
