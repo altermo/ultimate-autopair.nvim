@@ -5,6 +5,8 @@ local putils=require'ultimate-autopair.profile.pair.utils'
 ---@class ua.prof.pair.fastwarp.conf:ua.prof.pair.map.conf
 ---@field nocursormove boolean?
 
+local ulen=vim.api.nvim_strwidth
+
 local M={}
 ---@type (fun(o:ua.info,ind:number,p:string,first:boolean):ua.actions|nil)[]
 M.act={
@@ -15,7 +17,8 @@ M.act={
         end
         return {
             {'delete',0,p},
-            {'pos',ind-1},
+            --Because of the deletion, everything moved len(p) to the right
+            {'pos',ind-ulen(p)},
             p,{'left',p},
         }
     end,
@@ -25,7 +28,8 @@ M.act={
         if #next_spairs==0 then return end
         return {
             {'delete',0,p},
-            {'pos',ind-1},
+            --Because of the deletion, everything moved len(p) to the right
+            {'pos',ind-ulen(p)},
             p,{'left',p},
         }
     end,
@@ -37,9 +41,11 @@ M.act={
             local opair=setmetatable({m=v,col=o.col+#v.start_pair_old},{__index=o})
             local col,row=putils.next_open_end_pair(opair)
             if row and col then
+                col=col+ulen(opair.m.start_pair_old)
                 return {
                     {'delete',0,p},
-                    {'pos',col},
+                    --Because of the deletion, everything moved len(p) to the right
+                    {'pos',col-ulen(p)},
                     p,{'left',p},
                 }
             end
@@ -51,7 +57,8 @@ M.act={
         if #next_epairs==0 then return end
         return {
             {'delete',0,p},
-            {'pos',ind-1},
+            --Because of the deletion, everything moved len(p) to the right
+            {'pos',ind-ulen(p)},
             p,{'left',p},
         }
     end
