@@ -1,5 +1,6 @@
 local M={}
 local utils=require'ultimate-autopair.utils'
+local fn=require'ultimate-autopair._lib.filter'
 ---@type table<string,true|table<string,boolean>>
 M._cache_keywordy={}
 function M.is_keywordy(char,o)
@@ -34,6 +35,12 @@ function M.call(o)
         if o.conf.py_fstr and
             utils.get_filetype(o)=='python' and
             vim.regex[[\c\a\@1<!\v((r[fb])|([fb]r)|[frub])$]]:match_str(o.line:sub(1,o.cols-1)) then
+            return true
+        end
+        if o.conf.lua_nstr and
+            utils.get_filetype(o)=='lua' and
+            fn.has_treesitter(o) and
+            (not (fn.in_string(o) or fn.in_comment(o))) then
             return true
         end
         if M.is_keywordy(utils.get_char(o.line,o.cols-1),o) then

@@ -127,6 +127,10 @@ return {
         {'<|a','<lt>','<<|a',{c={{'<<','>>',alpha={after=true}}}}},
         {'a<|','<lt>','a<<|',{c={{'<<','>>',alpha={before=true}}}}},
         {'b""|','"','b"""|"',{ft='python',c={change={{'"""','"""',alpha={before=true}}}}}},
+        {'print|',"'","print'|"},
+        {'print|',"'","print'|'",{ft='lua'}},
+        {'print"don|"',"'",[[print"don'|"]],{ft='lua'}},
+        {'--don|',"'","--don'|",{ft='lua'}},
     },
     filter_escape={
         {'\\|','(','\\(|'},

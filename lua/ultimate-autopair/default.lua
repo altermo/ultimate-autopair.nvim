@@ -14,7 +14,7 @@ return {
     {'[',']'},
     {'{','}'},
     {'"','"',multiline=false,nft={'tex'}},
-    {"'","'",start_pair={alpha={before=true,py_fstr=true}},filter={in_lisp},multiline=false,nft={'tex','rust'}},
+    {"'","'",start_pair={alpha={before=true,py_fstr=true,lua_nstr=true}},filter={in_lisp},multiline=false,nft={'tex','rust'}},
     {'`','`',filter={in_lisp},multiline=false},
     {'<!--','-->',ft={'markdown','html'}}, --TODO: temp
     {'"""','"""',ft={'python'}}, --TODO: temp

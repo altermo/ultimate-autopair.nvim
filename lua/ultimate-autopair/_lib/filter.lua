@@ -104,4 +104,9 @@ function M.term_in_shell_or_vim(o,procnames)
     end
     return not in_not_allowed_proc(vim.fn.jobpid(vim.o.channel))
 end
+---@param o ua.filter
+---@return boolean
+function M.has_treesitter(o)
+    return not not o.source.get_parser()
+end
 return M

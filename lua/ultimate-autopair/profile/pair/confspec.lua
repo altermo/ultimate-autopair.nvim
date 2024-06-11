@@ -58,6 +58,7 @@ M.conf_spec={
         before='boolean',
         after='boolean',
         py_fstr='boolean',
+        lua_nstr='boolean',
         filter='boolean', --TODO: temp: this option should be replaced by something else
     },
     cmdtype={
