@@ -29,7 +29,8 @@ function M.run_start(o)
     end
     if m.start_pair_old~=m.end_pair_old then
         local count=open_pair.count_end_pair(o)
-        if open_pair.count_end_pair(o,true,count,true) then return end
+        --if open_pair.count_end_pair(o,true,count,true) then return end --TODO: use this once caching for return_pos is implemented
+        if count<open_pair.count_start_pair(o) then return end
     else
         if open_pair.count_ambiguous_pair(o,'both') then return end
     end
