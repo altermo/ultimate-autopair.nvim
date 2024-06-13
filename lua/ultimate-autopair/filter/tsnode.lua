@@ -24,7 +24,7 @@ function M.call(o)
     end
     if not parser then return true end
     if o.conf.separate and o.lsave then
-        local separate=query.get_node_types_from_config(o.conf.separate,utils.get_filetype(o))
+        local separate=query.get_node_types_from_config(o.conf.separate,utils.get_filetype(o,{parser=parser,tree=true}))
         if o.lsave[M.id]==false then
             local nodes=query.find_all_node_types(parser,separate)
             for _,node in ipairs(nodes) do

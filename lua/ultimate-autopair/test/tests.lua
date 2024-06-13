@@ -153,6 +153,7 @@ return {
         {'<!-|','-','<!--|-->',{ft='markdown'}},
         {'|','(','(|',{ft='TelescopePrompt'}},
         {'```lua\n|\n```','<lt>',"```lua\n<|>\n```",{ft='markdown',c={{'<','>',ft={'lua'}}}}},
+        {'```lua\n|\n```','<lt>',"```lua\n<|\n```",{ft='markdown',c={{'<','>',ft={'lua'}},filter={filetype={tree=false}}}}},
         {'$|$','<lt>','$<|>$',{ft='markdown',c={{'<','>',ft={'tex',detect_after='\a'}}},skip=true}},
         {'$|$','<lt>','$<|$',{ft='markdown',c={{'<','>',ft={'tex',detect_after='\a'},filetype={detect_after=false}}},skip=true}},
         {'|','<lt>','<|',{ft='lua',c={{'<','>',nft={'lua'}}}}},

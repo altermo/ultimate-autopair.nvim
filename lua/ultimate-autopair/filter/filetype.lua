@@ -7,9 +7,9 @@ function M.call(o)
     local ft
     if o.conf.detect_after then
         local parser=utils._HACK_parser_get_after_insert(o,o.conf.detect_after)
-        ft=utils.get_filetype(o,{parser=parser})
+        ft=utils.get_filetype(o,{parser=parser,tree=conf.tree})
     else
-        ft=utils.get_filetype(o)
+        ft=utils.get_filetype(o,{tree=conf.tree})
     end
     if conf.ft and not vim.list_contains(conf.ft,ft) then
     elseif conf.nft and vim.list_contains(conf.nft,ft) then

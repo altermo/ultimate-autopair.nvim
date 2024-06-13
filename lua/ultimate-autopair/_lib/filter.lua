@@ -5,9 +5,10 @@ M.global.string={'string'} --[[TODO: add other string node types]]
 M.global.comment={'comment'} --[[TODO: add other comment node types]]
 
 ---@param o ua.filter
+---@param tree boolean? --TODO: maybe make this a table of options
 ---@return string
-function M.get_filetype(o)
-    return utils.get_filetype(o)
+function M.get_filetype(o,tree)
+    return utils.get_filetype(o,{tree=tree})
 end
 ---@param _ ua.filter
 ---@return boolean
@@ -15,9 +16,10 @@ function M.in_macro(_)
     return vim.fn.reg_recording()~='' or vim.fn.reg_executing()~=''
 end
 ---@param o ua.filter
+---@param tree boolean? --TODO: maybe make this a table of options
 ---@return boolean
-function M.in_lisp(o)
-    local ft=utils.get_filetype(o)
+function M.in_lisp(o,tree)
+    local ft=utils.get_filetype(o,{tree=tree})
     return utils.ft_get_option(ft,'lisp') --[[@as boolean]]
 end
 ---@param o ua.filter

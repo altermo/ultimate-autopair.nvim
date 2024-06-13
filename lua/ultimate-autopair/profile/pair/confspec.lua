@@ -75,6 +75,7 @@ M.conf_spec={
         nft='TODO',
         detect_after='TODO',
         lang_detect_after='TODO',
+        tree='boolean',
     },
     filter={
         filter='TODO',
