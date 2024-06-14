@@ -51,6 +51,7 @@ function M.call(o)
 end
 M.clear_cache={
     'textchange',
+    'treechange',
     'opt:iskeyword',
     'opt:lisp',
     'opt:filetype',

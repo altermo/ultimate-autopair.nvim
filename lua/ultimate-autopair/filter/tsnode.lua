@@ -57,5 +57,6 @@ end
 M.clear_cache={
     'textchange',
     'treechange',
+    'opt:filetype',
 }
 return M

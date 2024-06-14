@@ -17,6 +17,7 @@ function M.call(o)
 end
 M.clear_cache={
     'textchange',
+    'treechange',
     'opt:filetype',
 }
 return M
