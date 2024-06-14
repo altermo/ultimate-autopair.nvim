@@ -155,10 +155,25 @@ function M.check_unique_lang_to_ft()
         ::continue::
     end
 end
+function M.check_cache(lua_path)
+    for _,file in ipairs(vim.fn.readdir(lua_path..'/filter')) do
+        for _,v in ipairs(require('ultimate-autopair.filter.'..file:sub(1,-5)).clear_cache) do
+            if v~='textchange' and v~='treechange' and v:sub(1,4)~='opt:' then
+                warn(('Invalid cache clear option `%s` in filter `%s`'):format(v,file:sub(1,-5)))
+            end
+            if v:sub(1,4)=='opt:' then
+                if vim.api.nvim_get_option_info2(v:sub(5),{}).scope=='win' then
+                warn(('Cache clear option `%s` is scope windows in filter `%s` which is not supported'):format(v,file:sub(1,-5)))
+                end
+            end
+        end
+    end
+end
 function M.start_dev(plugin_path,lua_path)
     start('Development checks')
     M.check_not_allowed_string(lua_path)
     M.check_unique_lang_to_ft()
+    M.check_cache(lua_path)
     start('Tests')
     M.run_tests(plugin_path)
 end
