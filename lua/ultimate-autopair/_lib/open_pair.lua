@@ -1,7 +1,7 @@
 local utils=require'ultimate-autopair.utils'
 local cachelib=require'ultimate-autopair.cache'
 local M={}
-local caches_count_star_pair=vim.defaulttable(function () return {} end)
+local caches_count_star_pair=cachelib.weak_defaulttable()
 ---@param o ua.info
 ---@param gotostart? boolean|"both"
 ---@param initial_count number?
@@ -70,7 +70,7 @@ function M.count_start_pair(o,gotostart,initial_count,return_pos)
     end
     return (not return_pos) and count or nil
 end
-local caches_count_end_pair=vim.defaulttable(function () return {} end)
+local caches_count_end_pair=cachelib.weak_defaulttable()
 ---@param o ua.info
 ---@param gotoend? boolean|"both"
 ---@param initial_count number?
@@ -136,7 +136,7 @@ function M.count_end_pair(o,gotoend,initial_count,return_pos)
     end
     return (not return_pos) and count or nil
 end
-local caches_count_ambiguous_pair=vim.defaulttable(function () return {} end)
+local caches_count_ambiguous_pair=cachelib.weak_defaulttable()
 ---@param o ua.info
 ---@param gotoend? boolean|"both"
 ---@param initial_count number?

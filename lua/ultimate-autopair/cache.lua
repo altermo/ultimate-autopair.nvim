@@ -45,5 +45,14 @@ function M.buf_get_cache(bufnr,caches)
     end
     return caches[bufnr]
 end
-
+---@return table<any,table>
+function M.weak_defaulttable()
+    return setmetatable({},{
+        __mode="k",
+        __index=function(t,k)
+            rawset(t,k,{})
+            return t[k]
+        end,
+    })
+end
 return M
