@@ -12,9 +12,6 @@ function M.call(o)
     end
     return not escape
 end
-M.conf={
-    escapechar='string?'
-}
 M.clear_cache={
     'textchange',
 }

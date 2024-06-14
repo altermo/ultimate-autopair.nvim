@@ -7,9 +7,6 @@ function M.call(o)
     if o.source.mode~='c' then return true end
     return not vim.list_contains(o.conf.skip,o.source.o.cmdtype)
 end
-M.conf={
-    skip='string[]',
-}
 M.clear_cache={
 }
 return M

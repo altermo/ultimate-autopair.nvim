@@ -49,11 +49,6 @@ function M.call(o)
     end
     return true
 end
-M.conf={
-    before='boolean',
-    after='boolean',
-    py_fstr='boolean',
-}
 M.clear_cache={
     'textchange',
     'opt:iskeyword',

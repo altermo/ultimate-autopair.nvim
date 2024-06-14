@@ -15,10 +15,6 @@ function M.call(o)
     elseif conf.nft and vim.list_contains(conf.nft,ft) then
     else return true end
 end
-M.conf={
-    ft='string[]',
-    nft='string[]',
-}
 M.clear_cache={
     'textchange',
     'opt:filetype',
