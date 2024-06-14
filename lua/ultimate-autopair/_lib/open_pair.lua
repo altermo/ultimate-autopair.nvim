@@ -65,7 +65,7 @@ function M.count_start_pair(o,gotostart,initial_count,return_pos)
                 count=0
             end
         end
-        if cache then cache[row]=count-rcount end
+        if cache and row~=o.row then cache[row]=count-rcount end
         ::continue::
     end
     return (not return_pos) and count or nil
@@ -131,9 +131,7 @@ function M.count_end_pair(o,gotoend,initial_count,return_pos)
                 count=0
             end
         end
-        if cache then
-            cache[row]=count-rcount
-        end
+        if cache and row~=o.row then cache[row]=count-rcount end
         ::continue::
     end
     return (not return_pos) and count or nil
@@ -195,7 +193,7 @@ function M.count_ambiguous_pair(o,gotoend,initial_count,return_pos)
             end
             pos=line:find(pair,pos+#pair,true)
         end
-        if cache then cache[row]=count-rcount end
+        if cache and row~=o.row then cache[row]=count-rcount end
         ::continue::
     end
     if not return_pos and count%2==0 then return end
