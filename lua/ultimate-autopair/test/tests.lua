@@ -112,7 +112,7 @@ return {
     filter_alpha={
         {'don|t',"'","don'|t"},
         {'ä|',"'","ä'|",ascii=true},
-        {'ä|',"'","ä'|'",{cmd='set iskeyword='},ascii=true},
+        {'ä|',"'","ä'|'",{cmd='set iskeyword=',skip=true},ascii=true},
         {'_|',"'","_'|"},
         {'-|',"'","-'|",{ft='lisp'}},
         {'```query\n.|\n```',"'","```query\n.'|\n```",{ft='markdown'}},

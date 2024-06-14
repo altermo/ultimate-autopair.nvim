@@ -2,12 +2,12 @@ local M={}
 local utils=require'ultimate-autopair.utils'
 local fn=require'ultimate-autopair._lib.filter'
 ---@type table<string,true|table<string,boolean>>
-M._cache_keywordy={}
+M._cache_keywordy={} --TODO: should be cleared when options change
 function M.is_keywordy(char,o)
     if char=='\0' then return false end
-    if M._cache_keywordy[char]==true then return true end
-    local ft=utils.get_filetype(o)
     if not M._cache_keywordy[char] then M._cache_keywordy[char]={} end
+    local ft=utils.get_filetype(o)
+    if M._cache_keywordy[char][ft]~=nil then return M._cache_keywordy[char][ft] end
     local is_keyword
     if ft==vim.o.filetype then
         is_keyword=vim.fn.charclass(char)==2
