@@ -1,7 +1,7 @@
 local utils=require'ultimate-autopair.utils'
 local cachelib=require'ultimate-autopair.cache'
 local M={}
-local caches_count_star_pair={}
+local caches_count_star_pair=vim.defaulttable(function () return {} end)
 ---@param o ua.info
 ---@param gotostart? boolean|"both"
 ---@param initial_count number?
@@ -12,7 +12,7 @@ function M.count_start_pair(o,gotostart,initial_count,return_pos)
     local cache
     if type(o.source.source)=='number' and not return_pos then
         --TODO: implement caching when return_pos is true
-        cache=cachelib.buf_get_cache(o.source.source --[[@as number]],caches_count_star_pair)
+        cache=cachelib.buf_get_cache(o.source.source --[[@as number]],caches_count_star_pair[o.m])
     end
     --TODO(fix): if gotostart=='both' and cursor in pair then dont count pair
     local m=o.m --[[@as ua.prof.pair.pair]]
@@ -70,7 +70,7 @@ function M.count_start_pair(o,gotostart,initial_count,return_pos)
     end
     return (not return_pos) and count or nil
 end
-local caches_count_end_pair={}
+local caches_count_end_pair=vim.defaulttable(function () return {} end)
 ---@param o ua.info
 ---@param gotoend? boolean|"both"
 ---@param initial_count number?
@@ -81,7 +81,7 @@ function M.count_end_pair(o,gotoend,initial_count,return_pos)
     local cache
     if type(o.source.source)=='number' and not return_pos then
         --TODO: implement caching when return_pos is true
-        cache=cachelib.buf_get_cache(o.source.source --[[@as number]],caches_count_end_pair)
+        cache=cachelib.buf_get_cache(o.source.source --[[@as number]],caches_count_end_pair[o.m])
     end
     --TODO(fix): if gotostart=='both' and cursor in pair then dont count pair
     local m=o.m --[[@as ua.prof.pair.pair]]
@@ -136,7 +136,7 @@ function M.count_end_pair(o,gotoend,initial_count,return_pos)
     end
     return (not return_pos) and count or nil
 end
-local caches_count_ambiguous_pair={}
+local caches_count_ambiguous_pair=vim.defaulttable(function () return {} end)
 ---@param o ua.info
 ---@param gotoend? boolean|"both"
 ---@param initial_count number?
@@ -147,7 +147,7 @@ function M.count_ambiguous_pair(o,gotoend,initial_count,return_pos)
     local cache
     if type(o.source.source)=='number' and not return_pos then
         --TODO: implement caching when return_pos is true
-        cache=cachelib.buf_get_cache(o.source.source --[[@as number]],caches_count_ambiguous_pair)
+        cache=cachelib.buf_get_cache(o.source.source --[[@as number]],caches_count_ambiguous_pair[o.m])
     end
     --TODO(fix): if gotostart=='both' and cursor in pair then dont count pair
     local m=o.m --[[@as ua.prof.pair.pair]]
