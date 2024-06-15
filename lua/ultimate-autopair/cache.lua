@@ -5,12 +5,12 @@ local M={}
 function M._attach_textchange(bufnr,cache)
     vim.api.nvim_buf_attach(bufnr,false,{
         on_lines=function(_,_,_,first,last,newlast)
-            if last < newlast then
+            if last<newlast then
                 for i=first+1,last do
                     cache[i]=false
                 end
                 for _=last,newlast-1 do
-                    table.insert(cache,last+1,nil)
+                    table.insert(cache,last+1,false)
                 end
             elseif last==newlast then
                 for i=first+1,last do
