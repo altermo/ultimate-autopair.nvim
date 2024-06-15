@@ -1,3 +1,4 @@
+local utils=require'ultimate-autopair.utils'
 local hookmem=require'ultimate-autopair.hook.mem'
 local maphook=require'ultimate-autopair.hook.map'
 local userhook=require'ultimate-autopair.hook.user'
@@ -47,9 +48,9 @@ function M.register_hook(obj,hash)
     if not hookmem[hash] then hookmem[hash]={} end
     local mem=hookmem[hash]
     if UA_DEV then
-        assert(not vim.list_contains(mem,obj))
+        assert(not utils.in_list(mem,obj))
     end
-    if vim.list_contains(mem,obj) then return end
+    if utils.in_list(mem,obj) then return end
     mem.dirty=true
     table.insert(mem,obj)
 end

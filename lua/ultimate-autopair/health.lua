@@ -114,7 +114,7 @@ function M.check_not_allowed_string(path)
         info('INFO Please make sure that `grep` is installed')
         return
     end
-    local blacklist={'vim.lg','print','vim.dev'}
+    local blacklist={'vim.lg','print','vim.dev','vim.tbl_contains','vim.list_contains'}
     local search=table.concat(blacklist,'\\|')
     local job=vim.fn.jobstart({'grep','-r','--exclude=health.lua','--exclude-dir=test',search,path},{on_stdout=function (_,data,_)
         for _,v in ipairs(data) do

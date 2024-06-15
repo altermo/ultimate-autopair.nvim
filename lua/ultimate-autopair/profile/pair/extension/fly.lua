@@ -9,7 +9,7 @@ function M.run(o,conf)
         if no.line:sub(no.col,no.col+#m.end_pair)==m.end_pair then
             no.col=no.col+#m.end_pair --TODO: test for utf8 pair
             break
-        elseif vim.list_contains(conf.jump_other_char or {'}',')'},no.line:sub(no.col,no.col)) then
+        elseif utils.in_list(conf.jump_other_char or {'}',')'},no.line:sub(no.col,no.col)) then
         else
             return
         end

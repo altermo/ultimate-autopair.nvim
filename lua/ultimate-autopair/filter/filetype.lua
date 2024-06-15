@@ -11,8 +11,8 @@ function M.call(o)
     else
         ft=utils.get_filetype(o,{tree=conf.tree})
     end
-    if conf.ft and not vim.list_contains(conf.ft,ft) then
-    elseif conf.nft and vim.list_contains(conf.nft,ft) then
+    if conf.ft and not utils.in_list(conf.ft,ft) then
+    elseif conf.nft and utils.in_list(conf.nft,ft) then
     else return true end
 end
 M.clear_cache={

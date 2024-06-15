@@ -5,7 +5,7 @@ local utils=require'ultimate-autopair.utils'
 function M.call(o)
     if not o.conf.skip then return true end
     if o.source.mode~='c' then return true end
-    return not vim.list_contains(o.conf.skip,o.source.o.cmdtype)
+    return not utils.in_list(o.conf.skip,o.source.o.cmdtype)
 end
 M.clear_cache={
 }

@@ -1,6 +1,16 @@
 ---@alias ua._.str_buf string.buffer
 local M={I={}}
 M.I.len=vim.api.nvim_strwidth
+---@generic T
+---@param list (T|any)[]
+---@param value T
+---@return boolean
+function M.in_list(list,value)
+    for _,v in ipairs(list) do
+        if v==value then return true end
+    end
+    return false
+end
 ---@generic T:string|string?
 ---@param str T
 ---@return T
@@ -13,7 +23,7 @@ function M.keycode(str)
         local sidx=1
         for k,v in ipairs(pos) do
             local c=str:sub(v,(pos[k+1] or 0)-1)
-            if #c>1 and vim.list_contains({string.byte(c,2,-1)},128) then
+            if #c>1 and M.in_list({string.byte(c,2,-1)},128) then
                 out=out..vim.api.nvim_replace_termcodes(str:sub(sidx,v-1),true,true,true)..c
                 sidx=pos[k+1]
             end

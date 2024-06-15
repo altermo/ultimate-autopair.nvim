@@ -98,7 +98,7 @@ function M.term_in_shell_or_vim(o,procnames)
         'vim',
     }
     local function in_not_allowed_proc(pid)
-        if not vim.tbl_contains(procnames,vim.api.nvim_get_proc(pid).name) then return true end
+        if not utils.in_list(procnames,vim.api.nvim_get_proc(pid).name) then return true end
         ---NOTE: nvim_get_proc_children sometimes doesn't return all children
         for _,v in ipairs(vim.api.nvim_get_proc_children(pid)) do
             if in_not_allowed_proc(v) then return true end
