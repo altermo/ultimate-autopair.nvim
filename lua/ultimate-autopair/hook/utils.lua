@@ -32,8 +32,12 @@ function M.create_o_wrapper()
         o=vim.bo[buf],
         mode=M.getmode(),
         get_parser=function ()
+            if source._cache[has_parsed]==false then return end
             local s,parser=pcall(vim.treesitter.get_parser,buf)
-            if not s then return end
+            if not s then
+                source._cache[has_parsed]=false
+                return
+            end
             if not source._cache[has_parsed] then
                 parser:parse(true)
                 source._cache[has_parsed]=true
