@@ -168,6 +168,9 @@ M._tslang2lang_single={
 function M.get_filetype(o,opt)
     opt=opt or {}
     --TODO: opt.tree should (almost) always be configurable
+    if opt.tree==false then return o.source.o.filetype end
+    local parser=opt.parser or o.source.get_parser()
+    if not parser then return o.source.o.filetype end
     local range={o.rows-1,o.cols-1,o.rowe-1,o.cole-1}
     ---@param ltree vim.treesitter.LanguageTree
     local function lang_for_range(ltree)
@@ -182,10 +185,6 @@ function M.get_filetype(o,opt)
         end
         return ltree:lang()
     end
-    local tree=opt.tree~=false
-    if not tree then return o.source.o.filetype end
-    local parser=opt.parser or o.source.get_parser()
-    if not parser then return o.source.o.filetype end
     local tslang,childlang=lang_for_range(parser)
     if not childlang then return o.source.o.filetype end
     return M.tslang2lang[tslang] or vim.treesitter.language.get_filetypes(tslang)[1] or tslang
