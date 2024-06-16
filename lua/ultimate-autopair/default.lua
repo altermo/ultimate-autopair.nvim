@@ -68,7 +68,10 @@ return {
     },
     fastwarp={
       enable=true,
+      --enable_normal=true, --TODO
+      --enable_reverse=true, --TODO
       map='<A-e>',
+      rmap='<A-E>'
     }
   },
   --tex={

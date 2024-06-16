@@ -4,6 +4,7 @@ M.maps={
     cr='newline',
     space='space',
     fastwarp='fastwarp',
+    rfastwarp='fastwarp',
 }
 ---@param objects ua.instance
 ---@param conf ua.prof.pair.conf

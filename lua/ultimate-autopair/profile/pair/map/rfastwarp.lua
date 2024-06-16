@@ -1,52 +1,39 @@
 local putils=require'ultimate-autopair.profile.pair.utils'
----@class ua.prof.pair.fastwarp:ua.object
----@field get_pairs fun():ua.prof.pair.pair[]
----@field nocursormove boolean?
----@class ua.prof.pair.fastwarp.conf:ua.prof.pair.map.conf
----@field nocursormove boolean?
----@field rmap string|table
-
-local ulen=vim.api.nvim_strwidth
 
 local M={}
 ---@type (fun(o:ua.info,ind:number,p:string,first:boolean):ua.actions|nil)[]
 M.act={
-    function (o,ind,p)
-        if not o.line:sub(ind,ind):match('[%w_]') then return end
-        while o.line:sub(ind,ind):match('[%w_]') do
-            ind=ind+1
-        end
+    function (o,ind,p,first)
+        if first then return end
+        if not o.line:sub(ind-1,ind-1):match('[%w_]') then return end
+        if o.line:sub(ind,ind):match('[%w_]') then return end
         return {
             {'delete',0,p},
-            --Because of the deletion, everything moved len(p) to the right
-            {'pos',ind-ulen(p)},
+            {'pos',ind},
             p,{'left',p},
         }
     end,
     function (o,ind,p,first)
         if first then return end
-        local next_spairs=putils.forward_get_start_pairs(o,o.m.get_pairs())
-        if #next_spairs==0 then return end
+        local prev_spairs=putils.backwards_get_end_pairs(o,o.m.get_pairs())
+        if #prev_spairs==0 then return end
         return {
             {'delete',0,p},
-            --Because of the deletion, everything moved len(p) to the right
-            {'pos',ind-ulen(p)},
+            {'pos',ind},
             p,{'left',p},
         }
     end,
     function (o,_,p,first)
         if not first then return end
-        local next_spairs=putils.forward_get_start_pairs(o,o.m.get_pairs())
-        if #next_spairs==0 then return end
-        for _,v in ipairs(next_spairs) do
-            local opair=setmetatable({m=v,col=o.col+#v.start_pair_old},{__index=o})
-            local col,row=putils.next_open_end_pair(opair)
+        local prev_spairs=putils.backwards_get_end_pairs(o,o.m.get_pairs())
+        if #prev_spairs==0 then return end
+        for _,v in ipairs(prev_spairs) do
+            local opair=setmetatable({m=v,col=o.col-1},{__index=o})
+            local col,row=putils.prev_open_start_pair(opair)
             if row and col then
-                col=col+ulen(opair.m.start_pair_old)
                 return {
                     {'delete',0,p},
-                    --Because of the deletion, everything moved len(p) to the right
-                    {'pos',col-(row==o.row and ulen(p) or 0),row},
+                    {'pos',col,row},
                     p,{'left',p},
                 }
             end
@@ -54,12 +41,11 @@ M.act={
         end
     end,
     function (o,ind,p)
-        local next_epairs=putils.forward_get_end_pairs(o,o.m.get_pairs())
-        if #next_epairs==0 then return end
+        local prev_spairs=putils.backwards_get_start_pairs(o,o.m.get_pairs())
+        if #prev_spairs==0 then return end
         return {
             {'delete',0,p},
-            --Because of the deletion, everything moved len(p) to the right
-            {'pos',ind-ulen(p)},
+            {'pos',ind},
             p,{'left',p},
         }
     end
@@ -85,24 +71,24 @@ function M.run(o,_rec)
     end
     local epairs=putils.forward_get_end_pairs(o,m.get_pairs())
     for _,epair in ipairs(epairs) do
-        for col=o.col+#epair.end_pair_old,#o.line do
+        for col=o.col,1,-1 do
             for _,v in ipairs(M.act) do
-                local ret=v(setmetatable({col=col},{__index=o}),col,epair.end_pair_old,col==o.col+#epair.end_pair_old)
+                local ret=v(setmetatable({col=col},{__index=o}),col,epair.end_pair_old,col==o.col)
                 if ret then return ret end
             end
         end
-        if o.col~=#o.line then
+        if o.col~=1 then
             return {
                 {'delete',0,epair.end_pair_old},
-                {'pos',#o.line},
+                {'pos',1},
                 epair.end_pair_old,
                 {'left',epair.end_pair_old},
             }
         else
-            --TODO: if last line, then don't move pair
+            --TODO: if first line, then don't move pair
             return {
                 {'delete',0,epair.end_pair_old},
-                {'pos',1,o.row+1},
+                {'pos',#o.lines[o.row>1 and o.row-1 or 1]+1,o.row-1},
                 epair.end_pair_old,
                 {'left',epair.end_pair_old},
             }
@@ -116,11 +102,11 @@ end
 function M.init(objects,conf)
     --TODO: each pair may have it's own fastwarp config defined
     ---@type ua.prof.pair.fastwarp
-    return putils.create_obj(conf,{
+    return putils.create_obj(setmetatable({map=conf.rmap},{__index=conf}),{
         run=M.run,
         get_pairs=function () return putils.get_pairs(objects) end,
         nocursormove=conf.nocursormove,
-        doc='autopairs fastwarp',
+        doc='autopairs reverse fastwarp',
     })
 end
 return M
