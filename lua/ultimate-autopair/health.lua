@@ -169,11 +169,24 @@ function M.check_cache(lua_path)
         end
     end
 end
+function M.check_other()
+    local default=require'ultimate-autopair.default'
+    local nodes={}
+    vim.list_extend(nodes,default._default_comment_nodes)
+    vim.list_extend(nodes,default._default_stringish_nodes)
+    table.sort(nodes)
+    local nodes_2=vim.tbl_values(default._default_comment_and_stringish_nodes)
+    table.sort(nodes_2)
+    if not vim.deep_equal(nodes,nodes_2) then
+        warn('In default.lua, content of comment and stringish does not match comment_and_stringish')
+    end
+end
 function M.start_dev(plugin_path,lua_path)
     start('Development checks')
     M.check_not_allowed_string(lua_path)
     M.check_unique_lang_to_ft()
     M.check_cache(lua_path)
+    M.check_other()
     start('Tests')
     M.run_tests(plugin_path)
 end

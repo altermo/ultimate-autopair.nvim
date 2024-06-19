@@ -1,8 +1,9 @@
 local utils=require'ultimate-autopair.utils'
+local default=require'ultimate-autopair.default'
 local M={}
 M.global={}
-M.global.string={'string'} --[[TODO: add other string node types]]
-M.global.comment={'comment'} --[[TODO: add other comment node types]]
+M.global.string=default._default_stringish_nodes
+M.global.comment=default._default_comment_nodes
 
 ---@param o ua.filter
 ---@param tree boolean? --TODO: maybe make this a table of options

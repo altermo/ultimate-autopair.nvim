@@ -1,3 +1,32 @@
+local comment_nodes={
+  'comment',
+  'line_comment','block_comment','nesting_block_comment' --d #62
+}
+local stringish_nodes={
+  'string','char','character',
+  'raw_string', --fish/bash/sh
+  'char_literal','string_literal', --c/cpp
+  'string_value', --css
+  'str_lit','char_lit', --clojure/commonlisp
+  'interpreted_string_literal','raw_string_literal','rune_literal', --go
+  'quoted_attribute_value', --html
+  'template_string', --javascript
+  'LINESTRING','STRINGLITERALSINGLE','CHAR_LITERAL', --zig
+  'string_literals','character_literal', --d #62
+}
+local comment_and_stringish_nodes={
+  'comment','string','char','character',
+  'raw_string', --fish/bash/sh
+  'char_literal','string_literal', --c/cpp
+  'string_value', --css
+  'str_lit','char_lit', --clojure/commonlisp
+  'interpreted_string_literal','raw_string_literal','rune_literal', --go
+  'quoted_attribute_value', --html
+  'template_string', --javascript
+  'LINESTRING','STRINGLITERALSINGLE','CHAR_LITERAL', --zig
+  'string_literals','character_literal','line_comment','block_comment','nesting_block_comment' --d #62
+}
+
 local in_lisp=function (o)
   local fn=require'ultimate-autopair._lib.filter' --TODO: better name
   return (not fn.in_lisp(o)) or fn.in_string(o) or fn.in_comment(o)
@@ -6,6 +35,9 @@ end
 --  ts_not_after={'latex_block','code_span','fenced_code_block'}
 --}
 return {
+  _default_comment_nodes=comment_nodes,
+  _default_stringish_nodes=stringish_nodes,
+  _default_comment_and_stringish_nodes=comment_and_stringish_nodes,
   conf={
     map_modes={'i','c'},
     pair_map_modes=nil,
@@ -25,17 +57,7 @@ return {
       escape={},
       alpha={p=-8},
       filetype={p=-9,nft={'TelescopePrompt'},lang_detect_after=true},
-      tsnode={p=-10,lang_detect_after=true,separate={'comment','string','char','character',
-        'raw_string', --fish/bash/sh
-        'char_literal','string_literal', --c/cpp
-        'string_value', --css
-        'str_lit','char_lit', --clojure/commonlisp
-        'interpreted_string_literal','raw_string_literal','rune_literal', --go
-        'quoted_attribute_value', --html
-        'template_string', --javascript
-        'LINESTRING','STRINGLITERALSINGLE','CHAR_LITERAL', --zig
-        'string_literals','character_literal','line_comment','block_comment','nesting_block_comment' --d #62
-      }},
+      tsnode={p=-10,lang_detect_after=true,separate=comment_and_stringish_nodes},
     },
     extension={
       --surround={},
