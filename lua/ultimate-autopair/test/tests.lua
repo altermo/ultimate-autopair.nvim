@@ -339,7 +339,7 @@ return {
         {'{|}foo,','<A-e>','{|foo},'},
         {'{foo|},bar','<A-e>','{foo,bar|}'},
         {'{foo|},()','<A-e>','{foo,|}()'},
-        {'<!--|-->foo','<A-e>','<!--|foo-->',{ft='markdown',skip=true}}, --TODO: test that this works in markdown+TREESITTER
+        {'<!--|-->foo','<A-e>','<!--|foo-->',{ft='markdown',skip=true}}, --TODO: test that this works in markdown+TREESITTER (the problem is that <!-- --> is using html parser instead of markdown parser)
         {'{foo,|}(),','<A-e>','{foo,()|},'},
         {'{foo,|}(\n),','<A-e>','{foo,(\n)|},'},
         {'(|)"bar"','<A-e>','(|"bar")'},
