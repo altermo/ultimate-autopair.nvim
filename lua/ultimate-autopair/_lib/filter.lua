@@ -25,53 +25,35 @@ end
 ---@param o ua.filter
 ---@return boolean
 function M.in_string(o)
-    local query=require'ultimate-autopair._lib.query'
-    local parser=o.source.get_parser()
-    if not parser then
+    --NOTE: whether it is inclusive or not depends on the string, but as most strings are not inclusive
+    local ret=M.in_node(o,M.global.string,false)
+    if ret==nil then
         --TODO: some simple regex matching
         return false
     end
-    local nodes=query.find_all_node_types(parser,M.global.string)
-    local range={o.rows-1,o.cols-1,o.rowe-1,o.cole-1}
-    for _,node in ipairs(nodes) do
-        local trange={node:range()}
-        --NOTE: whether it is inclusive or not depends on the string, but as most strings are not inclusive
-        if utils.range_in_range(trange,range,false) then
-            return true
-        end
-    end
-    return false
+    return ret
 end
 ---@param o ua.filter
 ---@return boolean
 function M.in_comment(o)
-    local query=require'ultimate-autopair._lib.query'
-    local parser=o.source.get_parser()
-    if not parser then
+    --NOTE: whether it is inclusive or not depends on the comment, but as most comments are inclusive (to the right)
+    local ret=M.in_node(o,M.global.comment,true)
+    if ret==nil then
         --TODO: some simple regex matching (using commentstring)
         return false
     end
-    local nodes=query.find_all_node_types(parser,M.global.comment)
-    local range={o.rows-1,o.cols-1,o.rowe-1,o.cole-1}
-    for _,node in ipairs(nodes) do
-        local trange={node:range()}
-        --NOTE: whether it is inclusive or not depends on the comment, but as most comments are inclusive
-        if utils.range_in_range(trange,range,true) then
-            return true
-        end
-    end
-    return false
+    return ret
 end
 ---@param o ua.filter
 ---@param node_type string|string[]
 ---@param inclusive boolean?
 ---@return boolean|nil
 function M.in_node(o,node_type,inclusive)
-    local query=require'ultimate-autopair._lib.query'
     local parser=o.source.get_parser()
     if not parser then
         return nil
     end
+    local query=require'ultimate-autopair._lib.query'
     local nodes=query.find_all_node_types(parser,type(node_type)=='string' and {node_type} or node_type --[[@as table]])
     local range={o.rows-1,o.cols-1,o.rowe-1,o.cole-1}
     for _,node in ipairs(nodes) do
