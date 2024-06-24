@@ -51,7 +51,7 @@ function M._attach_opt(bufnr,cache,opt)
 end
 ---@param bufnr number
 ---@param caches table<number,ua.cache>
----@param opts string[]
+---@param opts string[]?
 function M._init(bufnr,caches,opts)
     opts=opts or {'textchange'} --TODO: temp
     local cache={}
@@ -76,7 +76,7 @@ function M._init(bufnr,caches,opts)
 end
 ---@param bufnr number
 ---@param caches table<number,ua.cache>
----@param opts string[]
+---@param opts string[]?
 ---@return ua.cache
 function M.buf_get_cache(bufnr,caches,opts)
     if not caches[bufnr] then
