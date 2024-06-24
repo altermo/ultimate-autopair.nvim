@@ -205,13 +205,13 @@ function M.get_char(str,col)
         vim.str_utf_end(str,col)+col)
 end
 ---@param o ua.info
----@param _coloff number? --TODO: temp
----@param _coloffe number? --TODO: temp
+---@param col_start_offset number?
+---@param col_end_offset number?
 ---@return ua.filter
-function M.info_to_filter(o,_coloff,_coloffe)
+function M.info_to_filter(o,col_start_offset,col_end_offset)
     return {
-        cols=o.col-(_coloff or 0),
-        cole=o.col-(_coloffe or 0),
+        cols=o.col-(col_start_offset or 0),
+        cole=o.col-(col_end_offset or 0),
         line=o.line,
         lines=o.lines,
         rows=o.row,
@@ -222,11 +222,11 @@ function M.info_to_filter(o,_coloff,_coloffe)
 end
 ---@param filters table<string,table>
 ---@param o ua.info
----@param _coloff number? --TODO: temp
----@param _coloffe number? --TODO: temp
+---@param col_start_offset number?
+---@param col_end_offset number?
 ---@return boolean
-function M.run_filters(filters,o,_coloff,_coloffe)
-    local po=M.info_to_filter(o,_coloff,_coloffe)
+function M.run_filters(filters,o,col_start_offset,col_end_offset)
+    local po=M.info_to_filter(o,col_start_offset,col_end_offset)
     for filter,conf in pairs(filters) do
         if type(filter)=='number' then
             if not conf(po) then
