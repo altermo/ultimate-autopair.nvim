@@ -6,10 +6,10 @@ M.global.string=default._default_stringish_nodes
 M.global.comment=default._default_comment_nodes
 
 ---@param o ua.filter
----@param tree boolean? --TODO: maybe make this a table of options
+---@param opt {tree:boolean?,parser:vim.treesitter.LanguageTree?}?
 ---@return string
-function M.get_filetype(o,tree)
-    return utils.get_filetype(o,{tree=tree})
+function M.get_filetype(o,opt)
+    return utils.get_filetype(o,opt)
 end
 ---@param _ ua.filter
 ---@return boolean
@@ -17,10 +17,10 @@ function M.in_macro(_)
     return vim.fn.reg_recording()~='' or vim.fn.reg_executing()~=''
 end
 ---@param o ua.filter
----@param tree boolean? --TODO: maybe make this a table of options
+---@param opt {tree:boolean?,parser:vim.treesitter.LanguageTree?}?
 ---@return boolean
-function M.in_lisp(o,tree)
-    local ft=utils.get_filetype(o,{tree=tree})
+function M.in_lisp(o,opt)
+    local ft=utils.get_filetype(o,opt)
     return utils.ft_get_option(ft,'lisp') --[[@as boolean]]
 end
 ---@param o ua.filter
