@@ -334,7 +334,7 @@ function M.inherit(config) --TODO: temp
     for k,pair in pairs(config) do
         if type(k)~='number' then goto continue end
         out[k]=setmetatable({
-            map_modes=M.merge(config.map_modes,pair.map_modes,true,'modes'),
+            map_modes=M.merge(out.pair_map_modes,pair.map_modes,true,'modes'),
             multiline=M.merge(config.multiline,pair.multiline,true,'boolean'),
         },{__index=pair})
         if change[k] then
