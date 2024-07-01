@@ -138,7 +138,7 @@ function M.check_unique_lang_to_ft()
         return vim.fn.fnamemodify(x,':t:r')
     end,vim.api.nvim_get_runtime_file('parser/*',true))
     local done=vim.deepcopy(require'ultimate-autopair.utils'.tslang2lang)
-    local single=require'ultimate-autopair.utils'._tslang2lang_single
+    local single=require'ultimate-autopair.utils'._tslang2lang_special
     for _,tree_lang in ipairs(tree_langs) do
         if done[tree_lang]=='' then goto continue end
         vim.treesitter.language.add(tree_lang)

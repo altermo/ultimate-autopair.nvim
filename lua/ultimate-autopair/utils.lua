@@ -102,65 +102,70 @@ function M._to_cmd(cmd,...)
     return M.keycode'<cmd>lua '..cmd:format(unpack(arg))..'\r'
 end
 M.tslang2lang={
-    --These treesitter languages have multiple filetypes
-    ---Category 0
-    markdown_inline='markdown',
-    haskell_persistent='haskell',
-    ocaml_interface='ocaml',
-    surface='elixir',
-    ---Category 1
-    markdown='markdown',
-    glimmer='handlebars',
-    html='html',
-    ini='ini',
+    ---Last updated: 2024-07-01
+    ---NOTE:
+    --- When the following comments talks about corresponding to filetypes, they mean the return value of `vim.treesitter.language.get_filetype(lang)`
+    --- When the following comments talks about filetypes which vim detects, they mean the filetypes which are defined inside `filetype.lua` (and other files used by `filetype.lua` (like `filetype/detect.lua`))
+
+    -----Category 1 (these are languages correspond to multiple filetypes which vim detects (so we chose the most common one))
+    ini='dosini',
     javascript='javascript',
     make='make',
+    markdown='markdown',
     muttrc='muttrc',
     scala='scala',
     sql='sql',
+    starlark='starlark',
     tcl='tcl',
-    tsx='typescriptreact',
+    terraform='terraform',
     xml='xml',
-    verilog='verilog',
-    ---Category 2
-    latex='tex',
+    ---Category 2 (these languages are corresponding to only one filetype which vim detects)
     bash='sh',
     bibtex='bib',
+    c_sharp='cs',
     commonlisp='lisp',
     devicetree='dts',
-    c_sharp='cs',
     diff='diff',
     eex='eelixir',
     embedded_template='eruby',
-    facility='fsd',
-    faust='dsp',
+    faust='faust',
     gdshader='gdshader',
     git_config='gitconfig',
     git_rebase='gitrebase',
+    glimmer='handlebars',
     godot_resource='gdresource',
+    haskell_persistent='haskellpersistent',
+    html='html',
     janet_simple='janet',
+    latex='tex',
     linkerscript='ld',
-    m68k='asm68k',
     poe_filter='poefilter',
     properties='jproperties',
     qmljs='qml',
     slang='slang',
-    ssh_config='ssh_config',
-    starlark='bzl',
+    ssh_config='sshconfig',
+    surface='surface',
+    t32='trace32',
+    textproto='pbtxt',
     tlaplus='tla',
+    tsx='typescriptreact',
     udev='udevrules',
     uxntal='tal',
     v='v',
-    vhs='tape',
     vento='vento',
-    t32='trace32',
-    textproto='pbtxt',
+    vhs='vhs',
+    ---Category 3 (these languages don't correspond to any filetypes which vim detects)
+    facility='fsd',
+    m68k='m68k',
+    ---Category 4 (same as category 3, but they should point to filetypes which vim detects)
+    ---Unlike the above ones, these need not be be corresponding to multiple filetypes
+    markdown_inline='markdown',
+    ocaml_interface='ocaml',
 }
-M._tslang2lang_single={
+M._tslang2lang_special={
+    --These languages point the filetypes which do not correspond to these languages (`vim.treesitter.language.get_lang`)
     markdown_inline=true,
-    haskell_persistent=true,
     ocaml_interface=true,
-    surface=true,
 }
 ---@param o ua.filter
 ---@param opt {parser:vim.treesitter.LanguageTree?,tree:boolean?}?
