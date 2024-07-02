@@ -12,7 +12,7 @@ M.conf_spec={
         filter='filters',
         extension='TODO',
         integration='TODO',
-        change='TODO',
+        change={__array_value='pair'},
     },
     pair={
         __inherit_keys={'basepair'},
