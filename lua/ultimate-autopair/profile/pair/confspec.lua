@@ -342,7 +342,9 @@ function M.inherit(config) --TODO: temp
         end
         local filters={}
         for filter,_ in pairs(config.filter or {}) do
-            filters[filter]=out[k][filter]
+            if type(filter)~='number' then --TODO: temp
+                filters[filter]=out[k][filter]
+            end
         end
         filters=M.merge(filters,config.filter,true,'filters')
         filters=M.merge(pair.filter,filters,true,'filters')
