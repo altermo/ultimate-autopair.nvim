@@ -145,7 +145,7 @@ function M.check_unique_lang_to_ft()
         local filetypes=vim.treesitter.language.get_filetypes(tree_lang)
         local ft=done[tree_lang]
         if done[tree_lang] then
-            if not vim.list_contains(filetypes,ft) and not single[tree_lang] then
+            if not vim.tbl_contains(filetypes,ft) and not single[tree_lang] then
                 warn(('filetype `%s` in `utils.tslang2lang["%s"]` may be incorrect'):format(ft,tree_lang))
             end
         elseif #filetypes>1 then
