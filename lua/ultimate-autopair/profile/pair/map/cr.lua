@@ -9,6 +9,7 @@ local M={}
 ---@return ua.actions|nil
 function M.run(o)
     if o.source.mode=='c' then return end
+    local conf={}
     local m=o.m --[[@as ua.prof.pair.cr]]
     local spairs=putils.backwards_get_start_pairs(o,m.get_pairs())
     for _,p in ipairs(spairs) do
@@ -24,6 +25,7 @@ function M.run(o)
             }
         end
     end
+    if conf.do_nothing_if_fail then return {} end
 end
 ---@param objects ua.instance
 ---@param conf ua.prof.pair.cr.conf

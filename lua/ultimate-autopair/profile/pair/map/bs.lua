@@ -4,6 +4,7 @@ local putils=require'ultimate-autopair.profile.pair.utils'
 ---@field conf ua.prof.pair.bs.conf
 ---@class ua.prof.pair.bs.conf:ua.prof.pair.map.conf
 ---@field overjump boolean
+---@field do_nothing_if_fail boolean
 
 local M={}
 ---@param o ua.info
@@ -37,6 +38,7 @@ function M.run(o)
             return {{'delete',#p.start_pair_old+#p.end_pair_old}}
         end
     end
+    if m.conf.do_nothing_if_fail then return {} end
 end
 ---@param objects ua.instance
 ---@param conf ua.prof.pair.bs.conf
