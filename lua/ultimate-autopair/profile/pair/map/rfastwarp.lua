@@ -85,7 +85,7 @@ function M.run(o,_rec)
                 {'left',epair.end_pair_old},
             }
         else
-            --TODO: if first line, then don't move pair
+            if o.row==1 then return {} end
             return {
                 {'delete',0,epair.end_pair_old},
                 {'pos',#o.lines[o.row>1 and o.row-1 or 1]+1,o.row-1},
