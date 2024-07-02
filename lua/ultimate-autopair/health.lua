@@ -108,24 +108,46 @@ function M.run_tests(plugin_path)
     test.info=info
     test.test(plugin_path)
 end
-function M.check_not_allowed_string(path)
-    if vim.fn.executable('grep')==0 then
-        warn('Some of the required executables are missing for dev testing')
-        info('INFO Please make sure that `grep` is installed')
-        return
+function M.check_not_allowed_string_and_typos(path)
+    local jobs={}
+    local jobsdata={}
+    if vim.fn.executable('grep')==1 then
+        local blacklist={'vim.lg','print','vim.dev','vim.tbl_contains','vim.list_contains'}
+        local search=table.concat(blacklist,'\\|')
+        local flag=false
+        local job=vim.fn.jobstart({'grep','-r','--exclude=health.lua','--exclude-dir=test',search,path},{on_stdout=function (_,data,_)
+            for _,v in ipairs(data) do
+                if v~='' then
+                    if not flag then
+                        warn('The following strings are not allowed: `'..table.concat(blacklist,'`, `')..'`')
+                        info('INFO Replace any `vim.tbl_contains` and `vim.list_contains` with `utils.in_list`')
+                        flag=true
+                    end
+                    warn('Found something not allowed (using grep): '..v:sub(v:sub(2):find(' ') or 1))
+                end
+            end
+        end})
+        table.insert(jobs,job)
+        table.insert(jobsdata,{name='grep',expected=1})
+    else
+        warn('`grep` not found, skipping checks which require it')
     end
-    local blacklist={'vim.lg','print','vim.dev','vim.tbl_contains','vim.list_contains'}
-    local search=table.concat(blacklist,'\\|')
-    local job=vim.fn.jobstart({'grep','-r','--exclude=health.lua','--exclude-dir=test',search,path},{on_stdout=function (_,data,_)
-        for _,v in ipairs(data) do
-            if v=='' then return end
-            warn('Found something not allowed: '..v:sub(v:sub(2):find(' ') or 1))
-        end
-    end})
-    debug.setmetatable(job,{name='grep',expected=1})
-    local jobs={job}
-    for k,exitcode in ipairs(vim.fn.jobwait(jobs,5000)) do
-        local mt=getmetatable(jobs[k])
+    if vim.fn.executable('typos')==1 then
+        local job=vim.fn.jobstart({'typos'},{cwd=path,on_stdout=function(_,data,_)
+            for _,v in ipairs(data) do
+                if v~='' then
+                    warn(v)
+                end
+            end
+        end})
+        table.insert(jobs,job)
+        table.insert(jobsdata,{name='typos',expected=0})
+    else
+        warn('`typos`(https://github.com/crate-ci/typos) not found, skipping checks which require it')
+    end
+    for k,job in ipairs(jobs) do
+        local exitcode=vim.fn.jobwait({job},5000)[1]
+        local mt=jobsdata[k]
         if exitcode==-1 then
             warn(('timeout `%s`'):format(mt.name))
         elseif exitcode~=(mt.expected or 0) then
@@ -183,7 +205,7 @@ function M.check_other()
 end
 function M.start_dev(plugin_path,lua_path)
     start('Development checks')
-    M.check_not_allowed_string(lua_path)
+    M.check_not_allowed_string_and_typos(lua_path)
     M.check_unique_lang_to_ft()
     M.check_cache(lua_path)
     M.check_other()
