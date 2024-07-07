@@ -199,9 +199,9 @@ return {
         {'-- |',"'","-- '|'",{ft='lua',cmd='set lisp'}},
         --{'"|"',"'",[["'|'"]],{ts=true,ft='fennel',tsft='lua'}},
         --{'|','(','(|',{c={extensions={cond={cond=function () return false end}}}}},
-        --{'#|','(','#(|',{c={extensions={cond={cond=function (_,o) return o.line:sub(o.col-1,o.col-1)~='#' end}}}}},
+        --{'#|','(','#(|',{c={extensions={cond={cond=function (_,o) return o.lines[o.row]:sub(o.col-1,o.col-1)~='#' end}}}}},
         --{'|#)','(','(|)#)',{c={extensions={cond={cond=function (_,o)
-        --    return o.line:sub(o.col-1,o.col-1)~='#' end,filter=true}}}}},
+        --    return o.lines[o.row]:sub(o.col-1,o.col-1)~='#' end,filter=true}}}}},
         --{'"|"','(','"(|"',{ts=true,c={extensions={cond={cond=function(fns) return not fns.in_string() end}}}}},
         --{'--|a','(','--(|a',{ft='lua',ts=true,c={extensions={cond={cond=function (fns) return not fns.in_node('comment') end}}}}},
         --{'|','(','(|)',{ft='lua',ts=true,c={extensions={cond={cond=function (fns) return not fns.in_node('comment') end}}}}},

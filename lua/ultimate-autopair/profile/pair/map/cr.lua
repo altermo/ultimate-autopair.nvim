@@ -14,7 +14,7 @@ function M.run(o)
     local spairs=putils.backwards_get_start_pairs(o,m.get_pairs())
     for _,p in ipairs(spairs) do
         local opair=setmetatable({m=p},{__index=o})
-        if o.line:sub(o.col,o.col+#p.end_pair_old-1)==p.end_pair_old
+        if o.lines[o.row]:sub(o.col,o.col+#p.end_pair_old-1)==p.end_pair_old
             and putils.run_end_pair_filter(opair)
             --and putils.pair_balansed_start(opair) --Not needed: it doesn't modify the pairs
         then

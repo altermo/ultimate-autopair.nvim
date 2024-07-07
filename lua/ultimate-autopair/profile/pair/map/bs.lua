@@ -31,7 +31,7 @@ function M.run(o)
     local epairs=putils.backwards_get_end_pairs(o,m.get_pairs())
     for _,p in ipairs(epairs) do
         local opair=setmetatable({m=p},{__index=o})
-        if o.line:sub(o.col-#p.end_pair_old-#p.start_pair_old,o.col-#p.end_pair_old-1)==p.start_pair_old
+        if o.lines[o.row]:sub(o.col-#p.end_pair_old-#p.start_pair_old,o.col-#p.end_pair_old-1)==p.start_pair_old
             and putils.run_start_pair_filter(setmetatable({col=o.col-#p.end_pair_old-#p.start_pair_old},{__index=opair}))
             and putils.pair_balansed_end(opair)
         then

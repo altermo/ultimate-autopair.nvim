@@ -10,22 +10,22 @@ local M={}
 function M.run(o)
     local conf={check_box_ft=true} --TODO: temp
     local m=o.m --[[@as ua.prof.pair.space]]
-    local first_col=o.line:sub(1,o.col-1):find(' *$')
+    local first_col=o.lines[o.row]:sub(1,o.col-1):find(' *$')
     local total=o.col-first_col
     local spairs=putils.backwards_get_start_pairs(setmetatable({col=first_col},{__index=o}),m.get_pairs())
     for _,spair in ipairs(spairs) do
         local opair=setmetatable({m=spair},{__index=o})
         local col,row=putils.next_open_end_pair(opair)
         if conf.check_box_ft and o.col==col and spair.start_pair_old=='[' and spair.end_pair_old==']' and
-             utils.get_filetype(utils.info_to_filter(o))=='markdown' and vim.regex([=[\v^\s*([+*-]|(\d+\.))\s\[\]$]=]):match_str(o.line:sub(1,o.col)) then
+             utils.get_filetype(utils.info_to_filter(o))=='markdown' and vim.regex([=[\v^\s*([+*-]|(\d+\.))\s\[\]$]=]):match_str(o.lines[o.row]:sub(1,o.col)) then
             return conf.do_nothing_if_fail and {} or nil
         end
         if conf.check_box_ft and o.col==col and spair.start_pair_old=='(' and spair.end_pair_old==')' and
-             utils.get_filetype(utils.info_to_filter(o))=='norg' and vim.regex([=[\v^\s*([+*-]|(\d+\.))\s\(\)$]=]):match_str(o.line:sub(1,o.col)) then
+             utils.get_filetype(utils.info_to_filter(o))=='norg' and vim.regex([=[\v^\s*([+*-]|(\d+\.))\s\(\)$]=]):match_str(o.lines[o.row]:sub(1,o.col)) then
             return conf.do_nothing_if_fail and {} or nil
         end
         if row and col then
-            local ototal=#o.line:sub(o.col,col-1):reverse():match('^ *')
+            local ototal=#o.lines[o.row]:sub(o.col,col-1):reverse():match('^ *')
             if not (ototal>total) then
                 --and putils.pair_balansed_end(opair) --Not needed: it doesn't modify the pairs
                 return {

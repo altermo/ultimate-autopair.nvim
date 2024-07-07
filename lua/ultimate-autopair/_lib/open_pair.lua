@@ -30,7 +30,7 @@ function M.count_start_pair(o,gotostart,initial_count,return_pos)
 
     start_pair=start_pair:reverse()
     end_pair=end_pair:reverse()
-    local rev_lines={o.line}
+    local rev_lines={o.lines[o.row]}
     if multiline then
         rev_lines=vim.fn.reverse(vim.list_slice(o.lines,(not gotostart) and o.row or nil,gotostart==true and o.row or nil))
     end
@@ -97,7 +97,7 @@ function M.count_end_pair(o,gotoend,initial_count,return_pos)
         return utils.run_filters(m.end_pair_filter,no,0,-#end_pair)
     end
 
-    local lines={o.line}
+    local lines={o.lines[o.row]}
     if multiline then
         lines=vim.list_slice(o.lines,gotoend==true and o.row or nil,(not gotoend) and o.row or nil)
     end
@@ -166,7 +166,7 @@ function M.count_ambiguous_pair(o,gotoend,initial_count,return_pos)
     local count=initial_count or 0
     local index
     local rowindex
-    local lines={o.line}
+    local lines={o.lines[o.row]}
     if multiline then
         lines=vim.list_slice(o.lines,gotoend==true and o.row or nil,(not gotoend) and o.row or nil)
     end

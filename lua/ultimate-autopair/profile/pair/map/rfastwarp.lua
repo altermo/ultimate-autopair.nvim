@@ -5,8 +5,8 @@ local M={}
 M.act={
     function (o,ind,p,first)
         if first then return end
-        if not o.line:sub(ind-1,ind-1):match('[%w_]') then return end
-        if o.line:sub(ind,ind):match('[%w_]') then return end
+        if not o.lines[o.row]:sub(ind-1,ind-1):match('[%w_]') then return end
+        if o.lines[o.row]:sub(ind,ind):match('[%w_]') then return end
         return {
             {'delete',0,p},
             {'pos',ind},

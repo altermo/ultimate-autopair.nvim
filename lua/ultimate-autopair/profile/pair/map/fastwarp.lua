@@ -12,8 +12,8 @@ local M={}
 ---@type (fun(o:ua.info,ind:number,p:string,first:boolean):ua.actions|nil)[]
 M.act={
     function (o,ind,p)
-        if not o.line:sub(ind,ind):match('[%w_]') then return end
-        while o.line:sub(ind,ind):match('[%w_]') do
+        if not o.lines[o.row]:sub(ind,ind):match('[%w_]') then return end
+        while o.lines[o.row]:sub(ind,ind):match('[%w_]') do
             ind=ind+1
         end
         return {
@@ -86,16 +86,16 @@ function M.run(o,_rec)
     end
     local epairs=putils.forward_get_end_pairs(o,m.get_pairs())
     for _,epair in ipairs(epairs) do
-        for col=o.col+#epair.end_pair_old,#o.line do
+        for col=o.col+#epair.end_pair_old,#o.lines[o.row] do
             for _,v in ipairs(M.act) do
                 local ret=v(setmetatable({col=col},{__index=o}),col,epair.end_pair_old,col==o.col+#epair.end_pair_old)
                 if ret then return ret end
             end
         end
-        if o.col~=#o.line then
+        if o.col~=#o.lines[o.row] then
             return {
                 {'delete',0,epair.end_pair_old},
-                {'pos',#o.line},
+                {'pos',#o.lines[o.row]},
                 epair.end_pair_old,
                 {'left',epair.end_pair_old},
             }

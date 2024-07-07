@@ -72,12 +72,12 @@ function M.create_o_wrapper()
             _cache={},
         }
     end
-    local oindex=setmetatable({
+    local oindex={
         lines=source._lines,
         row=row,
         col=col,
         source=source,
-    },{__index=function (t,index) return index=='line' and t.lines[t.row] or nil end })
+    }
     return function (obj)
         return setmetatable({
             m=obj,

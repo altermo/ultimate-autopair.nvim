@@ -27,14 +27,14 @@ end
 ---@return boolean?
 function M.call(o)
     if o.conf.after then
-        if M.is_keywordy(utils.get_char(o.line,o.cole),o) then
+        if M.is_keywordy(utils.get_char(o.lines[o.rowe],o.cole),o) then
             return
         end
     end
     if o.conf.before then
         if o.conf.py_fstr and
             utils.get_filetype(o)=='python' and
-            vim.regex[[\c\a\@1<!\v((r[fb])|([fb]r)|[frub])$]]:match_str(o.line:sub(1,o.cols-1)) then
+            vim.regex[[\c\a\@1<!\v((r[fb])|([fb]r)|[frub])$]]:match_str(o.lines[o.rows]:sub(1,o.cols-1)) then
             return true
         end
         if o.conf.lua_nstr and
@@ -43,7 +43,7 @@ function M.call(o)
             (not (fn.in_string(o) or fn.in_comment(o))) then
             return true
         end
-        if M.is_keywordy(utils.get_char(o.line,o.cols-1),o) then
+        if M.is_keywordy(utils.get_char(o.lines[o.rows],o.cols-1),o) then
             return
         end
     end

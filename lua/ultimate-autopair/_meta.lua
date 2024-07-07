@@ -7,7 +7,6 @@
 ---@field _cache table?
 ---@class ua.info
 ---@field m ua.object
----@field line string --Special, is calculated from lines[row], do not set
 ---@field lines string[]
 ---@field row number
 ---@field col number
@@ -29,7 +28,6 @@
 ---@field conf table
 ---@field cols number
 ---@field cole number
----@field line string --Special, is calculated from lines[row], do not set
 ---@field lines string[]
 ---@field rows number
 ---@field rowe number

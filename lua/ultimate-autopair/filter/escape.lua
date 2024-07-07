@@ -6,8 +6,8 @@ function M.call(o)
     local col=o.cols-1
     local escape=false
     local escapechar=o.conf.escapechar or '\\'
-    while utils.get_char(o.line,col)==escapechar do
-        col=col-1+vim.str_utf_start(o.line,col)
+    while utils.get_char(o.lines[o.rows],col)==escapechar do
+        col=col-1+vim.str_utf_start(o.lines[o.rows],col)
         escape=not escape
     end
     return not escape

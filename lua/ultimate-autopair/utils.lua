@@ -217,7 +217,6 @@ function M.info_to_filter(o,col_start_offset,col_end_offset)
     return {
         cols=o.col-(col_start_offset or 0),
         cole=o.col-(col_end_offset or 0),
-        line=o.line,
         lines=o.lines,
         rows=o.row,
         rowe=o.row,
@@ -277,7 +276,7 @@ end
 function M._HACK_parser_get_after_insert(o,str)
     local lines={}
     vim.list_extend(lines,o.source._lines)
-    lines[o.rowe]=o.line:sub(1,o.cole-1)..str..o.line:sub(o.cole)
+    lines[o.rowe]=o.lines[o.rowe]:sub(1,o.cole-1)..str..o.lines[o.rowe]:sub(o.cole)
     o.cole=o.cole+1
     local parser=vim.treesitter.get_string_parser(table.concat(lines,'\n')..'\n',vim.treesitter.language.get_lang(o.source.o.filetype) or o.source.o.filetype)
     parser:parse({o.rows-1,o.rowe})

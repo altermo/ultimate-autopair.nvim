@@ -8,7 +8,7 @@ function M.backwards_get_start_pairs(o,somepairs)
     local ret={}
     for _,v in ipairs(somepairs) do
         if v.type=='start'
-            and v.start_pair_old==o.line:sub(o.col-#v.start_pair_old,o.col-1)
+            and v.start_pair_old==o.lines[o.row]:sub(o.col-#v.start_pair_old,o.col-1)
             and M.run_start_pair_filter(setmetatable({m=v,col=o.col-#v.start_pair_old},{__index=o}))
         then
             table.insert(ret,v)
@@ -23,7 +23,7 @@ function M.backwards_get_end_pairs(o,somepairs)
     local ret={}
     for _,v in ipairs(somepairs) do
         if v.type=='end'
-            and v.end_pair_old==o.line:sub(o.col-#v.end_pair_old,o.col-1)
+            and v.end_pair_old==o.lines[o.row]:sub(o.col-#v.end_pair_old,o.col-1)
             and M.run_end_pair_filter(setmetatable({m=v,col=o.col-#v.end_pair_old},{__index=o}))
         then
             table.insert(ret,v)
@@ -38,7 +38,7 @@ function M.forward_get_end_pairs(o,somepairs)
     local ret={}
     for _,v in ipairs(somepairs) do
         if v.type=='end'
-            and v.end_pair_old==o.line:sub(o.col,o.col+#v.end_pair_old-1)
+            and v.end_pair_old==o.lines[o.row]:sub(o.col,o.col+#v.end_pair_old-1)
             and M.run_end_pair_filter(setmetatable({m=v,col=o.col},{__index=o}))
         then
             table.insert(ret,v)
@@ -53,7 +53,7 @@ function M.forward_get_start_pairs(o,somepairs)
     local ret={}
     for _,v in ipairs(somepairs) do
         if v.type=='start'
-            and v.start_pair_old==o.line:sub(o.col,o.col+#v.start_pair_old-1)
+            and v.start_pair_old==o.lines[o.row]:sub(o.col,o.col+#v.start_pair_old-1)
             and M.run_start_pair_filter(setmetatable({m=v,col=o.col},{__index=o}))
         then
             table.insert(ret,v)
