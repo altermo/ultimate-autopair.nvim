@@ -95,6 +95,8 @@ function M.run(o,_rec)
             }
         end
     end
+    ---@diagnostic disable-next-line: unreachable-code
+    return conf.do_nothing_if_fail and {} or nil
 end
 
 ---@param objects ua.instance
