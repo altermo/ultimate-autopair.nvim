@@ -378,6 +378,7 @@ return {
         {'(|)<><>','<A-e>','(|<><>)',{c={{'<>','<>'}}}},
         {'```|```lua','<A-e>','```|lua```',{ft='markdown'}},
         {'(|)a_e','<A-e>','(|a_e)'},
+        {'(|\n),','<A-e>','(|\n,)'},
         --{'(|")")foo','','(|")"foo)',{c={fastwarp={no_filter_nodes={}}},ts=true}},
         --{'(|)foo','e','(|foo)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}}}},
         --{'(|)foo','E','(foo|)',{c={fastwarp={multi=true,{map='e'},{map='E',nocursormove=false}}}}},
@@ -411,6 +412,7 @@ return {
         {'<<foo|>>','E','<<|>>foo',{c={{'<<','>>',fastwarp={rmap='E'}}},skip=true}},
         {'(|"")','<A-E>','(|)""'},
         {'(|")")','<A-E>','(|)")"',{ft='lua',skip=true}},
+        {'(|\n,)','<A-E>','(|\n),'},
         --{'(|")")','','(|)")"',{ts=true,c={fastwarp={filter_string=true}},skip=true}}, --TODO: errors once in a while
         --{'(|{)}','','(|){}',{c={fastwarp={hopout=true}}}},
     },
