@@ -24,6 +24,9 @@ function M._attach_textchange(bufnr,cache)
                     table.remove(cache,newlast+1)
                 end
             end
+            if #cache==0 then
+                cache[1]=false
+            end
             assert(#cache==vim.api.nvim_buf_line_count(bufnr))
         end,
     })
