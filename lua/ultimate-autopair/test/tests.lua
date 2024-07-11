@@ -413,6 +413,7 @@ return {
         {'(|"")','<A-E>','(|)""'},
         {'(|")")','<A-E>','(|)")"',{ft='lua',skip=true}},
         {'(|\n,)','<A-E>','(|\n),'},
+        {'print(1,\nfunction()(|\n )\nend)','<A-E>','print(1,\nfunction()(|\n) \nend)',{ft='lua',skip=true}}
         --{'(|")")','','(|)")"',{ts=true,c={fastwarp={filter_string=true}},skip=true}}, --TODO: errors once in a while
         --{'(|{)}','','(|){}',{c={fastwarp={hopout=true}}}},
     },
