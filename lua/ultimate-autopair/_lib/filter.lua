@@ -40,8 +40,19 @@ function M.in_comment(o)
     --NOTE: whether it is inclusive or not depends on the comment, but as most comments are inclusive (to the right)
     local ret=M.in_node(o,M.global.comment,true)
     if ret==nil then
-        --TODO: some simple regex matching (using commentstring)
-        return false
+        --- I don't want to deal with multiline regex matching
+        if o.rows~=o.rowe then return false end
+        local row=o.rows
+        --- Because ret is only nil if there is no parser, we don't need to get the option from filetype
+        local commentstring=o.source.o.commentstring
+        if commentstring=='' then return false end
+        local lhs,rhs=commentstring:match('^(.*)%%s(.*)$')
+        lhs,rhs=vim.trim(lhs),vim.trim(rhs)
+        local idx
+        if rhs~='' then
+            idx=o.lines[row]:sub(1,o.cols-1):find(rhs,1,true)
+        end
+        return not not o.lines[row]:sub(idx or 1,o.cols-1):find(lhs,1,true)
     end
     return ret
 end
