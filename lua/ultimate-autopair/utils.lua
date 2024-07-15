@@ -239,19 +239,17 @@ end
 ---@return boolean
 function M.run_filters(filters,o,col_start_offset,col_end_offset)
     local po=M.info_to_filter(o,col_start_offset,col_end_offset)
-    for filter,conf in pairs(filters) do
+    for filter,conf,main in M.multi_iter(filters) do
+        --TODO: somehow use main variable
         if type(filter)=='number' then
             if not conf(po) then
                 return false
             end
-            goto continue
+        elseif conf.filter~=false then
+            if not require('ultimate-autopair.filter.'..filter).call(setmetatable({conf=conf},{__index=po})) then
+                return false
+            end
         end
-        filter=filter:gsub('_[_0-9]*$','') --TODO: what pattern to use? --TODO: move this into a function for reuse. : TODO: ALSO: (maybe allow configuration of it) TODO: or just redesign the whole thing
-        if conf.filter==false then goto continue end
-        if not require('ultimate-autopair.filter.'..filter).call(setmetatable({conf=conf},{__index=po})) then
-            return false
-        end
-        ::continue::
     end
     return true
 end
@@ -289,5 +287,28 @@ function M._HACK_parser_get_after_insert(o,str)
     local parser=vim.treesitter.get_string_parser(table.concat(lines,'\n')..'\n',vim.treesitter.language.get_lang(o.source.o.filetype) or o.source.o.filetype)
     parser:parse({o.rows-1,o.rowe})
     return parser
+end
+---@generic T,V:string|number
+---@param tbl table<V,T>
+---@return fun():V,T,T|nil|false
+function M.multi_iter(tbl)
+    local match='_[_0-9]+$' --TODO: what pattern to use or maybe just allow configuration of it
+    local main={}
+    local second={}
+    for k,v in pairs(tbl) do
+        if type(k)=='string' and k:match(match) then
+            table.insert(second,{k:gsub((match),''),v})
+        else
+            table.insert(main,{k,v})
+        end
+    end
+    return coroutine.wrap(function ()
+        for _,kv in ipairs(main) do
+            coroutine.yield(kv[1],kv[2])
+        end
+        for _,kv in ipairs(second) do
+            coroutine.yield(kv[1],kv[2],main[kv[1]] or false)
+        end
+    end)
 end
 return M
