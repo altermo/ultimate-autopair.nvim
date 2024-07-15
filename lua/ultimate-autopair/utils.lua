@@ -311,4 +311,18 @@ function M.multi_iter(tbl)
         end
     end)
 end
+---@param filetype string
+---@param conf {[number]:string,[string]:string[]}
+---@return string[]
+function M.flatten_config_for_filetype(conf,filetype)
+    --TODO: cache (but only for the current instance)
+    local ret={}
+    for _,v in ipairs(conf) do
+        table.insert(ret,v)
+    end
+    if conf[filetype] then
+        vim.list_extend(ret,conf[filetype])
+    end
+    return ret
+end
 return M

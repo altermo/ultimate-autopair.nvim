@@ -62,18 +62,4 @@ function M.find_all_node_types(parser,node_types)
     end)
     return ret
 end
----@param filetype string
----@param conf {[number]:string,[string]:string[]}
----@return string[]
-function M.get_node_types_from_config(conf,filetype) --TODO: maybe move to somewhere else (and rename because this can be more generalize for flattening other types of configs)
-    --TODO: cache (but only for the current instance)
-    local ret={}
-    for _,v in ipairs(conf) do
-        table.insert(ret,v)
-    end
-    if conf[filetype] then
-        vim.list_extend(ret,conf[filetype])
-    end
-    return ret
-end
 return M

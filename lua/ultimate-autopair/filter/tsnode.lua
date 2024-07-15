@@ -24,7 +24,7 @@ function M.call(o)
     end
     if not parser then return true end
     if o.conf.separate and o.lsave then
-        local separate=query.get_node_types_from_config(o.conf.separate,utils.get_filetype(o,{parser=parser,tree=true}))
+        local separate=utils.flatten_config_for_filetype(o.conf.separate,utils.get_filetype(o,{parser=parser,tree=true}))
         if (o.lsave[M.id] or {}).a then
             for _,trange in ipairs(o.lsave[M.id]) do
                 if utils.range_in_range(trange,range,false) then
