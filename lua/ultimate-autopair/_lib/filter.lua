@@ -29,6 +29,7 @@ function M.in_string(o)
     --NOTE: whether it is inclusive or not depends on the string, but as most strings are not inclusive
     local ret=M.in_node(o,M.global.string,false)
     if ret==nil then
+        --TODO: maybe add caching
         --TODO: some simple regex matching
         return false
     end
@@ -40,6 +41,7 @@ function M.in_comment(o)
     --NOTE: whether it is inclusive or not depends on the comment, but as most comments are inclusive (to the right)
     local ret=M.in_node(o,M.global.comment,true)
     if ret==nil then
+        --TODO: maybe add caching
         --- I don't want to deal with multiline regex matching
         if o.rows~=o.rowe then return false end
         local row=o.rows
