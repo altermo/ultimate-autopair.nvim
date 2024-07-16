@@ -1,6 +1,5 @@
 local M={}
---DEFAULT VALUES SHOULD ONLY BE USED ONCE (once implemented into the specification), OTHERWISE ASSERT AN ERROR
---TODO: set the appropriate __runtime options
+--TODO: set the appropriate __not_runtime options (and implement a resolver that resolves other options)
 M.conf_spec={
     main={
         __inherit_keys={'maps'},
