@@ -2,24 +2,22 @@ local M={}
 local utils=require'ultimate-autopair.utils'
 local fn=require'ultimate-autopair._lib.filter'
 ---@type table<string,true|table<string,boolean>>
-M._cache_keywordy={} --TODO: should be cleared when options change
+M._cache_keywordy={}
 function M.is_keywordy(char,o)
     if char=='\0' then return false end
     if not M._cache_keywordy[char] then M._cache_keywordy[char]={} end
     local ft=utils.get_filetype(o)
-    if M._cache_keywordy[char][ft]~=nil then return M._cache_keywordy[char][ft] end
-    local is_keyword
     if ft==vim.o.filetype then
-        is_keyword=vim.fn.charclass(char)==2
-    else
-        local opt_keyword=vim.o.iskeyword
-        local opt_lisp=vim.o.lisp
-        vim.o.iskeyword=utils.ft_get_option(ft,'iskeyword')
-        vim.o.lisp=utils.ft_get_option(ft,'lisp')
-        is_keyword=vim.fn.charclass(char)==2
-        vim.o.lisp=opt_lisp
-        vim.o.iskeyword=opt_keyword
+        return vim.fn.charclass(char)==2
     end
+    if M._cache_keywordy[char][ft]~=nil then return M._cache_keywordy[char][ft] end
+    local opt_keyword=vim.o.iskeyword
+    local opt_lisp=vim.o.lisp
+    vim.o.iskeyword=utils.ft_get_option(ft,'iskeyword')
+    vim.o.lisp=utils.ft_get_option(ft,'lisp')
+    local is_keyword=vim.fn.charclass(char)==2
+    vim.o.lisp=opt_lisp
+    vim.o.iskeyword=opt_keyword
     M._cache_keywordy[char][ft]=is_keyword
     return is_keyword
 end
