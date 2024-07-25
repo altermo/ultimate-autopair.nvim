@@ -146,6 +146,7 @@ function M.undo_last_act() --TODO
 end
 ---@return ua.actions
 function M.last_act_cycle() --TODO
+    --skip n actions (where n is the number of actions skipped previous time plus one) and then do action
     if not M.saveundo then return {} end
     local saveundo=M.saveundo
     M.saveundo=nil
