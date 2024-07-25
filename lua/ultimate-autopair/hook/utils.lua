@@ -114,7 +114,6 @@ end
 ---@param skip_index number?
 ---@return ua.actions
 ---@return ua.hook.subconf?
----@return boolean?
 function M.get_act(hash,mode,skip_index)
     local info=M.get_hash_info(hash)
     local objs=hookmem[hash]
@@ -125,32 +124,26 @@ function M.get_act(hash,mode,skip_index)
         local act=obj.run(o)
         if act then
             if mode=='i' then
-                M.saveundo={act=act,row=o.row,col=o.col,buf=type(o.source.source)=='number' and o.source.source,key=info.key,index=index,hash=hash,mode=mode}
+                M.saveundo={act=act,row=o.row,col=o.col,buf=type(o.source.source)=='number' and o.source.source,key=info.key,index=index,hash=hash,mode=mode,subconf=obj.__hook_subconf}
             end
             return act,obj.__hook_subconf
         end
         ::continue::
     end
-    return {utils.keycode(info.key)},nil,true --TODO: be able to set default subconf (which could also be a function)
+    return {utils.keycode(info.key)},{abbr=true,dot=true,true_dot=false}
+end
+---@return ua.actions
+function M.undo_last_act_and_do() --TODO
+    if not M.saveundo then return {} end
+    local saveundo=M.saveundo
+    M.saveundo=nil
+    return vim.list_extend(M.generate_undo(saveundo.act,saveundo.mode,saveundo.subconf),{utils.keycode(saveundo.key)})
 end
 ---@param act ua.actions
-function M.generate_undo(act)
+---@param mode string
+---@param conf? ua.hook.subconf
+function M.generate_undo(act,mode,conf) --TODO
     return {}
-end
----@return ua.actions
-function M.undo_last_act() --TODO
-    if not M.saveundo then return {} end
-    local saveundo=M.saveundo
-    M.saveundo=nil
-    return M.generate_undo(saveundo.act)
-end
----@return ua.actions
-function M.last_act_cycle() --TODO
-    --skip n actions (where n is the number of actions skipped previous time plus one) and then do action
-    if not M.saveundo then return {} end
-    local saveundo=M.saveundo
-    M.saveundo=nil
-    return vim.list_extend(M.generate_undo(saveundo.act),M.get_act(saveundo.hash,saveundo.can_undo,saveundo.index))
 end
 ---@param act ua.actions
 ---@param mode string
