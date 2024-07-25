@@ -71,7 +71,7 @@ Minimum Neovim version: 0.9.2; Recommended: 0.10 (or 0.11-dev)\
 ```
 </details>
 
-<details><summary><b>Plugin-manager-less</b></summary>
+<details><summary><b>Without plugin-manager</b></summary>
 
 ```lua
 local install_dir=vim.fn.stdpath('data')..'/plugins'
