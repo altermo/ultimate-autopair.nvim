@@ -3,6 +3,7 @@ local hookmem=require'ultimate-autopair.hook.mem'
 local M={}
 M.HASH_SEP1=':'
 M.HASH_SEP2=';'
+M.DEFAULT_HOOK_SUBCONF={dot=true,true_dot=false,abbr=true}
 ---@param hash ua.hook.hash
 ---@return {conf:string,type:string,key:string,hash:string}
 function M.get_hash_info(hash)
@@ -118,39 +119,35 @@ function M.get_act(hash,mode,skip_index)
     local info=M.get_hash_info(hash)
     local objs=hookmem[hash]
     local create_o=M.create_o_wrapper()
+    M.saveundo=nil
     for index,obj in ipairs(objs) do
         if skip_index and index<=skip_index then goto continue end
         local o=create_o(obj)
         local act=obj.run(o)
         if act then
             if mode=='i' then
-                M.saveundo={act=act,row=o.row,col=o.col,buf=type(o.source.source)=='number' and o.source.source,key=info.key,index=index,hash=hash,mode=mode,subconf=obj.__hook_subconf}
+                M.saveundo={act=act,row=o.row,col=o.col,buf=type(o.source.source)=='number' and o.source.source,key=info.key,index=index,hash=hash,mode=mode,subconf=obj.__hook_subconf,nonbuf=type(o.source.source)=='string' and o.source.source}
             end
             return act,obj.__hook_subconf
         end
         ::continue::
     end
-    return {utils.keycode(info.key)},{abbr=true,dot=true,true_dot=false}
+    return {utils.keycode(info.key)},M.DEFAULT_HOOK_SUBCONF
 end
 ---@return ua.actions
 function M.undo_last_act_and_do() --TODO
     if not M.saveundo then return {} end
     local saveundo=M.saveundo
     M.saveundo=nil
-    return vim.list_extend(M.generate_undo(saveundo.act,saveundo.mode,saveundo.subconf),{utils.keycode(saveundo.key)})
-end
----@param act ua.actions
----@param mode string
----@param conf? ua.hook.subconf
-function M.generate_undo(act,mode,conf) --TODO
-    return {}
+    return vim.list_extend(M.generate_undo(saveundo.act,saveundo.mode,saveundo.subconf,{saveundo.row,saveundo.col}),{utils.keycode(saveundo.key)})
+    --Problem: if there's a {'pos',x,y} then it is (almost) impossible to undo it
 end
 ---@param act ua.actions
 ---@param mode string
 ---@param conf? ua.hook.subconf
 ---@return string
 function M.act_to_keys(act,mode,conf)
-    conf=conf or {dot=true,true_dot=false,abbr=true}
+    conf=conf or M.DEFAULT_HOOK_SUBCONF
     local buf=utils.new_str_buf(#act)
     for _,v in ipairs(act) do
         if type(v)=='string' then v={'raw',v} end
