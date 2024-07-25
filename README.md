@@ -111,6 +111,9 @@ Ultimate-autopair uses these insert-keymaps by default: `<A-e>`, `<A-S-e>`, `<BS
 Some plugins handle these keymap conflicts well, and no no extra config is needed.
 If you don't use the features that the keymaps are for then disable them in the config. (see `:h ultimate-autopair-default-config`)
 If you use the features that the keymaps are for but still want to use them for other things then look into `:h ultimate-autopair-fallback` and `:h ultimate-autopair-create-map`
+### Filetype not detecting
+Treesitter is used to detect injected filetypes, but the process is not perfect:
+To convert between treesitter languages and filetypes, one uses `vim.treesitter.language.get_filetypes(lang)`, but some treesitter languages correspond to multiple filetypes, and to not deal with the concept of multiple filetypes in one region, a treesitter language to singular filetype table is used (see `require'ultimate-autopair.utils'.tslang2lang`).
 
 ### Donate
 If you want to donate then you need to find the correct link (hint: 50₁₀):
