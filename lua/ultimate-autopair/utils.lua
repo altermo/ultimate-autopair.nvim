@@ -102,7 +102,7 @@ function M._to_cmd(cmd,...)
     return M.keycode'<cmd>lua '..cmd:format(unpack(arg))..'\r'
 end
 M.tslang2lang={
-    ---Last updated: 2024-07-01
+    ---Last updated: 2024-07-25
     ---NOTE:
     --- When the following comments talks about corresponding to filetypes, they mean the return value of `vim.treesitter.language.get_filetype(lang)`
     --- When the following comments talks about filetypes which vim detects, they mean the filetypes which are defined inside `filetype.lua` (and other files used by `filetype.lua` (like `filetype/detect.lua`))
@@ -120,6 +120,7 @@ M.tslang2lang={
     terraform='terraform',
     xml='xml',
     ---Category 2 (these languages are corresponding to only one filetype which vim detects)
+    angular='htmlangular',
     bash='sh',
     bibtex='bib',
     c_sharp='cs',
@@ -142,7 +143,9 @@ M.tslang2lang={
     janet_simple='janet',
     latex='tex',
     linkerscript='ld',
+    perl='perl',
     poe_filter='poefilter',
+    powershell='ps1',
     properties='jproperties',
     python='python',
     qmljs='qml',
