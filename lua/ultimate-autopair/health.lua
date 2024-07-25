@@ -58,7 +58,8 @@ function M.validate_externals()
         local on_key=vim.on_key
         pcall(function ()
             local t={}
-            on_key=function (fn)
+            ---@diagnostic disable-next-line: duplicate-set-field
+            vim.on_key=function (fn)
                 table.insert(t,fn)
             end
             package.loaded['nvim-treesitter.endwise']=nil
