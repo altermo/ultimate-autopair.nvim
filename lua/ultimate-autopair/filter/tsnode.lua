@@ -16,7 +16,7 @@ end
 function M.call(o)
     local range={o.rows-1,o.cols-1,o.rowe-1,o.cole-1}
     local parser
-    if o.conf.detect_after then
+    if o.conf.detect_after then --TODO: only run if needed
         --TODO: modify the range to correctly detect the node
         parser=utils._HACK_parser_get_after_insert(o,o.conf.detect_after) --TODO: detect if treesitter enabled before this
     else
