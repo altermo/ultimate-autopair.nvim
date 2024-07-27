@@ -113,6 +113,8 @@ If you use the features that the keymaps are for but still want to use them for 
 ### Filetype not detecting
 Treesitter is used to detect injected filetypes, but the process is not perfect:
 To convert between treesitter languages and filetypes, one uses `vim.treesitter.language.get_filetypes(lang)`, but some treesitter languages correspond to multiple filetypes, and to not deal with the concept of multiple filetypes in one region, a treesitter language to singular filetype table is used (see `require'ultimate-autopair.utils'.tslang2lang`).
+### Other
++ The function `vim.filetype.get_option` is (sometimes) used, which may cause issues. (see [#88](https://github.com/altermo/ultimate-autopair.nvim/issues/88) as an example)
 
 ### Donate
 If you want to donate then you need to find the correct link (hint: 50₁₀):
