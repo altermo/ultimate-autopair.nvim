@@ -18,13 +18,12 @@ local M={}
 ---@param o ua.info
 ---@return ua.actions|nil
 function M.run_start(o)
-    o.lsave={}
     local m=o.m --[[@as ua.prof.pair.pair]]
     local last_char=m.start_pair_old:sub(-1+vim.str_utf_start(m.start_pair_old,#m.start_pair_old))
     local ret=putils.run_extension(m.extension,o)
     if ret then return ret end
     if o.lines[o.row]:sub(o.col-#m.start_pair_old+#last_char,o.col-1)~=m.start_pair_old:sub(0,-1-#last_char) then return end
-    if not utils.run_filters(m.start_pair_filter,o,#m.start_pair_old-1) then
+    if not utils.run_filters(m.start_pair_filter,o,#m.start_pair_old-1,nil,true) then
         return
     end
     if m.start_pair_old~=m.end_pair_old then
@@ -44,12 +43,11 @@ end
 ---@param o ua.info
 ---@return ua.actions|nil
 function M.run_end(o)
-    o.lsave={}
     local m=o.m --[[@as ua.prof.pair.pair]]
     local ret=putils.run_extension(m.extension,o)
     if ret then return ret end
     if o.lines[o.row]:sub(o.col,o.col+#m.end_pair_old-1)~=m.end_pair_old then return end
-    if not utils.run_filters(m.end_pair_filter,o,0,-#m.end_pair_old) then
+    if not utils.run_filters(m.end_pair_filter,o,0,-#m.end_pair_old,true) then
         return
     end
     if m.start_pair_old~=m.end_pair_old then

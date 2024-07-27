@@ -232,7 +232,6 @@ function M.info_to_filter(o,col_start_offset,col_end_offset)
         rows=o.row,
         rowe=o.row,
         source=o.source,
-        lsave=o.lsave,
     }
 end
 ---@param filters table<string,table>
@@ -240,7 +239,11 @@ end
 ---@param col_start_offset number?
 ---@param col_end_offset number?
 ---@return boolean
-function M.run_filters(filters,o,col_start_offset,col_end_offset)
+function M.run_filters(filters,o,col_start_offset,col_end_offset,pre)
+    if _G.UA_DEV and pre and o.filter_pre_confs then error'' end
+    if pre then
+        o.filter_pre_confs={}
+    end
     local po=M.info_to_filter(o,col_start_offset,col_end_offset)
     for filter,conf,main in M.multi_iter(filters) do
         --TODO: somehow use main variable
@@ -249,7 +252,15 @@ function M.run_filters(filters,o,col_start_offset,col_end_offset)
                 return false
             end
         elseif conf.filter~=false then
-            if not require('ultimate-autopair.filter.'..filter).call(setmetatable({conf=conf},{__index=po})) then
+            local filt=require('ultimate-autopair.filter.'..filter)
+            local pre_conf,dont_cache
+            if filt.pre_call and pre then
+                pre_conf,dont_cache=filt.pre_call(setmetatable({conf=conf},{__index=po}))
+                o.filter_pre_confs[filter]=pre_conf
+            elseif o.filter_pre_confs then
+                pre_conf=o.filter_pre_confs[filter]
+            end
+            if not filt.call(setmetatable({conf=conf,pre_conf=pre_conf},{__index=po})) then
                 return false
             end
         end

@@ -11,7 +11,7 @@
 ---@field row number
 ---@field col number
 ---@field source ua.source
----@field lsave? table
+---@field filter_pre_confs table<string,any>
 ---@class ua.act
 ---@field [1] 'left'|'right'|'ins'|'pos'|'delete'
 ---@field [number] any
@@ -32,7 +32,7 @@
 ---@field rows number
 ---@field rowe number
 ---@field source ua.source
----@field lsave? table
+---@field pre_conf? any
 ---@class ua.source
 ---@field o table<string,any>
 ---@field mode string
