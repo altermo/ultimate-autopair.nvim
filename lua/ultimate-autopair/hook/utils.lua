@@ -87,10 +87,9 @@ function M.create_o_wrapper()
 end
 ---@param tbl ua.object[]
 function M.stable_sort(tbl)
-    local col={}
+    local col=vim.defaulttable(function () return {} end)
     for _,v in ipairs(tbl) do
-        if not col[v.p or 0] then col[v.p or 0]={} end
-        table.insert(col[v.p or 0],v)
+        table.insert(col[-(v.p or 0)],v)
     end
     local i=1
     for _,t in vim.spairs(col) do

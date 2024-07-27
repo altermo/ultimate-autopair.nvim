@@ -1,8 +1,9 @@
 local hookutils=require'ultimate-autopair.hook.utils'
 local M={}
 ---@param map table
+---@param priority number
 ---@return ua.object
-function M.create_map(map)
+function M.create_map(map,priority)
     local modes=type(map[1])=='string' and {map[1]} or map[1] --[[@as string[] ]]
     local lhs=map[2]
     local rhs=map[3]
@@ -26,14 +27,15 @@ function M.create_map(map)
             return {ret}
         end,
         hooks=hooks,
-        doc=('map %s to %s'):format(vim.inspect(lhs),vim.inspect(rhs))
+        doc=('map %s to %s'):format(vim.inspect(lhs),vim.inspect(rhs)),
+        p=priority,
     }
 end
 ---@param conf table
 ---@param objects ua.instance
 function M.init(conf,objects)
     for _,map in ipairs(conf) do
-        table.insert(objects,M.create_map(map))
+        table.insert(objects,M.create_map(map,map.p or conf.p))
     end
 end
 return M

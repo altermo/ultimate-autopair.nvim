@@ -440,6 +440,8 @@ return {
         {'|','a','bb|',{c={profile='map',{'i','a','bb'}}}},
         {'ab|c','a','a|c',{c={profile='map',{'i','a','<bs>'}}}},
         {'ab|c','a','ab<bs>|c',{c={profile='map',{'i','a','<bs>',keycode=false}}}},
+        {'|','a','c|',{c={profile='map',{'i','a','b',p=1},{'i','a','c',p=2}}}},
+        {'|','a','b|',{c={profile='map',{'i','a','b',p=2},{'i','a','c',p=1}}}},
     },
     profile_raw={
         {'|','a','bb|',{c={profile='raw',{{'map','a','i'},function () return {'bb'} end}}}},
