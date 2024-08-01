@@ -147,7 +147,7 @@ M.conf={
     {'[',']',fly=true,dosuround=true,newline=true,space=true},
     {'(',')',fly=true,dosuround=true,newline=true,space=true},
     {'{','}',fly=true,dosuround=true,newline=true,space=true},
-    {'"','"',suround=true,cond=function(fn,o) return fn.get_ft()~='vim' or (not o.line:sub(1,o.col-1):match('^%s*$') and o.line:sub(o.col-2,o.col-1)~='@') end,multiline=false},
+    {'"','"',suround=true,cond=function(fn,o) return fn.get_ft()~='vim' or (not o.line:sub(1,o.col-1):match('^%s*$') and o.line:sub(o.col-1,o.col-1)~='@') end,multiline=false},
     {"'","'",suround=true,cond=function(fn) return not fn.in_lisp() or fn.in_string() end,alpha=true,nft={'tex','rust'},multiline=false},
     {'`','`',cond=function(fn) return not fn.in_lisp() or fn.in_string() end,nft={'tex'},multiline=false},
     {'``',"''",ft={'tex'}},
