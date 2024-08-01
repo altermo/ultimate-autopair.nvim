@@ -282,6 +282,7 @@ return {
         {'|','(','(|',{ft='lua',ts=true,c={extensions={cond={cond=function (fns) return fns.in_node('comment') end}}}}},
         {'""|a','(','""(|)a',{ft='lua',ts=true,c={extensions={cond={cond=function (fns) return fns.in_node('string') end}}},skip=true}},
         {'|','"','"|',{ft='vim'}},
+        {'@|','"','@"|',{ft='vim'}},
     },
     ext_fly={
         {'[{( | )}]',']','[{(  )}]|'},
