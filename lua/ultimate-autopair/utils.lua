@@ -84,7 +84,7 @@ function M.key_pos_nodot(col,row,mode)
         return M.I.key_i_ctrl_o..M.keycode(('<cmd>call cursor(%s,%s)\r'):format(row or '"."',col))
     elseif mode=='c' then
         --TODO: this relies on the cmdline state `getcmdline()`, somehow fix it and make it work in <C-r>=
-        if _G.UA_DEV then assert(row==1) end
+        if _G.UA_DEV then assert(row==1 or row==nil) end
         return M.I.key_home..M.I.key_right:rep(M.I.len(vim.fn.getcmdline():sub(1,col-1)))
     else
         return M.keycode(('<cmd>call cursor(%s,%s)\r'):format(row or '"."',col))
