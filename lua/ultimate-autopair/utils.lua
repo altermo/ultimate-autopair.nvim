@@ -11,26 +11,35 @@ function M.in_list(list,value)
     end
     return false
 end
----@generic T:string|string?
----@param str T
----@return T
-function M.keycode(str)
-    if str and #str~=M.I.len(str) then
-        ---HACK: nvim_replace_termcodes converts all \x80 bytes, even if they are part of a utf8 char
-        ---@cast str string
-        local pos=vim.str_utf_pos(str)
-        local out=''
-        local sidx=1
-        for k,v in ipairs(pos) do
-            local c=str:sub(v,(pos[k+1] or 0)-1)
-            if #c>1 and M.in_list({string.byte(c,2,-1)},128) then
-                out=out..vim.api.nvim_replace_termcodes(str:sub(sidx,v-1),true,true,true)..c
-                sidx=pos[k+1]
+if vim.api.nvim_replace_termcodes('›',true,true,true)~='›' then
+    ---@generic T:string|string?
+    ---@param str T
+    ---@return T
+    function M.keycode(str) --TODO: once fixed in neovim, remove this
+        if str and #str~=M.I.len(str) then
+            ---HACK: nvim_replace_termcodes converts all \x80 bytes, even if they are part of a utf8 char
+            ---@cast str string
+            local pos=vim.str_utf_pos(str)
+            local out=''
+            local sidx=1
+            for k,v in ipairs(pos) do
+                local c=str:sub(v,(pos[k+1] or 0)-1)
+                if #c>1 and M.in_list({string.byte(c,2,-1)},128) then
+                    out=out..vim.api.nvim_replace_termcodes(str:sub(sidx,v-1),true,true,true)..c
+                    sidx=pos[k+1]
+                end
             end
+            return out..vim.api.nvim_replace_termcodes(sidx and str:sub(sidx) or '',true,true,true)
         end
-        return out..vim.api.nvim_replace_termcodes(sidx and str:sub(sidx) or '',true,true,true)
+        return str and vim.api.nvim_replace_termcodes(str,true,true,true)
     end
-    return str and vim.api.nvim_replace_termcodes(str,true,true,true)
+else
+    ---@generic T:string|string?
+    ---@param str T
+    ---@return T
+    function M.keycode(str)
+        return str and vim.api.nvim_replace_termcodes(str,true,true,true)
+    end
 end
 M.I.key_bs=M.keycode'<bs>'
 M.I.key_del=M.keycode'<del>'
