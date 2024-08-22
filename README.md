@@ -1,4 +1,4 @@
-**:exclamation: Ultimate-autopair is at the moment in the _beta_ stage of development. ([versioning system](https://github.com/altermo/ultimate-autopair.nvim/blob/v0.6/CONTRIBUTING.md#version))**
+**:exclamation: Ultimate-autopair is currently in maintenance mode, no new features will be added in the near future**
 # Ultimate-autopair.nvim 0.6.1
 [Ultimate-autopair](https://github.com/altermo/ultimate-autopair.nvim) plugin aims to always work as you expect and be ultra customizable, while making it easy to configure. It has features which other auto-pairing plugins lack: multiline support, treesitter-node filtering and treesitter-filetype detection.
 
