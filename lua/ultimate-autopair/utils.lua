@@ -293,15 +293,15 @@ function M.interop.try_load_endwise()
         end
     end
     if not endwise or not tracking then return end
-    local name,add_end_node=debug.getupvalue(endwise,7)
+    local name,add_end_node=debug.getupvalue(endwise,8)
     if name~='add_end_node' then return end
     M.interop.endwise=function ()
         local buf=vim.api.nvim_get_current_buf()
         if not tracking[buf] then return end
         local ret
-        debug.setupvalue(endwise,7,function (...) ret=vim.F.pack_len(...) end)
+        debug.setupvalue(endwise,8,function (...) ret=vim.F.pack_len(...) end)
         local s,mes=pcall(endwise,buf)
-        debug.setupvalue(endwise,7,add_end_node)
+        debug.setupvalue(endwise,8,add_end_node)
         if not s then error(mes) end
         if not ret then return end
         return vim.F.unpack_len(ret)
