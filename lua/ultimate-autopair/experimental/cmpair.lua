@@ -30,7 +30,7 @@ function M.on_confirm_done(ev,conf)
     if opts==false then return end
     if opts==nil or opts=='auto' then
         opts={['(']={')',kind={'Function','Method'},lisp=vim.bo.lisp}}
-        if entry.context.filetype=='python' then
+        if entry.context.filetype=='python' and item.data then
             item.data.funcParensDisabled=false
         end
     end
