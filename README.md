@@ -1,57 +1,120 @@
-**:exclamation: Ultimate-autopair is currently in maintenance mode, no new features will be added in the near future**
-# Ultimate-autopair.nvim 0.6.1
-[Ultimate-autopair](https://github.com/altermo/ultimate-autopair.nvim) plugin aims to always work as you expect and be ultra customizable, while making it easy to configure. It has features which other auto-pairing plugins lack: multiline support, treesitter-node filtering and treesitter-filetype detection.
-
-For development version, which is sometimes up to date with default branch, check out [development](https://github.com/altermo/ultimate-autopair.nvim/tree/development)\
-Requires **neovim 0.9** (for older versions of neovim, check previous versions of plugin)\
-For some features, including string filtering, requires **treesitter**.
-
-For new users, check out starter documentation (`:help ultimate-autopair`)
-## Installation
+# Ultimate-autopair.nvim 0.7.0
+[Ultimate-autopair](https://github.com/altermo/ultimate-autopair.nvim) plugin aims to have any most features you want and be ultra customizable, while making it easy to configure.
+## Major features
++ Treesitter node filtering and treesitter injected language(filetype) detection
++ Multiline support (and caching)
++ The configuration system to rule them all:
+    + Smart merge with default configuration
+    + Smart inherit from parent config
+    + Validate that the configuration is correct
+    + Some options are runtime options and can be set to function to dynamically calculate them
+    + Generate a random config (cause why not)
++ Mappings
+    + backspace
+        + `(|)` > `|`
+    + newline
+        + `(|)` > `(\n|\n)`
+    + space
+        + `(|foo)` > `( |foo )`
+        +  Previous versions had a space2 which was refactored into space, please read `:h todo`
+    + fastwarp and reverse fastwarp
+        + `(|)foo` > `(|foo)`
+        + works multiline: `(|){foo\nbar}` > `({foo\nbar})`
+    + close
+        + `(|` > `(|)`
+    + tabout
+        + `(f|oo)` > `(foo|)`
++ Extensions
+    + surround
+        + `|"foo"` > `(` > `(|"foo")`
+    + fly
+        + `({[|]})` > `)` > `({[]})|`
++ UTF-8 compatible (or at leasts tries to be)
++ Extensiv testing
++ Terminal and normal mode support
++ And much much more...
+## Use
++ If your planing to use this with `rust`: `:h ultimate-autopair-use-with-rust`
++ If your planing to use this with `latex`: `:h ultimate-autopair-use-with-latex`
++ If your planing to use this with `lisp`: `:h ultimate-autopair-use-with-lisp`
++ If your planing to use this with `html`: `:h ultimate-autopair-use-with-html`
+## Install
+Minimum Neovim version: 0.9.2; Recommended: 0.10 (or 0.11-dev)\
+(Neovim versions 0.9.1<= (and 0.10-dev) had bugs which could crache Neovim (see: [neovim/neovim#24796](https://github.com/neovim/neovim/pull/24796)))
 <details open=true><summary><b>Lazy</b></summary>
 
 ```lua
 {
     'altermo/ultimate-autopair.nvim',
-    event={'InsertEnter','CmdlineEnter'},
-    branch='v0.6', --recommended as each new version will have breaking changes
+    event={'InsertEnter','CmdlineEnter'}, -- initialization is slow so lazyloading is recommended
+    branch='v0.7', --recommended as each new version will have breaking changes
     opts={
         --Config goes here
     },
+    dependencies={
+        -- -- Optional dependencies
+        -- 'nvim-treesitter/nvim-treesitter',
+        -- -- For installing parsers which will be used to get nodes and injected filetypes
+        -- 'windwp/nvim-ts-autotag',
+        -- -- html tag integration (IMPORTANT: read `:h ultimate-autopair-use-with-html`)
+    }
 }
+-- -- Recommended but not exactly related to ultimate-autopair
+-- 'gpanders/nvim-parinfer',
+-- -- the parinfer algorithm for LISP programming
+-- 'RRethy/nvim-treesitter-endwise',
+-- -- Auto add `end` keyword for some languages
+-- 'abecodes/tabout.nvim',
+-- -- Treesitter based more complex tabout (if ultimate-autopair's tabout is not good enough)
+-- 'kylechui/nvim-surround',
+-- -- Surround selected with pairs, delete/change surrounding pairs (in normal/visual mode)
 ```
-</details><details><summary><b>Packer</b></summary>
+</details>
+
+<details><summary><b>Without plugin-manager</b></summary>
 
 ```lua
-use{
+local install_dir=vim.fn.stdpath('data')..'/plugins'
+vim.fn.mkdir(install_dir,'p')
+for _,url in ipairs{
     'altermo/ultimate-autopair.nvim',
-    event={'InsertEnter','CmdlineEnter'},
-    branch='v0.6', --recommended as each new version will have breaking changes
-    config=function ()
-        require('ultimate-autopair').setup({
-                --Config goes here
-                })
-    end,
-}
+    --'nvim-treesitter/nvim-treesitter',
+} do
+    local install_path=install_dir..'/'..url:gsub('.*/','')
+    if vim.fn.isdirectory(install_path)==0 then
+        vim.fn.system{'git','clone','https://github.com/'..url,install_path}
+    end
+    vim.opt.runtimepath:append(install_path)
+end
+
+-- require'nvim-treesitter.configs'.setup{}
+
+-- initialization is slow so lazyloading is recommended
+local au_id
+au_id=vim.api.nvim_create_autocmd({'InsertEnter','CmdlineEnter'},{callback=function()
+    require('ultimate-autopair').setup{
+        --config
+    }
+    pcall(vim.api.nvim_del_autocmd,au_id)
+end})
 ```
 </details>
 
-## Default configuration
-For the default configuration, refer to the documentation (`:help ultimate-autopair-default-config`).
-## Demo
-</details><details> <summary><b>demo</b></summary>
-
-![demo](https://github.com/altermo/ultimate-autopair.nvim/assets/107814000/a30ba4fd-0a3b-49af-bcd8-67413c9a86d1)
-</details>
-
-### Other plugins to supercharge auto-pairing
-These are some other plugins which are related to pairing which have features that ultimate-autopair does not have.
-+ [endwise](https://github.com/RRethy/nvim-treesitter-endwise) wisely add `end` in lua, ruby, etc... (Note: doesn't get broken by ultimate-autopair's newline)
-+ [tabout](https://github.com/abecodes/tabout.nvim) tab out of treesitter nodes
-+ [surround](https://github.com/kylechui/nvim-surround) delete, change surrounding parentheses and much more...
-+ [autotag](https://github.com/windwp/nvim-ts-autotag) auto pair html tags
-
-If you want to use this together with [nvim-autopairs](https://github.com/windwp/nvim-autopairs) read `:h ultimate-autopair-use-with-npairs`
+## Troubleshoot
+### Run health checks
+If things doesn't work, try running `:checkhealth ultimate-autopair` to see if there are any errors/warnings.
+This doesn't run all health checks, only the ones related to the user.
+To run all health checks (including develeopmental ones), run `:lua _G.UA_DEV=true` and then run `:checkhealth ultimate-autopair`.
+### Keymap conflict
+Ultimate-autopair uses these insert-keymaps by default: `<A-e>`, `<A-S-e>`, `<BS>`, `<CR>`, `<A-)>` (+ the pair keymaps).
+Some plugins handle these keymap conflicts well, and no no extra config is needed.
+If you don't use the features that the keymaps are for then disable them in the config. (see `:h ultimate-autopair-default-config`)
+If you use the features that the keymaps are for but still want to use them for other things then look into `:h ultimate-autopair-fallback` and `:h ultimate-autopair-create-map`
+### Filetype not detecting
+Treesitter is used to detect injected filetypes, but the process is not perfect:
+To convert between treesitter languages and filetypes, one uses `vim.treesitter.language.get_filetypes(lang)`, but some treesitter languages correspond to multiple filetypes, and to not deal with the concept of multiple filetypes in one region, a treesitter language to singular filetype table is used (see `require'ultimate-autopair.utils'.tslang2lang`).
+### Other
++ The function `vim.filetype.get_option` is (sometimes) used, which may cause issues. (see [#88](https://github.com/altermo/ultimate-autopair.nvim/issues/88) as an example)
 
 ### Donate
 If you want to donate then you need to find the correct link (hint: 50₁₀):
