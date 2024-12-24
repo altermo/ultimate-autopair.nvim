@@ -3,9 +3,6 @@
 ---@class ua.config
 ---@field [any] any
 
----@class ua.iconfig
----@field [any] any
-
 ---@class ua.iconfig._pair
 ---@field _start_pair ua.iconfig.pair
 ---@field _end_pair ua.iconfig.pair
