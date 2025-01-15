@@ -8,3 +8,5 @@
     + Insert random char into text
     + Get the language at the position
     + SOME OTHER IMPROVEMENTS???
+# hooks
++ use buffer local keymaps instead of global keymaps

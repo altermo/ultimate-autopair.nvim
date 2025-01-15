@@ -1,3 +1,4 @@
+local utils=require'ultimate-autopair.utils'
 local M={}
 
 ---@alias ua.conf.err_format
@@ -9,12 +10,12 @@ local M={}
 
 ---@alias ua.conf.err_type
 ---|'dont_set'
----|'needed'
 ---|'vtype'
 ---|'enum'
 ---|'not_list'
 ---|'func_single_arg'
 ---|'not_filetype'
+---|'empty_string'
 
 ---@class ua.conf.opts
 ---@field validate? number|boolean
@@ -30,18 +31,13 @@ local M={}
 ---@field enums any[]?
 ---@field nparams number?
 
----@class ua.iconfig
----@field use_filetype_getopt ua.iconfig.use_filetype_getopt
-
 ---@class ua.conf.env
 ---@field val any
----@field top table
 ---@field validate number
 ---@field err_format ua.conf.err_format
 ---@field traceback string
-
----@class ua.confspec.NEEDED
-local NEEDED={}
+---@field providers table<string,any>
+---@field providers_traceback table<string,{[number]:string,n:number}>
 
 ---- ;; error
 ---@see https://en.wikipedia.org/wiki/Levenshtein_distance
@@ -97,10 +93,6 @@ local function generate_error_message(err)
 
         %s
         ]]):format(traceback_with_val,suggestion)
-    elseif err.type=='needed' then
-        return ([[
-        The option `%s` is not set, but it should be set.
-        ]]):format(traceback)
     elseif err.type=='vtype' and #err.wants_val==0 and #err.wants_type==1 then
         return([[
         The option %s should be the type `%s`, but got a `%s`.
@@ -139,6 +131,10 @@ local function generate_error_message(err)
         return ([[
         The option %s is not detected as a filetype.
         ]]):format(traceback_with_val)
+    elseif err.type=='empty_string' then
+        return ([[
+        The option %s should not be an empty string.
+        ]]):format(traceback_with_val)
     else
         error('unreachable')
     end
@@ -146,8 +142,8 @@ end
 ---@type table<ua.conf.err_type,number>
 local err_severity={
     vtype=1,
-    needed=1,
     enum=1,
+    empty_string=1,
     dont_set=2,
     not_list=2,
     not_filetype=3,
@@ -284,6 +280,15 @@ local function assert_filetype(env)
         }
     end
 end
+---@param env ua.conf.env
+local function assert_str_has_content(env)
+    if env.val=='' then
+        error_it{
+            type='empty_string',
+            env=env,
+        }
+    end
+end
 
 --- ;; merge (with default)
 ---@param conf any?
@@ -370,9 +375,10 @@ local function error_dont_set_idx(env,idx,to)
     local nenv={
         val=env.val[idx],
         traceback=merge_traceback(env.traceback,idx),
-        top=env.top,
         validate=env.validate,
         err_format=env.err_format,
+        providers=env.providers,
+        providers_traceback=env.providers_traceback,
     }
     local option_names={}
     for k in pairs(to) do
@@ -388,10 +394,10 @@ end
 ---@generic T
 ---@param env ua.conf.env
 ---@param idx string|number
----@param fallback T|ua.confspec.NEEDED?
----@param fn fun(env:ua.conf.env):T
+---@param fn fun(env:ua.conf.env,...):T
+---@param args table?
 ---@return T
-local function m(fn,env,idx,fallback)
+local function apply_indexed(fn,env,idx,args)
     assert_is(env,'table')
     local new_val=env.val[idx]
     local traceback=merge_traceback(env.traceback,idx)
@@ -399,25 +405,16 @@ local function m(fn,env,idx,fallback)
     local new_env={
         val=new_val,
         traceback=traceback,
-        top=env.top,
         validate=env.validate,
         err_format=env.err_format,
+        providers=env.providers,
+        providers_traceback=env.providers_traceback,
     }
-    if new_env.val==nil then
-        if fallback==NEEDED then
-            error_it{
-                type='needed',
-                env=new_env,
-            }
-        else
-            assert(fallback~=nil)
-            return fallback
-        end
-    end
-    local ret=fn(new_env)
+    local ret=fn(new_env,unpack(args or {}))
     assert(ret~=nil) --TODO: is this needed?
     return ret
 end
+
 ---@class ua.conf.mergef_spec
 ---@field match table<string,{[1]:(fun(env:ua.conf.env):any),[2]:any}>
 ---@field if_ table<any,any>
@@ -433,12 +430,39 @@ local function mergef(spec)
         for idx in pairs(env.val) do
             if spec.match[idx]=='SKIP' then
             elseif spec.match[idx] then
-                out[idx]=m(spec.match[idx][1],env,idx,spec.match[idx][2])
+                out[idx]=apply_indexed(spec.match[idx][1],env,idx,spec.match[idx][2])
             else
                 error_dont_set_idx(env,idx,spec.match)
             end
         end
         return out
+    end
+end
+---@param env ua.conf.env
+---@param idx string
+local function use(env,idx)
+    local ret=env.providers[idx]
+    if ret==nil then
+        error('TODO: err')
+    end
+    return ret
+end
+---@param env ua.conf.env
+---@param name string
+---@param value any
+---@param traceback string?
+local function provide(env,name,value,traceback)
+    if value then
+        env.providers[name]=value
+        env.providers=setmetatable({},{__index=env.providers})
+    end
+    if traceback then
+        env.providers_traceback[name]=env.providers_traceback[name] or {n=1}
+        env.providers_traceback[name][env.providers_traceback[name].n]=traceback
+        env.providers_traceback[name].n=env.providers_traceback[name].n+1
+        env.providers_traceback=setmetatable({},{__index=env.providers_traceback})
+    else
+        assert(env.providers[name]~=nil)
     end
 end
 
@@ -449,7 +473,7 @@ local modes_generate=function (env)
     assert_is_list(env)
     local modes={}
     for idx in ipairs(env.val) do
-        table.insert(modes,m(function (nenv)
+        table.insert(modes,apply_indexed(function (nenv)
             assert_in_enum(nenv,{'i','c','t','x','o','s','n','v'})
             if nenv.val=='v' then
                 return 'x'
@@ -471,7 +495,7 @@ local function filetypes_generate(env)
     assert_is_list(env)
     local filetypes={}
     for idx in ipairs(env.val) do
-        table.insert(filetypes,m(function (nenv)
+        table.insert(filetypes,apply_indexed(function (nenv)
             assert_filetype(nenv)
             return env.val
         end,env,idx))
@@ -504,7 +528,7 @@ local filter_cmdtype_generate=mergef(setmetatable({match={
         assert_is_list(env)
         local skips={}
         for idx in ipairs(env.val) do
-            table.insert(skips,m(function (nenv)
+            table.insert(skips,apply_indexed(function (nenv)
                 assert_in_enum(nenv,{'',':','>','/','?','@','-','='})
                 return nenv.val
             end,env,idx))
@@ -528,15 +552,15 @@ local function filter_generate(env)
     end
     for idx in pairs(env.val) do
         if is_filter(idx,'cmdtype') then
-            table.insert(filters.cmdtype,m(filter_cmdtype_generate,env,idx))
+            table.insert(filters.cmdtype,apply_indexed(filter_cmdtype_generate,env,idx))
         elseif is_filter(idx,'escape') then
-            table.insert(filters.escape,m(filter_escape_generate,env,idx))
+            table.insert(filters.escape,apply_indexed(filter_escape_generate,env,idx))
         elseif is_filter(idx,'alpha') then
-            table.insert(filters.escape,m(filter_alpha_generate,env,idx))
+            table.insert(filters.escape,apply_indexed(filter_alpha_generate,env,idx))
         elseif is_filter(idx,'filetype') then
-            table.insert(filters.filetype,m(filter_filetype_generate,env,idx))
+            table.insert(filters.filetype,apply_indexed(filter_filetype_generate,env,idx))
         elseif is_filter(idx,'tsnode') then
-            table.insert(filters.filetype,m(filter_tsnode_generate,env,idx))
+            table.insert(filters.filetype,apply_indexed(filter_tsnode_generate,env,idx))
         elseif idx~='merge' then
             error_dont_set_idx(env,idx,to)
         end
@@ -546,7 +570,7 @@ end
 
 ---@param env ua.conf.env
 ---@return ua.iconfig
-local function main_generate(env)
+local function main_generate_(env)
     assert_is(env,'table')
     ---@type ua.iconfig
     local out={} --[[@as unknown]]
@@ -558,8 +582,8 @@ local function main_generate(env)
         o'merge'
         --env.top.map_modes=m(modes_generate,env,o'map_modes',NEEDED) --TODO: this is only needed when a map is created: create a system which handles needed config, for example if each map defines it's own config(mode), then this config doesn't need to be set, and if one map doesn't define it's own config(mode) and this is also unset, then error with info about how at least one of the two options need to be set
         --env.top.pair_map_modes=m(modes_generate,env,o'pair_map_modes',env.top.map_modes)
-        env.top.multiline=m(rbool_generate,env,o'multiline',false)
-        env.top.filters=m(filter_generate,env,o'filter',{})
+        env.top.multiline=apply_indexed(rbool_generate,env,o'multiline',false)
+        env.top.filters=apply_indexed(filter_generate,env,o'filter',{})
         --env.top.integration=m(integration_generate,env,o'integration',{})
 
         --out.use_filetype_getopt=m(use_filetype_getopt_generate,env,o'use_filetype_getopt',true)
@@ -592,9 +616,83 @@ local function main_generate(env)
     return out
 end
 
+---@param env ua.conf.env
+---@param is_end boolean
+local function single_pair_generate(env,is_end)
+    assert_is(env,{'string','table'})
+    local function str_pair_to_key(pair)
+        if is_end then
+            return utils.utf8sub(pair,1,1)
+        else
+            return utils.utf8sub(pair,-1)
+        end
+    end
+    if type(env.val)=='string' then
+        assert_str_has_content(env)
+        local key=str_pair_to_key(env.val)
+        local modes=use(env,'pair_modes')
+        local fallback=key
+        local priority=use(env,'priority')
+        local ret={}
+        for _,mode in ipairs(modes) do
+            table.insert(ret,{mode=mode,key,fallback=fallback,p=priority})
+        end
+        return {ret,env.val}
+    else
+        error('TODO')
+    end
+end
+
+---@param env ua.conf.env
+local function pair_generate(env)
+    assert_is(env,'table')
+    local start_pairs_map,start_pair=unpack(apply_indexed(single_pair_generate,env,1,{false}))
+    local end_pairs_map,end_pair=unpack(apply_indexed(single_pair_generate,env,2,{true}))
+    for idx in pairs(env.val) do
+        if idx==1 or idx==2 then
+        else
+            error('TODO')
+        end
+    end
+    return {
+        start_pairs_map=start_pairs_map,
+        end_pairs_map=end_pairs_map,
+        start_pair=start_pair,
+        end_pair=end_pair,
+    }
+end
+
+---@param env ua.conf.env
+local function main_generate(env)
+    assert_is(env,'table')
+    local map_modes,pair_map_modes
+    if env.val.map_modes~=nil then
+        map_modes=apply_indexed(modes_generate,env,'map_modes')
+    end
+    if env.val.pair_map_modes~=nil then
+        pair_map_modes=apply_indexed(modes_generate,env,'pair_map_modes')
+    end
+    provide(env,'priority',0)
+    provide(env,'modes',map_modes,'map_modes')
+    provide(env,'pair_modes',map_modes,'map_modes')
+    provide(env,'pair_modes',pair_map_modes,'pair_map_modes')
+    for idx in pairs(env.val) do
+        if type(idx)=='number' then
+            --TODO: check that env.val as a list doesn't have gaps
+        elseif idx=='map_modes' or idx=='pair_map_modes' then
+        else
+            error('TODO')
+        end
+    end
+    local pairs_={}
+    for idx in ipairs(env.val) do
+        table.insert(pairs_,apply_indexed(pair_generate,env,idx))
+    end
+    error('TODO')
+end
+
 ---@param conf ua.config?
 ---@param opts ua.conf.opts?
----@return ua.iconfig
 function M._generate(conf,opts)
     if conf==nil then conf={} end
     if opts==nil then opts={} end
@@ -605,73 +703,75 @@ function M._generate(conf,opts)
         val=conf,
         validate=validate,
         err_format=err_format,
-        top={},
         traceback='',
+        providers={},
+        providers_traceback={},
     }
     return main_generate(env)
 end
+utils=dofile'/home/user/.tmp/lua/ua-mini/lua/ultimate-autopair/utils.lua'
 M._generate({
     map_modes={'i','c'},
-    pair_map_modes=nil, --If nil then same as `map_modes`
-    multiline=true,
-    -- enables use of `vim.filetype.get_option`, which may break other plugins
-    use_filetype_getopt=false,
+    --pair_map_modes=nil, --If nil then same as `map_modes`
+    --multiline=true,
+    ---- enables use of `vim.filetype.get_option`, which may break other plugins
+    --use_filetype_getopt=false,
     {'(',')'},
     {'[',']'},
     {'{','}'},
-    {'"','"',multiline=false,nft={'tex'}},
-    {{"'",alpha={before=true,py_fstr=true,lua_nstr=true}},"'",
-    --[[filter_on_insert=in_lisp TODO]]multiline=false,nft={'tex','rust'}},
-    --{'<!--','-->',ft={'markdown','html'}}, --TODO: temp
-    --{'"""','"""',ft={'python'}}, --TODO: temp
-    --{"'''","'''",ft={'python'}}, --TODO: temp
-    --{'```','```',ft={'markdown'}}, --TODO: temp
-    filter={
-      cmdtype={skip={'/','?','@'}},
-      escape={},
-      alpha={},
-      filetype={nft={'TelescopePrompt'},detect_after=true,treesitter=true},
-      --tsnode={separate=comment_and_stringish_nodes}, --TODO
-    },
-    integration={
-      endwise=true,
-    },
-    backspace={
-      enable=true,
-      map='<bs>',
-      fallback='<bs>',
-      overjump=false,
-    },
-    newline={
-      enable=true,
-      map='<cr>',
-      fallback='<cr>',
-    },
-    space={
-      enable=false,
-      map='<space>',
-      fallback='<space>',
-    },
-    fastwarp={
-      type='normal',
-      enable=false,
-      fallback='',
-      map='<A-e>',
-      rmap='<A-E>',
-    },
-    fastwarp_treesitter={
-      type='treesitter',
-      enable=false,
-      fallback='',
-      map={'<A-C-e>',p=10},
-      rmap={'<A-C-E>',p=10},
-    },
-    fastwarp_fast={
-      type='fast',
-      enable=false,
-      fallback='',
-      map='<A-C-e>',
-      rmap='<A-C-E>',
-    },
+    --{'"','"',multiline=false,nft={'tex'}},
+    --{{"'",alpha={before=true,py_fstr=true,lua_nstr=true}},"'",
+    ----[[filter_on_insert=in_lisp TODO]]multiline=false,nft={'tex','rust'}},
+    ----{'<!--','-->',ft={'markdown','html'}}, --TODO: temp
+    ----{'"""','"""',ft={'python'}}, --TODO: temp
+    ----{"'''","'''",ft={'python'}}, --TODO: temp
+    ----{'```','```',ft={'markdown'}}, --TODO: temp
+    --filter={
+    --  cmdtype={skip={'/','?','@'}},
+    --  escape={},
+    --  alpha={},
+    --  filetype={nft={'TelescopePrompt'},detect_after=true,treesitter=true},
+    --  --tsnode={separate=comment_and_stringish_nodes}, --TODO
+    --},
+    --integration={
+    --  endwise=true,
+    --},
+    --backspace={
+    --  enable=true,
+    --  map='<bs>',
+    --  fallback='<bs>',
+    --  overjump=false,
+    --},
+    --newline={
+    --  enable=true,
+    --  map='<cr>',
+    --  fallback='<cr>',
+    --},
+    --space={
+    --  enable=false,
+    --  map='<space>',
+    --  fallback='<space>',
+    --},
+    --fastwarp={
+    --  type='normal',
+    --  enable=false,
+    --  fallback='',
+    --  map='<A-e>',
+    --  rmap='<A-E>',
+    --},
+    --fastwarp_treesitter={
+    --  type='treesitter',
+    --  enable=false,
+    --  fallback='',
+    --  map={'<A-C-e>',p=10},
+    --  rmap={'<A-C-E>',p=10},
+    --},
+    --fastwarp_fast={
+    --  type='fast',
+    --  enable=false,
+    --  fallback='',
+    --  map='<A-C-e>',
+    --  rmap='<A-C-E>',
+    --},
   }) error('TODO: remove')
 return M

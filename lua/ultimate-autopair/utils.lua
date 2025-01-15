@@ -45,23 +45,16 @@ end
 ---@param finish number?
 ---@return string
 function M.utf8sub(str,start,finish)
-    local nstr
     if start==2 and finish==nil then
-        nstr=str:sub(vim.str_utf_end(str,1)+2)
+        return str:sub(vim.str_utf_end(str,1)+2)
+    elseif start==1 and finish==-2 then
+        return str:sub(1,vim.str_utf_start(str,#str)-2)
+    elseif start==-1 and finish==nil then
+        return str:sub(vim.str_utf_start(str,#str)-1)
+    elseif start==1 and finish==1 then
+        return str:sub(1,vim.str_utf_end(str,1)+1)
     end
-    if start==1 and finish==-2 then
-        nstr=str:sub(1,vim.str_utf_start(str,#str)-2)
-    end
-    if start==-1 and finish==nil then
-        nstr=str:sub(vim.str_utf_start(str,#str)-1)
-    end
-    if start==1 and finish==1 then
-        nstr=str:sub(1,vim.str_utf_end(str,1)+1)
-    end
-    if not nstr then
-        error('TODO')
-    end
-    return nstr
+    error('TODO')
 end
 ---@param str string
 ---@param prefix string
