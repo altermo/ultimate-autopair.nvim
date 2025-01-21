@@ -16,6 +16,7 @@ local M={}
 ---|'func_single_arg'
 ---|'not_filetype'
 ---|'empty_string'
+---|'need_set'
 
 ---@class ua.conf.opts
 ---@field validate? number|boolean
@@ -30,6 +31,7 @@ local M={}
 ---@field wants_val any[]?
 ---@field enums any[]?
 ---@field nparams number?
+---@field valid string[]?
 
 ---@class ua.conf.env
 ---@field val any
@@ -135,6 +137,15 @@ local function generate_error_message(err)
         return ([[
         The option %s should not be an empty string.
         ]]):format(traceback_with_val)
+    elseif err.type=='need_set' then
+        local valid={}
+        for _,v in ipairs(err.valid) do
+            table.insert(valid,('  * `%s`'):format(v))
+        end
+        return ([[
+        The option `%s` requires one of the following options to be set:
+        %s
+        ]]):format(traceback,table.concat(valid,'\n'))
     else
         error('unreachable')
     end
@@ -144,6 +155,7 @@ local err_severity={
     vtype=1,
     enum=1,
     empty_string=1,
+    need_set=1,
     dont_set=2,
     not_list=2,
     not_filetype=3,
@@ -345,14 +357,6 @@ end
 
 --- ;; validate/generate
 --- ;;; utils
----@return table<string,true>,fun(n:string):string
-local function make_opts()
-    local t={}
-    return t,function (n)
-        t[n]=true
-        return n
-    end
-end
 ---@param idx string|number
 ---@param traceback string
 ---@return string
@@ -369,8 +373,8 @@ local function merge_traceback(traceback,idx)
 end
 ---@param env ua.conf.env
 ---@param idx string
----@param to table<string,any>
-local function error_dont_set_idx(env,idx,to)
+---@param o table<string,any>
+local function error_dont_set_idx(env,idx,o)
     ---@type ua.conf.env
     local nenv={
         val=env.val[idx],
@@ -381,7 +385,7 @@ local function error_dont_set_idx(env,idx,to)
         providers_traceback=env.providers_traceback,
     }
     local option_names={}
-    for k in pairs(to) do
+    for k in pairs(o) do
         table.insert(option_names,k)
     end
     error_it{
@@ -443,27 +447,38 @@ end
 local function use(env,idx)
     local ret=env.providers[idx]
     if ret==nil then
-        error('TODO: err')
+        local list={}
+        for i=1,env.providers_traceback[idx].n-1 do
+            table.insert(list,env.providers_traceback[idx][i])
+        end
+        error_it{
+            type='need_set',
+            env=env,
+            valid=list,
+        }
     end
     return ret
 end
 ---@param env ua.conf.env
 ---@param name string
 ---@param value any
----@param traceback string?
-local function provide(env,name,value,traceback)
-    if value then
-        env.providers[name]=value
-        env.providers=setmetatable({},{__index=env.providers})
-    end
-    if traceback then
-        env.providers_traceback[name]=env.providers_traceback[name] or {n=1}
-        env.providers_traceback[name][env.providers_traceback[name].n]=traceback
-        env.providers_traceback[name].n=env.providers_traceback[name].n+1
-        env.providers_traceback=setmetatable({},{__index=env.providers_traceback})
+local function provide(env,name,value)
+    env.providers[name]=value
+    env.providers=setmetatable({},{__index=env.providers})
+end
+---@param env ua.conf.env
+---@param name string
+---@param traceback string
+local function provide_traceback(env,name,traceback)
+    if env.providers[name]~=nil then return end
+    if env.providers_traceback[name] then
+        env.providers_traceback[name]=setmetatable({},{__index=env.providers_traceback[name]})
     else
-        assert(env.providers[name]~=nil)
+        env.providers_traceback[name]={n=1}
     end
+    env.providers_traceback[name][env.providers_traceback[name].n]=traceback
+    env.providers_traceback[name].n=env.providers_traceback[name].n+1
+    env.providers_traceback=setmetatable({},{__index=env.providers_traceback})
 end
 
 --- ;;; generators
@@ -482,6 +497,18 @@ local modes_generate=function (env)
         end,env,idx))
     end
     return modes
+end
+---@param env ua.conf.env
+---@return number
+local function number_check(env)
+    assert_is(env,'number')
+    return env.val
+end
+---@param env ua.conf.env
+---@return boolean
+local function boolean_check(env)
+    assert_is(env,'boolean')
+    return env.val
 end
 ---@param env ua.conf.env
 ---@return boolean|ua.conf.runtime_fn
@@ -646,48 +673,77 @@ end
 ---@param env ua.conf.env
 local function pair_generate(env)
     assert_is(env,'table')
-    local start_pairs_map,start_pair=unpack(apply_indexed(single_pair_generate,env,1,{false}))
-    local end_pairs_map,end_pair=unpack(apply_indexed(single_pair_generate,env,2,{true}))
+    local o=vim.defaulttable(function (x) return x end)
     for idx in pairs(env.val) do
         if idx==1 or idx==2 then
+        elseif idx==o.multiline then
+            provide(env,'multiline',apply_indexed(boolean_check,env,o.multiline))
+        elseif idx==o.priority then
+            provide(env,'priority',apply_indexed(number_check,env,o.priority))
+        elseif idx==o.modes then
+            provide(env,'pair_modes',apply_indexed(modes_generate,env,o.modes))
         else
-            error('TODO')
+            error_dont_set_idx(env,idx,o)
         end
     end
+    provide_traceback(env,'pair_modes',merge_traceback(env.traceback,o.modes))
+    local start_pairs_maps,start_pair=unpack(apply_indexed(single_pair_generate,env,1,{false}))
+    local end_pairs_map,end_pair=unpack(apply_indexed(single_pair_generate,env,2,{true}))
     return {
-        start_pairs_map=start_pairs_map,
-        end_pairs_map=end_pairs_map,
-        start_pair=start_pair,
-        end_pair=end_pair,
+        {start_pairs_maps,start_pair},
+        {end_pairs_map,end_pair},
+        priority=use(env,'priority'),
+        multiline=use(env,'multiline'),
     }
 end
 
 ---@param env ua.conf.env
 local function main_generate(env)
     assert_is(env,'table')
-    local map_modes,pair_map_modes
-    if env.val.map_modes~=nil then
-        map_modes=apply_indexed(modes_generate,env,'map_modes')
+    local o=vim.defaulttable(function (x) return x end)
+
+    if env.val[o.map_modes]~=nil then
+        local map_modes=apply_indexed(modes_generate,env,o.map_modes)
+        provide(env,'modes',map_modes)
+        provide(env,'pair_modes',map_modes)
+    else
+        provide_traceback(env,'modes',o.map_modes)
+        provide_traceback(env,'pair_modes',o.map_modes)
     end
-    if env.val.pair_map_modes~=nil then
-        pair_map_modes=apply_indexed(modes_generate,env,'pair_map_modes')
+
+    if env.val[o.pair_map_modes]~=nil then
+        provide(env,'pair_modes',apply_indexed(modes_generate,env,o.pair_map_modes))
+    else
+        provide_traceback(env,'pair_modes',o.pair_map_modes)
     end
-    provide(env,'priority',0)
-    provide(env,'modes',map_modes,'map_modes')
-    provide(env,'pair_modes',map_modes,'map_modes')
-    provide(env,'pair_modes',pair_map_modes,'pair_map_modes')
+
+    if env.val[o.priority]~=nil then
+        provide(env,'priority',apply_indexed(number_check,env,o.priority))
+    else
+        provide(env,'priority',0)
+    end
+
+    if env.val[o.multiline]~=nil then
+        provide(env,'multiline',apply_indexed(boolean_check,env,o.multiline))
+    else
+        provide(env,'multiline',false)
+    end
+
     for idx in pairs(env.val) do
         if type(idx)=='number' then
             --TODO: check that env.val as a list doesn't have gaps
-        elseif idx=='map_modes' or idx=='pair_map_modes' then
+        elseif rawget(o,idx) then
         else
-            error('TODO')
+            error_dont_set_idx(env,idx,o)
         end
     end
     local pairs_={}
     for idx in ipairs(env.val) do
         table.insert(pairs_,apply_indexed(pair_generate,env,idx))
     end
+    local out={
+        pairs=pairs_,
+    }
     error('TODO')
 end
 
@@ -712,8 +768,8 @@ end
 utils=dofile'/home/user/.tmp/lua/ua-mini/lua/ultimate-autopair/utils.lua'
 M._generate({
     map_modes={'i','c'},
-    --pair_map_modes=nil, --If nil then same as `map_modes`
-    --multiline=true,
+    pair_map_modes=nil, --If nil then same as `map_modes`
+    multiline=true,
     ---- enables use of `vim.filetype.get_option`, which may break other plugins
     --use_filetype_getopt=false,
     {'(',')'},
