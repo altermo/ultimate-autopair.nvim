@@ -284,7 +284,10 @@ function M.interop.try_load_endwise()
     local _,fns=debug.getupvalue(vim.on_key,1)
     local endwise,tracking
     for _,fn in pairs(fns) do
-        if vim.endswith(debug.getinfo(fn).source,'/endwise.lua') then
+        if type(fn)=='table' then
+            fn=fn[1]
+        end
+        if type(fn)=='function' and vim.endswith(debug.getinfo(fn).source,'/endwise.lua') then
             local name
             name,tracking=debug.getupvalue(fn,1)
             if name~='tracking' then tracking=nil  end
