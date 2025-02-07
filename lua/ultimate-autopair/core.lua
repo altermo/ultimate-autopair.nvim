@@ -121,16 +121,18 @@ local lz ---@type boolean? save `vim.go.lz`
 function M.run_run(key)
     -- Set 'lazyredraw' on paring to prevent cursor jump caused by `<C-g>U<Left>`
     -- Source: https://github.com/windwp/nvim-autopairs/pull/403
-    lz = vim.go.lz
-    vim.go.lz = true
+    if not vim.go.lz then
+        lz = vim.go.lz
+        vim.go.lz = true
 
-    vim.schedule(function()
-      if lz == nil then
-        return
-      end
-      vim.go.lz = lz
-      lz = nil
-    end)
+        vim.schedule(function()
+          if lz == nil then
+            return
+          end
+          vim.go.lz = lz
+          lz = nil
+        end)
+    end
 
     return M.funcs[key]()
 end
