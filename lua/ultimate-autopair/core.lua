@@ -115,9 +115,25 @@ function M.get_run(key)
     end
     return 'v:lua.'..M.global_name..'.run_run("'..vim.fn.escape(key,[[\\"]])..'")'
 end
+local lz ---@type boolean? save `vim.go.lz`
 ---@param key string
 ---@return string
 function M.run_run(key)
+    -- Set 'lazyredraw' on paring to prevent cursor jump caused by `<C-g>U<Left>`
+    -- Source: https://github.com/windwp/nvim-autopairs/pull/403
+    if not vim.go.lz then
+        lz = vim.go.lz
+        vim.go.lz = true
+
+        vim.schedule(function()
+          if lz == nil then
+            return
+          end
+          vim.go.lz = lz
+          lz = nil
+        end)
+    end
+
     return M.funcs[key]()
 end
 ---@param mode string
