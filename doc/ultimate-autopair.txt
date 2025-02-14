@@ -5,11 +5,11 @@ TUTORIAL                                             *ultimate-autopair-TUTOR*
 example-configuration                       *ultimate-autopair-example-config*
 {NOTE} This is only a surface level look at the configuration.
 To configure internal pairs, use `{config_internal_pairs={'(',')',fly=false}}`
-To create a pair, use `{{'(,',')'}}`.
-To create a pair for a filetype, use `{{'(,',')',ft={ft1,ft2}}}`.
-To create a pair for a not filetype, use `{{'(,',')',nft={ft1,ft2}}}`.
-To disable a mapping, use `{space={enable=false}}`
-To disable a mapping in a filetype, use `{bs={conf={nft={ft}}}}`
+To create a pair, use `{{ '(', ')' }}`.
+To create a pair for a filetype, use `{{ '(', ')', ft = { ft1, ft2 }}}`.
+To create a pair for a not filetype, use `{{ '(', ')', nft = { ft1, ft2 }}}`.
+To disable a mapping, use `{ space = { enable = false }}`
+To disable a mapping in a filetype, use `{ bs = { conf = { nft = { ft }}}}`
 ------------------------------------------------------------------------------
 quick-start                                                *ultimate-autopair*
 This is a quick guide of the plugin, it is intended for people who just want
