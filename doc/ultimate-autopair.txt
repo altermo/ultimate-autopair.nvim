@@ -307,6 +307,7 @@ The default configuration contains a loot of options, here are those:
      --then a `\t` will not be inserted
    },
    extensions={-- *ultimate-autopair-extensions-default-config*
+     bigfile={p=110},
      cmdtype={skip={'/','?','@','-'},p=100},
      filetype={p=90,nft={'TelescopePrompt'},tree=true},
      escape={filter=true,p=80},
@@ -543,6 +544,12 @@ Extension pair-config:
   and if `string[]` then for which filetypes.
 {alpha_after} `string[]|boolean`: Weather to check for alpha after
   and if `string[]` then for which filetypes.
+------------------------------------------------------------------------------
+ext-bigfile                                    *ultimate-autopair-ext-bigfile*
+This extension can limit or even disablinig in specific files.
+Extension config:
+{row_limit} `number`: If the file is above this amount of rows, do disabling.
+{byte_limit} `number`: If the file is above this amount of bytes do disabling.
 ------------------------------------------------------------------------------
 ext-cmdtype                                    *ultimate-autopair-ext-cmdtype*
 This extension allows for disabling in specific cmdline-types

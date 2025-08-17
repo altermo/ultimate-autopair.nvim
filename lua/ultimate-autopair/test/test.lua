@@ -304,6 +304,12 @@ return {
         {'```python\nf|\n```',"'","\n```python\nf'|'\n```",{ts=true,ft='markdown',skip=true}},
         --TODO: write more tests (like multiline empty line...)
     },
+    ext_bigfile={
+        {'.|','(','.(|)',{c={extensions={bigfile={byte_limit=2}}}}},
+        {'..|','(','..(|',{c={extensions={bigfile={byte_limit=2}}}}},
+        {'|','(','(|)',{c={extensions={bigfile={row_limit=1}}}}},
+        {'|\n','(','(|\n',{c={extensions={bigfile={row_limit=1}}}}},
+    },
     utf8={
         {"'á|',","'","'á'|,",{interactive=true}}, --simple
         {'(|)aøe,','','(|aøe),',{interactive=true}}, --faswarp
