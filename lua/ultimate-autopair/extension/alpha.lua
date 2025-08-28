@@ -80,8 +80,9 @@ function M.check_change_iskeyword(o,m,ext,incheck)
     else
         vim.o.iskeyword=utils.ft_get_option(utils.getsmartft(o),'iskeyword')
     end
-    local ret=M.check(o,m,ext,incheck)
+    local ok,ret=pcall(M.check, o,m,ext,incheck)
     vim.o.iskeyword=savekeyword
+    if not ok then error(ret) end
     return ret
 end
 ---@param m prof.def.module
