@@ -44,6 +44,28 @@ function M.backspace_wrapp(m)
         end
     end
 end
+---@param m prof.def.m.paire
+---@return prof.def.map.cr.fn
+function M.newline_wrapp(m)
+    return function (o)
+        vim.lg(m.pair)
+        if m.pair==o.line:sub(o.col,o.col+#m.pair-1) and m.conf.newline and
+            m.filter(utils._get_o_pos(o,o.col)) then
+            local _,row=m.fn.find_corresponding_pair(o,o.col)
+            if row~=o.row then return end
+            local format_delete=#(vim.o.formatoptions:find'r' and vim.o.comments:match('s%w*:'..vim.pesc(m.start_pair)..',m%w*:(.-,)e%w*:'..vim.pesc(m.end_pair)) or '')
+            return utils.create_act({
+                {'newline'},
+                {'delete',format_delete},
+                utils.interop.get_endwise(),
+                {'k'},
+                {'home'},
+                {'l',o.col-1},
+                {'newline'},
+            })
+        end
+    end
+end
 ---@param q prof.def.q
 ---@return prof.def.m.pairae
 function M.init(q)
@@ -54,7 +76,7 @@ function M.init(q)
     m.extensions=q.extensions
     m.conf=q.conf
     m.key=m.pair:sub(1,1)
-    m[default.type_def]={'charins','pair','end','ambiguous','dobackspace'}
+    m[default.type_def]={'charins','pair','end','ambiguous','dobackspace','donewline'}
     m.mconf=q.mconf
     m.p=q.p
     m.doc=('autopairs ambiguous end pair: %s'):format(m.pair)
@@ -62,6 +84,7 @@ function M.init(q)
     m.multiline=q.multiline
 
     m.check=M.check_wrapp(m)
+    m.newline=M.newline_wrapp(m)
     m.backspace=M.backspace_wrapp(m)
     m.filter=default.def_filter_wrapp(m)
     default.init_extensions(m,m.extensions)
