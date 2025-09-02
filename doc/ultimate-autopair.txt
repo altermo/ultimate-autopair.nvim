@@ -63,6 +63,7 @@ Pairs may have a bunch of options, which include:
 + fly (false): enable fly for the pair
 + ft (nil;table[string]): in filetype
 + nft (nil;table[string]): not in filetype
++ insta_newline(false): do a newline when auto-pairing
 # {Extensions}
 Extensions are things that extend default mappings. They are designed to work
 for all mappings (and not just pair) which come from the default profile. Each

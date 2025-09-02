@@ -58,6 +58,9 @@ return {
         {'{|}','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'}}}},
         {'{|','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'},autoclose=true}}},
         {'{|};','\r','{\n|\n};',{skip=true,ft='c',c={autosemi={'c'},autoclose=true}}},
+        {'|','<','<\n|\n>',{c={{'<','>',insta_newline=true}}}},
+        {'<|','<','<<\n|\n>>',{c={{'<<','>>',insta_newline=true}}}},
+        {'<|','>','<>\n|\n<>',{c={{'<>','<>',insta_newline=true}}}},
     },
     backspace={
         {'[|]','','|'},

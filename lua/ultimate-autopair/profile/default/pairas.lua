@@ -29,6 +29,19 @@ function M.check_wrapp(m)
     return function(o)
         if not m.fn.can_check(o) then return end
         local part_end_present=o.line:sub(o.col,o.col+#m.end_pair-2)==m.end_pair:sub(-1)
+        if m.conf.insta_newline then
+            return utils.create_act({
+                m.start_pair:sub(-1),
+                (part_end_present and m.end_pair:sub(1,-2) or m.end_pair),
+                {'h',#m.end_pair-(part_end_present and 1 or 0)},
+                {'newline'},
+                utils.interop.get_endwise(),
+                {'k'},
+                {'home'},
+                {'l',o.col},
+                {'newline'},
+            })
+        end
         return utils.create_act({
             m.start_pair:sub(-1),
             (part_end_present and m.end_pair:sub(1,-2) or m.end_pair),
