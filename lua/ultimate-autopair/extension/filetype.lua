@@ -21,6 +21,9 @@ function M.filter(m,ext,o,incheck)
     ---@type ext.filetype.pconf
     local pconf=m.conf
     local notree=not default.orof(conf.tree,o,m,incheck)
+    if m.conf.treesitter==false then
+        notree=true
+    end
     local ft=utils.getsmartft(o,notree)
     local cft=default.orof(conf.ft,o,m,incheck)
     local pcft=default.orof(pconf.ft,o,m,incheck)

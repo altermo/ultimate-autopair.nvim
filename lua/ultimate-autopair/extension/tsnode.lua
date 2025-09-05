@@ -110,6 +110,9 @@ end
 ---@param m prof.def.module
 ---@param ext prof.def.ext
 function M.call(m,ext)
+    if m.conf.treesitter==false then
+        return
+    end
     local check=m.check
     local conf=ext.conf
     ---@cast conf ext.tsnode.conf

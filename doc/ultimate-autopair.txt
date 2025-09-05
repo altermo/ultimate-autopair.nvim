@@ -585,6 +585,7 @@ Extension config:
 Extension pair-config:
 {ft} `string[]`: Which filetypes to enable
 {nft} `string[]`: Which filetypes to disable
+{treesitter} `boolean`: Pair local treesitter switch
 ------------------------------------------------------------------------------
 ext-fly                                            *ultimate-autopair-ext-fly*
 This extensions allows for hopping list of end-pairs (+ other chars)
@@ -621,6 +622,8 @@ If in a specified tsnode, then filter outside the node
 and if outside of any specified tsnode, then filter inside tsnodes
 Extension config:
 {separate} `string[]`: List of node types to separate
+Extension pair-config:
+{treesitter} `boolean`: Pair local treesitter switch
 ------------------------------------------------------------------------------
 ultimate-autopair-ext-utf8                        *ultimate-autopair-ext-utf8*
 This extension replaces UTF-8 chars with ASCII counterparts.

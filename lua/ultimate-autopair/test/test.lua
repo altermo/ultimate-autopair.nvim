@@ -302,6 +302,8 @@ return {
     },
     ext_tsnode={
         {'|--)','(','(|)--)',{ts=true}},
+        {'|-->','<','<|>-->',{ts=true,c={{'<','>'}}}},
+        {'|-->','<','<|-->',{ts=true,c={{'<','>',treesitter=false}}}},
         {'/*(*/|)',')','/*(*/)|)',{ts=true,ft='c'}},
         {'|\n```lua\n)\n```','(','(|)\n```lua\n)\n```',{ts=true,ft='markdown',skip=true}},
         {'```lua\na|\n```\n)','(','\n```lua\na(|)\n```\n)',{ts=true,ft='markdown',skip=true}},
