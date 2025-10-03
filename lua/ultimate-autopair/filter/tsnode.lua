@@ -15,7 +15,7 @@ end
 ---@param conf ua.config.filter.tsnode
 ---@param tslang string
 ---@return vim.treesitter.Query[]
-local function get_queries_for_parser(conf,tslang)
+local function get_queries_for_tslang(conf,tslang)
     --TODO: how to do cache which only is invalidated when the config changes
 
     --TODO: what if a node is separate and exclude or inclusive and not inclusive?
@@ -75,7 +75,111 @@ local function get_queries_for_parser(conf,tslang)
 end
 
 ---@param conf ua.config.filter.tsnode
+---@param parser vim.treesitter.LanguageTree
+---@param range Range4
+---@return 'separate'|'exclude'?
+---@return Range4?
+local function range_in_queries(conf,parser,range)
+    --TODO: cache (or just save it in state)
+
+    local type_,smallest
+
+    parser:for_each_tree(function (tree,ltree)
+        local queries=get_queries_for_tslang(conf,ltree:lang())
+        for _,query in ipairs(queries) do
+            for id,node in query:iter_captures(tree:root(),range[1],range[3]) do
+                local name=query.captures[id]
+                local match=vim.treesitter.get_node_text(node,ltree:source())
+                local t,st=unpack(vim.split(name,'.',{plain=true}))
+                local inclusive
+                if st=='inclusive' then
+                    inclusive='right'
+                elseif querieslib.inclusive_pattern[st] then
+                    for _,pattern in pairs(querieslib.inclusive_pattern[st]) do
+                        if vim.startswith(match,pattern) then
+                            inclusive='right'
+                            break
+                        end
+                    end
+                end
+                local node_range={node:range()}
+                if not utils.range_in_range(node_range,range,inclusive) then
+                elseif t=='separate' then
+                    type_='separate'
+                    if smallest==nil or utils.range_in_range(smallest,node_range,'both') then
+                        smallest=node_range
+                    end
+                elseif t=='exclude' then
+                    type_='exclude'
+                    smallest=nil
+                    return
+                end
+            end
+        end
+    end)
+    return type_,smallest
+end
+
+---@param conf ua.config.filter.tsnode
+---@param range Range4
+---@param parser vim.treesitter.LanguageTree
+---@return Range4[]
+local function queries_to_ranges(conf,parser,range)
+    local type_,qrange=range_in_queries(conf,parser,range)
+    assert(type_~='exclude' and qrange)
+
+    local ranges={}
+    if qrange then
+        table.insert(ranges,{0,0,qrange[1],qrange[2]})
+    end
+
+    local start=qrange and qrange[1] or 1
+    local end_=qrange and qrange[3] or -1
+
+    parser:for_each_tree(function (tree,ltree)
+        local queries=get_queries_for_tslang(conf,ltree:lang())
+        for _,query in ipairs(queries) do
+            for id,node in query:iter_captures(tree:root(),start,end_) do
+                local name=query.captures[id]
+                local match=vim.treesitter.get_node_text(node,ltree:source())
+                local t,st=unpack(vim.split(name,'.',{plain=true}))
+                local inclusive
+                if st=='inclusive' then
+                    inclusive='right'
+                elseif querieslib.inclusive_pattern[st] then
+                    for _,pattern in pairs(querieslib.inclusive_pattern[st]) do
+                        if vim.startswith(match,pattern) then
+                            inclusive='right'
+                            break
+                        end
+                    end
+                end
+                local node_range={node:range()}
+                if not utils.range_in_range(node_range,range,inclusive) then
+                elseif t=='separate' or t=='separate' then
+                    --TODO what are we supposed to do here?:
+                    -- `ranges` needs to be a ordered list of ranges
+                    -- but there's no guarantee that either the trees nor the queries are ordered
+                end
+            end
+        end
+    end)
+
+    if qrange then
+        table.insert(ranges,{qrange[3],qrange[4],math.huge,math.huge})
+    end
+    return ranges
+end
+
+---@param conf ua.config.filter.tsnode
 return function (conf)
+
+    ---@class ua.filter.tsnode.state
+    ---@field ranges Range4?
+    ---@field idx number?
+    ---@field backwards boolean?
+    local state={}
+
     ---@type ua.config.filter.spec
     return {
         once=function (con)
@@ -83,40 +187,30 @@ return function (conf)
         end,
         pos=function (con,range,is_iter)
             if not is_iter then
-                local ltree=utils.get_langtree(con,range)
-                if not ltree then return false end
+                local parser=utils.get_parser(con)
+                if not parser then return false end
 
-                --TODO: the nodes are only inclusive one way, but range_in_range can only be enabled for both ways
-
-                --TODO: temp
-                local queries=get_queries_for_parser(conf,ltree:lang())
-                for _,query in ipairs(queries) do
-                    for id,node in query:iter_captures(ltree:trees()[1]:root(), range[1], range[3]) do
-                        local name=query.captures[id]
-                        local match=vim.treesitter.get_node_text(node,ltree:source())
-                        local t,st=unpack(vim.split(name,'.',{plain=true}))
-                        if t=='separate' then
-                        elseif st~='inclusive' and st~=nil then
-                            if utils.range_in_range({node:range()},range,(function ()
-                                for _,pattern in pairs(querieslib.inclusive_pattern[st]) do
-                                    if vim.startswith(match,pattern) then return 'right' end
-                                end
-                            end)()) then
-                                return true
-                            end
-                        else
-                            if utils.range_in_range({node:range()},range,st=='inclusive' and 'right') then
-                                return true
-                            end
-                        end
-                    end
+                if range_in_queries(conf,parser,range)=='exclude' then
+                    return true
                 end
                 return false
             end
             error'TODO'
         end,
-        on_iter=function (con,range)
-            error'TODO'
+        on_iter=function (con,range,type_)
+            if not state.ranges then
+                local parser=utils.get_parser(con)
+                if not parser then return false end
+
+                state.ranges=queries_to_ranges(conf,parser,range)
+            end
+            if type_=='reverse' then
+                state.idx=#state.ranges
+                state.backwards=true
+            else
+                state.idx=1
+                state.backwards=false
+            end
         end,
         _name='tsnode',_conf=conf,
 

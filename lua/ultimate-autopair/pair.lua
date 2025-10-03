@@ -40,6 +40,7 @@ function M.run_start(bconf,con)
         return
     end
     local fn=function () return true end
+    --TODO: actually this should be using pair_range...
     local row,col=con.cursor_range[1]+1,con.cursor_range[2]+1
     if start_pair==end_pair then
         if open_pair.open_ambiguous_pairs(row,col,start_pair,con,fn,fn,'both') then

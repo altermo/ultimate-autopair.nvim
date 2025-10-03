@@ -1,4 +1,8 @@
 local M={}
+
+--TODO: instead of making the count_* functions take a row/col, make them take a range
+-- This also solves the, what should on_iter take for range, now we have a range...
+
 ---If {gotostart_ret_pos} is false(/nil), returns the number of open END pairs or nil
 ---If {gotostart_ret_pos} is true, returns the start position of the LAST open START pair or nil
 ---Normally, it searches the range {-1,-1}(end of source) to {row,col}
