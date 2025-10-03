@@ -551,9 +551,9 @@ local list_of_tests={
             * `backspace.mode`
             * `map_mode`]]},
         {'','','',{validate=1,default=false,
-            {'(',')',backspace_multi={[dont_rec_check]={}}},map_mode='i'
+            {'(',')',backspace_multi={foo={}}},map_mode='i'
         },validate_and='expect error',expected_err=[[
-            The option `[1].backspace_multi[%%dont_rec_check%%]` requires the option `backspace_multi[%%dont_rec_check%%]` to be set.
+            The option `[1].backspace_multi.foo` requires the option `backspace_multi.foo` to be set.
         ]]},
         ---@diagnostic enable: assign-type-mismatch, redundant-parameter, missing-fields
 
@@ -736,11 +736,6 @@ local function validate_config(instance,test,category,index)
             err=err:gsub("Configuration for the plugin 'ultimate%-autopair' is incorrect:\n\n",'')
         end
         local expected_err=('\n'..test.expected_err):gsub('\n +','\n'):gsub('^%s+',''):gsub('%s+$','')
-            :gsub('%%%%dont_rec_check%%%%',function ()
-            return instance:exec_lua([[
-            return tostring(assert(require'ultimate-autopair.test'._dont_rec_check))
-            ]])
-        end)
         if err==expected_err then return end
         local msg=('test(%s) did not error correctly:\n{Expected-error:}\n%s\n{Actual-error:}\n%s'):format(category,expected_err,err)
         return msg
@@ -825,7 +820,6 @@ end
 
 local M={}
 M.tests=list_of_tests
-M._dont_rec_check=dont_rec_check
 
 ---@param plugin_path string?
 ---@param handler ua.health.handler?
