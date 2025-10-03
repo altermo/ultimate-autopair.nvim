@@ -171,7 +171,8 @@ end
 ---@param exclude_testfn_end_pair fun(row,col):boolean
 ---@param gotoend 'both'|true?
 ---@param initial_count number?
----@return boolean
+---@return number?
+---@return number?
 function M.open_ambiguous_pairs(
     range,
     pair_match,
@@ -181,6 +182,8 @@ function M.open_ambiguous_pairs(
     gotoend,
     initial_count)
     assert(#pair_match>0)
+    local pos_row=initial_count
+    local pos_col
     local row=(gotoend and range[3]+1) or range[1]+1
     local col=(gotoend and range[4]+1) or range[2]+1
     local start_row=(gotoend==true and row) or 1
@@ -207,6 +210,10 @@ function M.open_ambiguous_pairs(
                     (not in_range or in_range(rcol,rcol+#pair_match)) then
                     count=count+1
                     next_pair=line:find(pair_match,next_pair+#pair_match,true)
+                    if not gotoend or not pos_col then
+                        pos_row=lrow
+                        pos_col=rcol
+                    end
                 else
                     next_pair=line:find(pair_match,next_pair+1,true)
                 end
@@ -216,7 +223,8 @@ function M.open_ambiguous_pairs(
         end
         ::continue::
     end
-    return count%2==1
+    if count%2==0 then return end
+    return pos_row,pos_col
 end
 
 return M

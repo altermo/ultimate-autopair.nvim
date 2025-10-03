@@ -263,7 +263,7 @@ local list_of_tests={
         --{'""|a','(','""(|)a',{ft='lua',ts=true,c={extensions={cond={cond=function (fns) return fns.in_node('string') end}}},skip=true}},
     },
 
-    backspace={
+    map_backspace={
         {'(|)','<bs>','|'},
         {'[[|]]','<bs>','[|]'},
         {'[[|]','<bs>','[|]'},
@@ -276,6 +276,15 @@ local list_of_tests={
         {'"|""','<bs>','|""'},
         {'" "|"','<bs>','" |"'},
         {'""| "','<bs>','"| "'},
+        -- {"a'|'",'<bs>',"a|'"},
+        -- {"a'|' '",'<bs>',"a|' '"},
+        -- {'<|a>>','<bs>','|a>',{{'<','>',filter={alpha={before=true}}}}},
+        {'[|foo]','<bs>','|foo'},
+        {'"|foo"','<bs>','|foo"'},
+        {'"|foo"','<bs>','|foo',{default={pair={['""']={backspace={overjump=true}}}}}},
+        {'[|\n]','<bs>','|\n'},
+        {'|','<C-r>="(a<left><bs>\r','a|'},
+        -- {'<!--|-->','<bs>','<!-|-->'},
         -- {'a<!--|-->b','<bs>','a|b',{ft='markdown'}},
         -- {'a<!--|b-->c','<bs>','a|bc',{ft='markdown'}},
         -- {'a<!---->|b','<bs>','a|b',{ft='markdown'}},

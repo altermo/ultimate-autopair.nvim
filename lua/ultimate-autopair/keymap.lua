@@ -186,12 +186,35 @@ local keys={
     key_i_ctrl_o=vim.keycode'<C-\\><C-o>',
 }
 
+---@param row number
+---@param col number
+---@return string
+local function key_pos_nodot(row,col)
+    --TODO: make it dot complaint
+
+    local mode=vim.fn.mode()
+    if mode=='i' or mode=='R' then
+        -- key_i_ctrl_o is important because otherwise things break internally (like undo)
+        return keys.key_i_ctrl_o..utils.keycode(('<cmd>call cursor(%s,%s)\r'):format(row,col ))
+    elseif mode=='c' then
+        assert(row==nil or row==1)
+        return keys.key_home..keys.key_right:rep(vim.api.nvim_strwidth(vim.fn.getcmdline():sub(1,col-1)))
+    else
+        return M.keycode(('<cmd>call cursor(%s,%s)\r'):format(row or '"."',col))
+    end
+end
 ---@param action ua.actions
 ---@return string
 local function action_to_keys(action)
+    --TODO: the whole action system is pretty jank: how to make it not jank...
+
     local out={}
     local mode=vim.fn.mode()
     local key_left,key_right
+    local orig=vim.api.nvim_win_get_cursor(0)
+    if mode=='c' then
+        orig={1,vim.fn.getcmdpos()-1}
+    end
     if mode=='i' or mode=='R' then
         key_left=keys.key_noundo..keys.key_left
         key_right=keys.key_noundo..keys.key_right
@@ -207,8 +230,16 @@ local function action_to_keys(action)
         elseif act[1]=='l' then
             table.insert(out,key_right:rep(vim.api.nvim_strwidth(act[2])))
         elseif act[1]=='delete' then
-            table.insert(out,keys.key_bs:rep(vim.api.nvim_strwidth(act[2])))
-            table.insert(out,keys.key_del:rep(vim.api.nvim_strwidth(act[3])))
+            if act[2] then
+                table.insert(out,keys.key_bs:rep(vim.api.nvim_strwidth(act[2])))
+            end
+            if act[3] then
+                table.insert(out,keys.key_del:rep(vim.api.nvim_strwidth(act[3])))
+            end
+        elseif act[1]=='pos' then
+            table.insert(out,key_pos_nodot(act[2],act[3]))
+        elseif act[1]=='orig' then
+            table.insert(out,key_pos_nodot(orig[1],orig[2]+1))
         else
             error('TODO')
         end
