@@ -40,15 +40,13 @@ function M.run_start(bconf,con)
         return
     end
     local fn=function () return true end
-    --TODO: actually this should be using pair_range...
-    local row,col=con.cursor_range[1]+1,con.cursor_range[2]+1
     if start_pair==end_pair then
-        if open_pair.open_ambiguous_pairs(row,col,start_pair,con,fn,fn,'both') then
+        if open_pair.open_ambiguous_pairs(pair_range,start_pair,con,fn,fn,'both') then
             return
         end
     else
-        local count1=open_pair.count_start_pair(row,col,start_pair,end_pair,con,fn,fn)
-        local count2=open_pair.count_end_pair(row,col,start_pair,end_pair,con,fn,fn)
+        local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,fn,fn)
+        local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,fn,fn)
         if count1<count2 then return end
     end
     return {
@@ -87,16 +85,16 @@ function M.run_end(bconf,con)
         return
     end
     local fn=function () return true end
-    local row,col=con.cursor_range[1]+1,con.cursor_range[2]+1
+    --TODO: replace `con.cursor_range` with `pair_range`...
     if start_pair==end_pair then
         --if there's an uneven number of ambiguous pairs or if were not in a pair
-        local open_pair_before=open_pair.open_ambiguous_pairs(row,col,start_pair,con,fn,fn)
+        local open_pair_before=open_pair.open_ambiguous_pairs(con.cursor_range,start_pair,con,fn,fn)
         if not open_pair_before then return end
-        local open_pair_after=open_pair.open_ambiguous_pairs(row,col,start_pair,con,fn,fn,true,1)
+        local open_pair_after=open_pair.open_ambiguous_pairs(con.cursor_range,start_pair,con,fn,fn,true,1)
                 if open_pair_after then return end
     else
-        local count1=open_pair.count_start_pair(row,col,start_pair,end_pair,con,fn,fn)
-        local count2=open_pair.count_end_pair(row,col,start_pair,end_pair,con,fn,fn)
+        local count1=open_pair.count_start_pair(con.cursor_range,start_pair,end_pair,con,fn,fn)
+        local count2=open_pair.count_end_pair(con.cursor_range,start_pair,end_pair,con,fn,fn)
         if count1==0 or count1>count2 then return end
     end
     return {

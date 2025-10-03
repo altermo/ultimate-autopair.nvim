@@ -1,15 +1,11 @@
 local M={}
 
---TODO: instead of making the count_* functions take a row/col, make them take a range
--- This also solves the, what should on_iter take for range, now we have a range...
-
 ---If {gotostart_ret_pos} is false(/nil), returns the number of open END pairs or nil
 ---If {gotostart_ret_pos} is true, returns the start position of the LAST open START pair or nil
 ---Normally, it searches the range {-1,-1}(end of source) to {row,col}
 ---{gotostart_ret_pos} makes it search the range {row,col} to {0,0}
 ---col is cursor-indexed, as in start of line is 1
----@param row number (1-indexed)
----@param col number (cursor-indexed)
+---@param range Range4
 ---@param start_pair_match string
 ---@param end_pair_match string
 ---@param con ua.context
@@ -20,8 +16,7 @@ local M={}
 ---@return number?
 ---@return number?
 function M.count_end_pair(
-    row,
-    col,
+    range,
     start_pair_match,
     end_pair_match,
     con,
@@ -32,6 +27,8 @@ function M.count_end_pair(
     assert(start_pair_match~=end_pair_match)
     assert(#start_pair_match>0)
     assert(#end_pair_match>0)
+    local row=(gotostart_ret_pos and range[1]+1) or range[3]+1
+    local col=(gotostart_ret_pos and range[2]+1) or range[4]+1
     start_pair_match=start_pair_match:reverse()
     end_pair_match=end_pair_match:reverse()
     local count=initial_count or 0
@@ -91,8 +88,7 @@ end
 ---Normally, it searches the range {0,0} to {row,col}
 ---{gotoend_ret_pos} makes it search the range {row,col} to {-1,-1}(end of source)
 ---col is cursor-indexed, as in start of line is 1
----@param row number (1-indexed)
----@param col number (cursor-indexed)
+---@param range Range4
 ---@param start_pair_match string
 ---@param end_pair_match string
 ---@param con ua.context
@@ -103,8 +99,7 @@ end
 ---@return number?
 ---@return number?
 function M.count_start_pair(
-    row,
-    col,
+    range,
     start_pair_match,
     end_pair_match,
     con,
@@ -115,6 +110,8 @@ function M.count_start_pair(
     assert(start_pair_match~=end_pair_match)
     assert(#start_pair_match>0)
     assert(#end_pair_match>0)
+    local row=(gotoend_ret_pos and range[3]+1) or range[1]+1
+    local col=(gotoend_ret_pos and range[4]+1) or range[2]+1
     local count=initial_count or 0
     local start_row=(gotoend_ret_pos and row) or 1
     local end_row=(gotoend_ret_pos and -1) or row
@@ -167,8 +164,7 @@ function M.count_start_pair(
     end
     return (not gotoend_ret_pos) and count or nil
 end
----@param row number (1-indexed)
----@param col number (cursor-indexed)
+---@param range Range4
 ---@param pair_match string
 ---@param con ua.context
 ---@param exclude_testfn_start_pair fun(row,col):boolean
@@ -177,8 +173,7 @@ end
 ---@param initial_count number?
 ---@return boolean
 function M.open_ambiguous_pairs(
-    row,
-    col,
+    range,
     pair_match,
     con,
     exclude_testfn_start_pair,
@@ -186,6 +181,8 @@ function M.open_ambiguous_pairs(
     gotoend,
     initial_count)
     assert(#pair_match>0)
+    local row=(gotoend and range[3]+1) or range[1]+1
+    local col=(gotoend and range[4]+1) or range[2]+1
     local start_row=(gotoend==true and row) or 1
     local end_row=(not gotoend and -1) or row
     local count=initial_count or 0

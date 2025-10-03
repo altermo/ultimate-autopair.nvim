@@ -23,15 +23,14 @@ local function run_start_pair(pair,mconf,conf_idx,con)
     if not vim.startswith(utils.line_after_range(con,con.cursor_range),end_pair) then
         return
     end
-    local row,col=con.cursor_range[1]+1,con.cursor_range[2]+1
     local fn=function () return true end
     if start_pair==end_pair then
-        if open_pair.open_ambiguous_pairs(row,col,start_pair,con,fn,fn,'both') then
+        if open_pair.open_ambiguous_pairs(con.cursor_range,start_pair,con,fn,fn,'both') then
             return
         end
     else
-        local count1=open_pair.count_start_pair(row,col,start_pair,end_pair,con,fn,fn)
-        local count2=open_pair.count_end_pair(row,col,start_pair,end_pair,con,fn,fn)
+        local count1=open_pair.count_start_pair(con.cursor_range,start_pair,end_pair,con,fn,fn)
+        local count2=open_pair.count_end_pair(con.cursor_range,start_pair,end_pair,con,fn,fn)
         if count1>count2 then return end
     end
     return {
