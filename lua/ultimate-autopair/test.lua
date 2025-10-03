@@ -538,6 +538,12 @@ local list_of_tests={
         },validate_and='expect error',expected_err=[[
             The option `root_filter.tsnode.separate.lua` (with the value `"NOT_A_NODE"`) is not detected as a valid TSNode type for filetype lua.]]},
 
+        -- err: not_detected TSLang
+        {'','','',{validate=3,default=false,
+            root_filter={tsnode={separate={NOT_A_TSLANG=''}}}
+        },validate_and='expect error',expected_err=[[
+            The option `root_filter.tsnode.separate#index["NOT_A_TSLANG"]` (with the value `"NOT_A_TSLANG"`) is not detected as a treesitter language.]]},
+
         -- err: need_set
         {'','','',{validate=1,default=false,
             newline={}

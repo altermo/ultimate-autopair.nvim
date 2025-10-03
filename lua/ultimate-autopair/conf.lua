@@ -68,7 +68,7 @@ local opts_={}
 
 ---@class ua.conf.err.not_detected
 ---@field type 'not_detected'
----@field subtype 'filetype'|'TSNode'|'TSNode_filetype'|'query_filetype'
+---@field subtype 'filetype'|'TSNode'|'TSNode_filetype'|'query_filetype'|'tslang'
 ---@field msg string
 
 ---@class ua.conf.err.need_set
@@ -94,6 +94,7 @@ local err_severity={
         ['TSNode_filetype']=1,
         ['query_filetype']=1,
         ['filetype']=3,
+        ['tslang']=3,
     },
     dont_set=2,
     not_list=2,
@@ -355,6 +356,21 @@ local function assert_filetype(ft)
             type='not_detected',
             subtype='filetype',
             msg='filetype',
+        })
+    end
+end
+
+---@param tslang any
+local function assert_tslang(tslang)
+    assert_is(tslang,'string')
+    ---@cast tslang string
+    if opts_.validate<err_severity.not_detected.tslang then return end
+    if type(tslang)=='string' and vim.treesitter.language.add(tslang) then
+    else
+        error_it(tslang,{
+            type='not_detected',
+            subtype='tslang',
+            msg='treesitter language',
         })
     end
 end
@@ -1018,7 +1034,7 @@ local function g_tsnode_queries(tbl)
     assert_is(tbl,'table')
     local ft
     map_apply_indexes_double(tbl,function (x)
-        assert_filetype(x)
+        assert_tslang(x)
         ft=x
     end,function (x)
             assert_is_query_in_filetype(ft,x)
@@ -1049,7 +1065,7 @@ local function g_nodes(nodes)
     map_apply_indexes_double(nodes,function (x)
         assert_is(x,{'string','number'})
         if type(x)=='string' then
-            assert_filetype(x)
+            assert_tslang(x)
             ft=x
         else
             ft=nil
