@@ -1,0 +1,55 @@
+local open_pair=require'ultimate-autopair.open_pair'
+local utils=require'ultimate-autopair.utils'
+local M={}
+---@param pair ua.iconfig.pair
+---@param mconf ua.iconfig.backspace.root
+---@param conf_idx string
+---@param con ua.context
+---@return ua.actions?
+local function run_start_pair(pair,mconf,conf_idx,con)
+    local conf=(pair.start_pair.backspace or {})[conf_idx] or mconf
+    if conf.enable==false then
+        return
+    end
+
+    --TODO: temp, remove
+    local start_pair=pair.start_pair.pair
+    assert(type(start_pair)=='string')
+    local end_pair=pair.end_pair.pair
+    assert(type(end_pair)=='string')
+    if not vim.endswith(utils.line_before_range(con,con.cursor_range),start_pair) then
+        return
+    end
+    if not vim.startswith(utils.line_after_range(con,con.cursor_range),end_pair) then
+        return
+    end
+    local row,col=con.cursor_range[1]+1,con.cursor_range[2]+1
+    local fn=function () return true end
+    if start_pair==end_pair then
+        if open_pair.open_ambiguous_pairs(row,col,start_pair,con,fn,fn,'both') then
+            return
+        end
+    else
+        local count1=open_pair.count_start_pair(row,col,start_pair,end_pair,con,fn,fn)
+        local count2=open_pair.count_end_pair(row,col,start_pair,end_pair,con,fn,fn)
+        if count1>count2 then return end
+    end
+    return {
+        {'delete',start_pair,end_pair}
+    }
+    --TODO END
+end
+---@param mconf ua.iconfig.backspace.root
+---@param pairs_ ua.iconfig.pair[]
+---@param conf_idx string
+---@param con ua.context
+---@return ua.actions?
+function M.run(mconf,pairs_,conf_idx,con)
+    for _,pair in ipairs(pairs_) do
+        local ret=run_start_pair(pair,mconf,conf_idx,con)
+        if ret then
+            return ret
+        end
+    end
+end
+return M
