@@ -148,7 +148,7 @@
     --- row: same as pos, but it applies to rows. Would be useful on range filter to quickly discard unimportant rows
 ---@class ua.config.filter: ua.config.filter.base.1
 ---@field once? fun(con:ua.context):boolean?,boolean?
----@field on_iter? fun(con.ua.context,range:Range4):nil
+---@field on_iter? fun(type_:'normal'|'reverse',iter_range:Range4):nil
 ---@field pos? fun(con:ua.context,range:Range4,is_iter:boolean):boolean?
 ----@field row? fun(source:string):boolean? --TODO
 ---@class ua.config.filter.anonymous: ua.config.filter.base, ua.config.filter
