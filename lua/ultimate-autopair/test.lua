@@ -343,7 +343,7 @@ local list_of_tests={
                     separate={'comment'},
                     exclude_inclusive={},
                     exclude={},
-                    query=dont_rec_check,
+                    query={lua='(string) @separate'},
                     nodeclass_filter={},
                     filter_or=dont_rec_check,
                     filter=dont_rec_check,
@@ -820,6 +820,7 @@ end
 
 local M={}
 M.tests=list_of_tests
+M._dont_rec_check=dont_rec_check
 
 ---@param plugin_path string?
 ---@param handler ua.health.handler?

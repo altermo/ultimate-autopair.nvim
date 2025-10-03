@@ -392,7 +392,7 @@ end
 local function assert_is_query_in_filetype(ft,query)
     assert_is(query,'string')
     if opts_.validate<err_severity.not_detected.query_filetype then return end
-    if pcall(vim.treesitter.query.parse,query,ft) then
+    if pcall(vim.treesitter.query.parse,ft,query) then
     else
         error_it(query,{
             type='not_detected',
