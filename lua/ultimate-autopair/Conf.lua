@@ -209,6 +209,7 @@
 ---@field [string] string|true|ua.config.fallback.entry|fun():string
 
 ---@class ua.config
+---@field lazy boolean?
 ---@field map_mode ua.config.modes?
 ---@field pair_map_mode ua.config.modes?
 ---@field priority number?

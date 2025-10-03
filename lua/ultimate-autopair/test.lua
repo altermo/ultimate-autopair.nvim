@@ -316,6 +316,7 @@ local list_of_tests={
                 [true]=true,
                 ['<A-e>']={i='',[true]=function () return 'a' end},
             },
+            lazy=false,
             default=false,
             validate=4,
             err_format='default',

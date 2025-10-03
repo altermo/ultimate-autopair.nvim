@@ -1415,10 +1415,11 @@ local function g_main(tbl)
     ---@type ua.config
     local o=vim.defaulttable(function (x) return x end)
 
-    -- These three are validated beforehand
+    -- These are validated and used beforehand
     local _=o.validate
     local _=o.err_format
     local _=o.default
+    local _=o.lazy
 
     local use_filetype_getopt=apply_index_default(tbl,o.use_filetype_getopt,g_use_filetype_getopt,{[true]=false})
     local fallback=apply_index_default(tbl,o.fallback,g_fallback,{[true]=false})

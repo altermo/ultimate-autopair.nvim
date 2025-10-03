@@ -7,6 +7,9 @@ local M={}
 ---@param conf ua.config?
 function M.setup(conf)
     conf=conf or {}
+    if conf.lazy then
+        error'TODO: basic lazyloading on Insert and Cmdline'
+    end
     conf=defmerge.merge_with_default(conf)
     M._conf=conf
     local iconf=confgen._generate(conf)
