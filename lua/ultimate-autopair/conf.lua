@@ -68,7 +68,7 @@ local opts_={}
 
 ---@class ua.conf.err.not_detected
 ---@field type 'not_detected'
----@field subtype 'filetype'|'TSQuery'|'TSNode'|'TSNode_filetype'
+---@field subtype 'filetype'|'TSNode'|'TSNode_filetype'|'query_filetype'
 ---@field msg string
 
 ---@class ua.conf.err.need_set
@@ -90,9 +90,9 @@ local err_severity={
     enum=1,
     need_set=1,
     not_detected={
-        ['TSQuery']=1,
         ['TSNode']=1,
         ['TSNode_filetype']=1,
+        ['query_filetype']=1,
         ['filetype']=3,
     },
     dont_set=2,
@@ -359,26 +359,6 @@ local function assert_filetype(ft)
     end
 end
 
-local function is_tsquery(query)
-    return query.iter_captures
-        and query.lang
-end
-
----@param query any
-local function assert_is_ts_query(query)
-    assert_is(query,'table')
-    ---@cast query table
-    if opts_.validate<err_severity.not_detected.TSQuery then return end
-    if is_tsquery(query) then
-    else
-        error_it(query,{
-            type='not_detected',
-            subtype='TSQuery',
-            msg='vim.treesitter.Query',
-        })
-    end
-end
-
 ---@param node string
 local function assert_is_ts_node(node)
     assert_is(node,'string')
@@ -403,6 +383,21 @@ local function assert_is_ts_node_in_filetype(ft,node)
             type='not_detected',
             subtype='TSNode_filetype',
             msg='valid TSNode type for filetype '..ft,
+        })
+    end
+end
+
+---@param ft string
+---@param query string
+local function assert_is_query_in_filetype(ft,query)
+    assert_is(query,'string')
+    if opts_.validate<err_severity.not_detected.query_filetype then return end
+    if pcall(vim.treesitter.query.parse,query,ft) then
+    else
+        error_it(query,{
+            type='not_detected',
+            subtype='query_filetype',
+            msg='valid query for filetype '..ft,
         })
     end
 end
@@ -1019,17 +1014,16 @@ local function c_boolean_string(x)
     return x
 end
 
-local function g_tsnode_queries(queries)
-    assert_is(queries,'table')
-    if is_tsquery(queries) then
-        queries={queries}
-        env_.hop_traceback=true
-    end
-    assert_is_list(queries)
-    return map_apply_indexes(queries,function (x)
-        assert_is_ts_query(x)
-        return x
-    end)
+local function g_tsnode_queries(tbl)
+    assert_is(tbl,'table')
+    local ft
+    map_apply_indexes_double(tbl,function (x)
+        assert_filetype(x)
+        ft=x
+    end,function (x)
+            assert_is_query_in_filetype(ft,x)
+            return x
+        end)
 end
 
 ---@type (ua.config.nodeclass|true)[]

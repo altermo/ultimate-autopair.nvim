@@ -129,7 +129,7 @@
 ---- @type:range
 ---- TODO: a way to only pair in specific nodes
 ---@class ua.config.filter.tsnode: ua.config.filter.base.1
----@field query vim.treesitter.Query|vim.treesitter.Query[]?
+---@field query table<string,string>?
 ---@field nodeclass_filter table<ua.config.nodeclass|true,false|'separate'|'exclude'>?
 ---@field separate ua.config.nodes?
 ---@field separate_inclusive ua.config.nodes?

@@ -520,11 +520,11 @@ local list_of_tests={
         },validate_and='expect error',expected_err=[[
             The option `space.check_box_ft` (with the value `"NOT_A_FILETYPE"`) is not detected as a filetype.]]},
 
-        -- err: not_detected TSQuery
+        -- err: not_detected query_filetype
         {'','','',{validate=1,default=false,
-            root_filter={tsnode={query={dont_rec_check}}}
+            root_filter={tsnode={query={lua='NOT_A_NODE'}}}
         },validate_and='expect error',expected_err=[[
-            The option `root_filter.tsnode.query[1]` (with the value `%%dont_rec_check%%`) is not detected as a vim.treesitter.Query.]]},
+            The option `root_filter.tsnode.query.lua` (with the value `"NOT_A_NODE"`) is not detected as a valid query for filetype lua.]]},
 
         -- err: not_detected TSNode
         {'','','',{validate=1,default=false,

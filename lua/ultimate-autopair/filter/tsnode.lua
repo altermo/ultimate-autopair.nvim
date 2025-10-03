@@ -14,13 +14,13 @@ end
 
 ---@param conf ua.config.filter.tsnode
 ---@param tslang string
----@return vim.treesitter.Query[]
-local function get_queries_for_tslang(conf,tslang)
+---@return vim.treesitter.Query
+local function get_query_for_tslang(conf,tslang)
     --TODO: how to do cache which only is invalidated when the config changes
 
     --TODO: what if a node is separate and exclude or inclusive and not inclusive?
 
-    local queries={}
+    local captures={}
 
     for _,type_ in pairs({
         'exclude',
@@ -41,16 +41,8 @@ local function get_queries_for_tslang(conf,tslang)
             query_tbl[i]=type_
         end
 
-        local captures={}
         for i,j in pairs(query_tbl) do
             table.insert(captures,('(%s) @%s'):format(i,j:gsub('_','.')))
-        end
-        table.insert(queries,vim.treesitter.query.parse(tslang,table.concat(captures,'\n')))
-    end
-
-    for _,query in ipairs(conf.query) do
-        if query.lang==tslang then
-            table.insert(queries,query)
         end
     end
 
@@ -65,13 +57,15 @@ local function get_queries_for_tslang(conf,tslang)
 
     filter_invalid_node_types(query_tbl,tslang)
 
-    local captures={}
     for i,j in pairs(query_tbl) do
         table.insert(captures,('(%s) @%s'):format(i,j))
     end
-    table.insert(queries,vim.treesitter.query.parse(tslang,table.concat(captures,'\n')))
 
-    return queries
+    if conf.query[tslang] then
+        table.insert(captures,conf.query[tslang])
+    end
+
+    return vim.treesitter.query.parse(tslang,table.concat(captures,'\n'))
 end
 
 ---@param conf ua.config.filter.tsnode
@@ -85,35 +79,33 @@ local function range_in_queries(conf,parser,range)
     local type_,smallest
 
     parser:for_each_tree(function (tree,ltree)
-        local queries=get_queries_for_tslang(conf,ltree:lang())
-        for _,query in ipairs(queries) do
-            for id,node in query:iter_captures(tree:root(),range[1],range[3]) do
-                local name=query.captures[id]
-                local match=vim.treesitter.get_node_text(node,ltree:source())
-                local t,st=unpack(vim.split(name,'.',{plain=true}))
-                local inclusive
-                if st=='inclusive' then
-                    inclusive='right'
-                elseif querieslib.inclusive_pattern[st] then
-                    for _,pattern in pairs(querieslib.inclusive_pattern[st]) do
-                        if vim.startswith(match,pattern) then
-                            inclusive='right'
-                            break
-                        end
+        local query=get_query_for_tslang(conf,ltree:lang())
+        for id,node in query:iter_captures(tree:root(),range[1],range[3]) do
+            local name=query.captures[id]
+            local match=vim.treesitter.get_node_text(node,ltree:source())
+            local t,st=unpack(vim.split(name,'.',{plain=true}))
+            local inclusive
+            if st=='inclusive' then
+                inclusive='right'
+            elseif querieslib.inclusive_pattern[st] then
+                for _,pattern in pairs(querieslib.inclusive_pattern[st]) do
+                    if vim.startswith(match,pattern) then
+                        inclusive='right'
+                        break
                     end
                 end
-                local node_range={node:range()}
-                if not utils.range_in_range(node_range,range,inclusive) then
-                elseif t=='separate' then
-                    type_='separate'
-                    if smallest==nil or utils.range_in_range(smallest,node_range,'both') then
-                        smallest=node_range
-                    end
-                elseif t=='exclude' then
-                    type_='exclude'
-                    smallest=nil
-                    return
+            end
+            local node_range={node:range()}
+            if not utils.range_in_range(node_range,range,inclusive) then
+            elseif t=='separate' then
+                type_='separate'
+                if smallest==nil or utils.range_in_range(smallest,node_range,'both') then
+                    smallest=node_range
                 end
+            elseif t=='exclude' then
+                type_='exclude'
+                smallest=nil
+                return
             end
         end
     end)
@@ -137,30 +129,28 @@ local function queries_to_ranges(conf,parser,range)
     local end_=qrange and qrange[3] or -1
 
     parser:for_each_tree(function (tree,ltree)
-        local queries=get_queries_for_tslang(conf,ltree:lang())
-        for _,query in ipairs(queries) do
-            for id,node in query:iter_captures(tree:root(),start,end_) do
-                local name=query.captures[id]
-                local match=vim.treesitter.get_node_text(node,ltree:source())
-                local t,st=unpack(vim.split(name,'.',{plain=true}))
-                local inclusive
-                if st=='inclusive' then
-                    inclusive='right'
-                elseif querieslib.inclusive_pattern[st] then
-                    for _,pattern in pairs(querieslib.inclusive_pattern[st]) do
-                        if vim.startswith(match,pattern) then
-                            inclusive='right'
-                            break
-                        end
+        local query=get_query_for_tslang(conf,ltree:lang())
+        for id,node in query:iter_captures(tree:root(),start,end_) do
+            local name=query.captures[id]
+            local match=vim.treesitter.get_node_text(node,ltree:source())
+            local t,st=unpack(vim.split(name,'.',{plain=true}))
+            local inclusive
+            if st=='inclusive' then
+                inclusive='right'
+            elseif querieslib.inclusive_pattern[st] then
+                for _,pattern in pairs(querieslib.inclusive_pattern[st]) do
+                    if vim.startswith(match,pattern) then
+                        inclusive='right'
+                        break
                     end
                 end
-                local node_range={node:range()}
-                if not utils.range_in_range(node_range,range,inclusive) then
-                elseif t=='separate' or t=='separate' then
-                    --TODO what are we supposed to do here?:
-                    -- `ranges` needs to be a ordered list of ranges
-                    -- but there's no guarantee that either the trees nor the queries are ordered
-                end
+            end
+            local node_range={node:range()}
+            if not utils.range_in_range(node_range,range,inclusive) then
+            elseif t=='separate' or t=='separate' then
+                --TODO what are we supposed to do here?:
+                -- `ranges` needs to be a ordered list of ranges
+                -- but there's no guarantee that the trees are ordered
             end
         end
     end)
