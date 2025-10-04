@@ -1,8 +1,3 @@
----@class ua.filter.filetype.state
----@field range Range4?
---- They are one after another, in order (so optimizations can be made)
----@field exclude_ranges Range4[]?
-
 local utils=require'ultimate-autopair.utils'
 ---@param conf ua.config.filter.filetype
 ---@param con ua.context
@@ -25,10 +20,43 @@ local function ft_excluded(conf,ft)
     end
     return conf.nft and utils.in_list(conf.nft,ft) or false
 end
+
+---@param con ua.context
+---@param range Range4
+---@return Range4[]?
+local function trees_to_ranges(con,range)
+    local trange,ltree=utils.get_tstree_range(con,range)
+    if not ltree then return end
+
+    local ranges={}
+    if trange then
+        table.insert(ranges,{0,0,trange[1],trange[2]})
+    end
+
+    for _,child in pairs(ltree:children()) do
+        for _,tree_ in ipairs(child:trees()) do
+            for trange_ in ipairs(tree_:included_ranges(false)) do
+                --TODO: see TODO comment in @filter/tsnode.lua
+            end
+        end
+    end
+
+    if trange then
+        table.insert(ranges,{trange[3],trange[4],math.huge,math.huge})
+    end
+
+    return ranges
+end
+
 ---@param conf ua.config.filter.filetype
 return function (conf)
-    ---@type ua.filter.filetype.state
+
+    ---@class ua.filter.filetype.state
+    ---@field ranges Range4?
+    ---@field idx number?
+    ---@field backwards boolean?
     local state={}
+
     ---@type ua.config.filter.spec
     return {
         once=function (con)
@@ -40,10 +68,29 @@ return function (conf)
             if not is_iter then
                 return ft_excluded(conf,ft_on_range(conf,con,range))
             end
+            if not state.ranges then
+                return false
+            end
             error'TODO'
         end,
-        on_iter=function (con,range)
-            error'TODO'
+        on_iter=function (con,range,type_)
+            if not conf.injectlang_separate then
+                return
+            end
+            --TODO: what if `range` is not the same...
+            -- check that the smallest tree is still the same, and if not find the new smallest tree
+            if not state.ranges then
+                state.ranges=trees_to_ranges(con,range)
+
+                if state.ranges==nil then return end
+            end
+            if type_=='reverse' then
+                state.idx=#state.ranges
+                state.backwards=true
+            else
+                state.idx=1
+                state.backwards=false
+            end
         end,
         _name='filetype',_conf=conf,
 

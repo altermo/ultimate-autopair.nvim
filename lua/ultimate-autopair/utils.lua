@@ -262,10 +262,10 @@ function M.get_langtree(con,range)
     local function lang_for_range(ltree)
         for _,child in pairs(ltree:children()) do
             for _,tree in pairs(child:trees()) do
-                local tranges=tree:included_ranges(false)
-                local trange={tranges[1][1],tranges[1][2],tranges[#tranges][3],tranges[#tranges][4]}
-                if M.range_in_range(trange,range,'both') then
-                    return lang_for_range(child),true
+                for _,trange in ipairs(tree:included_ranges(false)) do
+                    if M.range_in_range(trange,range,'both') then
+                        return lang_for_range(child),true
+                    end
                 end
             end
         end
@@ -278,6 +278,32 @@ function M.get_langtree(con,range)
     con.__cache_get_lang={[range]={ltree,ischild}}
 
     return ltree,ischild
+end
+---@param con ua.context
+---@param range Range4
+---@return Range4?
+---@return vim.treesitter.LanguageTree?
+function M.get_tstree_range(con,range)
+    local parser=M.get_parser(con)
+    if not parser then return end
+
+    ---@param ltree vim.treesitter.LanguageTree
+    local function tree_for_range(ltree,trange)
+        for _,child in pairs(ltree:children()) do
+            for _,tree in pairs(child:trees()) do
+                for _,trange_ in ipairs(tree:included_ranges(false)) do
+                    if M.range_in_range(trange_,range,'both') then
+                        return tree_for_range(child,trange_)
+                    end
+                end
+            end
+        end
+        return trange,ltree
+    end
+
+    local trange,ltree=tree_for_range(parser)
+
+    return trange,ltree
 end
 ---@param tslang string
 ---@return string

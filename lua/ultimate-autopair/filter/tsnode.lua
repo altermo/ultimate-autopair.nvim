@@ -188,6 +188,8 @@ return function (conf)
             error'TODO'
         end,
         on_iter=function (con,range,type_)
+            --TODO: what if `range` is not the same...
+            -- check that the smallest node is still the same, and if not requiery the whole thing
             if not state.ranges then
                 local parser=utils.get_parser(con)
                 if not parser then return false end
