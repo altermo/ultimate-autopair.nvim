@@ -147,7 +147,7 @@
     --- pos: runs on pos (actually range, so maybe rename), may not necessary have a prepare run before this (argument which signals that prepare has indeed been run before, e.g. were in a loop, and not just a single pos detection)
     --- row: same as pos, but it applies to rows. Would be useful on range filter to quickly discard unimportant rows
 ---@class ua.config.filter: ua.config.filter.base.1
----@field once? fun(con:ua.context):boolean?,boolean?
+---@field once? fun(con:ua.context):boolean?
 ---@field on_iter? fun(con:ua.context,range:Range4,type_:'normal'|'reverse'):nil
 ---@field pos? fun(con:ua.context,range:Range4,is_iter:boolean):boolean?
 ----@field row? fun(source:string):boolean? --TODO

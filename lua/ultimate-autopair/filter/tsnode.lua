@@ -168,14 +168,18 @@ return function (conf)
     ---@field ranges Range4?
     ---@field idx number?
     ---@field backwards boolean?
-    local state={}
+    local state
 
     ---@type ua.config.filter.spec
     return {
         once=function (con)
-            return nil,not utils.treesitter_enabled()
+            state={}
+            if not utils.treesitter_enabled() then
+                state.skip=true
+            end
         end,
         pos=function (con,range,is_iter)
+            if state.skip then return end
             if not is_iter then
                 local parser=utils.get_parser(con)
                 if not parser then return false end
@@ -188,6 +192,7 @@ return function (conf)
             error'TODO'
         end,
         on_iter=function (con,range,type_)
+            if state.skip then return end
             --TODO: what if `range` is not the same...
             -- check that the smallest node is still the same, and if not requiery the whole thing
             if not state.ranges then

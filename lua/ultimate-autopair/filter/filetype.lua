@@ -55,16 +55,19 @@ return function (conf)
     ---@field ranges Range4?
     ---@field idx number?
     ---@field backwards boolean?
-    local state={}
+    local state
 
     ---@type ua.config.filter.spec
     return {
         once=function (con)
+            state={}
             if not conf.treesitter or not utils.treesitter_enabled() then
-                return ft_excluded(conf,con.root_filetype),true
+                state.skip=true
+                return ft_excluded(conf,con.root_filetype)
             end
         end,
         pos=function (con,range,is_iter)
+            if state.skip then return end
             if not is_iter then
                 return ft_excluded(conf,ft_on_range(conf,con,range))
             end
@@ -74,6 +77,7 @@ return function (conf)
             error'TODO'
         end,
         on_iter=function (con,range,type_)
+            if state.skip then return end
             if not conf.injectlang_separate then
                 return
             end
