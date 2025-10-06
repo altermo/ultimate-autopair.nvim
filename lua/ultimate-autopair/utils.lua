@@ -142,12 +142,13 @@ function M.get_parser(con)
     end
     if con.bufnr==nil then
         local _,line=con.iter_lines(1,-1)()
-        con._parser=vim.treesitter.get_string_parser(line..'\n','vim')
+        local isok,parser=pcall(vim.treesitter.get_string_parser,line..'\n','vim')
+        con._parser=(isok and parser) or false
+        if not isok or not parser then return end
         con._parser:parse(true)
         return con._parser or nil
     end
     assert(type(con.bufnr)=='number')
-    ---TODO: pcall
     local isok,parser=pcall(vim.treesitter.get_parser,con.bufnr)
     con._parser=(isok and parser) or false
     if not isok or not parser then
