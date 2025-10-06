@@ -45,6 +45,9 @@ function M.run_pos_filters(filters,con,range)
     if filters.inherited and not M.run_pos_filters(filters.inherited,con,range) then
         return false
     end
+    if filters.inherited_root and not M.run_pos_filters(filters.inherited_root,con,range) then
+        return false
+    end
     return true
 end
 ---@param filters ua.iconfig.filters|ua.iconfig.filters.1|ua.iconfig.filters.2
@@ -58,6 +61,9 @@ function M.run_once_filters(filters,con)
         end
     end
     if filters.inherited and not M.run_once_filters(filters.inherited,con) then
+        return false
+    end
+    if filters.inherited_root and not M.run_once_filters(filters.inherited_root,con) then
         return false
     end
     return true

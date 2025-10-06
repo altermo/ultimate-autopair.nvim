@@ -27,10 +27,10 @@ function M.run_start(bconf,con)
     if not conf.multiline then
         con=utils.context_to_singleline(con)
     end
-    if not vim.endswith(utils.line_before_range(con,con.cursor_range),utils.utf8sub(start_pair,1,-2)) then
+    if not filterlib.run_once_filters(conf.filter,con) then
         return
     end
-    if not filterlib.run_once_filters(conf.filter,con) then
+    if not vim.endswith(utils.line_before_range(con,con.cursor_range),utils.utf8sub(start_pair,1,-2)) then
         return
     end
     local pair_range={con.cursor_range[1],
@@ -77,6 +77,9 @@ function M.run_end(bconf,con)
     end
     if not conf.multiline then
         con=utils.context_to_singleline(con)
+    end
+    if not filterlib.run_once_filters(conf.filter,con) then
+        return
     end
     if not vim.startswith(utils.line_after_range(con,con.cursor_range),end_pair) then return end
     local pair_range={con.cursor_range[1],con.cursor_range[2],con.cursor_range[3],

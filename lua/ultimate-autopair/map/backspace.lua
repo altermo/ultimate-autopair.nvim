@@ -1,3 +1,4 @@
+local filterlib=require'ultimate-autopair.filter'
 local open_pair=require'ultimate-autopair.open_pair'
 local utils=require'ultimate-autopair.utils'
 local M={}
@@ -9,6 +10,13 @@ local M={}
 local function run_start_pair(pair,mconf,conf_idx,con)
     local conf=(pair.start_pair.backspace or {})[conf_idx] or mconf
     if conf.enable==false then
+        return
+    end
+
+    if not filterlib.run_once_filters(conf.filter,con) then
+        return
+    end
+    if not filterlib.run_pos_filters(conf.filter,con,con.cursor_range) then
         return
     end
 
