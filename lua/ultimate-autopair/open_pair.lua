@@ -35,7 +35,6 @@ function M.count_end_pair(
     local start_row=(gotostart_ret_pos and row) or -1
     local end_row=(gotostart_ret_pos and 1) or row
     for lrow,line in con.iter_lines(start_row,end_row) do
-        local in_range
         local rline=line:reverse()
         local rev_find_start=1
         local find_end=1
@@ -52,7 +51,7 @@ function M.count_end_pair(
                 if rcol<find_end then
                     goto continue
                 end
-                if exclude_testfn_start_pair(lrow,rcol) and (not in_range or in_range(rcol,rcol+#start_pair_match)) then
+                if exclude_testfn_start_pair(lrow,rcol) then
                     count=count-1
                     if count<0 then
                         if gotostart_ret_pos then
@@ -69,7 +68,7 @@ function M.count_end_pair(
                 if rcol<find_end then
                     goto continue
                 end
-                if exclude_testfn_end_pair(lrow,rcol) and (not in_range or in_range(rcol,rcol+#end_pair_match)) then
+                if exclude_testfn_end_pair(lrow,rcol) then
                     count=count+1
                     next_end_pair=rline:find(end_pair_match,next_end_pair+#end_pair_match,true)
                 else
@@ -116,7 +115,6 @@ function M.count_start_pair(
     local start_row=(gotoend_ret_pos and row) or 1
     local end_row=(gotoend_ret_pos and -1) or row
     for lrow,line in con.iter_lines(start_row,end_row) do
-        local in_range
         local find_start=1
         local find_end=math.huge
         if not gotoend_ret_pos and lrow==row then
@@ -132,7 +130,7 @@ function M.count_start_pair(
                 if rcol>find_end then
                     goto continue
                 end
-                if exclude_testfn_start_pair(lrow,rcol) and (not in_range or in_range(rcol,rcol+#start_pair_match)) then
+                if exclude_testfn_start_pair(lrow,rcol) then
                     count=count+1
                     next_start_pair=line:find(start_pair_match,next_start_pair+#start_pair_match,true)
                 else
@@ -143,7 +141,7 @@ function M.count_start_pair(
                 if rcol>find_end then
                     goto continue
                 end
-                if exclude_testfn_end_pair(lrow,rcol) and (not in_range or in_range(rcol,rcol+#end_pair_match)) then
+                if exclude_testfn_end_pair(lrow,rcol) then
                     count=count-1
                     if count<0 then
                         if gotoend_ret_pos then
@@ -190,7 +188,6 @@ function M.open_ambiguous_pairs(
     local end_row=(not gotoend and -1) or row
     local count=initial_count or 0
     for lrow,line in con.iter_lines(start_row,end_row) do
-        local in_range
         local find_start=1
         local find_end=math.huge
         if not gotoend and lrow==row then
@@ -206,8 +203,7 @@ function M.open_ambiguous_pairs(
                     goto continue
                 end
                 if ((count%2==0 and exclude_testfn_start_pair(lrow,rcol)) or
-                    (count%2==1 and exclude_testfn_end_pair(lrow,rcol))) and
-                    (not in_range or in_range(rcol,rcol+#pair_match)) then
+                    (count%2==1 and exclude_testfn_end_pair(lrow,rcol))) then
                     count=count+1
                     next_pair=line:find(pair_match,next_pair+#pair_match,true)
                     if not gotoend or not pos_col then
