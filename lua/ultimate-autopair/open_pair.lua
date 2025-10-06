@@ -9,8 +9,7 @@ local M={}
 ---@param start_pair_match string
 ---@param end_pair_match string
 ---@param con ua.context
----@param exclude_testfn_start_pair fun(row,col):boolean
----@param exclude_testfn_end_pair fun(row,col):boolean
+---@param exclude_testfns [{on_init:fun(...),pos:fun(row,col):boolean},{on_init:fun(...),pos:fun(row,col):boolean}]
 ---@param gotostart_ret_pos boolean?
 ---@param initial_count number?
 ---@return number?
@@ -20,8 +19,7 @@ function M.count_end_pair(
     start_pair_match,
     end_pair_match,
     con,
-    exclude_testfn_start_pair,
-    exclude_testfn_end_pair,
+    exclude_testfns,
     gotostart_ret_pos,
     initial_count)
     assert(start_pair_match~=end_pair_match)
@@ -34,6 +32,10 @@ function M.count_end_pair(
     local count=initial_count or 0
     local start_row=(gotostart_ret_pos and row) or -1
     local end_row=(gotostart_ret_pos and 1) or row
+    exclude_testfns[1].on_init(con,{0,0,math.huge,math.huge},'reverse')
+    exclude_testfns[2].on_init(con,{0,0,math.huge,math.huge},'reverse')
+    local exclude_testfn_start_pair=exclude_testfns[1].pos
+    local exclude_testfn_end_pair=exclude_testfns[2].pos
     for lrow,line in con.iter_lines(start_row,end_row) do
         local rline=line:reverse()
         local rev_find_start=1
@@ -90,9 +92,8 @@ end
 ---@param range Range4
 ---@param start_pair_match string
 ---@param end_pair_match string
+---@param exclude_testfns [{on_init:fun(...),pos:fun(row,col):boolean},{on_init:fun(...),pos:fun(row,col):boolean}]
 ---@param con ua.context
----@param exclude_testfn_start_pair fun(row,col):boolean
----@param exclude_testfn_end_pair fun(row,col):boolean
 ---@param gotoend_ret_pos boolean?
 ---@param initial_count number?
 ---@return number?
@@ -102,8 +103,7 @@ function M.count_start_pair(
     start_pair_match,
     end_pair_match,
     con,
-    exclude_testfn_start_pair,
-    exclude_testfn_end_pair,
+    exclude_testfns,
     gotoend_ret_pos,
     initial_count)
     assert(start_pair_match~=end_pair_match)
@@ -114,6 +114,10 @@ function M.count_start_pair(
     local count=initial_count or 0
     local start_row=(gotoend_ret_pos and row) or 1
     local end_row=(gotoend_ret_pos and -1) or row
+    exclude_testfns[1].on_init(con,{0,0,math.huge,math.huge},'normal')
+    exclude_testfns[2].on_init(con,{0,0,math.huge,math.huge},'normal')
+    local exclude_testfn_start_pair=exclude_testfns[1].pos
+    local exclude_testfn_end_pair=exclude_testfns[2].pos
     for lrow,line in con.iter_lines(start_row,end_row) do
         local find_start=1
         local find_end=math.huge
@@ -165,8 +169,9 @@ end
 ---@param range Range4
 ---@param pair_match string
 ---@param con ua.context
----@param exclude_testfn_start_pair fun(row,col):boolean
----@param exclude_testfn_end_pair fun(row,col):boolean
+---@param exclude_testfns [{on_init:fun(...),pos:fun(row,col):boolean},{on_init:fun(...),pos:fun(row,col):boolean}]
+--@param exclude_testfn_start_pair fun(row,col):boolean
+--@param exclude_testfn_end_pair fun(row,col):boolean
 ---@param gotoend 'both'|true?
 ---@param initial_count number?
 ---@return number?
@@ -175,8 +180,7 @@ function M.open_ambiguous_pairs(
     range,
     pair_match,
     con,
-    exclude_testfn_start_pair,
-    exclude_testfn_end_pair,
+    exclude_testfns,
     gotoend,
     initial_count)
     assert(#pair_match>0)
@@ -187,6 +191,10 @@ function M.open_ambiguous_pairs(
     local start_row=(gotoend==true and row) or 1
     local end_row=(not gotoend and -1) or row
     local count=initial_count or 0
+    exclude_testfns[1].on_init(con,{0,0,math.huge,math.huge},'normal')
+    exclude_testfns[2].on_init(con,{0,0,math.huge,math.huge},'normal')
+    local exclude_testfn_start_pair=exclude_testfns[1].pos
+    local exclude_testfn_end_pair=exclude_testfns[2].pos
     for lrow,line in con.iter_lines(start_row,end_row) do
         local find_start=1
         local find_end=math.huge

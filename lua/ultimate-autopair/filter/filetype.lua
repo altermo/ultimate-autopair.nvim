@@ -74,7 +74,7 @@ return function (conf)
             if not state.ranges then
                 return false
             end
-            error'TODO'
+            -- error'TODO'
         end,
         on_iter=function (con,range,type_)
             if state.skip then return end

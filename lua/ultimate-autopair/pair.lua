@@ -30,23 +30,29 @@ function M.run_start(bconf,con)
     if not filterlib.run_once_filters(conf.filter,con) then
         return
     end
+
+    --TODO: way to much of a hack
+    filterlib.run_once_filters(bconf.end_pair.filter,con)
+
     if not vim.endswith(utils.line_before_range(con,con.cursor_range),utils.utf8sub(start_pair,1,-2)) then
         return
     end
     local pair_range={con.cursor_range[1],
-        con.cursor_range[2]-(vim.api.nvim_strwidth(start_pair)-1),
+        con.cursor_range[2]-(#start_pair-1),
         con.cursor_range[3],con.cursor_range[4]}
     if not filterlib.run_pos_filters(conf.filter,con,pair_range) then
         return
     end
-    local fn=function () return true end
+
+    local testfns=filterlib.pair_to_filters(con,bconf.start_pair,bconf.end_pair,start_pair,end_pair)
+
     if start_pair==end_pair then
-        if open_pair.open_ambiguous_pairs(pair_range,start_pair,con,fn,fn,'both') then
+        if open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns,'both') then
             return
         end
     else
-        local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,fn,fn)
-        local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,fn,fn)
+        local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,testfns)
+        local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,testfns)
         if count1<count2 then return end
     end
     return {
@@ -81,21 +87,26 @@ function M.run_end(bconf,con)
     if not filterlib.run_once_filters(conf.filter,con) then
         return
     end
+
+    filterlib.run_once_filters(bconf.start_pair.filter,con)
+
     if not vim.startswith(utils.line_after_range(con,con.cursor_range),end_pair) then return end
     local pair_range={con.cursor_range[1],con.cursor_range[2],con.cursor_range[3],
-        con.cursor_range[4]+vim.api.nvim_strwidth(start_pair)}
+        con.cursor_range[4]+#end_pair}
     if not filterlib.run_pos_filters(conf.filter,con,pair_range) then
         return
     end
-    local fn=function () return true end
+
+    local testfns=filterlib.pair_to_filters(con,bconf.start_pair,bconf.end_pair,start_pair,end_pair)
+
     if start_pair==end_pair then
-        local open_pair_before=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,fn,fn)
+        local open_pair_before=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns)
         if not open_pair_before then return end
-        local open_pair_after=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,fn,fn,true,2)
+        local open_pair_after=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns,true,2)
         if open_pair_after then return end
     else
-        local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,fn,fn)
-        local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,fn,fn,nil,1)
+        local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,testfns)
+        local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,testfns,nil,1)
         if count1==0 or count1>count2 then return end
     end
     return {

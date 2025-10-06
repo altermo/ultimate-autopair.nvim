@@ -118,7 +118,7 @@ end
 ---@return Range4[]
 local function queries_to_ranges(conf,parser,range)
     local type_,qrange=range_in_queries(conf,parser,range)
-    assert(type_~='exclude' and qrange)
+    assert(type_~='exclude')
 
     local ranges={}
     if qrange then
@@ -189,7 +189,7 @@ return function (conf)
                 end
                 return false
             end
-            error'TODO'
+            -- error'TODO'
         end,
         on_iter=function (con,range,type_)
             if state.skip then return end
@@ -199,6 +199,7 @@ return function (conf)
                 local parser=utils.get_parser(con)
                 if not parser then return false end
 
+                --TODO: range may change
                 state.ranges=queries_to_ranges(conf,parser,range)
             end
             if type_=='reverse' then

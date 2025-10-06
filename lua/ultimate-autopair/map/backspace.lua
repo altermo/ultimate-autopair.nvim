@@ -13,6 +13,8 @@ local function run_start_pair(pair,mconf,conf_idx,con)
         return
     end
 
+    --TODO: Okay, maybe we should collect all the filters into one big function
+
     if not filterlib.run_once_filters(conf.filter,con) then
         return
     end
@@ -20,24 +22,41 @@ local function run_start_pair(pair,mconf,conf_idx,con)
         return
     end
 
-    local fn=function () return true end
-
     local start_pair=pair.start_pair.pair
     assert(type(start_pair)=='string')
     local end_pair=pair.end_pair.pair
     assert(type(end_pair)=='string')
 
+    if not filterlib.run_once_filters(pair.start_pair.filter,con) then
+        return
+    end
+    filterlib.run_once_filters(pair.end_pair.filter,con)
+
+    local start_pair_range={con.cursor_range[1],con.cursor_range[2]-#start_pair,
+        con.cursor_range[3],con.cursor_range[4]}
+    if not filterlib.run_pos_filters(pair.start_pair.filter,con,start_pair_range) then
+        return
+    end
+
+    local end_pair_range={con.cursor_range[1],con.cursor_range[2],
+        con.cursor_range[3],con.cursor_range[4]+#end_pair}
+    if not filterlib.run_pos_filters(pair.end_pair.filter,con,end_pair_range) then
+        return
+    end
+
     if not vim.endswith(utils.line_before_range(con,con.cursor_range),start_pair) then
         return
     end
 
+    local testfns=filterlib.pair_to_filters(con,pair.start_pair,pair.end_pair,start_pair,end_pair)
+
     if start_pair==end_pair then
-        if open_pair.open_ambiguous_pairs(con.cursor_range,start_pair,con,fn,fn,'both') then
+        if open_pair.open_ambiguous_pairs(con.cursor_range,start_pair,con,testfns,'both') then
             return
         end
     else
-        local count1=open_pair.count_start_pair(con.cursor_range,start_pair,end_pair,con,fn,fn)
-        local count2=open_pair.count_end_pair(con.cursor_range,start_pair,end_pair,con,fn,fn)
+        local count1=open_pair.count_start_pair(con.cursor_range,start_pair,end_pair,con,testfns)
+        local count2=open_pair.count_end_pair(con.cursor_range,start_pair,end_pair,con,testfns)
         if count1>count2 then return end
     end
 
@@ -52,9 +71,9 @@ local function run_start_pair(pair,mconf,conf_idx,con)
 
     local row,col
     if start_pair==end_pair then
-        row,col=open_pair.open_ambiguous_pairs(con.cursor_range,start_pair,con,fn,fn,true)
+        row,col=open_pair.open_ambiguous_pairs(con.cursor_range,start_pair,con,testfns,true)
     else
-        row,col=open_pair.count_start_pair(con.cursor_range,start_pair,end_pair,con,fn,fn,true)
+        row,col=open_pair.count_start_pair(con.cursor_range,start_pair,end_pair,con,testfns,true)
     end
     if row and col then
         return {{'pos',row,col},{'delete',nil,end_pair},{'orig'},{'delete',start_pair,nil}}

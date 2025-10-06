@@ -34,18 +34,19 @@ end
 ---@param filters ua.iconfig.filters|ua.iconfig.filters.1|ua.iconfig.filters.2
 ---@param con ua.context
 ---@param range Range4
+---@param in_iter boolean?
 ---@return boolean
-function M.run_pos_filters(filters,con,range)
+function M.run_pos_filters(filters,con,range,in_iter)
     ---TODO: temp
     for _,f in ipairs(filters) do
-        if f.pos and f.pos(con,range,false) then
+        if f.pos and f.pos(con,range,in_iter or false) then
             return false
         end
     end
-    if filters.inherited and not M.run_pos_filters(filters.inherited,con,range) then
+    if filters.inherited and not M.run_pos_filters(filters.inherited,con,range,in_iter) then
         return false
     end
-    if filters.inherited_root and not M.run_pos_filters(filters.inherited_root,con,range) then
+    if filters.inherited_root and not M.run_pos_filters(filters.inherited_root,con,range,in_iter) then
         return false
     end
     return true
@@ -67,6 +68,40 @@ function M.run_once_filters(filters,con)
         return false
     end
     return true
+end
+---@param filters ua.iconfig.filters|ua.iconfig.filters.1|ua.iconfig.filters.2
+---@param con ua.context
+---@param range Range4
+---@param type_ 'normal'|'reverse'
+function M.run_on_iter_filters(filters,con,range,type_)
+    ---TODO: temp
+    for _,f in ipairs(filters) do
+        if f.on_iter then f.on_iter(con,range,type_) end
+    end
+    if filters.inherited then M.run_on_iter_filters(filters.inherited,con,range,type_) end
+    if filters.inherited_root then M.run_on_iter_filters(filters.inherited_root,con,range,type_) end
+end
+---@param con ua.context
+---@param start_pair_conf ua.iconfig.single_pair
+---@param end_pair_conf ua.iconfig.single_pair
+---@param start_pair string
+---@param end_pair string
+---@return [{on_init:fun(...),pos:fun(row,col):boolean},{on_init:fun(...),pos:fun(row,col):boolean}]
+function M.pair_to_filters(con,start_pair_conf,end_pair_conf,start_pair,end_pair)
+    return {
+        {on_init=function(...)
+            M.run_on_iter_filters(start_pair_conf.filter,...)
+        end,pos=function (row,col)
+                local range={row-1,col-1,row-1,col-1+#start_pair}
+                return M.run_pos_filters(start_pair_conf.filter,con,range,true)
+            end},
+        {on_init=function(...)
+            M.run_on_iter_filters(end_pair_conf.filter,...)
+        end,pos=function (row,col)
+                local range={row-1,col-2+#end_pair,row-1,col-2+#end_pair+#end_pair}
+                return M.run_pos_filters(end_pair_conf.filter,con,range,true)
+            end}
+    }
 end
 
 return M
