@@ -23,7 +23,6 @@ local maps_module={
 ---@alias ua.keymap.map.table table<ua.mode,table<string,ua.keymap.map.list>>
 
 ---@type table<ua.mode,table<string,ua.keymap.info>>
----TODO: maybe just have it `keytrans(keycode(..))`: everything expect normal mappings, not keycode
 local _mapped=vim.defaulttable(function () return vim.defaulttable(function () return {} end) end)
 ---@type ua.iconfig?
 local _used_iconfig=nil
@@ -31,7 +30,6 @@ local _used_iconfig=nil
 local function clear_mapped()
     for mode,maps in pairs(_mapped) do
         for key in pairs(maps) do
-            ---TODO: fix maparg doesn't take keycode
             if vim.startswith(vim.fn.maparg(key,mode),"v:lua.require'ultimate-autopair.keymap") then
                 vim.keymap.del(mode,key)
             end
@@ -47,7 +45,7 @@ end
 ---@param action any[]
 local function add_hooks_to(tbl,hooks,desc,action)
     for _,v in ipairs(hooks) do
-        table.insert(tbl[v.mode][utils.keycode(v[1])],{
+        table.insert(tbl[v.mode][vim.fn.keytrans(utils.keycode(v[1]))],{
             p=v.priority,
             a=action,
             d=desc,
@@ -122,8 +120,8 @@ local function apply_map_from(tbl)
             end
 
             vim.keymap.set(mode=='v' and 'x' or mode,
-                vim.fn.keytrans(key),
-                ("v:lua.require'ultimate-autopair.keymap'._run(%q,%q)"):format(mode,key),
+                key,
+                ("v:lua.require'ultimate-autopair.keymap'._run(%q,%q)"):format(mode,vim.fn.keytrans(key)),
                 {noremap=true,
                     expr=true,replace_keycodes=false,
                     desc=table.concat(desc,'\n\t\t ')})
@@ -200,7 +198,7 @@ local function key_pos_nodot(row,col)
         assert(row==nil or row==1)
         return keys.key_home..keys.key_right:rep(vim.api.nvim_strwidth(vim.fn.getcmdline():sub(1,col-1)))
     else
-        return M.keycode(('<cmd>call cursor(%s,%s)\r'):format(row or '"."',col))
+        return utils.keycode(('<cmd>call cursor(%s,%s)\r'):format(row or '"."',col))
     end
 end
 ---@param action ua.actions
@@ -280,7 +278,7 @@ local function run(mode,key)
     end
 
     return type(actions.fallback)=='function' and actions.fallback()
-        or actions.fallback==true and key
+        or actions.fallback==true and utils.keycode(key)
         or assert(actions.fallback --[[@as string]])
 end
 
@@ -298,7 +296,7 @@ function M._run(...)
     local errmsg
     local _,ret=xpcall(run,function (msg) errmsg=debug.traceback(msg,2) end,...)
     if errmsg then
-        return vim.keycode((('<cmd>lua error(%q,0)\r'):format(errmsg))
+        return utils.keycode((('<cmd>lua error(%q,0)\r'):format(errmsg))
             :gsub('\n','n'))
     end
     return add_abbrev_expand(ret)
