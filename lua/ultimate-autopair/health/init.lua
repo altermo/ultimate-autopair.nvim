@@ -44,6 +44,7 @@ local function validate_config(handler,is_default)
         if type(err)=='string' then
             handler.error('Error while validating config: \n'..err)
         else
+            ---@diagnostic disable-next-line: undefined-field
             handler.error('Config is invalid: >\n'..err.msg)
             handler.info'' -- is for ending code block
         end

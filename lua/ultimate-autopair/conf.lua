@@ -1214,7 +1214,7 @@ local i_filters=function (tbl,type_)
     d_filters(tbl,o.escape,g_filter_escape,o.escape_multi,filters)
     d_filters(tbl,o.alpha,g_filter_alpha,o.alpha_multi,filters)
 
-    ---TODO: some kind of filter_or: if one filter fails, a second chanse with these filters (same as filter's filter_or, but applied to multiple filters)
+    ---TODO: some kind of filter_or: if one filter fails, a second chance with these filters (same as filter's filter_or, but applied to multiple filters)
     ---TODO: some kind of filter_not: if passes, then the whole thing fails
 
     local enable=apply_index_default(tbl,o.enable,c_boolean,true)
@@ -1594,7 +1594,7 @@ function M._generate_opt_default_validate(conf,default_config)
                     end)
                     ret[pair_to_key[k]]=v
                 else
-                    --TODO: replace it with a in enum, so the user knows what is allwed
+                    --TODO: replace it with a in enum, so the user knows what is allowed
                     error_dont_set_idx(k,pair_to_key)
                 end
             end
