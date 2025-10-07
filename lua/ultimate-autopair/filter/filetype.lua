@@ -35,8 +35,8 @@ local function trees_to_ranges(con,range)
 
     for _,child in pairs(ltree:children()) do
         for _,tree_ in ipairs(child:trees()) do
-            for trange_ in ipairs(tree_:included_ranges(false)) do
-                --TODO: see TODO comment in @filter/tsnode.lua
+            for _,trange_ in ipairs(tree_:included_ranges(false)) do
+                utils.insert_range(ranges,trange_)
             end
         end
     end
@@ -52,7 +52,7 @@ end
 return function (conf)
 
     ---@class ua.filter.filetype.state
-    ---@field ranges Range4?
+    ---@field ranges Range4[]?
     ---@field idx number?
     ---@field backwards boolean?
     local state
@@ -74,7 +74,13 @@ return function (conf)
             if not state.ranges then
                 return false
             end
-            -- error'TODO'
+
+            --TODO: optimize
+            for _,i in ipairs(state.ranges) do
+                if utils.range_in_range(i,range,'both') then
+                    return true
+                end
+            end
         end,
         on_iter=function (con,range,type_)
             if state.skip then return end

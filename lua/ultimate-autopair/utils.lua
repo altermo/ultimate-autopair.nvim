@@ -72,6 +72,63 @@ function M.line_after_range(con,range)
     ---TODO: check
     return select(2,con.iter_lines(range[3]+1,range[3]+1)()):sub(range[4]+1)
 end
+---@param ranges Range4[]
+---@param range Range4
+function M.insert_range(ranges,range)
+    if range[1]==range[3] and range[2]==range[4] then
+        return
+    end
+
+    if #ranges==0 then
+        table.insert(ranges,range)
+        return
+    end
+
+    local idx=1
+    local finish=#ranges
+    local count=#ranges
+    while idx~=finish do
+        count=count-1
+        assert(count>=0)
+
+        local mid=math.floor((idx+finish)/2)
+        if ranges[mid][3]<range[1] or (ranges[mid][3]==range[1] and ranges[mid][4]<range[2]) then
+            idx=mid+1
+        else
+            finish=mid
+        end
+    end
+    if ranges[idx][3]<range[1] or (ranges[idx][3]==range[1] and ranges[idx][4]<range[2]) then
+        table.insert(ranges,range)
+        return
+    end
+    if ranges[idx] and
+        (ranges[idx][1]<range[1] or (ranges[idx][1]==range[1] and ranges[idx][2]<=range[2])) then
+        if ranges[idx][3]>range[3] or (ranges[idx][3]==range[3] and ranges[idx][4]>=range[4]) then
+            -- (.{.}.)
+            return
+        end
+        -- (.{.).}
+
+        range[1]=ranges[idx][1]
+        range[2]=ranges[idx][2]
+        table.remove(ranges,idx)
+    end
+    while ranges[idx] and M.range_in_range(range,ranges[idx],'both') do
+        -- {.(.).}
+
+        table.remove(ranges,idx)
+    end
+    if ranges[idx] and
+        (ranges[idx][1]<range[3] or (ranges[idx][1]==range[3] and ranges[idx][4]<=range[4])) then
+        -- {.(.}.)
+
+        range[3]=ranges[idx][3]
+        range[4]=ranges[idx][4]
+        table.remove(ranges,idx)
+    end
+    table.insert(ranges,range)
+end
 
 ---@param str string
 ---@param u_start number
@@ -123,6 +180,8 @@ function M.range_in_range(range,contains_range,inclusive)
     elseif inclusive~='right'
         and crange[1]==crange[3] and crange[2]==crange[4]
         and crange[1]==range[1] and crange[2]==range[2] then
+        return true
+    elseif range[1]==crange[1] and range[2]==crange[2] and range[3]==crange[3] and range[4]==crange[4] then
         return true
     end
     return (range[1]<crange[1] or (range[1]==crange[1] and range[2]<crange[2])) and

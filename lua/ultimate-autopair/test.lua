@@ -201,6 +201,8 @@ local list_of_tests={
         {'```lua\n|\n```','<lt>',"```lua\n<|\n```",ft='markdown',{{'<','>',filter={filetype={nft='lua'}}}}},
         {'```lua\n|\n```','<lt>',"```lua\n<|>\n```",ft='markdown',{{'<','>',filter={filetype={treesitter=false,nft='lua'}}}}},
         {'|','(','(|',ft='TelescopePrompt'},
+        {'|\nlua )\nlua )\nlua )','(','(|)\nlua )\nlua )\nlua )',ft='vim'},
+        {'lua a|b\n)','(','lua a(|)b\n)',ft='vim'},
         -- {'<!-|','-','<!--|'},
         -- {'<!-|','-','<!--|-->',ft='markdown'},
         -- {'""|','"','"""|"'},

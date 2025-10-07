@@ -32,8 +32,8 @@ function M.count_end_pair(
     local count=initial_count or 0
     local start_row=(gotostart_ret_pos and row) or -1
     local end_row=(gotostart_ret_pos and 1) or row
-    exclude_testfns[1].on_init(con,{0,0,math.huge,math.huge},'reverse')
-    exclude_testfns[2].on_init(con,{0,0,math.huge,math.huge},'reverse')
+    exclude_testfns[1].on_init(con,range,'reverse')
+    exclude_testfns[2].on_init(con,range,'reverse')
     local exclude_testfn_start_pair=exclude_testfns[1].pos
     local exclude_testfn_end_pair=exclude_testfns[2].pos
     for lrow,line in con.iter_lines(start_row,end_row) do
@@ -114,8 +114,8 @@ function M.count_start_pair(
     local count=initial_count or 0
     local start_row=(gotoend_ret_pos and row) or 1
     local end_row=(gotoend_ret_pos and -1) or row
-    exclude_testfns[1].on_init(con,{0,0,math.huge,math.huge},'normal')
-    exclude_testfns[2].on_init(con,{0,0,math.huge,math.huge},'normal')
+    exclude_testfns[1].on_init(con,range,'normal')
+    exclude_testfns[2].on_init(con,range,'normal')
     local exclude_testfn_start_pair=exclude_testfns[1].pos
     local exclude_testfn_end_pair=exclude_testfns[2].pos
     for lrow,line in con.iter_lines(start_row,end_row) do
@@ -191,8 +191,8 @@ function M.open_ambiguous_pairs(
     local start_row=(gotoend==true and row) or 1
     local end_row=(not gotoend and -1) or row
     local count=initial_count or 0
-    exclude_testfns[1].on_init(con,{0,0,math.huge,math.huge},'normal')
-    exclude_testfns[2].on_init(con,{0,0,math.huge,math.huge},'normal')
+    exclude_testfns[1].on_init(con,range,'normal')
+    exclude_testfns[2].on_init(con,range,'normal')
     local exclude_testfn_start_pair=exclude_testfns[1].pos
     local exclude_testfn_end_pair=exclude_testfns[2].pos
     for lrow,line in con.iter_lines(start_row,end_row) do
