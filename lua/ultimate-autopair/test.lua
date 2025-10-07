@@ -868,6 +868,8 @@ function M.run_tests(plugin_path,handler,dev)
     local instance=create_instance(handler)
     instance:exec_lua('vim.opt.runtimepath:append(...)',plugin_path)
 
+    instance:exec_lua('_UA_IN_TEST=true',plugin_path)
+
     instance:exec_lua[[
     vim['lg']=function (...)
         local d=debug.getinfo(2)

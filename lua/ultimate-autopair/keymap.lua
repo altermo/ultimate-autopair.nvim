@@ -296,6 +296,14 @@ function M._run(...)
     local errmsg
     local _,ret=xpcall(run,function (msg) errmsg=debug.traceback(msg,2) end,...)
     if errmsg then
+
+        -- If there's an error, the test runner may hang...
+        ---@diagnostic disable-next-line: undefined-field
+        if _G._UA_IN_TEST then
+            vim.v.errmsg=errmsg
+            return
+        end
+
         return utils.keycode((('<cmd>lua error(%q,0)\r'):format(errmsg))
             :gsub('\n','n'))
     end
