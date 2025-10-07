@@ -29,7 +29,7 @@ function M.count_end_pair(
     local col=(gotostart_ret_pos and range[2]+1) or range[4]+1
     start_pair_match=start_pair_match:reverse()
     end_pair_match=end_pair_match:reverse()
-    local count=initial_count or 0
+    local count=0
     local start_row=(gotostart_ret_pos and row) or -1
     local end_row=(gotostart_ret_pos and 1) or row
     exclude_testfns[1].on_init(con,range,'reverse')
@@ -82,7 +82,7 @@ function M.count_end_pair(
         end
         ::continue::
     end
-    return (not gotostart_ret_pos) and count or nil
+    return (not gotostart_ret_pos) and count+(initial_count or 0) or nil
 end
 ---If {gotoend_ret_pos} is false(/nil), returns the number of open START pairs or nil
 ---If {gotoend_ret_pos} is true, returns the start position of the FIRST open END pair or nil
