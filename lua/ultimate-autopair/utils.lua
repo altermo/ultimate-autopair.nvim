@@ -172,20 +172,15 @@ function M.range_in_range(range,contains_range,inclusive)
     --If crange is zero width then and only then inclusive influence the result
     --So [f(oo)] is always true and [foo()] is true depending on if inclusive is set
     local crange=contains_range
-    if not inclusive then
-    elseif inclusive~='left'
-        and crange[1]==crange[3] and crange[2]==crange[4]
+    if crange[1]==crange[3] and crange[2]==crange[4]
         and crange[3]==range[3] and crange[4]==range[4] then
-        return true
-    elseif inclusive~='right'
-        and crange[1]==crange[3] and crange[2]==crange[4]
+        return inclusive=='right' or inclusive=='both'
+    elseif crange[1]==crange[3] and crange[2]==crange[4]
         and crange[1]==range[1] and crange[2]==range[2] then
-        return true
-    elseif range[1]==crange[1] and range[2]==crange[2] and range[3]==crange[3] and range[4]==crange[4] then
-        return true
+        return inclusive=='left' or inclusive=='both'
     end
-    return (range[1]<crange[1] or (range[1]==crange[1] and range[2]<crange[2])) and
-        (range[3]>crange[3] or (range[3]==crange[3] and range[4]>crange[4]))
+    return (range[1]<crange[1] or (range[1]==crange[1] and range[2]<=crange[2])) and
+        (range[3]>crange[3] or (range[3]==crange[3] and range[4]>=crange[4]))
 end
 
 --TODO
