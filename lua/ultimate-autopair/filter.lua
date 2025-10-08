@@ -31,56 +31,38 @@ function M.in_comment_syntax(row,col)
     return false
 end
 
----@param filters ua.iconfig.filters|ua.iconfig.filters.1|ua.iconfig.filters.2
----@param con ua.context
----@param range Range4
----@param in_iter boolean?
----@return boolean
-function M.run_pos_filters(filters,con,range,in_iter)
-    ---TODO: temp
-    for _,f in ipairs(filters) do
-        if f.pos and f.pos(con,range,in_iter or false) then
+---@param fn_name string
+---@param do_ret boolean
+local function run_filters_fn(fn_name,do_ret)
+    ---@param filters ua.iconfig.filters|ua.iconfig.filters.1|ua.iconfig.filters.2
+    local function fn(filters,...)
+        for _,f in ipairs(filters) do
+            if f[fn_name] and f[fn_name](...) and do_ret then
+                return false
+            end
+        end
+        if filters.inherited and not fn(filters.inherited,...) and do_ret then
             return false
         end
-    end
-    if filters.inherited and not M.run_pos_filters(filters.inherited,con,range,in_iter) then
-        return false
-    end
-    if filters.inherited_root and not M.run_pos_filters(filters.inherited_root,con,range,in_iter) then
-        return false
-    end
-    return true
-end
----@param filters ua.iconfig.filters|ua.iconfig.filters.1|ua.iconfig.filters.2
----@param con ua.context
----@return boolean
-function M.run_once_filters(filters,con)
-    ---TODO: temp
-    for _,f in ipairs(filters) do
-        if f.once and f.once(con) then
+        if filters.inherited_root and not fn(filters.inherited_root,...) and do_ret then
             return false
         end
+        return true
     end
-    if filters.inherited and not M.run_once_filters(filters.inherited,con) then
-        return false
-    end
-    if filters.inherited_root and not M.run_once_filters(filters.inherited_root,con) then
-        return false
-    end
-    return true
+    return fn
 end
----@param filters ua.iconfig.filters|ua.iconfig.filters.1|ua.iconfig.filters.2
----@param con ua.context
----@param range Range4
----@param type_ 'normal'|'reverse'
-function M.run_on_iter_filters(filters,con,range,type_)
-    ---TODO: temp
-    for _,f in ipairs(filters) do
-        if f.on_iter then f.on_iter(con,range,type_) end
-    end
-    if filters.inherited then M.run_on_iter_filters(filters.inherited,con,range,type_) end
-    if filters.inherited_root then M.run_on_iter_filters(filters.inherited_root,con,range,type_) end
-end
+
+---@alias ua.filters_all ua.iconfig.filters|ua.iconfig.filters.1|ua.iconfig.filters.2
+
+---@overload fun(filters: ua.filters_all, con: ua.context,range: Range4, in_iter: boolean?): boolean
+M.run_pos_filters=run_filters_fn('pos',true)
+
+---@overload fun(filters: ua.filters_all, con: ua.context): boolean
+M.run_once_filters=run_filters_fn('once',true)
+
+---@overload fun(filters: ua.filters_all, con: ua.context, range: Range4, type_: 'normal'|'reverse')
+M.run_on_iter_filters=run_filters_fn('on_iter',false)
+
 ---@param con ua.context
 ---@param start_pair_conf ua.iconfig.single_pair
 ---@param end_pair_conf ua.iconfig.single_pair
