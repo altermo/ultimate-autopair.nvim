@@ -30,7 +30,7 @@ local function run_start_pair(pair,mconf,conf_idx,con)
     if not filterlib.run_once_filters(pair.start_pair.filter,con) then
         return
     end
-    filterlib.run_once_filters(pair.end_pair.filter,con)
+    filterlib.run_once_filters_no_ret(pair.end_pair.filter,con)
 
     local start_pair_range={con.cursor_range[1],con.cursor_range[2]-#start_pair,
         con.cursor_range[3],con.cursor_range[4]}

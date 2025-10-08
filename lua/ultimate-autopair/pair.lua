@@ -32,7 +32,7 @@ function M.run_start(bconf,con)
     end
 
     --TODO: way to much of a hack
-    filterlib.run_once_filters(bconf.end_pair.filter,con)
+    filterlib.run_once_filters_no_ret(bconf.end_pair.filter,con)
 
     if not vim.endswith(utils.line_before_range(con,con.cursor_range),utils.utf8sub(start_pair,1,-2)) then
         return
@@ -88,7 +88,7 @@ function M.run_end(bconf,con)
         return
     end
 
-    filterlib.run_once_filters(bconf.start_pair.filter,con)
+    filterlib.run_once_filters_no_ret(bconf.start_pair.filter,con)
 
     if not vim.startswith(utils.line_after_range(con,con.cursor_range),end_pair) then return end
     local pair_range={con.cursor_range[1],con.cursor_range[2],con.cursor_range[3],

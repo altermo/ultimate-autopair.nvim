@@ -60,6 +60,9 @@ M.run_pos_filters=run_filters_fn('pos',true)
 ---@overload fun(filters: ua.filters_all, con: ua.context): boolean
 M.run_once_filters=run_filters_fn('once',true)
 
+---@overload fun(filters: ua.filters_all, con: ua.context): boolean
+M.run_once_filters_no_ret=run_filters_fn('once',false)
+
 ---@overload fun(filters: ua.filters_all, con: ua.context, range: Range4, type_: 'normal'|'reverse')
 M.run_on_iter_filters=run_filters_fn('on_iter',false)
 
