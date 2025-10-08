@@ -73,10 +73,11 @@ end
 ---@param range Range4
 ---@return 'separate'|'exclude'?
 ---@return Range4?
+---@return TSNode?
 local function range_in_queries(conf,parser,range)
     --TODO: cache (or just save it in state)
 
-    local type_,smallest
+    local type_,smallest,smallest_node
 
     parser:for_each_tree(function (tree,ltree)
         local query=get_query_for_tslang(conf,ltree:lang())
@@ -101,15 +102,17 @@ local function range_in_queries(conf,parser,range)
                 type_='separate'
                 if smallest==nil or utils.range_in_range(smallest,node_range,'both') then
                     smallest=node_range
+                    smallest_node=node
                 end
             elseif t=='exclude' then
                 type_='exclude'
                 smallest=nil
+                smallest_node=nil
                 return
             end
         end
     end)
-    return type_,smallest
+    return type_,smallest,smallest_node
 end
 
 ---@param conf ua.config.filter.tsnode
@@ -117,7 +120,7 @@ end
 ---@param parser vim.treesitter.LanguageTree
 ---@return Range4[]
 local function queries_to_ranges(conf,parser,range)
-    local type_,qrange=range_in_queries(conf,parser,range)
+    local type_,qrange,qnode=range_in_queries(conf,parser,range)
     assert(type_~='exclude')
 
     local ranges={}
@@ -132,31 +135,19 @@ local function queries_to_ranges(conf,parser,range)
         local query=get_query_for_tslang(conf,ltree:lang())
         for id,node in query:iter_captures(tree:root(),start,end_) do
             local name=query.captures[id]
-            local match=vim.treesitter.get_node_text(node,ltree:source())
-            local t,st=unpack(vim.split(name,'.',{plain=true}))
-            local inclusive
-            if st=='inclusive' then
-                inclusive='right'
-            elseif querieslib.inclusive_pattern[st] then
-                for _,pattern in pairs(querieslib.inclusive_pattern[st]) do
-                    if vim.startswith(match,pattern) then
-                        inclusive='right'
-                        break
-                    end
-                end
-            end
+            local t,_=unpack(vim.split(name,'.',{plain=true}))
+
             local node_range={node:range()}
-            if not utils.range_in_range(node_range,range,inclusive) then
-            elseif t=='separate' or t=='separate' then
-                --TODO what are we supposed to do here?:
-                -- `ranges` needs to be a ordered list of ranges
-                -- but there's no guarantee that the trees are ordered
+            if qrange and not utils.range_in_range(qrange,node_range) then
+            elseif qnode and qnode==node then
+            elseif t=='separate' or t=='exclude' then
+                utils.insert_range(ranges,node_range)
             end
         end
     end)
 
     if qrange then
-        table.insert(ranges,{qrange[3],qrange[4],math.huge,math.huge})
+        utils.insert_range(ranges,{qrange[3],qrange[4],math.huge,math.huge})
     end
     return ranges
 end
@@ -165,7 +156,7 @@ end
 return function (conf)
 
     ---@class ua.filter.tsnode.state
-    ---@field ranges Range4?
+    ---@field ranges Range4[]?
     ---@field idx number?
     ---@field backwards boolean?
     local state
@@ -189,7 +180,13 @@ return function (conf)
                 end
                 return false
             end
-            -- error'TODO'
+
+            --TODO: optimize
+            for _,i in ipairs(state.ranges or {}) do
+                if utils.range_in_range(i,range,'both') then
+                    return true
+                end
+            end
         end,
         on_iter=function (con,range,type_)
             if state.skip then return end

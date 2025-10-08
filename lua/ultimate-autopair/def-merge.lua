@@ -18,7 +18,7 @@ M.conf.default={
     {'[',']'},
     {'{','}'},
     {'"','"',multiline=false,filter={filetype={nft={'tex'}}}},
-    {{"'",filter={alpha={before=true}}},"'",
+    {{"'",filter={alpha={before=true--[[,singlechar=true TODO]]}}},"'",
         multiline=false,filter={filetype={nft={'tex','rust'}}},
         --[[filter_on_insert=in_lisp TODO]]},
     root_filter={
