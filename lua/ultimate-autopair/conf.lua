@@ -1271,7 +1271,9 @@ end
 local filter_idxs={
     filter={'filter',g_filters,default_nil=true},
     filter_or={'filter_or',g_filters,default_nil=true},
-    -- TODO: singlechar
+
+    --TODO: a better name
+    singlechar={'singlechar',c_boolean,default_nil=true},
     --TODO: some kind of filter_not, see other TODO for more info
 }
 local function gg_filter(extend)

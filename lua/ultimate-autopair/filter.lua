@@ -37,7 +37,8 @@ local function run_filters_fn(fn_name,do_ret)
     ---@param filters ua.iconfig.filters|ua.iconfig.filters.1|ua.iconfig.filters.2
     local function fn(filters,...)
         for _,f in ipairs(filters) do
-            if f[fn_name] and f[fn_name](...) and do_ret then
+            if not (f.singlechar and fn_name=='pos' and select(3,...)) and
+                f[fn_name] and f[fn_name](...) and do_ret then
                 return false
             end
         end
