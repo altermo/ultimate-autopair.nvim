@@ -42,7 +42,7 @@ local function trees_to_ranges(con,range)
     end
 
     if trange then
-        table.insert(ranges,{trange[3],trange[4],math.huge,math.huge})
+        utils.insert_range(ranges,{trange[3],trange[4],math.huge,math.huge})
     end
 
     return ranges
