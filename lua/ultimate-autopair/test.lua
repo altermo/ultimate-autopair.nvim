@@ -290,6 +290,7 @@ local list_of_tests={
         {'"|foo"','<bs>','|foo"'},
         {'"|foo"','<bs>','|foo',{default={pair={['""']={backspace={overjump=true}}}}}},
         {'[|\n]','<bs>','|\n'},
+        {'[|\n]','<bs>','|\n]',{default={pair={['[]']={multiline=false}}}}},
         {'|','<C-r>="(a<left><bs>\r','a|'},
         -- {'<!--|-->','<bs>','<!-|-->'},
         -- {'a<!--|-->b','<bs>','a|b',{ft='markdown'}},

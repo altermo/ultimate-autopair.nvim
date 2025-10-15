@@ -27,7 +27,9 @@ local function run_start_pair(pair,mconf,conf_idx,con)
     local end_pair=pair.end_pair.pair
     assert(type(end_pair)=='string')
 
-    --TODO: singleline (e.g. multiline=false)?
+    if not pair.start_pair.multiline then
+        con=utils.context_to_singleline(con)
+    end
 
     con=utils.con_set_treesitter_enabled(con,pair.start_pair.treesitter)
     con=utils.con_set_treesitter_enabled(con,conf.treesitter)
