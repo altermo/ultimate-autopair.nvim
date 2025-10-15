@@ -210,8 +210,6 @@ function M.get_parser(con)
     end
 
     if con.iconf.treesitter_async then
-        --TODO: check
-        parser:parse({con.cursor_range[1],con.cursor_range[2]})
         vim.schedule(function ()
             parser:parse(true,function () end)
         end)
