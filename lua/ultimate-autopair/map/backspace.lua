@@ -31,6 +31,10 @@ local function run_start_pair(pair,mconf,conf_idx,con)
         con=utils.context_to_singleline(con)
     end
 
+    if not vim.endswith(utils.line_before_range(con,con.cursor_range),start_pair) then
+        return
+    end
+
     con=utils.con_set_treesitter_enabled(con,pair.start_pair.treesitter)
     con=utils.con_set_treesitter_enabled(con,conf.treesitter)
 
@@ -48,10 +52,6 @@ local function run_start_pair(pair,mconf,conf_idx,con)
     local end_pair_range={con.cursor_range[1],con.cursor_range[2],
         con.cursor_range[3],con.cursor_range[4]+#end_pair}
     if not filterlib.run_pos_filters(pair.end_pair.filter,con,end_pair_range) then
-        return
-    end
-
-    if not vim.endswith(utils.line_before_range(con,con.cursor_range),start_pair) then
         return
     end
 
