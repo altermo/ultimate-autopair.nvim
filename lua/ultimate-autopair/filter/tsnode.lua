@@ -181,12 +181,7 @@ return function (conf)
                 return false
             end
 
-            --TODO: optimize
-            for _,i in ipairs(state.ranges or {}) do
-                if utils.range_in_range(i,range,'both') then
-                    return true
-                end
-            end
+            return state.ranges and utils.optimized_range_in_ranges(state,range)
         end,
         on_iter=function (con,range,type_)
             if state.skip then return end

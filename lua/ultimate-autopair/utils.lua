@@ -183,6 +183,34 @@ function M.range_in_range(range,contains_range,inclusive)
         (range[3]>crange[3] or (range[3]==crange[3] and range[4]>=crange[4]))
 end
 
+---@param state {ranges:Range4[],idx:number,backwards:boolean}
+---@param range Range4
+---@return boolean
+function M.optimized_range_in_ranges(state,range)
+    --TODO: check
+
+    if not state.ranges[state.idx] then
+        return false
+    end
+    local idx=state.idx
+    local ranges=state.ranges
+
+    if state.backwards then
+        while ranges[idx][1]>range[3] or (ranges[idx][1]==range[3] and ranges[idx][2]>range[4]) do
+            idx=idx-1
+            if not ranges[idx] then return false end
+        end
+    else
+        while ranges[idx][3]<range[1] or (ranges[idx][3]==range[1] and ranges[idx][4]<range[2]) do
+            idx=idx+1
+            if not ranges[idx] then return false end
+        end
+    end
+
+    state.idx=idx
+    return M.range_in_range(ranges[idx],range)
+end
+
 ---@param con ua.context
 ---@return vim.treesitter.LanguageTree?
 function M.get_parser(con)
