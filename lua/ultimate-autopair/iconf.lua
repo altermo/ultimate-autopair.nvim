@@ -15,6 +15,7 @@
 ---@field backspace table<any,ua.iconfig.backspace>?
 ---@field space table<any,ua.iconfig.space>?
 ---@field newline table<any,ua.iconfig.newline>?
+---@field treesitter boolean?
 
 ---@class ua.iconfig.pair
 ---@field start_pair ua.iconfig.single_pair
@@ -29,6 +30,7 @@
 
 ---@class ua.iconfig.map: ua.config.base_map
 ---@field filter ua.iconfig.filters.2
+---@field treesitter boolean?
 
 ---@class ua.iconfig.backspace: ua.iconfig.map, ua.config.backspace.opt
 ---@class ua.iconfig.newline: ua.iconfig.map, ua.config.newline.opt
@@ -46,6 +48,7 @@
 ---@field pairs ua.iconfig.pair[]
 ---@field use_filetype_getopt ua.iconfig.use_filetype_getopt
 ---@field treesitter_async boolean
+---@field treesitter boolean
 ---@field backspace table<any,ua.iconfig.backspace.root>
 ---@field space table<any,ua.iconfig.space.root>
 ---@field newline table<any,ua.iconfig.newline.root>

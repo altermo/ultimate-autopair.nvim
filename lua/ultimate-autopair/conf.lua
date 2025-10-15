@@ -493,11 +493,11 @@ end
 ---@param tbl table
 ---@param index any
 ---@param fn fun(arg:any):T
----@return T
+---@return T?
 local function apply_index_default_nil(tbl,index,fn)
     local obj={}
     local ret=_apply_index(tbl,index,fn,obj)
-    return ret~=obj and ret or nil
+    if ret~=obj then return ret end
 end
 ---@param tbl table
 ---@param index any
@@ -935,6 +935,11 @@ local function i_single_pair(pair,is_end)
     local newline=d_pair_map(pair,o.newline,g_map,o.newline_multi,env_.vars.pair_newline)
     local space=d_pair_map(pair,o.space,g_map,o.space_multi,env_.vars.pair_space)
 
+    local treesitter_enabled=apply_index_default_nil(pair,o.treesitter,c_boolean)
+    if treesitter_enabled==nil then
+        treesitter_enabled=env_.vars.pair_treesitter_enabled
+    end
+
     env_.vars=setmetatable({
         pair_modes=modes,
         priority=priority,
@@ -945,11 +950,12 @@ local function i_single_pair(pair,is_end)
         [2]={'pair',c_pair_str,needed=not pair_fallback,default=pair_fallback},
         [o.multiline]={'multiline',c_boolean,default=env_.vars.multiline},
         [o.filter]={'filter',g_filters_1,default=env_.vars.pair_filters},
-        [o.smart_pairing]={'smart_pairing',c_boolean,default=env_.vars.smart_pairing}
+        [o.smart_pairing]={'smart_pairing',c_boolean,default=env_.vars.smart_pairing},
     },o,{
             backspace=backspace,
             newline=newline,
-            space=space
+            space=space,
+            treesitter=treesitter_enabled,
         })
 end
 ---@param pair ua.config.single_pair
@@ -976,6 +982,9 @@ local function g_pair(pair)
     local multiline=apply_index_default(pair,o.multiline,c_boolean,env_.vars.multiline)
     local filters=apply_index_default(pair,o.filter,g_filters_1,{inherited=env_.vars.root_filters})
     local smart_pairing=apply_index_default(pair,o.smart_pairing,c_boolean,env_.vars.smart_pairing)
+    _G.a=pair.treesitter==false
+    local treesitter_enabled=apply_index_default_nil(pair,o.treesitter,c_boolean)
+    _G.a=false
 
     local backspace=d_pair_map(pair,o.backspace,g_map,o.backspace_multi)
     local newline=d_pair_map(pair,o.newline,g_map,o.newline_multi)
@@ -990,6 +999,7 @@ local function g_pair(pair)
         pair_backspace=backspace,
         pair_space=space,
         pair_newline=newline,
+        pair_treesitter_enabled=treesitter_enabled,
     },{__index=env_.vars})
     return apply_index_tbl(pair,{
         [1]={'start_pair',g_single_pair_start,needed=true},
@@ -1308,6 +1318,7 @@ local function gg_map_root(extend)
         map={'hooks',g_hooks,needed=true},
         enable={'enable',c_boolean,default=true},
         filter={'filter',g_filters_1,default={}},
+        treesitter={'treesitter',c_boolean,default_nil=true},
     },extend)
     ---@param tbl ua.config.base_map.root
     ---@return ua.iconfig.map.root
@@ -1426,6 +1437,7 @@ local function g_main(tbl)
     local use_filetype_getopt=apply_index_default(tbl,o.use_filetype_getopt,g_use_filetype_getopt,{[true]=false})
     local fallback=apply_index_default(tbl,o.fallback,g_fallback,{[true]=false})
     local treesitter_async=apply_index_default(tbl,o.treesitter_async,c_boolean,false)
+    local treesitter_enabled=apply_index_default(tbl,o.treesitter,c_boolean,true)
 
     local map_modes=apply_index_traceback_list(tbl,o.map_mode,c_modes,nil)
     local pair_modes=apply_index_traceback_list(tbl,o.pair_map_mode,c_modes,map_modes)
@@ -1470,6 +1482,7 @@ local function g_main(tbl)
 
     ---@type ua.iconfig
     return {
+        treesitter=treesitter_enabled,
         treesitter_async=treesitter_async,
         backspace=backspace,
         newline=newline,

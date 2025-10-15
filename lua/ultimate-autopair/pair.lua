@@ -27,6 +27,9 @@ function M.run_start(bconf,con)
     if not conf.multiline then
         con=utils.context_to_singleline(con)
     end
+
+    con=utils.con_set_treesitter_enabled(con,conf.treesitter)
+
     if not filterlib.run_once_filters(conf.filter,con) then
         return
     end
@@ -84,6 +87,9 @@ function M.run_end(bconf,con)
     if not conf.multiline then
         con=utils.context_to_singleline(con)
     end
+
+    con=utils.con_set_treesitter_enabled(con,conf.treesitter)
+
     if not filterlib.run_once_filters(conf.filter,con) then
         return
     end

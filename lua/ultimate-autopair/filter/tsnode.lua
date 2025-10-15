@@ -165,7 +165,7 @@ return function (conf)
     return {
         once=function (con)
             state={}
-            if not utils.treesitter_enabled() then
+            if not con.treesitter_enabled then
                 state.skip=true
             end
         end,

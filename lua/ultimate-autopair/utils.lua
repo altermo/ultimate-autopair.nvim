@@ -183,10 +183,6 @@ function M.range_in_range(range,contains_range,inclusive)
         (range[3]>crange[3] or (range[3]==crange[3] and range[4]>=crange[4]))
 end
 
---TODO
-function M.treesitter_enabled()
-    return true
-end
 ---@param con ua.context
 ---@return vim.treesitter.LanguageTree?
 function M.get_parser(con)
@@ -422,6 +418,7 @@ function M.create_context(iconf)
             cursor_range={0,col-1,0,col-1},
             iconf=iconf,
             root_filetype='vim',
+            treesitter_enabled=iconf.treesitter,
             iter_lines=function (s,e)
                 assert((s==1 or s==-1) and (e==1 or e==-1))
                 return coroutine.wrap(function ()
@@ -440,6 +437,7 @@ function M.create_context(iconf)
         iconf=iconf,
         bufnr=bufnr,
         root_filetype=vim.o.filetype,
+        treesitter_enabled=iconf.treesitter,
         iter_lines=function (s,e)
             return coroutine.wrap(function ()
                 if s<0 then
@@ -466,6 +464,18 @@ function M.context_to_singleline(con)
             return con.iter_lines(row,row)
         end},
         {__index=con})
+end
+
+---@param con ua.context
+---@param enabled boolean?
+---@return ua.context
+function M.con_set_treesitter_enabled(con,enabled)
+    if con.treesitter_enabled==enabled or enabled==nil then
+        return con
+    end
+    return setmetatable({
+        treesitter_enabled=enabled
+    },{__index=con})
 end
 
 return M

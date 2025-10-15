@@ -61,7 +61,7 @@ return function (conf)
     return {
         once=function (con)
             state={}
-            if not conf.treesitter or not utils.treesitter_enabled() then
+            if not conf.treesitter or not con.treesitter_enabled then
                 state.skip=true
                 return ft_excluded(conf,con.root_filetype)
             end

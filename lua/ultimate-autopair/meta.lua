@@ -18,6 +18,7 @@
 ---@field _parser? vim.treesitter.LanguageTree|false
 ---@field cursor_range Range4
 ---@field iconf ua.iconfig
+---@field treesitter_enabled boolean
 
 ---@class ua.actions
 ---@field [number] ua.action|string

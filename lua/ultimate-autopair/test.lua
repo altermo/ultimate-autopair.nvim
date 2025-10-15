@@ -226,6 +226,8 @@ local list_of_tests={
         {'|\n")"','(','(|)\n")"',ft='lua'},
         {'"|"\n)','(','"(|)"\n)',ft='lua'},
         {"'''|'","'","''''|",ft='lua'},
+        {'| ")"','(','(| ")"',{treesitter=false},ft='lua'},
+        {'| ")"','(','(| ")"',{treesitter=true,default={pair={['()']={treesitter=false}}}},ft='lua'},
         -- {'local a=| }','{','local a={|} }',{ft='lua',c={filter={tsnode={separate={'table_constructor'},detect_after="{"}}},skip=true}}, --TODO: make detect_after only run on insert
         -- {"let a: Vec<|a>;","'","let a: Vec<'|a>;",{ft='rust',c={filter={tsnode={dont={'lifetime'},detect_after="'"}}},skip=true}}, --TODO: only do on insertion, not on general filtering
         -- {"let a: Vec<a>;|","'","let a: Vec<'a>;'|'",{ft='rust',c={filter={tsnode={dont={'lifetime'},detect_after="'"}}},skip=true}},
@@ -332,6 +334,7 @@ local list_of_tests={
             use_filetype_getopt={[true]=true,lua=function (...) end},
             smart_pairing=true,
             treesitter_async=true,
+            treesitter=true,
             perf={
                 smart_pairing=dont_rec_check,
                 treesitter=dont_rec_check,
@@ -406,17 +409,26 @@ local list_of_tests={
                 priority=1,
                 multiline=true,
                 filter=dont_rec_check,
-                -- treesitter=false, --TODO
+                treesitter=true,
                 '(',
                 {{{')',mode='i',priority=1}},
                     function (_,_) return 'a' end,mode='i',priority=1,
                     filter=dont_rec_check,multiline=true,smart_pairing=true,
-                    backspace=dont_rec_check,
+                    backspace={
+                        treesitter=false,
+                        enable=true,
+                        space=true,
+                        newline=true,
+                        single_delete=true,
+                        overjump='nonambiguous',
+                        filter=dont_rec_check,
+                    },
                     backspace_multi=dont_rec_check,
                     newline=dont_rec_check,
                     newline_multi=dont_rec_check,
                     space=dont_rec_check,
                     space_multi=dont_rec_check,
+                    treesitter=true,
                 },
                 backspace=dont_rec_check,
                 backspace_multi=dont_rec_check,
@@ -438,6 +450,7 @@ local list_of_tests={
                     overjump='nonambiguous',
                     newline=true,
                     filter=dont_rec_check,
+                    treesitter=true,
                 }
             },
             backspace={
@@ -449,6 +462,7 @@ local list_of_tests={
                 space=true,
                 overjump='nonambiguous',
                 newline=true,
+                treesitter=true,
                 filter={
                     enable=true,
                     filetype_multi={},
@@ -465,10 +479,10 @@ local list_of_tests={
                 },
             },
             newline_multi={},
-            newline={mode='i',priority=1,map='\r',enable=true,filter=dont_rec_check},
+            newline={mode='i',priority=1,map='\r',enable=true,filter=dont_rec_check,treesitter=true,},
             space_multi={},
             space={mode='i',priority=1,map=' ',enable=true,filter=dont_rec_check,
-                check_box_ft='lua'},
+                check_box_ft='lua',treesitter=true},
         },validate_and='no error, no bad idx'},
         {'','','',{default=true},validate_and='no error'},
 

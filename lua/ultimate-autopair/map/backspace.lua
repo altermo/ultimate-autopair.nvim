@@ -27,6 +27,11 @@ local function run_start_pair(pair,mconf,conf_idx,con)
     local end_pair=pair.end_pair.pair
     assert(type(end_pair)=='string')
 
+    --TODO: singleline (e.g. multiline=false)?
+
+    con=utils.con_set_treesitter_enabled(con,pair.start_pair.treesitter)
+    con=utils.con_set_treesitter_enabled(con,conf.treesitter)
+
     if not filterlib.run_once_filters(pair.start_pair.filter,con) then
         return
     end
@@ -85,6 +90,9 @@ end
 ---@param con ua.context
 ---@return ua.actions?
 function M.run(mconf,pairs_,conf_idx,con)
+
+    con=utils.con_set_treesitter_enabled(con,mconf.treesitter_enabled)
+
     for _,pair in ipairs(pairs_) do
         local ret=run_start_pair(pair,mconf,conf_idx,con)
         if ret then

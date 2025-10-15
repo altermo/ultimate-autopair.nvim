@@ -70,6 +70,7 @@
 ---@field multiline boolean?
 ---@field filter ua.config.filters.root_inherit?
 ---@field smart_pairing boolean?
+---@field treesitter boolean?
 ---@class ua.config.single_pair: ua.config.pair_no_12
 ---@field [1] string|(string|ua.config.hook)[]
 ---@field [2] string|ua.dynamic_pair_fn?
