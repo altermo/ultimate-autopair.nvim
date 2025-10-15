@@ -348,7 +348,7 @@ local function assert_filetype(ft)
     assert_is(ft,'string')
     ---@cast ft string
     if opts_.validate<err_severity.not_detected.filetype then return end
-    if type(ft)=='string' and vim.treesitter.language.add(vim.treesitter.language.get_lang(ft) or '') then
+    if vim.treesitter.language.add(vim.treesitter.language.get_lang(ft) or '') then
     elseif utils.in_list(vim.fn.getcompletion('','filetype'),ft) then
     elseif utils.in_list(other_filetypes,ft) then
     else
