@@ -74,14 +74,14 @@ end
 function M.check_change_iskeyword(o,m,ext,incheck)
     local conf=ext.conf
     ---@cast conf ext.alpha.conf
-    local savekeyword=vim.o.iskeyword
+    local savekeyword=vim.bo.iskeyword
     if default.orof(conf.no_ft_iskeyword,o,m,incheck) then
-        vim.o.iskeyword=vim.api.nvim_get_option_value('iskeyword',{buf=vim.api.nvim_get_current_buf()})
+        vim.bo.iskeyword=vim.api.nvim_get_option_value('iskeyword',{buf=vim.api.nvim_get_current_buf()})
     else
-        vim.o.iskeyword=utils.ft_get_option(utils.getsmartft(o),'iskeyword')
+        vim.bo.iskeyword=utils.ft_get_option(utils.getsmartft(o),'iskeyword')
     end
     local ok,ret=pcall(M.check, o,m,ext,incheck)
-    vim.o.iskeyword=savekeyword
+    vim.bo.iskeyword=savekeyword
     if not ok then error(ret) end
     return ret
 end
