@@ -29,6 +29,8 @@ M.conf={
     --(\n\t|\n) > bs > (|)
     single_delete=false,
     -- <!--|--> > bs > <!-|
+    delete_from_end=true,
+    -- []| > bs > |
     conf={},
     --contains extension config
     multi=false,

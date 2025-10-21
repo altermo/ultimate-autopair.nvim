@@ -33,8 +33,9 @@ end
 ---@param m prof.def.m.pairae
 ---@return prof.def.map.bs.fn
 function M.backspace_wrapp(m)
-    return function (o)
+    return function (o,bs_m)
         if m.conf.backspace==false then return end
+        if bs_m.iconf.delete_from_end==false then return end
         if o.line:sub(o.col-#m.pair-#m.pair,o.col-1-#m.pair)==m.pair and
             m.pair==o.line:sub(o.col-#m.pair,o.col-1) and
             open_pair.open_pair_ambiguous_before_nor_after(m,o,o.col) and

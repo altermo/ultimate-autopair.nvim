@@ -215,6 +215,8 @@ The default configuration contains a loot of options, here are those:
      --(\n\t|\n) > bs > (|)
      single_delete=false,
      -- <!--|--> > bs > <!-|
+     delete_from_end=true,
+     -- []| > bs > |
      conf={},
      --contains extension config
      multi=false,
@@ -414,6 +416,7 @@ Example (`*` is cursor): >
  | ( *foo  ) | ( *foo ) | space='balance'    |
  | <!--*-->  | <!-*     | single_delete=true |
  | {\n\t*\n} | {*}      |indent_ignore=true  |
+ | []*       | *        |delete_from_end=true|
 <
 ------------------------------------------------------------------------------
 newline                                        *ultimate-autopair-map-newline*

@@ -103,6 +103,8 @@ return {
         {'f|','','|',{abrv={f='foo'}}},
         {'<!--|-->','','<!-|',{c={bs={single_delete=true}},ft='html'}},
         {'```|```','','``|',{c={bs={single_delete=true}},ft='markdown'}},
+        {'[]|','','[|',{c={bs={delete_from_end=false}}}},
+        {'""|','','"|',{c={bs={delete_from_end=false}}}},
     },
     fastwarp={
         {'{|}[]','','{|[]}'},

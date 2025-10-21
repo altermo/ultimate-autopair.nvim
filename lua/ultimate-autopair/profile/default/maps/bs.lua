@@ -3,6 +3,7 @@
 ---@field space boolean?
 ---@field indent_ignore boolean?
 ---@field single_delete boolean?
+---@field delete_from_end boolean?
 ---@class prof.def.map.bs.m.backspace:prof.def.module
 ---@field backspace prof.def.map.bs.fn
 ---@alias prof.def.map.bs.fn fun(o:core.o,m:prof.def.m.map,conf:prof.def.map.bs.conf):string?
