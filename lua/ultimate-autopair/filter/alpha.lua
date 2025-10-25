@@ -17,7 +17,9 @@ local function is_keywordy(con,range,after,chars)
         return chars:find(char,1,true) and true or false
     end
     local ft=utils.get_filetype(con,range)
-    if ft==con.root_filetype then
+
+    -- not `con.root_filetype` because of cmdline
+    if ft==vim.o.filetype then
         return vim.fn.charclass(char)==2
     end
     return utils.with({o={

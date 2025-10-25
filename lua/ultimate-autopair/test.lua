@@ -175,6 +175,7 @@ local list_of_tests={
         -- {'foo"don|"',"'",[[foo"don'|"]],{treesitter=false},ft='lua'},
         -- {'--don|',"'","--don'|",{treesitter=false},ft='lua'},
         {"f'|","'","f''|"},
+        {'|','<C-r>=".\'<end>"\r',".''|",ft='help'},
     },
     filter_escape={
         {'\\|','(','\\(|'},
