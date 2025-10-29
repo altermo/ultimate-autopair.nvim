@@ -42,7 +42,7 @@ function M.run_start(bconf,con)
     end
     local pair_range={con.cursor_range[1],
         con.cursor_range[2]-(#start_pair-1),
-        con.cursor_range[3],con.cursor_range[4]}
+        con.cursor_range[1],con.cursor_range[2]}
     if not filterlib.run_pos_filters(conf.filter,con,pair_range) then
         return
     end
@@ -97,7 +97,7 @@ function M.run_end(bconf,con)
     filterlib.run_once_filters_no_ret(bconf.start_pair.filter,con)
 
     if not vim.startswith(utils.line_after_range(con,con.cursor_range),end_pair) then return end
-    local pair_range={con.cursor_range[1],con.cursor_range[2],con.cursor_range[3],
+    local pair_range={con.cursor_range[3],con.cursor_range[4],con.cursor_range[3],
         con.cursor_range[4]+#end_pair}
     if not filterlib.run_pos_filters(conf.filter,con,pair_range) then
         return

@@ -45,12 +45,12 @@ function M.start_pair_type_mapping(pair,mconf,conf_idx,con,map_idx)
     filterlib.run_once_filters_no_ret(pair.end_pair.filter,con)
 
     local start_pair_range={con.cursor_range[1],con.cursor_range[2]-#start_pair,
-        con.cursor_range[3],con.cursor_range[4]}
+        con.cursor_range[1],con.cursor_range[2]}
     if not filterlib.run_pos_filters(pair.start_pair.filter,con,start_pair_range) then
         return
     end
 
-    local end_pair_range={con.cursor_range[1],con.cursor_range[2],
+    local end_pair_range={con.cursor_range[3],con.cursor_range[4],
         con.cursor_range[3],con.cursor_range[4]+#end_pair}
     if not filterlib.run_pos_filters(pair.end_pair.filter,con,end_pair_range) then
         return
