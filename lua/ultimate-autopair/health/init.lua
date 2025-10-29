@@ -18,23 +18,7 @@ M.health_handler={
 }
 
 ---@param handler ua.health.handler
----@param is_default boolean?
-local function validate_config(handler,is_default)
-    local conf
-    if is_default then
-        handler.start('Default configuration validation')
-        ---TODO: if multiple default configs, validate all of them
-        conf=require'ultimate-autopair.def-merge'.conf.default
-        assert(conf)
-    else
-        handler.start('Configuration validation')
-        conf=require'ultimate-autopair'._conf
-        conf={} --TODO
-        if not conf then
-            handler.warn("No config detected, can't validate config")
-            return
-        end
-    end
+local function validate_config(handler,conf)
     local err_out={}
     local is_not_err,err=pcall(require'ultimate-autopair.conf'._generate,conf,{
         validate=4,
@@ -56,6 +40,21 @@ local function validate_config(handler,is_default)
     end
     handler.warn('Config is VALID, but may be problematic: >\n'..table.concat(vim.tbl_map(function (x) return x.msg end,err_out),'\n\n'))
     handler.info'' -- is for ending code block
+end
+
+---@param handler ua.health.handler
+---@param conf ua.config
+local function validate_user_config(handler,conf)
+    handler.start('User configuration validation')
+    validate_config(handler,conf)
+end
+
+---@param handler ua.health.handler
+local function validate_default_configs(handler)
+    for name,conf in pairs(require'ultimate-autopair.def-merge'.conf) do
+        handler.start('Default('..name..') configurations validation')
+        validate_config(handler,conf)
+    end
 end
 
 ---@param handler ua.health.handler
@@ -172,7 +171,12 @@ function M.start(dev,handler)
         handler.warn('Use 0.11.1 or newer for better performance')
     end
 
-    validate_config(handler)
+    local conf=require'ultimate-autopair'._conf
+    if not conf then
+        handler.warn("No config detected, can't validate config")
+        return
+    end
+    validate_user_config(handler,conf)
     validate_externals(handler)
 
     if not dev then return end
@@ -187,7 +191,7 @@ function M.start(dev,handler)
     local plugin_path=vim.fs.dirname(vim.fs.dirname(lua_path))
     check_not_allowed_string_and_typos(handler,lua_path,plugin_path)
     check_unique_lang_to_ft(handler)
-    validate_config(handler,true)
+    validate_default_configs(handler)
     reload_and_run_tests(handler,plugin_path,dev)
 end
 return M
