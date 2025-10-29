@@ -1,8 +1,0 @@
--- You tried to run ultimate-autopair's config's tutor using
--- the builtin tutor plugin (`:h pi_tutor.txt`).
--- But the builtin tutor plugin is not powerful enough...
--- Run `:so` to start ultimate-autopair's config's tutor
-
-require'ultimate-autopair.tutor'.start()
-
--- vim: ft=lua
