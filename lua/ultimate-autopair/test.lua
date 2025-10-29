@@ -414,7 +414,7 @@ local list_of_tests={
                 treesitter=true,
                 '(',
                 {{{')',mode='i',priority=1}},
-                    function (_,_) return 'a' end,mode='i',priority=1,
+                    ')',mode='i',priority=1,
                     filter=dont_rec_check,multiline=true,smart_pairing=true,
                     backspace={
                         treesitter=false,
@@ -598,6 +598,14 @@ local list_of_tests={
         },validate_and='expect error',expected_err=[[
             The option `[1].backspace_multi.foo` requires the option `backspace_multi.foo` to be set.
         ]]},
+
+        -- err: same_type
+        {'','','',{validate=1,default=false,
+            {{'(',function () end},')',mode='i'},
+        },validate_and='expect error',expected_err=[[
+            The options `[1][1][2]` (with the value `function: $$`) and `[1][2]` (with the value `")"`) should be of the same type.
+            But they are of the types `function` and `string`.
+        ]]},
         ---@diagnostic enable: assign-type-mismatch, redundant-parameter, missing-fields
 
         ---TODO: test the different err_formats
@@ -779,7 +787,12 @@ local function validate_config(instance,test,category,index)
             err=err:gsub("Configuration for the plugin 'ultimate%-autopair' is incorrect:\n\n",'')
         end
         local expected_err=('\n'..test.expected_err):gsub('\n +','\n'):gsub('^%s+',''):gsub('%s+$','')
-        if err==expected_err then return end
+        if expected_err:find('$$',1,true) then
+            local pre,post=unpack(vim.split(expected_err,'$$',{plain=true}))
+            if vim.startswith(err,pre) and vim.endswith(err,post) and err:sub(#pre+1,-#post-1):match('^0x%x+$') then return end
+        else
+            if err==expected_err then return end
+        end
         local msg=('test(%s) did not error correctly:\n{Expected-error:}\n%s\n{Actual-error:}\n%s'):format(category,expected_err,err)
         return msg
     else

@@ -75,6 +75,13 @@ local opts_={}
 ---@field type 'need_set'
 ---@field valid string[]
 
+---@class ua.conf.err.same_type
+---@field type 'same_type'
+---@field traceback1 string
+---@field traceback2 string
+---@field opt1 any
+---@field opt2 any
+
 ---@alias ua.conf.err
 ---|ua.conf.err.need_set
 ---|ua.conf.err.dont_set
@@ -83,6 +90,7 @@ local opts_={}
 ---|ua.conf.err.not_list
 ---|ua.conf.err.func_n_params
 ---|ua.conf.err.not_detected
+---|ua.conf.err.same_type
 
 ---@type table<ua.conf.err_type,number|table<string,number>>
 local err_severity={
@@ -96,6 +104,7 @@ local err_severity={
         ['filetype']=3,
         ['tslang']=3,
     },
+    same_type=1,
     dont_set=2,
     not_list=2,
     func_n_params=3,
@@ -229,6 +238,15 @@ local function generate_error_message(val,err)
         The option `%s` requires one of the following options to be set:
         %s
         ]]):format(traceback,table.concat(valid,'\n        '))
+    elseif err.type=='same_type' then
+        local traceback1_with_val=('`%s` (with the value `%s`)'):format(
+            err.traceback1,obj_to_str(err.opt1))
+        local traceback2_with_val=('`%s` (with the value `%s`)'):format(
+            err.traceback2,obj_to_str(err.opt2))
+        return ([[
+        The options %s and %s should be of the same type.
+        But they are of the types `%s` and `%s`.
+        ]]):format(traceback1_with_val,traceback2_with_val,type(err.opt1),type(err.opt2))
     else
         error('unreachable')
     end
@@ -414,6 +432,24 @@ local function assert_is_query_in_filetype(ft,query)
             type='not_detected',
             subtype='query_filetype',
             msg='valid query for filetype '..ft,
+        })
+    end
+end
+
+---@generic T
+---@param traceback1 string
+---@param opt1 T
+---@param traceback2 string
+---@param opt2 T
+local function assert_options_same_type(traceback1,opt1,traceback2,opt2)
+    if opts_.validate<err_severity.same_type then return end
+    if type(opt1)~=type(opt2) then
+        error_it(nil,{
+            type='same_type',
+            traceback1=traceback1,
+            traceback2=traceback2,
+            opt1=opt1,
+            opt2=opt2,
         })
     end
 end
@@ -830,13 +866,13 @@ end
 ---@param pair string|ua.dynamic_pair_fn
 ---@return string|ua.dynamic_pair_fn
 local function c_pair_str(pair)
-    --TODO: if one pair is a function then the other one should also be a function
-
     assert_is(pair,{'string','function'})
     if type(pair)=='function' then
         --TODO: maybe make it a possible to do "1 to 2 arguments" instead of just "2 and only 2 arguments"
         assert_n_params(pair,2)
     end
+    table.insert(env_.vars.pair_pair_opts,env_.traceback)
+    table.insert(env_.vars.pair_pair_opts,pair)
     return pair
 end
 
@@ -926,6 +962,8 @@ local function i_single_pair(pair,is_end)
     local pair_fallback
     if type(pair[1])=='string' and pair[2]==nil then
         pair_fallback=pair[1]
+        table.insert(env_.vars.pair_pair_opts,env_.traceback)
+        table.insert(env_.vars.pair_pair_opts,pair_fallback)
     end
 
     local modes=apply_index_traceback_list(pair,o.mode,c_modes,env_.vars.pair_modes)
@@ -1000,11 +1038,14 @@ local function g_pair(pair)
         pair_space=space,
         pair_newline=newline,
         pair_treesitter_enabled=treesitter_enabled,
+        pair_pair_opts={},
     },{__index=env_.vars})
-    return apply_index_tbl(pair,{
+    local ipair=apply_index_tbl(pair,{
         [1]={'start_pair',g_single_pair_start,needed=true},
         [2]={'end_pair',g_single_pair_end,needed=true},
     },o)
+    assert_options_same_type(unpack(env_.vars.pair_pair_opts))
+    return ipair
 end
 
 ---@param x string
