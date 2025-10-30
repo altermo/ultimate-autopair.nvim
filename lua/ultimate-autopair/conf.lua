@@ -43,6 +43,7 @@ local opts_={}
 ---|'func_n_params'
 ---|'not_detected'
 ---|'need_set'
+---|'same_type'
 
 ---@class ua.conf.err.dont_set
 ---@field type 'dont_set'
