@@ -7,6 +7,9 @@ Requires **neovim 0.9** (for older versions of neovim, check previous versions o
 For some features, including string filtering, requires **treesitter**.
 
 For new users, check out starter documentation (`:help ultimate-autopair`)
+
+You can test out the (non-finished) next version here: [v0.7](https://github.com/altermo/ultimate-autopair.nvim/tree/v0.7)
+
 ## Installation
 <details open=true><summary><b>Lazy</b></summary>
 
