@@ -1,4 +1,2 @@
-# NOTE: This version is <u>NOT DONE</u>
-(*DO NOT USE* this version (unless you know what you are doing))
-
-Here is the actual [README](./README.md).
+> [!NOTE]
+> This version(v0.7) is still note done; many features are still missing from [v0.6](https://github.com/altermo/ultimate-autopair.nvim/tree/v0.6).
