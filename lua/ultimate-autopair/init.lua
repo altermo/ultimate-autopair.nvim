@@ -1,22 +1,29 @@
-local confgen=require'ultimate-autopair.conf'
-local defmerge=require'ultimate-autopair.def-merge'
 local keymap=require'ultimate-autopair.keymap'
 
 local M={}
 
 ---@param conf ua.config?
 function M.setup(conf)
-    conf=conf or {}
-    if conf.lazy then
-        error'TODO: basic lazyloading on Insert and Cmdline'
-    end
-    conf=defmerge.merge_with_default(conf)
-    M._conf=conf
-    local iconf=confgen._generate(conf)
-    M.setup_with_iconfig(iconf)
+  if
+    ---@diagnostic disable-next-line: unnecessary-if
+    true then
+    --TODO: temp
+    assert(conf==nil)
+    keymap.set_mappings({
+      i={
+        ['(']={
+          fallback=true,
+          {
+            action=function ()
+              return {'()',{'h',1}}
+            end,
+            desc='autopairs pair (,)',
+            config={},
+          }
+        }
+      }
+    },{})
+  end
 end
----@param iconf ua.iconfig
-function M.setup_with_iconfig(iconf)
-    keymap.set_mappings(iconf)
-end
+
 return M
