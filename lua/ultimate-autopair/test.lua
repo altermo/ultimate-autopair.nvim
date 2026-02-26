@@ -1,15 +1,26 @@
 local function list_of_test_fn(_)
   ---@diagnostic disable: duplicate-index
   ---@type ua.test[]
-  local tests={
+  return {
     [1]=false --[[@as unknown]],
-
-    --## simple
+    --## simple#start_pair
     [_()]={'|','(','(|)'},
     [_()]={'|)','(','(|)'},
+    [_()]={'(|)','(','((|))'},
+    [_()]={'(|','(','((|)'},
+    [_()]={'|)(','(','(|)('},
+    [_()]={'() |','(','() (|)'},
+    [_()]={'(|))','(','((|))'},
+    --## simple#end_pair
+    [_()]={'(|)',')','()|'},
+    [_()]={'((|))',')','(()|)'},
+    [_()]={'|)',')',')|)'},
+    [_()]={'(|))',')','()|)'},
+    [_()]={'()|)',')','())|)'},
+    [_()]={'( |)',')','( )|'},
+    [_()]={'(|)(()',')','()|(()'},
   }
   ---@diagnostic enable: duplicate-index
-  return tests
 end
 
 ---@class ua.test.pre
@@ -51,7 +62,7 @@ do
     test.id=idx
 
     if test.I then
-      M.tests={test}
+      tests={test}
       break
     end
   end
@@ -265,6 +276,15 @@ function M.run_tests(plugin_path,handler,dev)
     end
   end
   ::break_::
+
+  local toinform=instance:exec_lua([[return _G._UA_PRINT]])
+  if next(toinform) then
+    handler.start('test log:')
+    for _,v in ipairs(toinform) do
+      handler.info(v)
+    end
+  end
+
   if vim.fn.jobstop(instance._chan)==0 then
     handler.error('Could not stop test neovim instance execution: already stopped')
   end

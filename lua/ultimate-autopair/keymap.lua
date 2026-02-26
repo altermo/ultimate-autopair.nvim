@@ -4,8 +4,8 @@ local context=require'ultimate-autopair.util.context'
 local M={}
 
 ---@class ua.keymap.list.entry
----@field action fun():... --TODO
----@field config table --TODO
+---@field action fun(con: ua.context, arg: any): ua.actions?
+---@field arg any
 ---@field desc string
 
 ---@class ua.keymap.list
@@ -48,7 +48,7 @@ function M.set_mappings(keymap_tbl,top_conf)
         table.insert(desc,entry.desc)
       end
 
-      local id=#mapped
+      local id=#mapped+1
 
       vim.keymap.set(mode=='v' and 'x' or mode,
       key,
@@ -84,6 +84,8 @@ local function action_to_keys(action)
       table.insert(out,act)
     elseif act[1]=='h' then
       table.insert(out,keys.key_left:rep(act[2]))
+    elseif act[1]=='l' then
+      table.insert(out,keys.key_right:rep(act[2]))
     else
       error'TODO'
     end
@@ -109,8 +111,8 @@ local function run(id)
   local map=assert(mapped[id] --[[@as any?]])
 
   local con=context.create_context(mapped)
-  for _,list in ipairs(map[3]) do
-    local ret=list.action(list.config,con)
+  for _,item in ipairs(map[3]) do
+    local ret=item.action(con,item.arg)
     if ret then
       return action_to_keys(ret)
     end

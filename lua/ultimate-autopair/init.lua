@@ -1,4 +1,5 @@
 local keymap=require'ultimate-autopair.keymap'
+local pair=require'ultimate-autopair.pair'
 
 local M={}
 
@@ -14,11 +15,17 @@ function M.setup(conf)
         ['(']={
           fallback=true,
           {
-            action=function ()
-              return {'()',{'h',1}}
-            end,
-            desc='autopairs pair (,)',
-            config={},
+            action=pair.run_start,
+            desc='autopairs start pair (,)',
+            arg={'(',')'},
+          }
+        },
+        [')']={
+          fallback=true,
+          {
+            action=pair.run_end,
+            desc='autopairs end pair (,)',
+            arg={'(',')'},
           }
         }
       }

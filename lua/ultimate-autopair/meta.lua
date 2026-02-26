@@ -2,13 +2,16 @@
 
 ---@alias ua.mode 'i'|'c'|'t'|'v'|'o'|'s'|'n'
 
----@class ua.str: string
+---@alias TODO unknown
+
+---@class ua.str
 
 --- srow and erow are 1-indexed
 ---@alias ua.source.iter_line fun(srow:number,erow:number):fun():number,string
 
 ---@class ua.context
 ---@field iter_lines ua.source.iter_line
+---@field cursor_range Range4
 
 ---@class ua.config: table
 ---@class ua.iconfig: table

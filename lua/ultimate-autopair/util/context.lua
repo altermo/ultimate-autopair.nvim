@@ -5,7 +5,10 @@ local M={}
 function M.create_context(iconf)
   local _=iconf
   local bufnr=vim.api.nvim_get_current_buf()
+  local row=vim.fn.line('.')
+  local col=vim.fn.col('.')
   return {
+    cursor_range={row-1,col-1,row-1,col-1},
     iter_lines=function (s,e)
       return coroutine.wrap(function ()
         if s<0 then
@@ -18,8 +21,7 @@ function M.create_context(iconf)
           coroutine.yield(rows,vim.api.nvim_buf_get_lines(bufnr,rows-1,rows,false)[1])
         end
       end)
-    end
-
+    end,
   }
 end
 
