@@ -25,4 +25,11 @@ function M.create_context(iconf)
   }
 end
 
+---@param con ua.context
+---@param range Range4
+---@return string
+function M.line_after_range(con,range)
+    return select(2,con.iter_lines(range[3]+1,range[3]+1)()) --[[@as string]]:sub(range[4]+1)
+end
+
 return M

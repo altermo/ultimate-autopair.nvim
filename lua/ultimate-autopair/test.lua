@@ -19,6 +19,15 @@ local function list_of_test_fn(_)
     [_()]={'()|)',')','())|)'},
     [_()]={'( |)',')','( )|'},
     [_()]={'(|)(()',')','()|(()'},
+    --## simple#ambiguous_start_pair
+    [_()]={'|','"','"|"'},
+    [_()]={'"|','"','""|'},
+    [_()]={"'' |","'","'' '|'"},
+    [_()]={'"a|b"','"','"a"|"b"'},
+    [_()]={'""|""','"','"""|"""'},
+    --## simple#ambiguous_end_pair
+    [_()]={'"|"','"','""|'},
+    [_()]={'|"','"','"|"'},
   }
   ---@diagnostic enable: duplicate-index
 end
@@ -62,6 +71,7 @@ do
     test.id=idx
 
     if test.I then
+      test.id=1
       tests={test}
       break
     end

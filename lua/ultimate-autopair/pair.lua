@@ -1,4 +1,5 @@
 local open_pair=require'ultimate-autopair.util.open_pair'
+local context=require'ultimate-autopair.util.context'
 local M={}
 
 ---@param con ua.context
@@ -17,7 +18,10 @@ function M.run_start(con,conf)
   }) --[[@as TODO]]
 
   if start_pair==end_pair then
-    error'TODO'
+    local balanced=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns,'both')
+    if balanced then
+      return
+    end
   else
     local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,testfns)
     local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,testfns)
@@ -36,13 +40,20 @@ function M.run_end(con,conf)
   local pair_range={con.cursor_range[3],con.cursor_range[4],con.cursor_range[3],
   con.cursor_range[4]+#end_pair}
 
+  if not vim.startswith(context.line_after_range(con,con.cursor_range),end_pair) then
+    return
+  end
+
   local testfns;testfns=setmetatable({},{
     __index=function() return testfns end,
     __call=function() return true end,
   }) --[[@as TODO]]
 
   if start_pair==end_pair then
-    error'TODO'
+    local open_pair_before=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns)
+    if not open_pair_before then return end
+    local open_pair_after=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns,true,2)
+    if open_pair_after then return end
   else
     local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,testfns)
     local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,testfns,nil,1)
