@@ -13,6 +13,15 @@
 ---@field iter_lines ua.source.iter_line
 ---@field cursor_range Range4
 
----@class ua.config: table
----@class ua.iconfig: table
----@class ua.actions: table
+---@class ua.config: TODO
+---@class ua.iconfig: TODO
+---@class ua.actions: TODO
+
+---@alias ua.filter.iter_pos_fn fun(con:ua.context,range:Range4):boolean
+---@alias ua.filter.once_fn fun(con:ua.context):boolean
+---@class ua.filter
+---@field iter_pos ua.filter.iter_pos_fn?
+---@field once ua.filter.once_fn?
+
+---@alias ua.exclude_testfn fun(row:number,col:number):boolean
+---@alias ua.exclude_testfns [ua.exclude_testfn,ua.exclude_testfn]

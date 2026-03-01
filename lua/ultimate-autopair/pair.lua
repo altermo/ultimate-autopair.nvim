@@ -12,10 +12,10 @@ function M.run_start(con,conf)
   con.cursor_range[2]-(#start_pair-1),
   con.cursor_range[1],con.cursor_range[2]}
 
-  local testfns;testfns=setmetatable({},{
-    __index=function() return testfns end,
-    __call=function() return true end,
-  }) --[[@as TODO]]
+  local testfn=function()
+    return true
+  end
+  local testfns={testfn,testfn}
 
   if start_pair==end_pair then
     local balanced=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns,'both')
