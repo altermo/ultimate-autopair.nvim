@@ -31,5 +31,12 @@ end
 function M.line_after_range(con,range)
     return select(2,con.iter_lines(range[3]+1,range[3]+1)()) --[[@as string]]:sub(range[4]+1)
 end
+---@param con ua.context
+---@param range Range4
+---@return string
+function M.line_before_range(con,range)
+    return select(2,con.iter_lines(range[1]+1,range[1]+1)()) --[[@as string]]:sub(1,range[2])
+end
+
 
 return M

@@ -1,6 +1,6 @@
 local function list_of_test_fn(_)
   ---@diagnostic disable: duplicate-index
-  ---@type ua.test[]
+  ---@type ua.test.pre[]
   return {
     [1]=false --[[@as unknown]],
     --## simple#start_pair
@@ -22,12 +22,20 @@ local function list_of_test_fn(_)
     --## simple#ambiguous_start_pair
     [_()]={'|','"','"|"'},
     [_()]={'"|','"','""|'},
-    [_()]={"'' |","'","'' '|'"},
+    [_()]={'"" |','"','"" "|"'},
     [_()]={'"a|b"','"','"a"|"b"'},
     [_()]={'""|""','"','"""|"""'},
     --## simple#ambiguous_end_pair
     [_()]={'"|"','"','""|'},
     [_()]={'|"','"','"|"'},
+    --## simple#multichar_pair
+    [_()]={'|','&','&|',{{'&&','??'}}},
+    [_()]={'&|','&','&&|??',{{'&&','??'}}},
+    --## simple#other
+    [_()]={'|','f(','foo(|)',cmd='abbr <buffer>f foo'},
+    [_()]={'|','<esc>a(<esc>..a','(((|)))'},
+    [_()]={'|','<esc>3a(<esc>a','(((|)))'},
+    [_()]={'|foo','<esc>R(','(|)o'},
   }
   ---@diagnostic enable: duplicate-index
 end

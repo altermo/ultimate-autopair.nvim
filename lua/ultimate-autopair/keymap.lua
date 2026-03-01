@@ -79,13 +79,23 @@ local keys={
 local function action_to_keys(action)
   local out={}
 
+  local mode=vim.fn.mode()
+  local key_left,key_right
+  if mode=='i' or mode=='R' then
+    key_left=keys.key_noundo..keys.key_left
+    key_right=keys.key_noundo..keys.key_right
+  else
+    key_left=keys.key_left
+    key_right=keys.key_right
+  end
+
   for _,act in ipairs(action) do
     if type(act)=='string' then
       table.insert(out,act)
     elseif act[1]=='h' then
-      table.insert(out,keys.key_left:rep(act[2]))
+      table.insert(out,key_left:rep(act[2]))
     elseif act[1]=='l' then
-      table.insert(out,keys.key_right:rep(act[2]))
+      table.insert(out,key_right:rep(act[2]))
     else
       error'TODO'
     end

@@ -8,6 +8,10 @@ local M={}
 function M.run_start(con,conf)
   local start_pair,end_pair=unpack(conf)
 
+  if not vim.endswith(context.line_before_range(con,con.cursor_range),start_pair:sub(1,-2)) then
+    return
+  end
+
   local pair_range={con.cursor_range[1],
   con.cursor_range[2]-(#start_pair-1),
   con.cursor_range[1],con.cursor_range[2]}
@@ -28,7 +32,7 @@ function M.run_start(con,conf)
     if count1<count2 then return end
   end
 
-  return {start_pair..end_pair,{'h',#end_pair}}
+  return {start_pair:sub(-1)..end_pair,{'h',#end_pair}}
 end
 
 ---@param con ua.context
