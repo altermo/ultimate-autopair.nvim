@@ -1,72 +1,112 @@
-local function list_of_test_fn(_)
-  ---@diagnostic disable: duplicate-index
-  ---@type ua.test.pre[]
-  return {
-    [1]=false --[[@as unknown]],
-    --## simple#start_pair
-    [_()]={'|','(','(|)'},
-    [_()]={'|)','(','(|)'},
-    [_()]={'(|)','(','((|))'},
-    [_()]={'(|','(','((|)'},
-    [_()]={'|)(','(','(|)('},
-    [_()]={'() |','(','() (|)'},
-    [_()]={'(|))','(','((|))'},
-    --## simple#end_pair
-    [_()]={'(|)',')','()|'},
-    [_()]={'((|))',')','(()|)'},
-    [_()]={'|)',')',')|)'},
-    [_()]={'(|))',')','()|)'},
-    [_()]={'()|)',')','())|)'},
-    [_()]={'( |)',')','( )|'},
-    [_()]={'(|)(()',')','()|(()'},
-    --## simple#ambiguous_start_pair
-    [_()]={'|','"','"|"'},
-    [_()]={'"|','"','""|'},
-    [_()]={'"" |','"','"" "|"'},
-    [_()]={'"a|b"','"','"a"|"b"'},
-    [_()]={'""|""','"','"""|"""'},
-    --## simple#ambiguous_end_pair
-    [_()]={'"|"','"','""|'},
-    [_()]={'|"','"','"|"'},
-    --## simple#multichar_pair
-    [_()]={'|','&','&|',{{'&&','??'}}},
-    [_()]={'&|','&','&&|??',{{'&&','??'}}},
-    --## simple#other
-    [_()]={'|','f(','foo(|)',cmd='abbr <buffer>f foo'},
-    [_()]={'|','<esc>a(<esc>..a','(((|)))'},
-    [_()]={'|','<esc>3a(<esc>a','(((|)))'},
-    [_()]={'|foo','<esc>R(','(|)o'},
-  }
-  ---@diagnostic enable: duplicate-index
+---@param _ fun(test: ua.test.spec, ...)
+local function list_of_test_fn(_,_tests)
+  --## simple#start_pair
+  _{'|','(','(|)'}
+  _{'|)','(','(|)'}
+  _{'(|)','(','((|))'}
+  _{'(|','(','((|)'}
+  _{'|)(','(','(|)('}
+  _{'() |','(','() (|)'}
+  _{'(|))','(','((|))'}
+  --## simple#end_pair
+  _{'(|)',')','()|'}
+  _{'((|))',')','(()|)'}
+  _{'|)',')',')|)'}
+  _{'(|))',')','()|)'}
+  _{'()|)',')','())|)'}
+  _{'( |)',')','( )|'}
+  _{'(|)(()',')','()|(()'}
+  --## simple#ambiguous_start_pair
+  _{'|','"','"|"'}
+  _{'"|','"','""|'}
+  _{'"" |','"','"" "|"'}
+  _{'"a|b"','"','"a"|"b"'}
+  _{'""|""','"','"""|"""'}
+  _{'"|""','"','""|""'}
+  _{'"""|"','"','""""|'}
+  --## simple#ambiguous_end_pair
+  _{'"|"','"','""|'}
+  _{'|"','"','"|"'}
+  --## simple#multichar_start_pair
+  _{'|','&','&|',{{'&&','??'}}}
+  _{'&|','&','&&|??',{{'&&','??'}}}
+  _{'&|??','&','&&|??',{{'&&','??'}}}
+  _{'&&&|??','&','&&&&|????',{{'&&','??'}}}
+  _{'&&&|','&','&&&&|??',{{'&&','??'}}}
+  _{'&|??&&','&','&&|??&&',{{'&&','??'}}}
+  _{'&&?? &|','&','&&?? &&|??',{{'&&','??'}}}
+  _{'&&&|????','&','&&&&|????',{{'&&','??'}}}
+  _{'&|','*','&*|*?',{{'&*','*?'}}}
+  -- _{'&|*?','*','&*|*?',{{'&*','*?'}}}
+  -- _{'*| **?','*','**| **?',{{'**','*?'}}}
+  _{'*| ***?','*','**|*? ***?',{{'**','*?'}}}
+  --## simple#multichar_end_pair
+  _{'&&|??','?','&&??|',{{'&&','??'}}}
+  _{'&&&&|????','?','&&&&??|??',{{'&&','??'}}}
+  _{'?|??','?','??|??',{{'&&','??'}}}
+  _{'&&|????','?','&&??|??',{{'&&','??'}}}
+  _{'&&??|??','?','&&???|??',{{'&&','??'}}}
+  _{'&&|??&&&&??','?','&&??|&&&&??',{{'&&','??'}}}
+  -- _{'&|**','*','&*|**',{{'&*','**'}}}
+  --## simple#multichar_ambiguous_start_pair
+  _{'|','*','*|',{{'**','**'}}}
+  _{'*|','*','**|**',{{'**','**'}}}
+  _{'**|','*','***|',{{'**','**'}}}
+  _{'***|','*','****|',{{'**','**'}}}
+  -- _{'****|','*','*****|',{{'**','**'}}}
+  _{'*****|','*','******|**',{{'**','**'}}}
+  _{'**a*|b**','*','**a**|**b**',{{'**','**'}}}
+  _{'*****|****','*','******|******',{{'**','**'}}}
+  -- _{'**|****','*','****|****',{{'**','**'}}}
+  _{'******|**','*','********|',{{'**','**'}}}
+  _{'&|','?','&?|&?',{{'&?','&?'}}}
+  _{'&?&|','?','&?&?|',{{'&?','&?'}}}
+  --## simple#multichar_ambiguous_end_pair
+  _{'**|**','*','****|',{{'**','**'}}}
+  _{'|**','*','*|**',{{'**','**'}}}
+  -- _{'*|**','*','**|**',{{'**','**'}}}
+  _{'&?|&?','&','&?&?|',{{'&?','&?'}}}
+  _{'|&?','&','&|&?',{{'&?','&?'}}}
+
+  -- TODO: what about {'a','ab'}
+  -- TODO: what about {'b','ab'}
+  -- TODO: what about {'ba','a'}
+  -- TODO: what about {'ba','b'}
+  -- TODO: what about {'ab','ca'}
+  -- TODO: what about {'ab','ba'}
+
+  --## simple#other
+  _{'|','f(','foo(|)',cmd='abbr <buffer>f foo'}
+  _{'|','<esc>a(<esc>..a','(((|)))'}
+  _{'|','<esc>3a(<esc>a','(((|)))'}
+  _{'|foo','<esc>R(','(|)o'}
 end
 
----@class ua.test.pre
+---@class ua.test.spec.arr
 ---@field [1] string
 ---@field [2] string
 ---@field [3] string
+
+---@class ua.test.spec.tbl: ua.test.spec.arr
 ---@field [4] ua.config?
 ---@field I any?
 ---@field trim boolean?
 ---@field cmd string?
 ---@field ft string?
 
----@class ua.test: ua.test.pre
+---@alias ua.test.spec ua.test.spec.arr|ua.test.spec.tbl
+
+---@class ua.test: ua.test.spec.tbl
 ---@field def_info debuglib.DebugInfo
 ---@field id number
 
 local M={}
 
 do
-  local test_to_def_info={}
-  local n=0
-  tests=list_of_test_fn(function()
-    n=n+1
-    test_to_def_info[n]=debug.getinfo(2)
-    return n+1
-  end)
-  assert(table.remove(tests,1)==false,'Forgot to add `[_()]=`')
+  local tests={}
+  M.tests=tests
 
-  for idx,test in ipairs(tests) do
+  list_of_test_fn(function(test)
     assert(type(test[1])=='string')
     assert(type(test[2])=='string')
     assert(type(test[3])=='string')
@@ -75,17 +115,16 @@ do
     assert(test[3]:find('|'))
     assert(test[4]==nil or type(test[4])=='table')
 
-    test.def_info=assert(test_to_def_info[idx])
-    test.id=idx
+    ---@cast test ua.test
+    test.def_info=debug.getinfo(2)
+    table.insert(tests,test)
+    test.id=#tests
 
     if test.I then
+      M.tests={test}
       test.id=1
-      tests={test}
-      break
     end
-  end
-  ---@cast tests ua.test[]
-  M.tests=tests
+  end,tests)
 end
 
 ---@class ua.test.instance
