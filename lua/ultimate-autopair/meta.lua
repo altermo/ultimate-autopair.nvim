@@ -17,11 +17,14 @@
 ---@class ua.iconfig: TODO
 ---@class ua.actions: TODO
 
----@alias ua.filter.iter_pos_fn fun(con:ua.context,range:Range4):boolean
----@alias ua.filter.once_fn fun(con:ua.context):boolean
----@class ua.filter
----@field iter_pos ua.filter.iter_pos_fn?
----@field once ua.filter.once_fn?
+---@alias ua.ifilter.iter_pos_fn<T> fun(con:ua.context,range:Range4,conf:T):boolean
+---@alias ua.ifilter.once_fn<T> fun(con:ua.context,conf:T):boolean
+---@class ua.ifilter<T>
+---@field iter_pos ua.ifilter.iter_pos_fn<T>?
+---@field once ua.ifilter.once_fn<T>?
+---@alias ua.filter.iter_pos_fn ua.ifilter.iter_pos_fn<any?>
+---@alias ua.filter.once_fn ua.ifilter.once_fn<any?>
+---@alias ua.filter: ua.ifilter<any?>
 
 ---@alias ua.exclude_testfn fun(row:number,col:number):boolean
 ---@alias ua.exclude_testfns [ua.exclude_testfn,ua.exclude_testfn]
