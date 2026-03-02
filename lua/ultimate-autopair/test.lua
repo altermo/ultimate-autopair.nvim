@@ -1,5 +1,5 @@
 ---@param _ fun(test: ua.test.spec, ...)
-local function list_of_test_fn(_,_tests)
+local function list_of_test_fn(_,tests)
   --## simple#start_pair
   _{'|','(','(|)'}
   _{'|)','(','(|)'}
@@ -27,6 +27,25 @@ local function list_of_test_fn(_,_tests)
   --## simple#ambiguous_end_pair
   _{'"|"','"','""|'}
   _{'|"','"','"|"'}
+
+  for n=1,#tests do
+    local test=tests[n]
+    local ntest={
+      [4]={{'‹','›'},{'˚','˚'}}
+    }
+    for k,v in pairs(test) do
+      if k==1 or k==2 or k==3 then
+        ntest[k]=v:gsub('%(','‹'):gsub('%)','›'):gsub('"','˚')
+      elseif k=='I' or k=='id' or k=='def_info' then
+      else
+        error(('debug info: %s %s'):format(vim.inspect(k),vim.inspect(v)))
+      end
+    end
+    ---@cast ntest ua.test.spec
+    -- if #tests+1==24 then ntest.I=true end
+    _(ntest)
+  end
+
   --## simple#multichar_start_pair
   _{'|','&','&|',{{'&&','??'}}}
   _{'&|','&','&&|??',{{'&&','??'}}}
@@ -68,12 +87,14 @@ local function list_of_test_fn(_,_tests)
   _{'&?|&?','&','&?&?|',{{'&?','&?'}}}
   _{'|&?','&','&|&?',{{'&?','&?'}}}
 
-  -- TODO: what about {'a','ab'}
-  -- TODO: what about {'b','ab'}
-  -- TODO: what about {'ba','a'}
-  -- TODO: what about {'ba','b'}
-  -- TODO: what about {'ab','ca'}
-  -- TODO: what about {'ab','ba'}
+  -- TODO: what about {'*','*?'}
+  -- TODO: what about {'*','?*'}
+  -- TODO: what about {'&*','*'}
+  -- TODO: what about {'*&','*'}
+  -- TODO: what about {'**','*'}
+  -- TODO: what about {'*','**'}
+  -- TODO: what about {'*&','?*'}
+  -- TODO: what about {'*|','|*'}
 
   --## simple#other
   _{'|','f(','foo(|)',cmd='abbr <buffer>f foo'}
@@ -319,11 +340,17 @@ function M.run_tests(plugin_path,handler,dev)
   end]]
 
   for _,tests in pairs(organize_tests_by_config(M.tests)) do
-    instance:exec_lua([[
-    local index=...
-    local ua_conf=require'ultimate-autopair.test'.tests[index][4]
-    require'ultimate-autopair'.setup(ua_conf)
-    ]],tests[1].id)
+    local ok,err=pcall(function()
+      instance:exec_lua([[
+      local index=...
+      local ua_conf=require'ultimate-autopair.test'.tests[index][4]
+      require'ultimate-autopair'.setup(ua_conf)
+      ]],tests[1].id)
+    end)
+    if not ok then
+      instance.handler.error(err)
+      goto break_
+    end
 
     for _,test in ipairs(tests) do
       if run_test(instance,test)=='error' then

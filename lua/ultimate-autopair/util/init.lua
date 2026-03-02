@@ -15,7 +15,7 @@ if vim.keycode('›')~='›' then
                 local c=str:sub(v,(pos[k+1] or 0)-1)
                 if #c>1 and M.in_list({string.byte(c,2,-1)},128) then
                     out=out..vim.keycode(str:sub(sidx,v-1))..c
-                    sidx=pos[k+1]
+                    sidx=pos[k+1] --[[@as integer]]
                 end
             end
             return out..vim.keycode(sidx and str:sub(sidx) or '')
@@ -29,6 +29,17 @@ else
     function M.keycode(str)
         return str and vim.keycode(str)
     end
+end
+
+---@generic T
+---@param list (T|any)[]
+---@param value T
+---@return boolean
+function M.in_list(list,value)
+    for _,v in ipairs(list) do
+        if v==value then return true end
+    end
+    return false
 end
 
 return M
