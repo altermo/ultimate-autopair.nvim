@@ -1,10 +1,16 @@
 local M={}
 
+---@param s string
+---@return number
+local function slenmin1char(s)
+  local utf=require'ultimate-autopair.util.utf'
+  return #utf.sub(utf.new(s),0,-2)
+end
+
 ---If {gotostart_ret_pos} is false(/nil), returns the number of open END pairs or nil
 ---If {gotostart_ret_pos} is true, returns the start position of the LAST open START pair or nil
 ---Normally, it searches the range {-1,-1}(end of source) to {row,col}
 ---{gotostart_ret_pos} makes it search the range {row,col} to {0,0}
----col is cursor-indexed, as in start of line is 1
 ---@param range Range4
 ---@param start_pair_match string
 ---@param end_pair_match string
@@ -86,7 +92,6 @@ end
 ---If {gotoend_ret_pos} is true, returns the start position of the FIRST open END pair or nil
 ---Normally, it searches the range {0,0} to {row,col}
 ---{gotoend_ret_pos} makes it search the range {row,col} to {-1,-1}(end of source)
----col is cursor-indexed, as in start of line is 1
 ---@param range Range4
 ---@param start_pair_match string
 ---@param end_pair_match string
@@ -114,6 +119,8 @@ function M.count_start_pair(
   local end_row=(gotoend_ret_pos and -1) or row
   local exclude_testfn_start_pair=exclude_testfns[1]
   local exclude_testfn_end_pair=exclude_testfns[2]
+  local start_offset_len=slenmin1char(start_pair_match)
+  local end_offset_len=slenmin1char(end_pair_match)
   for lrow,line in con.iter_lines(start_row,end_row) do
     local find_start=1
     local find_end=math.huge
@@ -127,7 +134,7 @@ function M.count_start_pair(
     while true do
       if next_start_pair and next_start_pair<(next_end_pair or math.huge) then
         local rcol=next_start_pair
-        if rcol>find_end then
+        if rcol+start_offset_len>find_end then
           goto continue
         end
         if exclude_testfn_start_pair(lrow,rcol) then
@@ -138,7 +145,7 @@ function M.count_start_pair(
         end
       elseif next_end_pair then
         local rcol=next_end_pair
-        if rcol>find_end then
+        if rcol+end_offset_len>find_end then
           goto continue
         end
         if exclude_testfn_end_pair(lrow,rcol) then
@@ -189,6 +196,7 @@ function M.open_ambiguous_pairs(
   local count=initial_count or 0
   local exclude_testfn_start_pair=exclude_testfns[1]
   local exclude_testfn_end_pair=exclude_testfns[2]
+  local offset_len=slenmin1char(pair_match)
   for lrow,line in con.iter_lines(start_row,end_row) do
     local find_start=1
     local find_end=math.huge
@@ -203,7 +211,7 @@ function M.open_ambiguous_pairs(
         break
       end
       local rcol=next_pair
-      if rcol>find_end then
+      if rcol+offset_len>find_end then
         goto continue
       end
       if ((count%2==0 and exclude_testfn_start_pair(lrow,rcol)) or
