@@ -16,7 +16,7 @@ function M.setup(conf)
     conf=conf or {}
     vim.list_extend(conf,{
       {'(',')'},
-      {"'","'"},
+      {"'","'",start_pair_filter={require'ultimate-autopair.filter.alpha',{char='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'}}},
       {'"','"'}})
 
     for _,p in ipairs(conf) do

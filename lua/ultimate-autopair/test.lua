@@ -107,6 +107,9 @@ local function list_of_test_fn(_,tests)
   _{'|','<esc>a(<esc>..a','(((|)))'}
   _{'|','<esc>3a(<esc>a','(((|)))'}
   _{'|foo','<esc>R(','(|)o'}
+
+  --## filter#alpha
+  _{'don|t',"'","don'|t"}
 end
 
 ---@class ua.test.spec.arr

@@ -1,7 +1,26 @@
 local open_pair=require'ultimate-autopair.util.open_pair'
 local context=require'ultimate-autopair.util.context'
 local utf=require'ultimate-autopair.util.utf'
+local filter=require'ultimate-autopair.util.filter'
 local M={}
+
+---@param con ua.context
+---@param conf TODO
+---@param start_pair string
+---@param end_pair string
+---@return ua.exclude_testfns
+local function conf_get_testfns(con,conf,start_pair,end_pair)
+  return {
+    function(row,col)
+      local range={row-1,col-1,row-1,col-1+#start_pair}
+      return filter.run_iter_pos(conf.start_pair_filter,con,range)
+    end,
+    function(row,col)
+      local range={row-1,col-2+#end_pair,row-1,col-2+#end_pair+#end_pair}
+      return filter.run_iter_pos(conf.end_pair_filter,con,range)
+    end
+  }
+end
 
 ---@param con ua.context
 ---@param conf TODO
@@ -15,10 +34,11 @@ local function start_pair_check(con,conf,start_pair,end_pair)
   con.cursor_range[2]-(#start_pair-1),
   con.cursor_range[1],con.cursor_range[2]}
 
-  local testfn=function()
-    return true
+  if not filter.run_once(conf.start_pair_filter,con) then
+    return
   end
-  local testfns={testfn,testfn}
+
+  local testfns=conf_get_testfns(con,conf,start_pair,end_pair)
 
   if start_pair==end_pair then
     local balanced=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns,'both')
@@ -44,6 +64,10 @@ function M.run_start(con,conf)
     return
   end
 
+  if not filter.run_once(conf.end_pair_filter,con) then
+    return
+  end
+
   if not start_pair_check(con,conf,utf.raw(start_pair),utf.raw(end_pair)) then
     return
   end
@@ -62,10 +86,7 @@ local function end_pair_check(con,conf,start_pair,end_pair)
   local pair_range={con.cursor_range[3],con.cursor_range[4],con.cursor_range[3],
   con.cursor_range[4]+#end_pair}
 
-  local testfns;testfns=setmetatable({},{
-    __index=function() return testfns end,
-    __call=function() return true end,
-  }) --[[@as TODO]]
+  local testfns=conf_get_testfns(con,conf,start_pair,end_pair)
 
   if start_pair==end_pair then
     local open_pair_before=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns)

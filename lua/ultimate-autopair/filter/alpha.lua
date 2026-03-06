@@ -1,4 +1,4 @@
-local util=require'util'
+local context=require'ultimate-autopair.util.context'
 
 ---@class ua.filter.alpha.conf
 ---@field before boolean|string?
@@ -12,9 +12,9 @@ local util=require'util'
 local function is_keywordy(con,range,after,chars)
   local char
   if after then
-    char=util.chars_after_range(con,range,1)
+    char=context.chars_after_range(con,range,1)
   else
-    char=util.chars_before_range(con,range,1)
+    char=context.chars_before_range(con,range,1)
   end
   if char=='\0' then
     return false
@@ -35,7 +35,6 @@ local function is_keywordy(con,range,after,chars)
   --   return vim.fn.charclass(char)==2
   -- end)
 end
-
 
 ---@type ua.ifilter<ua.filter.alpha.conf>
 return {

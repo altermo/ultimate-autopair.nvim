@@ -22,9 +22,9 @@
 ---@class ua.ifilter<T>
 ---@field iter_pos ua.ifilter.iter_pos_fn<T>?
 ---@field once ua.ifilter.once_fn<T>?
----@alias ua.filter.iter_pos_fn ua.ifilter.iter_pos_fn<any?>
----@alias ua.filter.once_fn ua.ifilter.once_fn<any?>
----@alias ua.filter: ua.ifilter<any?>
+---@class ua.filter
+---@field [1] ua.ifilter<any?>
+---@field [2] any
 
 ---@alias ua.exclude_testfn fun(row:number,col:number):boolean
 ---@alias ua.exclude_testfns [ua.exclude_testfn,ua.exclude_testfn]

@@ -1,4 +1,4 @@
-local filter=require'util.filter'
+local filter=require'ultimate-autopair.util.filter'
 
 ---@class ua.filter.multi.conf
 ---@field once ua.filter[]
