@@ -20,6 +20,19 @@ function M.setup(conf)
       {'"','"'}})
 
     for _,p in ipairs(conf) do
+      p.start_pair_filter={require'ultimate-autopair.filter'.multi_or,{
+        p.start_pair_filter
+      }}
+      p.end_pair_filter={require'ultimate-autopair.filter'.multi_or,{
+        p.end_pair_filter
+      }}
+      for _,f in ipairs{
+        {require'ultimate-autopair.filter.escape'}
+      } do
+        table.insert(p.start_pair_filter[2],f)
+        table.insert(p.end_pair_filter[2],f)
+      end
+
       local desc=('autopairs %%s pair %s,%s'):format(p[1],p[2])
       p[1]=utf.new(p[1])
       p[2]=utf.new(p[2])

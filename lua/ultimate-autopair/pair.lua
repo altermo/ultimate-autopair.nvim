@@ -13,11 +13,11 @@ local function conf_get_testfns(con,conf,start_pair,end_pair)
   return {
     function(row,col)
       local range={row-1,col-1,row-1,col-1+#start_pair}
-      return filter.run_pos(conf.start_pair_filter,con,range)
+      return not filter.run_pos(conf.start_pair_filter,con,range)
     end,
     function(row,col)
       local range={row-1,col-2+#end_pair,row-1,col-2+#end_pair+#end_pair}
-      return filter.run_pos(conf.end_pair_filter,con,range)
+      return not filter.run_pos(conf.end_pair_filter,con,range)
     end
   }
 end
@@ -30,13 +30,13 @@ end
 local function start_pair_check(con,conf,start_pair,end_pair)
   local _=conf
 
+  if filter.run_pos(conf.start_pair_filter,con,con.cursor_range) then
+    return
+  end
+
   local pair_range={con.cursor_range[1],
   con.cursor_range[2]-(#start_pair-1),
   con.cursor_range[1],con.cursor_range[2]}
-
-  if not filter.run_pos(conf.start_pair_filter,con,con.cursor_range) then
-    return
-  end
 
   local testfns=conf_get_testfns(con,conf,start_pair,end_pair)
 
@@ -64,10 +64,6 @@ function M.run_start(con,conf)
     return
   end
 
-  if not filter.run_pos(conf.end_pair_filter,con,con.cursor_range) then
-    return
-  end
-
   if not start_pair_check(con,conf,utf.raw(start_pair),utf.raw(end_pair)) then
     return
   end
@@ -82,6 +78,10 @@ end
 ---@return true?
 local function end_pair_check(con,conf,start_pair,end_pair)
   local _=conf
+
+  if filter.run_pos(conf.end_pair_filter,con,con.cursor_range) then
+    return
+  end
 
   local pair_range={con.cursor_range[3],con.cursor_range[4],con.cursor_range[3],
   con.cursor_range[4]+#end_pair}
