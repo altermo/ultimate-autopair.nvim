@@ -13,11 +13,11 @@ local function conf_get_testfns(con,conf,start_pair,end_pair)
   return {
     function(row,col)
       local range={row-1,col-1,row-1,col-1+#start_pair}
-      return filter.run_iter_pos(conf.start_pair_filter,con,range)
+      return filter.run_pos(conf.start_pair_filter,con,range)
     end,
     function(row,col)
       local range={row-1,col-2+#end_pair,row-1,col-2+#end_pair+#end_pair}
-      return filter.run_iter_pos(conf.end_pair_filter,con,range)
+      return filter.run_pos(conf.end_pair_filter,con,range)
     end
   }
 end
@@ -34,7 +34,7 @@ local function start_pair_check(con,conf,start_pair,end_pair)
   con.cursor_range[2]-(#start_pair-1),
   con.cursor_range[1],con.cursor_range[2]}
 
-  if not filter.run_once(conf.start_pair_filter,con) then
+  if not filter.run_pos(conf.start_pair_filter,con,con.cursor_range) then
     return
   end
 
@@ -64,7 +64,7 @@ function M.run_start(con,conf)
     return
   end
 
-  if not filter.run_once(conf.end_pair_filter,con) then
+  if not filter.run_pos(conf.end_pair_filter,con,con.cursor_range) then
     return
   end
 

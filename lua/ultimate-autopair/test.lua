@@ -110,6 +110,11 @@ local function list_of_test_fn(_,tests)
 
   --## filter#alpha
   _{'don|t',"'","don'|t"}
+  _{'$|',"'","$'|'"}
+  _{'ǎ|',"'","ǎ'|"}
+  _{'ä|',"'","ä'|"}
+  -- _{"a' |'","'","a' '|"}
+  -- _{"a' |'","'","a' '|'",{...}}
 end
 
 ---@class ua.test.spec.arr

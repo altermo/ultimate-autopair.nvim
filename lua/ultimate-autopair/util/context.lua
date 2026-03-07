@@ -38,5 +38,4 @@ function M.line_before_range(con,range)
     return select(2,con.iter_lines(range[1]+1,range[1]+1)()) --[[@as string]]:sub(1,range[2])
 end
 
-
 return M
