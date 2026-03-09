@@ -96,6 +96,13 @@ local function action_to_keys(action)
       table.insert(out,key_left:rep(act[2]))
     elseif act[1]=='l' then
       table.insert(out,key_right:rep(act[2]))
+    elseif act[1]=='delete' then
+      if act[2] then
+          table.insert(out,keys.key_bs:rep(act[2]))
+      end
+      if act[3] then
+          table.insert(out,keys.key_del:rep(act[3]))
+      end
     else
       error'TODO'
     end

@@ -1,6 +1,8 @@
 local keymap=require'ultimate-autopair.keymap'
 local pair=require'ultimate-autopair.pair'
 local utf=require'ultimate-autopair.util.utf'
+local util=require'ultimate-autopair.util'
+local backspace=require'ultimate-autopair.map.backspace'
 
 local M={}
 
@@ -19,6 +21,7 @@ function M.setup(conf)
       {"'","'",start_pair_filter={require'ultimate-autopair.filter.alpha',{before=true}}},
       {'"','"'}})
 
+    local pairs_={}
     for _,p in ipairs(conf) do
       p.start_pair_filter={require'ultimate-autopair.filter'.multi_or,{
         p.start_pair_filter
@@ -46,7 +49,13 @@ function M.setup(conf)
         desc=desc:format'start',
         arg=p,
       })
+      table.insert(pairs_,p)
     end
+    table.insert(tbl['<bs>'],{
+      action=backspace.run,
+      desc='autopairs backspace',
+      arg={pairs=pairs_},
+    })
 
     keymap.set_mappings({
       i=tbl

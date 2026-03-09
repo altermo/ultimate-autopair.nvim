@@ -121,6 +121,12 @@ local function list_of_test_fn(_,tests)
   _{'|\\)','(','(|)\\)'}
   _{'\\(|)',')','\\()|)'}
   _{'\\( |)',')','\\( )|)'}
+
+  --## map#backspace
+  _{'(|)','<bs>','|'}
+  -- _{'((|)','<bs>','(|)'}
+  --## map#backspace#multichar
+  _{'&&|??','<bs>','&|',{{'&&','??'}}}
 end
 
 ---@class ua.test.spec.arr
