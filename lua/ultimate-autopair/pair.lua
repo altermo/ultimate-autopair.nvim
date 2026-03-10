@@ -4,22 +4,10 @@ local utf=require'ultimate-autopair.util.utf'
 local filter=require'ultimate-autopair.util.filter'
 local M={}
 
----@param con ua.context
 ---@param conf TODO
----@param start_pair string
----@param end_pair string
----@return ua.exclude_testfns
-local function conf_get_testfns(con,conf,start_pair,end_pair)
-  return {
-    function(row,col)
-      local range={row-1,col-1,row-1,col-1+#start_pair}
-      return not filter.run_pos(conf.start_pair_filter,con,range)
-    end,
-    function(row,col)
-      local range={row-1,col-2+#end_pair,row-1,col-2+#end_pair+#end_pair}
-      return not filter.run_pos(conf.end_pair_filter,con,range)
-    end
-  }
+---@return [ua.filter,ua.filter]
+local function conf_get_filters(conf)
+  return {conf.start_pair_filter,conf.end_pair_filter}
 end
 
 ---@param con ua.context
@@ -38,16 +26,16 @@ local function start_pair_check(con,conf,start_pair,end_pair)
   con.cursor_range[2]-(#start_pair-1),
   con.cursor_range[1],con.cursor_range[2]}
 
-  local testfns=conf_get_testfns(con,conf,start_pair,end_pair)
+  local filters=conf_get_filters(conf)
 
   if start_pair==end_pair then
-    local balanced=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns,'both')
-    if balanced then
+    local not_balanced=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,filters,'both')
+    if not_balanced then
       return
     end
   else
-    local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,testfns)
-    local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,testfns)
+    local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,filters)
+    local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,filters)
     if count1<count2 then return end
   end
 
@@ -86,16 +74,16 @@ local function end_pair_check(con,conf,start_pair,end_pair)
   local pair_range={con.cursor_range[3],con.cursor_range[4],con.cursor_range[3],
   con.cursor_range[4]+#end_pair}
 
-  local testfns=conf_get_testfns(con,conf,start_pair,end_pair)
+  local filters=conf_get_filters(conf)
 
   if start_pair==end_pair then
-    local open_pair_before=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns)
+    local open_pair_before=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,filters)
     if not open_pair_before then return end
-    local open_pair_after=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,testfns,true,2)
+    local open_pair_after=open_pair.open_ambiguous_pairs(pair_range,start_pair,con,filters,true,2)
     if open_pair_after then return end
   else
-    local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,testfns)
-    local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,testfns,nil,1)
+    local count1=open_pair.count_start_pair(pair_range,start_pair,end_pair,con,filters)
+    local count2=open_pair.count_end_pair(pair_range,start_pair,end_pair,con,filters,nil,1)
     if count1==0 or count1>count2 then return end
   end
 

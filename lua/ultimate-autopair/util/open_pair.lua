@@ -7,6 +7,29 @@ local function slenmin1char(s)
   return #utf.sub(utf.new(s),0,-2)
 end
 
+local to_excludefn
+do
+  local filter=require'ultimate-autopair.util.filter'
+
+  ---@param start_pair string
+  ---@param end_pair string
+  ---@param filters [ua.filter,ua.filter]
+  ---@param con ua.context
+  ---@return ua.excludefn
+  ---@return ua.excludefn
+  function to_excludefn(filters,start_pair,end_pair,con)
+    return function(row,col)
+        local range={row-1,col-1,row-1,col-1+#start_pair}
+        ---@cast range Range4
+        return not filter.run_pos(filters[1],con,range)
+      end,function(row,col)
+        local range={row-1,col-2+#end_pair,row-1,col-2+#end_pair+#end_pair}
+        ---@cast range Range4
+        return not filter.run_pos(filters[2],con,range)
+      end
+  end
+end
+
 ---If {gotostart_ret_pos} is false(/nil), returns the number of open END pairs or nil
 ---If {gotostart_ret_pos} is true, returns the start position of the LAST open START pair or nil
 ---Normally, it searches the range {-1,-1}(end of source) to {row,col}
@@ -15,7 +38,7 @@ end
 ---@param start_pair_match string
 ---@param end_pair_match string
 ---@param con ua.context
----@param exclude_testfns ua.exclude_testfns
+---@param filters [ua.filter,ua.filter]
 ---@param gotostart_ret_pos boolean?
 ---@param initial_count number?
 ---@return number?
@@ -25,7 +48,7 @@ function M.count_end_pair(
   start_pair_match,
   end_pair_match,
   con,
-  exclude_testfns,
+  filters,
   gotostart_ret_pos,
   initial_count)
   assert(start_pair_match~=end_pair_match)
@@ -33,13 +56,12 @@ function M.count_end_pair(
   assert(#end_pair_match>0)
   local row=(gotostart_ret_pos and range[1]+1) or range[3]+1
   local col=(gotostart_ret_pos and range[2]+1) or range[4]+1
+  local excludefn_start_pair,excludefn_end_pair=to_excludefn(filters,start_pair_match,end_pair_match,con)
   start_pair_match=start_pair_match:reverse()
   end_pair_match=end_pair_match:reverse()
   local count=0
   local start_row=(gotostart_ret_pos and row) or -1
   local end_row=(gotostart_ret_pos and 1) or row
-  local exclude_testfn_start_pair=exclude_testfns[1]
-  local exclude_testfn_end_pair=exclude_testfns[2]
   for lrow,line in con.iter_lines(start_row,end_row) do
     local rline=line:reverse()
     local rev_find_start=1
@@ -57,7 +79,7 @@ function M.count_end_pair(
         if rcol<find_end then
           goto continue
         end
-        if exclude_testfn_start_pair(lrow,rcol) then
+        if excludefn_start_pair(lrow,rcol) then
           count=count-1
           if count<0 then
             if gotostart_ret_pos then
@@ -74,7 +96,7 @@ function M.count_end_pair(
         if rcol<find_end then
           goto continue
         end
-        if exclude_testfn_end_pair(lrow,rcol) then
+        if excludefn_end_pair(lrow,rcol) then
           count=count+1
           next_end_pair=rline:find(end_pair_match,next_end_pair+#end_pair_match,true)
         else
@@ -95,7 +117,7 @@ end
 ---@param range Range4
 ---@param start_pair_match string
 ---@param end_pair_match string
----@param exclude_testfns ua.exclude_testfns
+---@param filters [ua.filter,ua.filter]
 ---@param con ua.context
 ---@param gotoend_ret_pos boolean?
 ---@param initial_count number?
@@ -106,7 +128,7 @@ function M.count_start_pair(
   start_pair_match,
   end_pair_match,
   con,
-  exclude_testfns,
+  filters,
   gotoend_ret_pos,
   initial_count)
   assert(start_pair_match~=end_pair_match)
@@ -117,8 +139,7 @@ function M.count_start_pair(
   local count=initial_count or 0
   local start_row=(gotoend_ret_pos and row) or 1
   local end_row=(gotoend_ret_pos and -1) or row
-  local exclude_testfn_start_pair=exclude_testfns[1]
-  local exclude_testfn_end_pair=exclude_testfns[2]
+  local excludefn_start_pair,excludefn_end_pair=to_excludefn(filters,start_pair_match,end_pair_match,con)
   local start_offset_len=slenmin1char(start_pair_match)
   local end_offset_len=slenmin1char(end_pair_match)
   for lrow,line in con.iter_lines(start_row,end_row) do
@@ -137,7 +158,7 @@ function M.count_start_pair(
         if rcol+start_offset_len>find_end then
           goto continue
         end
-        if exclude_testfn_start_pair(lrow,rcol) then
+        if excludefn_start_pair(lrow,rcol) then
           count=count+1
           next_start_pair=line:find(start_pair_match,next_start_pair+#start_pair_match,true)
         else
@@ -148,7 +169,7 @@ function M.count_start_pair(
         if rcol+end_offset_len>find_end then
           goto continue
         end
-        if exclude_testfn_end_pair(lrow,rcol) then
+        if excludefn_end_pair(lrow,rcol) then
           count=count-1
           if count<0 then
             if gotoend_ret_pos then
@@ -159,7 +180,6 @@ function M.count_start_pair(
           next_end_pair=line:find(end_pair_match,next_end_pair+#end_pair_match,true)
         else
           next_end_pair=line:find(end_pair_match,next_end_pair+1,true)
-
         end
       else
         break
@@ -172,9 +192,7 @@ end
 ---@param range Range4
 ---@param pair_match string
 ---@param con ua.context
----@param exclude_testfns ua.exclude_testfns
---@param exclude_testfn_start_pair fun(row,col):boolean
---@param exclude_testfn_end_pair fun(row,col):boolean
+---@param filters [ua.filter,ua.filter]
 ---@param gotoend 'both'|true?
 ---@param initial_count number?
 ---@return number?
@@ -183,7 +201,7 @@ function M.open_ambiguous_pairs(
   range,
   pair_match,
   con,
-  exclude_testfns,
+  filters,
   gotoend,
   initial_count)
   assert(#pair_match>0)
@@ -194,8 +212,7 @@ function M.open_ambiguous_pairs(
   local start_row=(gotoend==true and row) or 1
   local end_row=(not gotoend and -1) or row
   local count=initial_count or 0
-  local exclude_testfn_start_pair=exclude_testfns[1]
-  local exclude_testfn_end_pair=exclude_testfns[2]
+  local excludefn_start_pair,excludefn_end_pair=to_excludefn(filters,pair_match,pair_match,con)
   local offset_len=slenmin1char(pair_match)
   for lrow,line in con.iter_lines(start_row,end_row) do
     local find_start=1
@@ -214,8 +231,8 @@ function M.open_ambiguous_pairs(
       if rcol+offset_len>find_end then
         goto continue
       end
-      if ((count%2==0 and exclude_testfn_start_pair(lrow,rcol)) or
-        (count%2==1 and exclude_testfn_end_pair(lrow,rcol))) then
+      if ((count%2==0 and excludefn_start_pair(lrow,rcol)) or
+        (count%2==1 and excludefn_end_pair(lrow,rcol))) then
         count=count+1
         next_pair=line:find(pair_match,next_pair+#pair_match,true)
         if not gotoend or not pos_col then

@@ -1,7 +1,6 @@
 local keymap=require'ultimate-autopair.keymap'
 local pair=require'ultimate-autopair.pair'
 local utf=require'ultimate-autopair.util.utf'
-local util=require'ultimate-autopair.util'
 local backspace=require'ultimate-autopair.map.backspace'
 
 local M={}
