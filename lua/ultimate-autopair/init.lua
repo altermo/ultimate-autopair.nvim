@@ -17,19 +17,19 @@ function M.setup(conf)
     conf=conf or {}
     vim.list_extend(conf,{
       {'(',')'},
-      {"'","'",start_pair_filter={require'ultimate-autopair.filter.alpha',{before=true}}},
+      {"'","'",start_pair_filter={'alpha',{before=true}}},
       {'"','"'}})
 
     local pairs_={}
     for _,p in ipairs(conf) do
-      p.start_pair_filter={require'ultimate-autopair.filter'.multi_or,{
+      p.start_pair_filter={'or',{
         p.start_pair_filter
       }}
-      p.end_pair_filter={require'ultimate-autopair.filter'.multi_or,{
+      p.end_pair_filter={'or',{
         p.end_pair_filter
       }}
       for _,f in ipairs{
-        {require'ultimate-autopair.filter.escape'}
+        {'escape'}
       } do
         table.insert(p.start_pair_filter[2],f)
         table.insert(p.end_pair_filter[2],f)

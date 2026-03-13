@@ -1,7 +1,7 @@
 local open_pair=require'ultimate-autopair.util.open_pair'
 local context=require'ultimate-autopair.util.context'
 local utf=require'ultimate-autopair.util.utf'
-local filter=require'ultimate-autopair.util.filter'
+local filter=require'ultimate-autopair.filter'
 
 local M={}
 

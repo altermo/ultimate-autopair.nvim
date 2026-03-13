@@ -1,30 +1,26 @@
-local filter=require'ultimate-autopair.util.filter'
+local M={}
 
----@class ua.filter.multi.conf
----@field once ua.filter[]
----@field on_iter ua.filter[]
+local filter_map
 
----@type ua.filter_fn<ua.filter.multi.conf>
-local multi_or=function(con,range,conf)
-  for _,f in ipairs(conf) do
-    if filter.run_pos(f,con,range) then
-      return true
-    end
+---@param filter ua.filter?
+---@param con ua.context
+---@param range Range4
+---@return boolean
+function M.run_pos(filter,con,range)
+  if not filter_map then
+    filter_map={
+      ['or']=require'ultimate-autopair.filter.multi'['or'],
+      ['and']=require'ultimate-autopair.filter.multi'['and'],
+      alpha=require'ultimate-autopair.filter.alpha',
+      escape=require'ultimate-autopair.filter.escape',
+    }
   end
-  return false
+
+  if not filter then
+    return false
+  end
+
+  return (filter_map[filter[1]] or filter[1])(con,range,filter[2])
 end
 
----@type ua.filter_fn<ua.filter.multi.conf>
-local multi_and=function(con,range,conf)
-  for _,f in ipairs(conf) do
-    if not filter.run_pos(f,con,range) then
-      return false
-    end
-  end
-  return true
-end
-
-return {
-  multi_and=multi_and,
-  multi_or=multi_or,
-}
+return M

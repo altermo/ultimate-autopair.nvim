@@ -9,7 +9,7 @@ end
 
 local to_excludefn
 do
-  local filter=require'ultimate-autopair.util.filter'
+  local filter=require'ultimate-autopair.filter'
 
   ---@param start_pair string
   ---@param end_pair string
