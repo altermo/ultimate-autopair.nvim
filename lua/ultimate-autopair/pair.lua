@@ -2,6 +2,7 @@ local open_pair=require'ultimate-autopair.util.open_pair'
 local context=require'ultimate-autopair.util.context'
 local utf=require'ultimate-autopair.util.utf'
 local filter=require'ultimate-autopair.filter'
+local action=require'ultimate-autopair.util.action'
 local M={}
 
 ---@param conf TODO
@@ -44,7 +45,7 @@ end
 
 ---@param con ua.context
 ---@param conf TODO
----@return ua.actions?
+---@return string?
 function M.run_start(con,conf)
   local start_pair,end_pair=unpack(conf)
 
@@ -56,7 +57,7 @@ function M.run_start(con,conf)
     return
   end
 
-  return {utf.sub(start_pair,-1)..utf.raw(end_pair),{'h',utf.len(end_pair)}}
+  return action{utf.sub(start_pair,-1)..utf.raw(end_pair),{'h',utf.len(end_pair)}}
 end
 
 ---@param con ua.context
@@ -92,7 +93,7 @@ end
 
 ---@param con ua.context
 ---@param conf TODO
----@return ua.actions?
+---@return string?
 function M.run_end(con,conf)
   local start_pair,end_pair=unpack(conf)
 
@@ -104,9 +105,7 @@ function M.run_end(con,conf)
     return
   end
 
-  return {
-    {'l',utf.len(end_pair)},
-  }
+  return action{{'l',utf.len(end_pair)}}
 end
 
 return M

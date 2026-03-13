@@ -39,19 +39,19 @@ function M.setup(conf)
       p[1]=utf.new(p[1])
       p[2]=utf.new(p[2])
       table.insert(tbl[utf.sub(p[2],1,1)],{
-        action=pair.run_end,
+        run=pair.run_end,
         desc=desc:format'end',
         arg=p,
       })
       table.insert(tbl[utf.sub(p[1],-1)],{
-        action=pair.run_start,
+        run=pair.run_start,
         desc=desc:format'start',
         arg=p,
       })
       table.insert(pairs_,p)
     end
     table.insert(tbl['<bs>'],{
-      action=backspace.run,
+      run=backspace.run,
       desc='autopairs backspace',
       arg={pairs=pairs_},
     })

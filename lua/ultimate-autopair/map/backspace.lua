@@ -2,6 +2,7 @@ local open_pair=require'ultimate-autopair.util.open_pair'
 local context=require'ultimate-autopair.util.context'
 local utf=require'ultimate-autopair.util.utf'
 local filter=require'ultimate-autopair.filter'
+local action=require'ultimate-autopair.util.action'
 
 local M={}
 
@@ -43,7 +44,7 @@ local function start_pair_backspace(con,pair)
     end
   end
 
-  return {{'delete',1,utf.len(pair[2])}}
+  return action{{'delete',1,utf.len(pair[2])}}
 end
 
 ---@param con ua.context
