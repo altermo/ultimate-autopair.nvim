@@ -59,12 +59,48 @@ local function check_not_allowed_string_and_typos(handler,lua_path,plugin_path)
 end
 
 ---@param handler ua.health.handler
+local function check_unique_lang_to_ft(handler)
+  if not pcall(require,'nvim-treesitter') then
+    handler.warn("nvim-treesitter not found, can't run nvim-treesitter related checks")
+    return
+  end
+
+  local tree_langs=vim.tbl_map(function (x)
+    return vim.fn.fnamemodify(x,':t:r')
+  end,vim.api.nvim_get_runtime_file('parser/*',true))
+  local done=vim.deepcopy(require'ultimate-autopair.util.treesitter'.tslang2lang)
+  for _,tree_lang in ipairs(tree_langs) do
+    if done[tree_lang]=='' then goto continue end
+    vim.treesitter.language.add(tree_lang)
+    local filetypes=vim.treesitter.language.get_filetypes(tree_lang)
+    local ft=done[tree_lang]
+
+    if done[tree_lang] then
+      if not require'ultimate-autopair.util'.in_list(filetypes,ft) and not done[' '..tree_lang] then
+        handler.warn(('filetype `%s` in `tslang2lang["%s"]` may be incorrect'):format(ft,tree_lang))
+      end
+    elseif #filetypes>1 then
+      handler.warn('Found multiple languages for '..tree_lang..': '..vim.inspect(filetypes))
+    -- elseif not require'ultimate-autopair.util'.in_list(vim.fn.getcompletion('','filetype'),filetypes[1]) then
+    --   handler.warn(filetypes[1])
+    end
+    done[tree_lang]=''
+    ::continue::
+  end
+  for k,v in pairs(done) do
+    if v~='' and k:sub(1,1)~=' ' then
+      handler.warn('filetype '..k..' in utils.tslang2lang['..v..'] can be removed')
+    end
+  end
+end
+
+---@param handler ua.health.handler
 ---@param plugin_path string
 ---@param dev boolean
 local function reload_and_run_tests(handler,plugin_path,dev)
-    package.loaded['ultimate-autopair.test']=nil
-    local test=require'ultimate-autopair.test'
-    test.run_tests(plugin_path,handler,dev)
+  package.loaded['ultimate-autopair.test']=nil
+  local test=require'ultimate-autopair.test'
+  test.run_tests(plugin_path,handler,dev)
 end
 
 ---@param handler ua.health.handler
@@ -82,7 +118,7 @@ end
 ---@param handler ua.health.handler?
 function M.start(dev,handler)
   handler=handler or M.default_handler
-  
+
   if dev=='test' then
     local lua_path=get_plugin_lua_path(handler)
     if lua_path then
@@ -121,8 +157,8 @@ function M.start(dev,handler)
   local plugin_path=vim.fs.dirname(vim.fs.dirname(lua_path))
 
   check_not_allowed_string_and_typos(handler,lua_path,plugin_path)
+  check_unique_lang_to_ft(handler)
   -- -- TODO:
-  -- check_unique_lang_to_ft(handler)
   -- validate_default_configs(handler)
   reload_and_run_tests(handler,plugin_path,true)
 end
