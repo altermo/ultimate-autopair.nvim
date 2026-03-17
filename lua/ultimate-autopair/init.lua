@@ -29,7 +29,8 @@ function M.setup(conf)
         p.end_pair_filter
       }}
       for _,f in ipairs{
-        {'escape'}
+        {'escape'},
+        {'cmdtype',{skip={'/','?','@'}}},
       } do
         table.insert(p.start_pair_filter[2],f)
         table.insert(p.end_pair_filter[2],f)
@@ -57,7 +58,8 @@ function M.setup(conf)
     })
 
     keymap.set_mappings({
-      i=tbl
+      i=tbl,
+      c=tbl
     },{})
   end
 end

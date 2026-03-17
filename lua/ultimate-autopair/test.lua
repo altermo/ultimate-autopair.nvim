@@ -102,6 +102,8 @@ local function list_of_test_fn(_,tests)
   -- TODO: what about {'*&','?*'}
   -- TODO: what about {'*|','|*'}
 
+  --## simple#mode
+  _{'|','<C-r>="(\r','()|'}
   --## simple#other
   _{'|','f(','foo(|)',cmd='abbr <buffer>f foo'}
   _{'|','<esc>a(<esc>..a','(((|)))'}
@@ -121,6 +123,8 @@ local function list_of_test_fn(_,tests)
   _{'|\\)','(','(|)\\)'}
   _{'\\(|)',')','\\()|)'}
   _{'\\( |)',')','\\( )|)'}
+  --## filter#cmdtype
+  _{'|','<C-r>=input("")\r(\r','(|'}
 
   --## map#backspace
   _{'(|)','<bs>','|'}

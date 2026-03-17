@@ -4,10 +4,25 @@ local M={}
 ---@return ua.context
 function M.create_context(iconf)
   local _=iconf
+  if vim.fn.mode()=='c' then
+      local line=vim.fn.getcmdline()
+      local col=vim.fn.getcmdpos()
+      ---@type ua.context
+      return {
+          cursor_range={0,col-1,0,col-1},
+          iter_lines=function (s,e)
+              assert((s==1 or s==-1) and (e==1 or e==-1))
+              return coroutine.wrap(function ()
+                  coroutine.yield(1,line)
+              end)
+          end
+      }
+  end
   local bufnr=vim.api.nvim_get_current_buf()
   local row=vim.fn.line('.')
   local col=vim.fn.col('.')
   return {
+    bufnr=bufnr,
     cursor_range={row-1,col-1,row-1,col-1},
     iter_lines=function (s,e)
       return coroutine.wrap(function ()

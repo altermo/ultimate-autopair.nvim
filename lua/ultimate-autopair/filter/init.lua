@@ -13,6 +13,7 @@ function M.run_pos(filter,con,range)
       ['and']=require'ultimate-autopair.filter.multi'['and'],
       alpha=require'ultimate-autopair.filter.alpha',
       escape=require'ultimate-autopair.filter.escape',
+      cmdtype=require'ultimate-autopair.filter.cmdtype',
     }
   end
 
