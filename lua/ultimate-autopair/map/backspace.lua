@@ -8,7 +8,7 @@ local M={}
 
 ---@param con ua.context
 ---@param pair TODO
----@return ua.actions?
+---@return string?
 local function start_pair_backspace(con,pair)
   local start_pair=utf.raw(pair[1])
   local end_pair=utf.raw(pair[2])
@@ -49,7 +49,7 @@ end
 
 ---@param con ua.context
 ---@param conf TODO
----@return ua.actions?
+---@return string?
 function M.run(con,conf)
   for _,p in ipairs(conf.pairs) do
     local ret=start_pair_backspace(con,p)

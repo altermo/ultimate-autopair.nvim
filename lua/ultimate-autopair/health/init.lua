@@ -75,7 +75,7 @@ local function check_unique_lang_to_ft(handler)
     local filetypes=vim.treesitter.language.get_filetypes(tree_lang)
     local ft=done[tree_lang]
 
-    if done[tree_lang] then
+    if done[tree_lang] --[[@as any]] then
       if not require'ultimate-autopair.util'.in_list(filetypes,ft) and not done[' '..tree_lang] then
         handler.warn(('filetype `%s` in `tslang2lang["%s"]` may be incorrect'):format(ft,tree_lang))
       end
