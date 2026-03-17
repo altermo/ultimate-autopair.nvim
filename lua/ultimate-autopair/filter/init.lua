@@ -5,8 +5,9 @@ local filter_map
 ---@param filter ua.filter?
 ---@param con ua.context
 ---@param range Range4
+---@param single true?
 ---@return boolean
-function M.run_pos(filter,con,range)
+function M.run_pos(filter,con,range,single)
   if not filter_map then
     filter_map={
       ['or']=require'ultimate-autopair.filter.multi'['or'],
@@ -21,7 +22,7 @@ function M.run_pos(filter,con,range)
     return false
   end
 
-  return (filter_map[filter[1]] or filter[1])(con,range,filter[2])
+  return (filter_map[filter[1]] or filter[1])(con,range,filter[2],single)
 end
 
 return M

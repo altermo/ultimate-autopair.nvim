@@ -5,6 +5,12 @@ local filter=require'ultimate-autopair.filter'
 local action=require'ultimate-autopair.util.action'
 local M={}
 
+---@param s string
+---@return integer
+local function slenmin1char(s)
+  return #utf.sub(utf.new(s),0,-2)
+end
+
 ---@param conf TODO
 ---@return [ua.filter,ua.filter]
 local function conf_get_filters(conf)
@@ -19,13 +25,13 @@ end
 local function start_pair_check(con,conf,start_pair,end_pair)
   local _=conf
 
-  if filter.run_pos(conf.start_pair_filter,con,con.cursor_range) then
+  local pair_range={con.cursor_range[1],
+  con.cursor_range[2]-slenmin1char(start_pair),
+  con.cursor_range[1],con.cursor_range[2]}
+
+  if filter.run_pos(conf.start_pair_filter,con,pair_range,true) then
     return
   end
-
-  local pair_range={con.cursor_range[1],
-  con.cursor_range[2]-(#start_pair-1),
-  con.cursor_range[1],con.cursor_range[2]}
 
   local filters=conf_get_filters(conf)
 
@@ -68,12 +74,12 @@ end
 local function end_pair_check(con,conf,start_pair,end_pair)
   local _=conf
 
-  if filter.run_pos(conf.end_pair_filter,con,con.cursor_range) then
-    return
-  end
-
   local pair_range={con.cursor_range[3],con.cursor_range[4],con.cursor_range[3],
   con.cursor_range[4]+#end_pair}
+
+  if filter.run_pos(conf.end_pair_filter,con,pair_range,true) then
+    return
+  end
 
   local filters=conf_get_filters(conf)
 

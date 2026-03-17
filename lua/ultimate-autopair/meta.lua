@@ -17,7 +17,7 @@
 ---@class ua.config: TODO
 ---@class ua.iconfig: TODO
 
----@alias ua.filter_fn<T> fun(con:ua.context,range:Range4,conf:T):boolean
+---@alias ua.filter_fn<T> fun(con:ua.context,range:Range4,conf:T,single:true?):boolean
 ---@class ua.filter<T>
 ---@field [1] ua.ifilter<T>
 ---@field [2] T

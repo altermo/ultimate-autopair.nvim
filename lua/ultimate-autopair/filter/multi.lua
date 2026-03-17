@@ -6,9 +6,9 @@ local M={}
 ---@field on_iter ua.filter[]
 
 ---@type ua.filter_fn<ua.filter.multi.conf>
-M['or']=function(con,range,conf)
+M['or']=function(con,range,conf,single)
   for _,f in ipairs(conf) do
-    if filter.run_pos(f,con,range) then
+    if filter.run_pos(f,con,range,single) then
       return true
     end
   end
@@ -16,9 +16,9 @@ M['or']=function(con,range,conf)
 end
 
 ---@type ua.filter_fn<ua.filter.multi.conf>
-M['and']=function(con,range,conf)
+M['and']=function(con,range,conf,single)
   for _,f in ipairs(conf) do
-    if not filter.run_pos(f,con,range) then
+    if not filter.run_pos(f,con,range,single) then
       return false
     end
   end
