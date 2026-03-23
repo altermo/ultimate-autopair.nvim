@@ -13,6 +13,7 @@
 ---@field iter_lines ua.source.iter_line
 ---@field cursor_range Range4
 ---@field bufnr integer?
+---@field parser vim.treesitter.LanguageTree?
 
 ---@class ua.config: TODO
 ---@class ua.iconfig: TODO

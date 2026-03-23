@@ -7,8 +7,11 @@ function M.create_context(iconf)
   if vim.fn.mode()=='c' then
       local line=vim.fn.getcmdline()
       local col=vim.fn.getcmdpos()
+      local parser=vim.treesitter.get_string_parser(line..'\n','vim')
+      parser:parse(true) --TODO: temp
       ---@type ua.context
       return {
+          parser=parser,
           cursor_range={0,col-1,0,col-1},
           iter_lines=function (s,e)
               assert((s==1 or s==-1) and (e==1 or e==-1))
@@ -21,7 +24,12 @@ function M.create_context(iconf)
   local bufnr=vim.api.nvim_get_current_buf()
   local row=vim.fn.line('.')
   local col=vim.fn.col('.')
+  local parser=vim.treesitter.get_parser()
+  if parser then
+    parser:parse(true) --TODO: temp
+  end
   return {
+    parser=parser,
     bufnr=bufnr,
     cursor_range={row-1,col-1,row-1,col-1},
     iter_lines=function (s,e)

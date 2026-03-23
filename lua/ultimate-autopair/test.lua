@@ -127,6 +127,8 @@ local function list_of_test_fn(_,tests)
   _{'\\\\&|','&','\\\\&&|??',{{'&&','??'}}}
   --## filter#cmdtype
   _{'|','<C-r>=input("")\r(\r','(|'}
+  --## filter#tsnode
+  _{'| ")"','(','(|) ")"',ft='lua'}
 
   --## map#backspace
   _{'(|)','<bs>','|'}

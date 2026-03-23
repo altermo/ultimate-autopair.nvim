@@ -94,46 +94,46 @@ function M.tslang_to_ft(tslang)
   return M.tslang2lang[tslang] or vim.treesitter.language.get_filetypes(tslang)[1] or tslang
 end
 
--- --TODO
--- ---@param con ua.context
--- ---@param range Range4
--- ---@param node_type string
--- ---@return TSNode?
--- function M.in_tsnode(con,range,node_type)
+--TODO
+---@param con ua.context
+---@param range Range4
+---@param cond fun(node:TSNode):boolean
+---@return TSNode?
+function M.find_node(con,range,cond)
 --   local cache=con.cache[M.in_tsnode]
---   local parser=con.parser
---   while parser do
---     local node=parser:named_node_for_range(range)
---     local ids={}
---     while true do
---       if cache[node:id()]~=nil then
---         return cache[node:id()] or nil
---       end
---       node=node:parent()
---       if not node then
---         break
---       end
---       table.insert(ids,node:id())
---       if node:type()==node_type then
---         for _,id in ipairs(ids) do
---           cache[id]=node
---         end
---         return node
---       end
---     end
---     for _,id in ipairs(ids) do
---       cache[id]=false
---     end
---     parser=M.get_tslang(con,range,parser)
---   end
--- end
+  local parser=con.parser
+  while parser do
+    local node=parser:named_node_for_range(range)
+    -- local ids={}
+    while node do
+      -- if cache[node:id()]~=nil then
+      --   return cache[node:id()] or nil
+      -- end
+      node=node:parent()
+      if not node then
+        break
+      end
+      -- table.insert(ids,node:id())
+      if cond(node) then
+        -- for _,id in ipairs(ids) do
+        --   cache[id]=node
+        -- end
+        return node
+      end
+    end
+    -- for _,id in ipairs(ids) do
+    --   cache[id]=false
+    -- end
+    parser=M.get_tslang(con,range,parser)
+  end
+end
 
--- ---@param con ua.context
--- ---@param range Range4
--- ---@param ltree vim.treesitter.LanguageTree
--- function M.get_tslang(con,range,ltree)
---   local cache=con.cache[M.get_tslang]
---   --TODO
--- end
+---@param con ua.context
+---@param range Range4
+---@param ltree vim.treesitter.LanguageTree
+---@return vim.treesitter.LanguageTree?
+function M.get_tslang(con,range,ltree)
+  return {con,range,ltree} and nil
+end
 
 return M

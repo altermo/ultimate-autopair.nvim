@@ -31,6 +31,7 @@ function M.setup(conf)
       for _,f in ipairs{
         {'escape'},
         {'cmdtype',{skip={'/','?','@'}}},
+        {'tsnode',{ignore={'string'}}},
       } do
         table.insert(p.start_pair_filter[2],f)
         table.insert(p.end_pair_filter[2],f)
