@@ -14,6 +14,7 @@
 ---@field cursor_range Range4
 ---@field bufnr integer?
 ---@field parser vim.treesitter.LanguageTree?
+---@field state table
 
 ---@class ua.config: TODO
 ---@class ua.iconfig: TODO

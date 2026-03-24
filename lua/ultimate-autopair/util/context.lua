@@ -11,6 +11,7 @@ function M.create_context(iconf)
       parser:parse(true) --TODO: temp
       ---@type ua.context
       return {
+          state={},
           parser=parser,
           cursor_range={0,col-1,0,col-1},
           iter_lines=function (s,e)
@@ -29,6 +30,7 @@ function M.create_context(iconf)
     parser:parse(true) --TODO: temp
   end
   return {
+    state={},
     parser=parser,
     bufnr=bufnr,
     cursor_range={row-1,col-1,row-1,col-1},
@@ -59,6 +61,34 @@ end
 ---@return string
 function M.line_before_range(con,range)
     return select(2,con.iter_lines(range[1]+1,range[1]+1)()) --[[@as string]]:sub(1,range[2])
+end
+
+---@param con ua.context
+---@param ... any?
+function M.set_state(con,...)
+  local n=select('#',...)
+  local state=con.state
+  for i=1,n-2 do
+    local key=select(i,...)
+    if not state[key] then
+      state[key]={}
+    end
+    state=state[key]
+  end
+
+  state[select(n-1,...)]=select(n,...)
+end
+
+---@param con ua.context
+---@param ... any?
+function M.get_state(con,...)
+  local n=select('#',...)
+  local state=con.state
+  for i=1,n-1 do
+    state=state[select(i,...)]
+  end
+
+  return state[select(n,...)]
 end
 
 return M

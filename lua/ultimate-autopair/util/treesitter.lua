@@ -109,10 +109,6 @@ function M.find_node(con,range,cond)
       -- if cache[node:id()]~=nil then
       --   return cache[node:id()] or nil
       -- end
-      node=node:parent()
-      if not node then
-        break
-      end
       -- table.insert(ids,node:id())
       if cond(node) then
         -- for _,id in ipairs(ids) do
@@ -120,6 +116,8 @@ function M.find_node(con,range,cond)
         -- end
         return node
       end
+
+      node=node:parent()
     end
     -- for _,id in ipairs(ids) do
     --   cache[id]=false
