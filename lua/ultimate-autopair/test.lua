@@ -130,6 +130,10 @@ local function list_of_test_fn(_,tests)
   --## filter#tsnode
   _{'| ")"','(','(|) ")"',ft='lua'}
   _{'"|")','(','"(|)")',ft='lua'}
+  --## filter#filetype
+  _{'|\nlua )\nlua )\nlua )','(','(|)\nlua )\nlua )\nlua )',ft='vim'}
+  _{'lua a|b\n)','(','lua a(|)b\n)',ft='vim'}
+
 
   --## map#backspace
   _{'(|)','<bs>','|'}

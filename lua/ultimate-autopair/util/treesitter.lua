@@ -1,3 +1,5 @@
+local util=require'ultimate-autopair.util'
+
 local M={}
 
 M.tslang2lang={
@@ -132,6 +134,57 @@ end
 ---@return vim.treesitter.LanguageTree?
 function M.get_tslang(con,range,ltree)
   return {con,range,ltree} and nil
+end
+
+---@param tree TSTree
+---@param range Range
+---@return boolean
+local function tree_contains(tree, range)
+  local tree_ranges = tree:included_ranges(false)
+
+  for _, tree_range in ipairs(tree_ranges) do
+    if util.range_in_range(tree_range, range) then
+      return true
+    end
+  end
+
+  return false
+end
+
+---@param range Range4
+---@return TSTree?
+---@return boolean?
+local function tree_for_range(parser, range)
+  for _, child in pairs(parser:children()) do
+    local tree = child:tree_for_range(range)
+    if tree then
+      return tree, false
+    end
+  end
+
+  for _, tree in pairs(parser:trees()) do
+    if tree_contains(tree, range) then
+      return tree, true
+    end
+  end
+
+  return nil
+end
+
+---@param con ua.context
+---@param range Range4
+---@param ltree vim.treesitter.LanguageTree
+---@return TSTree?
+---@return boolean?
+function M.find_smallest_tree(con,range,ltree)
+  local _=con
+  return tree_for_range(ltree,range)
+end
+
+---@param tree TSTree?
+---@return Range4
+function M.tree_to_ranges(tree)
+  return tree:included_ranges(false)
 end
 
 return M

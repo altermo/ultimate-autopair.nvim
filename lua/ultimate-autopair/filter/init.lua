@@ -16,6 +16,7 @@ function M.run_pos(filter,con,range,single)
       escape=require'ultimate-autopair.filter.escape',
       cmdtype=require'ultimate-autopair.filter.cmdtype',
       tsnode=require'ultimate-autopair.filter.tsnode',
+      filetype=require'ultimate-autopair.filter.filetype',
     }
   end
 

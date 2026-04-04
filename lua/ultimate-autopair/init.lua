@@ -32,6 +32,7 @@ function M.setup(conf)
         {'escape'},
         {'cmdtype',{skip={'/','?','@'}}},
         {'tsnode',{separate={'string'}}},
+        {'filetype',{injectlang_separate=true}},
       } do
         table.insert(p.start_pair_filter[2],f)
         table.insert(p.end_pair_filter[2],f)
