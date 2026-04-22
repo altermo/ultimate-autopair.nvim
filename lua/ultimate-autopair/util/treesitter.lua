@@ -137,7 +137,7 @@ function M.get_tslang(con,range,ltree)
 end
 
 ---@param tree TSTree
----@param range Range
+---@param range Range4
 ---@return boolean
 local function tree_contains(tree, range)
   local tree_ranges = tree:included_ranges(false)
@@ -182,9 +182,9 @@ function M.find_smallest_tree(con,range,ltree)
 end
 
 ---@param tree TSTree?
----@return Range4
+---@return Range4[]
 function M.tree_to_ranges(tree)
-  return tree:included_ranges(false)
+  return tree and tree:included_ranges(false) or {}
 end
 
 return M

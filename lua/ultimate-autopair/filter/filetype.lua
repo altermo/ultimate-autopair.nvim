@@ -9,6 +9,7 @@ local context=require'ultimate-autopair.util.context'
 ---@param range Range4
 ---@return TSTree?
 local function in_tree(con,range)
+  if not con.parser then return end
   local tree,top=treesitter.find_smallest_tree(con,range,con.parser)
   return not top and tree or nil
 end
