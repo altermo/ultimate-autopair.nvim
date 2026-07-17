@@ -109,6 +109,7 @@ local function list_of_test_fn(_,tests)
   _{'|','<esc>a(<esc>..a','(((|)))'}
   _{'|','<esc>3a(<esc>a','(((|)))'}
   _{'|foo','<esc>R(','(|)o'}
+  _{'\xc2|\xb9','\xb9','\xc2¹|\xb9',{{'¹','\xb9'}}}
 
   --## filter#alpha
   _{'don|t',"'","don'|t"}

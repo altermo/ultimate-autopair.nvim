@@ -1,12 +1,5 @@
 local M={}
 
----@param s string
----@return number
-local function slenmin1char(s)
-  local utf=require'ultimate-autopair.util.utf'
-  return #utf.sub(utf.new(s),0,-2)
-end
-
 local to_excludefn
 do
   local filter=require'ultimate-autopair.filter'
@@ -140,8 +133,8 @@ function M.count_start_pair(
   local start_row=(gotoend_ret_pos and row) or 1
   local end_row=(gotoend_ret_pos and -1) or row
   local excludefn_start_pair,excludefn_end_pair=to_excludefn(filters,start_pair_match,end_pair_match,con)
-  local start_offset_len=slenmin1char(start_pair_match)
-  local end_offset_len=slenmin1char(end_pair_match)
+  local start_offset_len=#start_pair_match-1
+  local end_offset_len=#end_pair_match-1
   for lrow,line in con.iter_lines(start_row,end_row) do
     local find_start=1
     local find_end=math.huge
@@ -213,7 +206,7 @@ function M.open_ambiguous_pairs(
   local end_row=(not gotoend and -1) or row
   local count=initial_count or 0
   local excludefn_start_pair,excludefn_end_pair=to_excludefn(filters,pair_match,pair_match,con)
-  local offset_len=slenmin1char(pair_match)
+  local offset_len=#pair_match-1
   for lrow,line in con.iter_lines(start_row,end_row) do
     local find_start=1
     local find_end=math.huge
